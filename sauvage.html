@@ -4,20 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sauvage - Rachat de Montres de Luxe</title>
-    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <script>
-        <!-- tailwind.config = { -->
-            <!-- theme: { -->
-                <!-- extend: { -->
-                    <!-- colors: { -->
-                        <!-- primary: '#006135', -->
-                        <!-- 'text-main': '#2a282b' -->
-                    <!-- } -->
-                <!-- } -->
-            <!-- } -->
-        <!-- } -->
-    </script>
 	<style type="text/tailwindcss">
       @theme {
         --color-primary: #00c172;
@@ -42,18 +29,19 @@
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
-                    <div class="text-2xl font-bold text-primary">Sauvage</div>
+                    <!-- <div class="text-2xl font-bold text-primary">Sauvage</div> -->
+                    <img width="50px" height="50px" src="logo500x500.png" />
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-8">
                         <a href="#accueil" class="text-text-main hover:text-primary transition-colors">Accueil</a>
                         <a href="#estimation" class="text-text-main hover:text-primary transition-colors">Estimation</a>
-                        <a href="#a-propos" class="text-text-main hover:text-primary transition-colors">À propos</a>
+                        <a href="#temoignages" class="text-text-main hover:text-primary transition-colors">Témoignages</a>
                         <a href="#faq" class="text-text-main hover:text-primary transition-colors">FAQ</a>
                         <a href="#contact" class="text-text-main hover:text-primary transition-colors">Contact</a>
                     </div>
                 </div>
-                <button class="md:hidden">
+                <button class="md:hidden" id="mobile-menu">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
@@ -68,12 +56,12 @@
             <div class="grid lg:grid-cols-2 gap-12 items-center">
                 <div class="text-center lg:text-left">
                     <h1 class="text-4xl lg:text-6xl font-bold text-text-main mb-6 leading-tight">
-                        Vendez votre montre de luxe au 
+                        Vendez votre montre de luxe 
+                        <span class="text-primary">rapidement</span> et au 
                         <span class="text-primary">meilleur prix</span>
                     </h1>
                     <p class="text-xl text-gray-600 mb-8 leading-relaxed">
-                        Estimation gratuite, offre sous 24h, paiement immédiat. 
-                        Faites confiance aux experts du rachat horloger.
+                        Estimation gratuite, offre sous 24h, remise en main propre dans un lieu sécurisé.
                     </p>
                     <a href="#estimation" class="inline-flex items-center bg-primary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-green-700 transition-all transform hover:scale-105 shadow-lg">
                         Faire estimer ma montre
@@ -238,7 +226,7 @@
     </section>
 	
     <!-- Avis et Témoignages -->
-    <section class="py-20 bg-white">
+    <section id="temoignages" class="py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-4">Ils nous font confiance</h2>
@@ -647,8 +635,7 @@
         });
 
         // Mobile menu toggle (basic implementation)
-        const mobileMenuButton = document.querySelector('.md\\:hidden button');
-        const mobileMenu = document.querySelector('.md\\:block');
+        const mobileMenuButton = document.querySelector('#mobile-menu');
         
         if (mobileMenuButton) {
             mobileMenuButton.addEventListener('click', function() {
