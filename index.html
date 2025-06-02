@@ -53,7 +53,18 @@
     <!-- Hero Section -->
     <section id="accueil" class="gradient-bg py-20 lg:py-32">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+		
+			<!-- PARALLAX OBJECTS -->
+			<div class="relative">
+				<img src="https://images.unsplash.com/photo-1594534475808-b18fc33b045e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Rolex" class="rounded-2xl shadow-lg parallax-object w-50 absolute top-0 right-0 " data-scroll-speed="1">
+				<img src="https://images.unsplash.com/photo-1548171915-e79a380a2a4b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Patek Philippe" class="rounded-2xl shadow-lg parallax-object w-50 absolute top-16" data-scroll-speed="0.6">
+				<img src="https://images.unsplash.com/photo-1609587312208-cea54be969e7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Omega" class="rounded-2xl shadow-lg parallax-object w-50 absolute top-32" data-scroll-speed="0.3">
+				<img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Cartier" class="rounded-2xl shadow-lg parallax-object w-50 absolute top-40" data-scroll-speed="0.8">
+			</div>
+				
+				
             <div class="grid lg:grid-cols-2 gap-12 items-center">
+			
                 <div class="text-center lg:text-left">
                     <h1 class="text-4xl lg:text-6xl font-bold text-text-main mb-6 leading-tight">
                         Vendez votre montre de luxe 
@@ -76,6 +87,14 @@
                              alt="Montre de luxe" class="w-full h-auto max-w-lg">
                     </div>
                 </div>
+				
+				
+				
+
+				
+                    
+
+				
             </div>
         </div>
     </section>
@@ -665,7 +684,19 @@
             section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
             observer.observe(section);
         });
-    </script>
+    
+		// Add JavaScript to handle parallax effect on scroll
+        window.addEventListener('scroll', function () {
+            const parallaxElements = 
+                  document.querySelectorAll('.parallax-object');
+            parallaxElements.forEach(function (element) {
+                let scrollPosition = window.pageYOffset;
+				const speed = Number(element.dataset.scrollSpeed) ?? 1
+                element.style.transform = 
+                      'translateY(' + scrollPosition * 0.5 * speed + 'px)';
+            });
+        });
+	</script>
 </body>
 </html>
 
