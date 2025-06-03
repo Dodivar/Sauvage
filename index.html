@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sauvage - Rachat de Montres de Luxe</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 	<style type="text/tailwindcss">
       @theme {
         --color-primary: #00c172;
@@ -21,8 +22,42 @@
 		#header {
 			background-color: rgba(255,255,255,0.45);
 		}
+		.hide-scrollbar::-webkit-scrollbar {
+			display: none;
+	  }
+	  .hide-scrollbar {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+		}
+		  
+	  #sales-carousel {
+		    box-shadow: inset 0 9px 0px 0px #f8f9fa, 
+				inset 0 -9px 0px 0px #f8f9fa, 
+				inset 30px 0 15px -4px var(--color-gray-50), 
+				inset -30px 0 15px -4px var(--color-gray-50);
+	  }
     </style>
 </head>
+
+<!-- Menu mobile plein écran -->
+<div id="mobile-menu-overlay" class="fixed inset-0 bg-white/70 backdrop-blur-lg z-50 hidden transition-opacity duration-300 z-60">
+  <div class="absolute top-6 right-6">
+    <button id="close-mobile-menu" class="text-3xl text-text-main focus:outline-none">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <nav class="flex flex-col items-center justify-center h-full space-y-8 text-xl font-semibold text-text-main">
+	<img width="200px" src="logo500x500.png" />
+    <a href="#accueil" class="hover:text-primary transition-colors">Accueil</a>
+    <a href="#estimation" class="hover:text-primary transition-colors">Estimation</a>
+    <a href="#temoignages" class="hover:text-primary transition-colors">Témoignages</a>
+    <a href="#faq" class="hover:text-primary transition-colors">FAQ</a>
+    <a href="#contact" class="hover:text-primary transition-colors">Contact</a>
+    <a href="/recherche.html" class="hover:text-primary transition-colors">Recherche personnalisée</a>
+  </nav>
+</div>
+
+
 <body class="bg-white text-text-main font-sans">
     <!-- Header -->
     <header id="header" class="shadow-sm backdrop-blur-sm sticky top-0 z-50">
@@ -41,7 +76,7 @@
                         <a href="#contact" class="text-text-main hover:text-primary transition-colors">Contact</a>
                     </div>
                 </div>
-                <button class="md:hidden" id="mobile-menu">
+                <button class="md:hidden" id="mobile-menu-toggle">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
@@ -49,6 +84,17 @@
             </div>
         </nav>
     </header>
+	
+	<!-- <div class="md:hidden fixed top-0 right-0 bottom-0 left-0 text-center m-auto transition-all z-60" id="mobile-menu"> -->
+		<!-- <ul> -->
+			<!-- <li>Accueil</li> -->
+			<!-- <li>Estimer votre montre</li> -->
+			<!-- <li>Nos offres</li> -->
+			<!-- <li>Dépôt vente</li> -->
+			<!-- <li>Recherche personnalisée</li> -->
+			<!-- <li>Contact</li> -->
+		<!-- </ul> -->
+	<!-- </div> -->
 
     <!-- Hero Section -->
     <section id="accueil" class="gradient-bg py-20 lg:py-32">
@@ -56,10 +102,10 @@
 		
 			<!-- PARALLAX OBJECTS -->
 			<div class="relative">
-				<img src="https://images.unsplash.com/photo-1594534475808-b18fc33b045e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Rolex" class="rounded-2xl shadow-lg parallax-object w-50 absolute top-0 right-0 " data-scroll-speed="1">
-				<img src="https://images.unsplash.com/photo-1548171915-e79a380a2a4b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Patek Philippe" class="rounded-2xl shadow-lg parallax-object w-50 absolute top-16" data-scroll-speed="0.6">
-				<img src="https://images.unsplash.com/photo-1609587312208-cea54be969e7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Omega" class="rounded-2xl shadow-lg parallax-object w-50 absolute top-32" data-scroll-speed="0.3">
-				<img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Cartier" class="rounded-2xl shadow-lg parallax-object w-50 absolute top-40" data-scroll-speed="0.8">
+				<img src="https://images.unsplash.com/photo-1594534475808-b18fc33b045e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Rolex" class="rounded-2xl shadow-lg parallax-object w-50 absolute top-0 left-12 -z-1" data-scroll-speed="1">
+				<img src="https://images.unsplash.com/photo-1548171915-e79a380a2a4b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Patek Philippe" class="rounded-2xl shadow-lg parallax-object w-50 absolute top-16 right-0 -z-1" data-scroll-speed="0.6">
+				<img src="https://images.unsplash.com/photo-1609587312208-cea54be969e7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Omega" class="rounded-2xl shadow-lg parallax-object w-50 absolute top-48 -z-1" data-scroll-speed="0.3">
+				<img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Cartier" class="rounded-2xl shadow-lg parallax-object w-50 absolute top-64 right-12 -z-1" data-scroll-speed="0.8">
 			</div>
 				
 				
@@ -140,41 +186,69 @@
                 <p class="text-xl text-gray-600">Remplissez ce formulaire pour recevoir une estimation personnalisée</p>
             </div>
             <div class="bg-white rounded-2xl shadow-2xl p-8">
-                <form class="space-y-6">
+                <form class="space-y-6" id="form-estimation">
                     <div class="grid md:grid gap-6">
                         <div>
-                            <label class="block text-sm font-medium text-text-main mb-2">Prénom Nom *</label>
-                            <input type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" required>
+                            <label class="block text-sm font-medium text-text-main mb-2" for="name">Prénom NOM *</label>
+                            <input name="name" type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" required>
                         </div>
                     </div>
                     <div class="grid md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-sm font-medium text-text-main mb-2">Email *</label>
-                            <input type="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" required>
+                            <label class="block text-sm font-medium text-text-main mb-2" for="email">Email *</label>
+                            <input name="email" type="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" required>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-text-main mb-2">Téléphone</label>
-                            <input type="tel" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                            <label class="block text-sm font-medium text-text-main mb-2" for="tel">Téléphone</label>
+                            <input name="tel" type="tel" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
                         </div>
                     </div>
                     <div class="grid md:grid-cols-3 gap-6">
                         <div>
-                            <label class="block text-sm font-medium text-text-main mb-2">Marque *</label>
-                            <input type="text" placeholder="Ex: Rolex, Patek Philippe..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" required>
+                            <label class="block text-sm font-medium text-text-main mb-2" for="brand">Marque *</label>
+                            <input name="brand" type="text" placeholder="Ex: Rolex, Patek Philippe..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" required>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-text-main mb-2">Modèle</label>
-                            <input type="text" placeholder="Ex: Submariner, Nautilus..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                            <label class="block text-sm font-medium text-text-main mb-2" for="model">Modèle</label>
+                            <input name="model" type="text" placeholder="Ex: Submariner, Nautilus..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-text-main mb-2">Année</label>
-                            <input type="number" placeholder="2020" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                            <label class="block text-sm font-medium text-text-main mb-2" for="year">Année</label>
+                            <input name="year" type="number" min="1900" max="2099" step="1" placeholder="2020" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
                         </div>
                     </div>
+					<!-- Numéro de série -->
+					<div>
+						<label class="block text-sm font-medium text-text-main mb-2" title="Le numéro de série sera examiné pour garantir l'authenticité de la montre" for="serie">Numéro de série</label>
+						<input name="serie" type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" required>
+					</div>
+					<!-- État de possession -->
+					<div>
+					  <label class="block text-sm font-medium text-text-main mb-2" for="state">État de possession *</label>
+					  <div class="space-y-2 md:flex space-x-8">
+						<label class="flex items-center space-x-3">
+						  <input name="state" type="radio" name="possession" value="Full set" required class="text-primary focus:ring-primary accent-primary">
+						  <span class="text-text-main">Full set (boîte + papiers)</span>
+						</label>
+						<label class="flex items-center space-x-3">
+						  <input name="state" type="radio" name="possession" value="Boîte d'origine" class="text-primary focus:ring-primary accent-primary">
+						  <span class="text-text-main">Boîte d’origine</span>
+						</label>
+						<label class="flex items-center space-x-3">
+						  <input name="state" type="radio" name="possession" value="Papiers d'origine" class="text-primary focus:ring-primary accent-primary">
+						  <span class="text-text-main">Papiers d’origine</span>
+						</label>
+						<label class="flex items-center space-x-3">
+						  <input name="state" type="radio" name="possession" value="Montre seule" class="text-primary focus:ring-primary accent-primary">
+						  <span class="text-text-main">Montre seule</span>
+						</label>
+					  </div>
+					</div>
+					<!-- Photos -->
                     <div>
                         <label class="block text-sm font-medium text-text-main mb-2">Photos de votre montre</label>
                         <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-colors">
-                            <input type="file" multiple accept="image/*" class="hidden" id="photos">
+                            <input name="photos" type="file" multiple accept="image/*" class="hidden" id="photos">
                             <label for="photos" class="cursor-pointer">
                                 <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" stroke="currentColor" fill="none" viewBox="0 0 48 48">
                                     <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -183,14 +257,21 @@
                                 <p class="text-gray-500 text-sm mt-1">PNG, JPG jusqu'à 10MB</p>
                             </label>
                         </div>
+						<div id="preview-photos-container"></div>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-text-main mb-2">Message (optionnel)</label>
-                        <textarea rows="4" placeholder="Décrivez l'état de votre montre, si vous son histoire..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"></textarea>
+                        <textarea rows="4" placeholder="Précisez si vous êtes le premier propriétaire, décrivez l'état de votre montre, son histoire..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"></textarea>
                     </div>
-                    <button type="submit" class="w-full bg-primary text-white py-4 px-8 rounded-lg font-semibold text-lg hover:bg-green-700 transition-all transform hover:scale-105 shadow-lg">
-                        Recevoir mon estimation gratuite
-                    </button>
+                    <!-- <button type="submit" class="w-full bg-primary text-white py-4 px-8 rounded-lg font-semibold text-lg hover:bg-green-700 transition-all transform hover:scale-105 shadow-lg"> -->
+                        <!-- Recevoir mon estimation gratuite -->
+                    <!-- </button>-->
+					<div class="text-center">
+						<a href="./merci.html" class="w-full bg-primary text-white py-4 px-8 rounded-lg font-semibold text-lg hover:bg-green-700 transition-all transform hover:scale-105 shadow-lg"> 
+							Recevoir mon estimation gratuite
+						</a>
+					</div>
+					
                 </form>
             </div>
         </div>
@@ -384,6 +465,156 @@
 			</div>
 		</div>
     </section>
+	
+	<!-- Dernières ventes -->
+	<section class="py-20 bg-gray-50">
+	  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+		<div class="text-center mb-12">
+		  <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-4">Dernières ventes réalisées</h2>
+		  <p class="text-xl text-gray-600">Voici quelques montres récemment vendues</p>
+		</div>
+		<div class="overflow-x-auto hide-scrollbar scroll-smooth p-8" id="sales-carousel">
+		  <div class="flex space-x-6 min-w-full">
+			<!-- Slide 1 -->
+			<div class="flex-shrink-0 w-60 bg-white rounded-xl shadow-md hover:shadow-lg p-4 text-center transition-all duration-300 -z-1">
+			  <img src="https://placehold.co/200x200" alt="Rolex Submariner" class="rounded-lg mb-4 mx-auto">
+			  <h4 class="text-lg font-semibold text-text-main">Rolex Submariner</h4>
+			</div>
+			<!-- Slide 2 -->
+			<div class="flex-shrink-0 w-60 bg-white rounded-xl shadow-md hover:shadow-lg p-4 text-center transition-all duration-300 -z-1">
+			  <img src="https://placehold.co/200x200" alt="Omega Speedmaster" class="rounded-lg mb-4 mx-auto">
+			  <h4 class="text-lg font-semibold text-text-main">Omega Speedmaster</h4>
+			</div>
+			<!-- Slide 3 -->
+			<div class="flex-shrink-0 w-60 bg-white rounded-xl shadow-md hover:shadow-lg p-4 text-center transition-all duration-300 -z-1">
+			  <img src="https://placehold.co/200x200" alt="Patek Nautilus" class="rounded-lg mb-4 mx-auto">
+			  <h4 class="text-lg font-semibold text-text-main">Patek Philippe Nautilus</h4>
+			</div>
+			<!-- Slide 4 -->
+			<div class="flex-shrink-0 w-60 bg-white rounded-xl shadow-md hover:shadow-lg p-4 text-center transition-all duration-300 -z-1">
+			  <img src="https://placehold.co/200x200" alt="Cartier Santos" class="rounded-lg mb-4 mx-auto">
+			  <h4 class="text-lg font-semibold text-text-main">Cartier Santos</h4>
+			</div>
+			<!-- Slide 5 -->
+			<div class="flex-shrink-0 w-60 bg-white rounded-xl shadow-md hover:shadow-lg p-4 text-center transition-all duration-300 -z-1">
+			  <img src="https://placehold.co/200x200" alt="Breitling Navitimer" class="rounded-lg mb-4 mx-auto">
+			  <h4 class="text-lg font-semibold text-text-main">Breitling Navitimer</h4>
+			</div>
+			<!-- Slide 6 -->
+			<div class="flex-shrink-0 w-60 bg-white rounded-xl shadow-md hover:shadow-lg p-4 text-center transition-all duration-300 -z-1">
+			  <img src="https://placehold.co/200x200" alt="Audemars Royal Oak" class="rounded-lg mb-4 mx-auto">
+			  <h4 class="text-lg font-semibold text-text-main">Audemars Piguet Royal Oak</h4>
+			</div>
+			<!-- Slide 7 -->
+			<div class="flex-shrink-0 w-60 bg-white rounded-xl shadow-md hover:shadow-lg p-4 text-center transition-all duration-300 -z-1">
+			  <img src="https://placehold.co/200x200" alt="TAG Heuer Carrera" class="rounded-lg mb-4 mx-auto">
+			  <h4 class="text-lg font-semibold text-text-main">TAG Heuer Carrera</h4>
+			</div>
+			<!-- Slide 8 -->
+			<div class="flex-shrink-0 w-60 bg-white rounded-xl shadow-md hover:shadow-lg p-4 text-center transition-all duration-300 -z-1">
+			  <img src="https://placehold.co/200x200" alt="Jaeger-LeCoultre Reverso" class="rounded-lg mb-4 mx-auto">
+			  <h4 class="text-lg font-semibold text-text-main">Jaeger-LeCoultre Reverso</h4>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	</section>
+
+	<!-- Recherche personnalisée CTA -->
+	<!-- <section class="py-20 gradient-bg"> -->
+	  <!-- <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"> -->
+		<!-- <div class="text-center mb-12"> -->
+		  <!-- <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-4"> -->
+			<!-- Vous cherchez un modèle en particulier ? -->
+		  <!-- </h2> -->
+		  <!-- <p class="text-xl text-gray-600 mb-6"> -->
+			<!-- Bénéficiez de notre service de recherche personnalisée de montres de luxe -->
+		  <!-- </p> -->
+		  <!-- <p class="text-lg text-gray-700 max-w-3xl mx-auto leading-relaxed"> -->
+			<!-- Que ce soit une Rolex rare, une Patek Philippe introuvable ou une édition limitée Audemars Piguet,  -->
+			<!-- notre équipe de spécialistes met tout en œuvre pour trouver le modèle de vos rêves.  -->
+			<!-- Grâce à notre réseau international de partenaires et notre expertise du marché,  -->
+			<!-- nous vous accompagnons dans votre recherche et sécurisons l’achat pour vous. -->
+		  <!-- </p> -->
+		<!-- </div> -->
+		<!-- <div class="text-center"> -->
+		  <!-- <a href="/recherche.html" class="inline-block bg-primary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-green-700 transition-all transform hover:scale-105 shadow-lg"> -->
+			<!-- Démarrer ma recherche personnalisée -->
+			<!-- <svg class="ml-2 h-5 w-5 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"> -->
+			  <!-- <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" /> -->
+			<!-- </svg> -->
+		  <!-- </a> -->
+		<!-- </div> -->
+	  <!-- </div> -->
+	<!-- </section> -->
+
+	<!-- Nos services -->
+	<section class="py-20 bg-white">
+	  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+		<div class="text-center mb-16">
+		  <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-4">Nos services exclusifs</h2>
+		  <p class="text-xl text-gray-600">Une expertise complète pour répondre à tous vos besoins horlogers</p>
+		</div>
+
+		<div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+		  <!-- Estimation gratuite -->
+		  <div class="bg-gray-50 rounded-2xl p-6 text-center hover:shadow-lg transition-all">
+			<div class="text-primary text-4xl mb-4">
+			  <i class="fas fa-calculator"></i>
+			</div>
+			<h3 class="text-xl font-semibold mb-3">Estimation gratuite</h3>
+			<p class="text-gray-600 mb-4">
+			  Obtenez une évaluation fiable de votre montre de luxe en moins de 24h, sans engagement.
+			</p>
+			<a href="#estimation" class="text-primary font-semibold hover:underline">
+			  Faire estimer ma montre
+			</a>
+		  </div>
+		  
+		   <!-- Vente de montre -->
+		  <div class="bg-gray-50 rounded-2xl p-6 text-center hover:shadow-lg transition-all">
+			<div class="text-primary text-4xl mb-4">
+			  <i class="fas fa-hand-holding-usd"></i>
+			</div>
+			<h3 class="text-xl font-semibold mb-3">Vente de montre</h3>
+			<p class="text-gray-600 mb-4">
+			  Découvrez notre offre de montre à saisir dès maitenant.
+			</p>
+			<a href="#estimation" class="text-primary font-semibold hover:underline">
+			  Voir nos offres
+			</a>
+		  </div>
+
+		  <!-- Dépôt-vente -->
+		  <div class="bg-gray-50 rounded-2xl p-6 text-center hover:shadow-lg transition-all">
+			<div class="text-primary text-4xl mb-4">
+			  <i class="fas fa-store"></i>
+			</div>
+			<h3 class="text-xl font-semibold mb-3">Dépôt-vente</h3>
+			<p class="text-gray-600 mb-4">
+			  Confiez-nous votre montre : nous activons notre réseau pour trouver un acheteur sérieux.
+			</p>
+			<a href="#contact" class="text-primary font-semibold hover:underline">
+			  En savoir plus
+			</a>
+		  </div>
+
+		  <!-- Recherche personnalisée -->
+		  <div class="bg-gray-50 rounded-2xl p-6 text-center hover:shadow-lg transition-all">
+			<div class="text-primary text-4xl mb-4">
+			  <i class="fas fa-search"></i>
+			</div>
+			<h3 class="text-xl font-semibold mb-3">Recherche personnalisée</h3>
+			<p class="text-gray-600 mb-4">
+			  Dites-nous ce que vous cherchez, nous le trouvons pour vous. Rareté, budget, état : on s’occupe de tout.
+			</p>
+			<a href="./recherche.html" class="text-primary font-semibold hover:underline">
+			  Lancer une recherche
+			</a>
+		  </div>
+		</div>
+	  </div>
+	</section>
 
     <!-- FAQ -->
     <section id="faq" class="py-20 gradient-bg">
@@ -487,6 +718,26 @@
 							<li>Si vous acceptez, nous organisons la remise en main propre.</li>
 							<li>Une fois la montre vérifiée, vous recevez le paiement immédiat.</li>
 						</ul>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm">
+                    <button class="w-full text-left p-6 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-inset faq-button" onclick="toggleFAQ(this)">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-lg font-semibold">Proposez vous d'autres services ?</h3>
+                            <svg class="h-5 w-5 transform transition-transform faq-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                    </button>
+                    <div class="faq-content hidden px-6 pb-6">
+                        <p class="text-gray-600">Toute à fait ! Nous proposons également :
+
+La vente de montres de collection et de prestige
+Le dépôt-vente pour mettre en vente votre montre en toute sécurité
+La recherche personnalisée pour vous aider à trouver la montre de vos rêves selon vos critères spécifiques
+
+Notre expertise nous permet de vous offrir un service complet et sur-mesure, que vous souhaitiez vendre, acheter ou confier votre montre.
+</p>
                     </div>
                 </div>
             </div>
@@ -617,6 +868,8 @@
         </div>
     </footer>
 
+<script type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script>
         // FAQ Toggle Function
         function toggleFAQ(button) {
@@ -652,16 +905,6 @@
             alert('Merci pour votre demande ! Nous vous contacterons sous 24h avec une estimation personnalisée.');
         });
 
-        // Mobile menu toggle (basic implementation)
-        const mobileMenuButton = document.querySelector('#mobile-menu');
-        
-        if (mobileMenuButton) {
-            mobileMenuButton.addEventListener('click', function() {
-                // Simple mobile menu toggle - in a real implementation, you'd want a proper mobile menu
-                alert('Menu mobile - À implémenter');
-            });
-        }
-
         // Add animation on scroll
         const observerOptions = {
             threshold: 0.1,
@@ -696,6 +939,76 @@
                       'translateY(' + scrollPosition * 0.5 * speed + 'px)';
             });
         });
+		
+		
+		
+		<!-- Auto-scroll Script -->
+	  const carousel = document.getElementById('sales-carousel');
+	  let autoScrollActive = true;
+
+	  function startAutoScroll() {
+		if (!autoScrollActive) return;
+		carousel.scrollBy({ left: 1, behavior: 'smooth' });
+	  }
+
+	  // Scroll every 30ms for slow smooth effect
+	  let scrollInterval = setInterval(startAutoScroll, 30);
+
+	  // Stop auto-scroll on user interaction
+	  ['wheel', 'touchstart', 'mousedown'].forEach(event => {
+		carousel.addEventListener(event, () => {
+		  autoScrollActive = false;
+		  clearInterval(scrollInterval);
+		}, { once: true });
+	  });
+
+
+const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+  const closeBtn = document.getElementById('close-mobile-menu');
+  const overlay = document.getElementById('mobile-menu-overlay');
+
+  mobileMenuToggle.addEventListener('click', () => {
+    overlay.classList.remove('hidden');
+    overlay.classList.add('flex', 'opacity-0');
+    setTimeout(() => overlay.classList.add('opacity-100'), 10); // animation d'apparition
+  });
+
+  closeBtn.addEventListener('click', () => {
+    overlay.classList.remove('opacity-100');
+    overlay.classList.add('opacity-0');
+    setTimeout(() => {
+      overlay.classList.add('hidden');
+      overlay.classList.remove('flex');
+    }, 300); // correspond à duration-300
+  });
+  
+  
+  // Preview photos files 
+  const fileInput = document.getElementById('photos');
+const previewContainer = document.getElementById('preview-photos-container');
+
+fileInput.addEventListener('change', function () {
+  previewContainer.innerHTML = ''; // Réinitialise les aperçus
+
+  const files = Array.from(fileInput.files);
+
+  files.forEach(file => {
+    if (!file.type.startsWith('image/')) return;
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const img = document.createElement('img');
+      img.src = e.target.result;
+      img.style.maxWidth = '150px';
+      img.style.margin = '10px';
+      img.style.borderRadius = '10px';
+      img.style.boxShadow = '0 0 5px rgba(0,0,0,0.3)';
+      previewContainer.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  });
+});
+  
 	</script>
 </body>
 </html>
