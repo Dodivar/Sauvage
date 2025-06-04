@@ -1,21 +1,18 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import scrollAnimation from '@/animation'
+const router = useRouter()
 
 onMounted(() => {
-  // Observe elements for animation
-  document.querySelectorAll('section').forEach((section) => {
-    section.style.opacity = '0'
-    section.style.transform = 'translateY(20px)'
-    section.style.transition = 'opacity 0.6s ease, transform 0.6s ease'
-    observer.observe(section)
-  })
+  scrollAnimation()
 
   // Add JavaScript to handle parallax effect on scroll
   window.addEventListener('scroll', function () {
     const parallaxElements = document.querySelectorAll('.parallax-object')
     parallaxElements.forEach(function (element) {
       let scrollPosition = window.scrollY
-      const speed = Number(element.dataset.scrollSpeed) ?? 1
+      const speed = Number(element.dataset.scrollSpeed)
       element.style.transform = 'translateY(' + scrollPosition * 0.5 * speed + 'px)'
     })
   })
@@ -46,39 +43,6 @@ onMounted(() => {
     })
   }
 
-  // Smooth scrolling for anchor links
-  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-    anchor.addEventListener('click', function (e) {
-      e.preventDefault()
-      const target = document.querySelector(this.getAttribute('href'))
-      if (target) {
-        target.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start',
-        })
-      }
-    })
-  })
-
-  const mobileMenuToggle = document.getElementById('mobile-menu-toggle')
-  const closeBtn = document.getElementById('close-mobile-menu')
-  const overlay = document.getElementById('mobile-menu-overlay')
-
-  mobileMenuToggle.addEventListener('click', () => {
-    overlay.classList.remove('hidden')
-    overlay.classList.add('flex', 'opacity-0')
-    setTimeout(() => overlay.classList.add('opacity-100'), 10) // animation d'apparition
-  })
-
-  closeBtn.addEventListener('click', () => {
-    overlay.classList.remove('opacity-100')
-    overlay.classList.add('opacity-0')
-    setTimeout(() => {
-      overlay.classList.add('hidden')
-      overlay.classList.remove('flex')
-    }, 300) // correspond à duration-300
-  })
-
   // Preview photos files
   const fileInput = document.getElementById('photos')
   const previewContainer = document.getElementById('preview-photos-container')
@@ -105,6 +69,7 @@ onMounted(() => {
     })
   })
 })
+
 // FAQ Toggle Function
 function toggleFAQ(button) {
   const content = button.target.nextElementSibling
@@ -124,20 +89,9 @@ function toggleFAQ(button) {
   icon.style.transform = isExpanded ? 'rotate(180deg)' : 'rotate(0deg)'
 }
 
-// Add animation on scroll
-const observerOptions = {
-  threshold: 0.1,
-  once: true,
+function ToMerci() {
+  router.push({ path: '/merci', query: { from: 'estimation' } })
 }
-
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => {
-    if (entry.isIntersecting) {
-      entry.target.style.opacity = '1'
-      entry.target.style.transform = 'translateY(0)'
-    }
-  })
-}, observerOptions)
 </script>
 
 <template>
@@ -176,25 +130,25 @@ const observer = new IntersectionObserver((entries) => {
           <img
             src="../assets/watches/navitimer-b01-chronograph-43.png"
             alt="Rolex"
-            class="parallax-object absolute -left-20 w-40 md:w-56 lg:w-72 xl:w-96"
+            class="parallax-object absolute left-0 w-32 md:w-40 lg:w-56 xl:w-80"
             data-scroll-speed="1"
           />
           <img
             src="../assets/watches/rolex.png"
             alt="Patek Philippe"
-            class="parallax-object absolute -right-20 w-40 md:w-56 lg:w-72 xl:w-96"
+            class="parallax-object absolute left-20 w-32 md:w-40 lg:w-56 xl:w-80"
             data-scroll-speed="0.6"
           />
           <img
             src="../assets/watches/rolex2.png"
             alt="Omega"
-            class="parallax-object absolute left-1/4 w-40 md:w-56 lg:w-72 xl:w-96"
+            class="parallax-object absolute top-20 left-40 w-32 md:w-40 lg:w-56 xl:w-80"
             data-scroll-speed="0.3"
           />
           <img
             src="../assets/watches/tudor-black-bay-41.png"
             alt="Cartier"
-            class="parallax-object absolute right-1/4 w-40 md:w-56 lg:w-72 xl:w-96"
+            class="parallax-object absolute top-10 left-60 w-32 md:w-40 lg:w-56 xl:w-80"
             data-scroll-speed="0.8"
           />
         </div>
@@ -430,8 +384,7 @@ const observer = new IntersectionObserver((entries) => {
               ></textarea>
             </div>
             <button
-              to="merci"
-              type="submit"
+              @click="ToMerci"
               class="w-full bg-primary text-white py-4 px-8 rounded-lg font-semibold text-lg hover:bg-green-700 transition-all transform hover:scale-105 shadow-lg"
             >
               Recevoir mon estimation gratuite
@@ -739,7 +692,7 @@ const observer = new IntersectionObserver((entries) => {
               <img
                 src="../assets/sales/IMG_6983.jpg"
                 alt="Rolex Submariner"
-                class="rounded-lg mb-4 mx-auto size-200"
+                class="rounded-lg mb-4 mx-auto h-48 w-96 object-contain"
               />
               <h4 class="text-lg font-semibold text-text-main">Rolex Submariner</h4>
             </div>
@@ -750,7 +703,7 @@ const observer = new IntersectionObserver((entries) => {
               <img
                 src="https://placehold.co/200x200"
                 alt="Omega Speedmaster"
-                class="rounded-lg mb-4 mx-auto size-200"
+                class="rounded-lg mb-4 mx-auto h-48 w-96 object-contain"
               />
               <h4 class="text-lg font-semibold text-text-main">Omega Speedmaster</h4>
             </div>
@@ -826,7 +779,7 @@ const observer = new IntersectionObserver((entries) => {
     </section>
 
     <!-- Nos services -->
-    <section class="py-20 bg-white">
+    <section id="services" class="py-20 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
           <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-4">Nos services exclusifs</h2>
@@ -875,9 +828,9 @@ const observer = new IntersectionObserver((entries) => {
               Confiez-nous votre montre : nous activons notre réseau pour trouver un acheteur
               sérieux.
             </p>
-            <a href="#contact" class="text-primary font-semibold hover:underline">
+            <RouterLink to="/depot-vente" class="text-primary font-semibold hover:underline">
               En savoir plus
-            </a>
+            </RouterLink>
           </div>
 
           <!-- Recherche personnalisée -->

@@ -1,48 +1,165 @@
 <script setup>
-import Home from './components/Home.vue'
+import { ref, useTemplateRef, onMounted } from 'vue'
+
+//const displayMobileMenu = ref(false)
+const mobileMenuToggle = useTemplateRef('mobile-menu-toggle')
+const closeBtn = useTemplateRef('close-mobile-menu')
+const overlay = useTemplateRef('mobile-menu-overlay')
+
+/*
+onMounted(() => {
+  const mobileMenuToggle = document.getElementById('mobile-menu-toggle')
+  const closeBtn = document.getElementById('close-mobile-menu')
+  const overlay = document.getElementById('mobile-menu-overlay')
+
+  mobileMenuToggle.addEventListener('click', () => {
+    overlay.classList.remove('hidden')
+    overlay.classList.add('flex', 'opacity-0')
+    setTimeout(() => overlay.classList.add('opacity-100'), 10) // animation d'apparition
+  })
+
+  closeBtn.addEventListener('click', () => {
+    overlay.classList.remove('opacity-100')
+    overlay.classList.add('opacity-0')
+    setTimeout(() => {
+      overlay.classList.add('hidden')
+      overlay.classList.remove('flex')
+    }, 300) // correspond à duration-300
+  })
+})*/
+
+function displayMobileMenu() {
+  overlay.value.classList.remove('hidden')
+  overlay.value.classList.add('flex', 'opacity-0')
+  setTimeout(() => overlay.value.classList.add('opacity-100'), 10) // animation d'apparition
+}
+
+function closeMobileMenu() {
+  overlay.value.classList.remove('opacity-100')
+  overlay.value.classList.add('opacity-0')
+  setTimeout(() => {
+    overlay.value.classList.add('hidden')
+    overlay.value.classList.remove('flex')
+  }, 300) // correspond à duration-300
+}
 </script>
 
 <template>
-  <!-- Menu mobile plein écran -->
+  <!-- Menu mobile-->
   <div
-    id="mobile-menu-overlay"
-    class="fixed inset-0 bg-white/70 backdrop-blur-lg z-50 hidden transition-opacity duration-300 z-60"
+    ref="mobile-menu-overlay"
+    class="fixed inset-0 bg-white/70 backdrop-blur-lg z-30 hidden transition-opacity duration-300"
   >
     <div class="absolute top-6 right-6">
-      <button id="close-mobile-menu" class="text-3xl text-text-main focus:outline-none">
+      <button
+        @click="closeMobileMenu"
+        ref="close-mobile-menu"
+        class="text-3xl text-text-main focus:outline-none"
+      >
         <i class="fas fa-times"></i>
       </button>
     </div>
     <nav
-      class="flex flex-col items-center justify-center h-full space-y-8 text-xl font-semibold text-text-main"
+      class="flex flex-col items-center justify-center h-screen space-y-8 text-xl font-semibold text-text-main"
     >
-      <img width="200px" src="./assets/logo500x500.png" />
-      <a href="#accueil" class="hover:text-primary transition-colors">Accueil</a>
-      <a href="#estimation" class="hover:text-primary transition-colors">Estimation</a>
-      <a href="#temoignages" class="hover:text-primary transition-colors">Témoignages</a>
-      <a href="#faq" class="hover:text-primary transition-colors">FAQ</a>
-      <a href="#contact" class="hover:text-primary transition-colors">Contact</a>
-      <a href="/recherche.html" class="hover:text-primary transition-colors"
-        >Recherche personnalisée</a
+      <RouterLink to="/" @click="closeMobileMenu">
+        <img width="100px" src="./assets/logo noir.png" />
+      </RouterLink>
+      <RouterLink to="/" @click="closeMobileMenu" class="hover:text-primary transition-colors"
+        >Accueil</RouterLink
+      >
+      <RouterLink
+        to="/#estimation"
+        @click="closeMobileMenu"
+        class="hover:text-primary transition-colors"
+        >Estimation</RouterLink
+      >
+      <RouterLink
+        to="/recherche"
+        @click="closeMobileMenu"
+        class="hover:text-primary transition-colors"
+        >Recherche personnalisée</RouterLink
+      >
+      <RouterLink to="/offres" @click="closeMobileMenu" class="hover:text-primary transition-colors"
+        >Nos offres</RouterLink
+      >
+      <RouterLink
+        to="/depot-vente"
+        @click="closeMobileMenu"
+        class="hover:text-primary transition-colors"
+        >Dépôt-vente</RouterLink
+      >
+      <RouterLink
+        to="/#temoignages"
+        @click="closeMobileMenu"
+        class="hover:text-primary transition-colors"
+        >Témoignages</RouterLink
+      >
+      <RouterLink to="/#faq" @click="closeMobileMenu" class="hover:text-primary transition-colors"
+        >FAQ</RouterLink
+      >
+      <RouterLink
+        to="/#contact"
+        @click="closeMobileMenu"
+        class="hover:text-primary transition-colors"
+        >Contact</RouterLink
       >
     </nav>
   </div>
 
   <!-- Menu desktop -->
-  <header id="header" class="shadow-sm backdrop-blur-sm sticky top-0 z-50">
+  <header id="header" class="shadow-sm backdrop-blur-sm sticky top-0 z-20">
     <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center">
-          <img width="50px" height="50px" src="./assets/logo500x500.png" />
+          <RouterLink to="/">
+            <img width="50px" height="50px" src="./assets/logo noir.png" />
+          </RouterLink>
         </div>
         <div class="hidden md:block">
           <div class="ml-10 flex items-baseline space-x-8">
-            <RouterLink to="/" class="text-text-main hover:text-primary transition-colors">
-              Accueil</RouterLink
-            >
-            <a href="#estimation" class="text-text-main hover:text-primary transition-colors"
-              >Estimation</a
-            >
+            <div class="relative group">
+              <RouterLink
+                to="/#services"
+                class="text-text-main hover:text-primary transition-colors flex items-center"
+              >
+                Nos services
+                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </RouterLink>
+              <div
+                class="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
+              >
+                <div class="py-1">
+                  <RouterLink
+                    to="/#estimation"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary"
+                    >Estimation</RouterLink
+                  >
+                  <RouterLink
+                    to="/recherche"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary"
+                    >Recherche personnalisée</RouterLink
+                  >
+                  <RouterLink
+                    to="/offres"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary"
+                    >Nos offres</RouterLink
+                  >
+                  <RouterLink
+                    to="/depot-vente"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary"
+                    >Dépôt-vente</RouterLink
+                  >
+                </div>
+              </div>
+            </div>
             <a href="#temoignages" class="text-text-main hover:text-primary transition-colors"
               >Témoignages</a
             >
@@ -52,7 +169,7 @@ import Home from './components/Home.vue'
             >
           </div>
         </div>
-        <button class="md:hidden" id="mobile-menu-toggle">
+        <button class="md:hidden" ref="mobile-menu-toggle" @click="displayMobileMenu">
           <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path
               stroke-linecap="round"

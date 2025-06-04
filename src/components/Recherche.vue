@@ -1,4 +1,16 @@
-<script setup></script>
+<script setup>
+import { useRoute, useRouter } from 'vue-router'
+import { onMounted } from 'vue'
+import scrollAnimation from '@/animation'
+const router = useRouter()
+
+function ToMerci() {
+  router.push({ path: '/merci', query: { from: 'recherche' } })
+}
+onMounted(() => {
+  scrollAnimation()
+})
+</script>
 
 <template>
   <section class="py-16 gradient-bg">
@@ -114,17 +126,12 @@
             ></textarea>
           </div>
 
-          <!-- <button type="submit" class="w-full bg-primary text-white py-4 px-8 rounded-lg font-semibold text-lg hover:bg-green-700 transition-all transform hover:scale-105 shadow-lg"> -->
-          <!-- Envoyer ma demande de recherche -->
-          <!-- </button> -->
-          <div class="text-center">
-            <a
-              href="./merci.html"
-              class="w-full bg-primary text-white py-4 px-8 rounded-lg font-semibold text-lg hover:bg-green-700 transition-all transform hover:scale-105 shadow-lg"
-            >
-              Envoyer ma demande de recherche
-            </a>
-          </div>
+          <button
+            @click="ToMerci"
+            class="w-full bg-primary text-white py-4 px-8 rounded-lg font-semibold text-lg hover:bg-green-700 transition-all transform hover:scale-105 shadow-lg"
+          >
+            Envoyer ma demande de recherche
+          </button>
         </form>
       </div>
     </div>
