@@ -3,13 +3,14 @@ import { createMemoryHistory, createRouter } from 'vue-router'
 import HomeView from './components/Home.vue'
 import Merci from './components/Merci.vue'
 import Recherche from './components/Recherche.vue'
-import DepotVente from './components/DepotVente.vue'
+import WatchesCollection from './components/WatchesCollection.vue'
 
 const routes = [
   { path: '/', component: HomeView },
   { path: '/merci', component: Merci },
   { path: '/recherche', component: Recherche },
   { path: '/depot-vente', component: DepotVente },
+  { path: '/collection', component: WatchesCollection },
 ]
 
 const router = createRouter({

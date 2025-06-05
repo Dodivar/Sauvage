@@ -371,7 +371,7 @@ function ToMerci() {
                   <p class="text-gray-500 text-sm mt-1">PNG, JPG jusqu'à 10MB</p>
                 </label>
               </div>
-              <div id="preview-photos-container"></div>
+              <div id="preview-photos-container" class="grid md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
             </div>
             <div>
               <label class="block text-sm font-medium text-text-main mb-2"
@@ -813,9 +813,9 @@ function ToMerci() {
             <p class="text-gray-600 mb-4">
               Découvrez notre offre de montre à saisir dès maitenant.
             </p>
-            <a href="#estimation" class="text-primary font-semibold hover:underline">
-              Voir nos offres
-            </a>
+            <RouterLink to="/collection" class="text-primary font-semibold hover:underline">
+              Voir nos montres
+            </RouterLink>
           </div>
 
           <!-- Dépôt-vente -->
