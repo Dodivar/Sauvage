@@ -6,28 +6,6 @@ const mobileMenuToggle = useTemplateRef('mobile-menu-toggle')
 const closeBtn = useTemplateRef('close-mobile-menu')
 const overlay = useTemplateRef('mobile-menu-overlay')
 
-/*
-onMounted(() => {
-  const mobileMenuToggle = document.getElementById('mobile-menu-toggle')
-  const closeBtn = document.getElementById('close-mobile-menu')
-  const overlay = document.getElementById('mobile-menu-overlay')
-
-  mobileMenuToggle.addEventListener('click', () => {
-    overlay.classList.remove('hidden')
-    overlay.classList.add('flex', 'opacity-0')
-    setTimeout(() => overlay.classList.add('opacity-100'), 10) // animation d'apparition
-  })
-
-  closeBtn.addEventListener('click', () => {
-    overlay.classList.remove('opacity-100')
-    overlay.classList.add('opacity-0')
-    setTimeout(() => {
-      overlay.classList.add('hidden')
-      overlay.classList.remove('flex')
-    }, 300) // correspond à duration-300
-  })
-})*/
-
 function displayMobileMenu() {
   overlay.value.classList.remove('hidden')
   overlay.value.classList.add('flex', 'opacity-0')
@@ -80,8 +58,11 @@ function closeMobileMenu() {
         class="hover:text-primary transition-colors"
         >Recherche personnalisée</RouterLink
       >
-      <RouterLink to="/offres" @click="closeMobileMenu" class="hover:text-primary transition-colors"
-        >Nos offres</RouterLink
+      <RouterLink
+        to="/collection"
+        @click="closeMobileMenu"
+        class="hover:text-primary transition-colors"
+        >Nos montres</RouterLink
       >
       <RouterLink
         to="/depot-vente"
@@ -148,9 +129,9 @@ function closeMobileMenu() {
                     >Recherche personnalisée</RouterLink
                   >
                   <RouterLink
-                    to="/offres"
+                    to="/collection"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary"
-                    >Nos offres</RouterLink
+                    >Nos montres</RouterLink
                   >
                   <RouterLink
                     to="/depot-vente"
@@ -230,8 +211,29 @@ function closeMobileMenu() {
               >
             </li>
             <li>
-              <a href="#estimation" class="text-gray-300 hover:text-primary transition-colors"
-                >Estimation</a
+              <RouterLink
+                to="/#estimation"
+                class="text-gray-300 hover:text-primary transition-colors"
+                >Estimation</RouterLink
+              >
+            </li>
+            <li>
+              <RouterLink to="/recherche" class="text-gray-300 hover:text-primary transition-colors"
+                >Recherche personnalisée</RouterLink
+              >
+            </li>
+            <li>
+              <RouterLink
+                to="/collection"
+                class="text-gray-300 hover:text-primary transition-colors"
+                >Nos montres</RouterLink
+              >
+            </li>
+            <li>
+              <RouterLink
+                to="/depot-vente"
+                class="text-gray-300 hover:text-primary transition-colors"
+                >Dépôt-vente</RouterLink
               >
             </li>
             <li>
@@ -240,11 +242,13 @@ function closeMobileMenu() {
               >
             </li>
             <li>
-              <a href="#faq" class="text-gray-300 hover:text-primary transition-colors">FAQ</a>
+              <RouterLink to="/#faq" class="text-gray-300 hover:text-primary transition-colors"
+                >FAQ</RouterLink
+              >
             </li>
             <li>
-              <a href="#contact" class="text-gray-300 hover:text-primary transition-colors"
-                >Contact</a
+              <RouterLink to="/#contact" class="text-gray-300 hover:text-primary transition-colors"
+                >Contact</RouterLink
               >
             </li>
           </ul>
@@ -289,7 +293,7 @@ function closeMobileMenu() {
                   d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                 />
               </svg>
-              123 Avenue des Montres<br />75001 Paris, France
+              123 Avenue des Montres<br />67000 Strasbourg, France
             </p>
           </div>
         </div>
