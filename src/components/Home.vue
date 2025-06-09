@@ -109,8 +109,8 @@ function ToMerci() {
           <p class="text-xl text-gray-600 mb-8 leading-relaxed">
             Estimation gratuite, offre sous 24h, remise en main propre dans un lieu sécurisé.
           </p>
-          <a
-            href="#estimation"
+          <RouterLink
+            to="/#estimation"
             class="inline-flex items-center bg-primary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-green-700 transition-all transform hover:scale-105 shadow-lg"
           >
             Faire estimer ma montre
@@ -122,18 +122,36 @@ function ToMerci() {
                 d="M13 7l5 5m0 0l-5 5m5-5H6"
               />
             </svg>
-          </a>
+          </RouterLink>
         </div>
-
-        <!-- PARALLAX OBJECTS -->
-        <div class="relative">
-          <img
-            src="../assets/watches/navitimer-b01-chronograph-43.png"
-            alt="Rolex"
-            class="parallax-object absolute left-0 w-32 md:w-40 lg:w-56 xl:w-80"
-            data-scroll-speed="1"
-          />
-          <img
+      </div>
+      <!-- PARALLAX OBJECTS -->
+      <div class="relative">
+        <img
+          src="../assets/watches/navitimer-b01-chronograph-43.png"
+          alt="Rolex"
+          class="parallax-object absolute left-0 w-32 md:w-40 lg:w-56 xl:w-80"
+          data-scroll-speed="1"
+        />
+        <img
+          src="../assets/hero section img/image-Photoroom (9).png"
+          alt="Rolex"
+          class="parallax-object absolute w-32 md:w-40 lg:w-56 xl:w-[35rem] xl:top-[-70px] -scale-x-100"
+          data-scroll-speed="1"
+        />
+        <img
+          src="../assets/hero section img/image-Photoroom (3).png"
+          alt="Rolex"
+          class="parallax-object absolute right-0 w-32 md:w-40 lg:w-56 xl:w-[35rem] xl:top-[-50px] xl:right-[-60px]"
+          data-scroll-speed="1"
+        />
+        <img
+          src="../assets/hero section img/image-Photoroom (2).png"
+          alt="Rolex"
+          class="parallax-object absolute left-40 w-32 md:w-40 lg:w-56 xl:w-80"
+          data-scroll-speed="1"
+        />
+        <!--  <img
             src="../assets/watches/rolex.png"
             alt="Patek Philippe"
             class="parallax-object absolute left-20 w-32 md:w-40 lg:w-56 xl:w-80"
@@ -151,7 +169,7 @@ function ToMerci() {
             class="parallax-object absolute top-10 left-60 w-32 md:w-40 lg:w-56 xl:w-80"
             data-scroll-speed="0.8"
           />
-        </div>
+          -->
       </div>
     </section>
 

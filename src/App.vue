@@ -141,12 +141,16 @@ function closeMobileMenu() {
                 </div>
               </div>
             </div>
-            <a href="#temoignages" class="text-text-main hover:text-primary transition-colors"
-              >Témoignages</a
+            <RouterLink
+              to="/#temoignages"
+              class="text-text-main hover:text-primary transition-colors"
+              >Témoignages</RouterLink
             >
-            <a href="#faq" class="text-text-main hover:text-primary transition-colors">FAQ</a>
-            <a href="#contact" class="text-text-main hover:text-primary transition-colors"
-              >Contact</a
+            <RouterLink to="/#faq" class="text-text-main hover:text-primary transition-colors"
+              >FAQ</RouterLink
+            >
+            <RouterLink to="#contact" class="text-text-main hover:text-primary transition-colors"
+              >Contact</RouterLink
             >
           </div>
         </div>
