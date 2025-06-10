@@ -1,0 +1,17 @@
+- Améliorer Footer 
+- Améliorer sections réseaux
+- Ajouter blog 
+- Blog partie du site bien dédiée avec articles, lien tiktok, backend pour automatiser blog, insertion vidéo et 
+
+- Contact whatsapp
+
+
+- Photo avoir une légende qlq part isncitant à mettre pleins de photos pour garantir une meilleure estimation
+- point d'intrerogation sur pthoso & numéro de série (non obligatoire lui)
+- Dans formulaire de recherche préciser avec quoi être recontacté, email obligatoire 
+- ajouter * champs obligatoires
+
+Dépôt vente =>
+- Pourquoi nous choisir ? => delete reconnue
+- Estimation plutôt qu'évolution, 
+- Etapte 6 recevez l'argent sur votre compte

@@ -1,7 +1,13 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import scrollAnimation from '@/animation'
+import navitimerImg from '@/assets/watches/navitimer-b01-chronograph-43.png'
+import parallaxImg1 from '@/assets/hero section img/image-Photoroom (9).png'
+import parallaxImg2 from '@/assets/hero section img/image-Photoroom (3).png'
+import parallaxImg3 from '@/assets/hero section img/image-Photoroom (2).png'
+import ParallaxImage from './ParallaxImage.vue'
+
 const router = useRouter()
 
 onMounted(() => {
@@ -126,50 +132,44 @@ function ToMerci() {
         </div>
       </div>
       <!-- PARALLAX OBJECTS -->
-      <div class="relative">
-        <img
-          src="../assets/watches/navitimer-b01-chronograph-43.png"
-          alt="Rolex"
-          class="parallax-object absolute left-0 w-32 md:w-40 lg:w-56 xl:w-80"
-          data-scroll-speed="1"
+      <div class="parallax-container relative h-full w-full overflow-hidden">
+        <ParallaxImage
+          :src="navitimerImg"
+          alt="Breitling Navitimer"
+          initial-x="10%"
+          initial-y="20%"
+          size="medium"
+          :depth="1"
+          :scroll-speed="0.5"
         />
-        <img
-          src="../assets/hero section img/image-Photoroom (9).png"
-          alt="Rolex"
-          class="parallax-object absolute w-32 md:w-40 lg:w-56 xl:w-[35rem] xl:top-[-70px] -scale-x-100"
-          data-scroll-speed="1"
+        <ParallaxImage
+          :src="parallaxImg1"
+          alt="Montre de luxe"
+          initial-x="30%"
+          initial-y="40%"
+          size="large"
+          :depth="2"
+          :scroll-speed="0.4"
+          class="-scale-x-100"
         />
-        <img
-          src="../assets/hero section img/image-Photoroom (3).png"
-          alt="Rolex"
-          class="parallax-object absolute right-0 w-32 md:w-40 lg:w-56 xl:w-[35rem] xl:top-[-50px] xl:right-[-60px]"
-          data-scroll-speed="1"
+        <ParallaxImage
+          :src="parallaxImg2"
+          alt="Montre de luxe"
+          initial-x="15%"
+          initial-y="25%"
+          size="large"
+          :depth="3"
+          :scroll-speed="0.3"
         />
-        <img
-          src="../assets/hero section img/image-Photoroom (2).png"
-          alt="Rolex"
-          class="parallax-object absolute left-40 w-32 md:w-40 lg:w-56 xl:w-80"
-          data-scroll-speed="1"
+        <ParallaxImage
+          :src="parallaxImg3"
+          alt="Montre de luxe"
+          initial-x="45%"
+          initial-y="15%"
+          size="small"
+          :depth="2"
+          :scroll-speed="0.45"
         />
-        <!--  <img
-            src="../assets/watches/rolex.png"
-            alt="Patek Philippe"
-            class="parallax-object absolute left-20 w-32 md:w-40 lg:w-56 xl:w-80"
-            data-scroll-speed="0.6"
-          />
-          <img
-            src="../assets/watches/rolex2.png"
-            alt="Omega"
-            class="parallax-object absolute top-20 left-40 w-32 md:w-40 lg:w-56 xl:w-80"
-            data-scroll-speed="0.3"
-          />
-          <img
-            src="../assets/watches/tudor-black-bay-41.png"
-            alt="Cartier"
-            class="parallax-object absolute top-10 left-60 w-32 md:w-40 lg:w-56 xl:w-80"
-            data-scroll-speed="0.8"
-          />
-          -->
       </div>
     </section>
 
