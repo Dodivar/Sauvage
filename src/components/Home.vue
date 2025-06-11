@@ -107,7 +107,7 @@ function ToMerci() {
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center relative z-10">
           <h1 class="text-4xl lg:text-6xl font-bold text-text-main mb-6 leading-tight">
-            Vendez votre montre de luxe
+            Vendez votre montre
             <span class="text-primary">rapidement</span> et au
             <span class="text-primary">meilleur prix</span>
             <i class="fas fa-check-circle text-primary ml-2"></i>
@@ -814,7 +814,7 @@ function ToMerci() {
             </div>
             <h3 class="text-xl font-semibold mb-3">Estimation gratuite</h3>
             <p class="text-gray-600 mb-4">
-              Obtenez une évaluation fiable de votre montre de luxe en moins de 24h, sans
+              Obtenez une évaluation fiable de votre montre en moins de 24h, sans
               engagement.
             </p>
             <a href="#estimation" class="text-primary font-semibold hover:underline">
@@ -1059,7 +1059,7 @@ function ToMerci() {
             </button>
             <div class="faq-content hidden px-6 pb-6">
               <p class="text-gray-600">
-                Nous rachetons principalement les <strong>montres de luxe de marques</strong> comme
+                Nous rachetons principalement les <strong>montres de marques</strong> comme
                 Rolex, Omega, Cartier, Breitling, Audemars Piguet, Patek Philippe, etc. Si vous avez
                 un doute, n'hésitez pas à nous envoyer les informations, nous vous répondrons
                 rapidement.
@@ -1140,7 +1140,7 @@ function ToMerci() {
           <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-4">
             Suivez-nous sur les réseaux !
           </h2>
-          <p class="text-xl text-gray-600">Découvrez l'univers fascinant des montres de luxe</p>
+          <p class="text-xl text-gray-600">Découvrez l'univers fascinant des montres</p>
         </div>
         <div class="grid md:grid-cols-2 gap-12 items-center">
           <div>

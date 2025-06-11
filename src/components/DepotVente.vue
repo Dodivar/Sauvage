@@ -15,12 +15,12 @@ onMounted(() => {
   <section class="py-16 gradient-bg">
     <div class="max-w-4xl mx-auto px-4">
       <h1 class="text-4xl font-bold text-text-main mb-8 text-center">
-        Dépôt-Vente de montres de luxe
+        Dépôt-Vente de montres
       </h1>
 
       <div class="prose-lg max-w-none">
         <p class="text-xl text-gray-600 mb-8 text-center">
-          Confiez-nous votre montre de luxe et bénéficiez de notre expertise pour une vente optimale
+          Confiez-nous votre montre et bénéficiez de notre expertise pour une vente optimale
         </p>
 
         <div class="bg-white rounded-xl shadow-lg p-8 mb-12">
@@ -28,7 +28,7 @@ onMounted(() => {
             Notre service de dépôt-vente
           </h2>
           <p class="mb-6">
-            Chez Sauvage, nous comprenons que la vente d'une montre de luxe représente un
+            Chez Sauvage, nous comprenons que la vente d'une montre représente un
             <strong>moment important</strong>. Notre service de dépôt-vente vous offre une solution
             complète et sécurisée pour valoriser votre pièce dans les meilleures conditions.
           </p>
@@ -83,7 +83,7 @@ onMounted(() => {
                       d="M5 13l4 4L19 7"
                     />
                   </svg>
-                  <span>Une expertise reconnue dans l'évaluation des montres de luxe</span>
+                  <span>Une expertise dans l'estimation des montres</span>
                 </li>
               </ul>
             </div>
@@ -144,7 +144,7 @@ onMounted(() => {
           </div>
 
           <p class="mb-8">
-            Notre réseau étendu de collectionneurs et d'amateurs de montres de luxe nous permet de
+            Notre réseau étendu de collectionneurs et d'amateurs de montres nous permet de
             garantir une exposition optimale de votre pièce. Nous nous chargeons de toute la
             logistique et de la sécurisation de la transaction, vous permettant de vous concentrer
             sur l'essentiel.
@@ -155,11 +155,12 @@ onMounted(() => {
               Le processus en quelques étapes :
             </h3>
             <ol class="list-decimal list-inside space-y-3 text-gray-700">
-              <li>Évaluation gratuite et confidentielle de votre montre</li>
+              <li>Estimation gratuite et confidentielle de votre montre</li>
               <li>Proposition d'un prix de vente conseillé</li>
               <li>Mise en place du dépôt-vente avec contrat détaillé</li>
-              <li>Présentation à notre réseau d'acheteurs qualifiés</li>
+              <li>Mise en vente de votre montre sur le marché</li>
               <li>Accompagnement jusqu'à la finalisation de la vente</li>
+              <li>Recevez l'argent sur votre compte</li>
             </ol>
           </div>
         </div>
@@ -169,7 +170,7 @@ onMounted(() => {
             Prêt à nous confier votre montre ?
           </h2>
           <p class="text-lg text-gray-600 mb-8">
-            Contactez-nous dès maintenant pour une évaluation gratuite et sans engagement
+            Contactez-nous dès maintenant pour une estimation gratuite et sans engagement
           </p>
 
           <div class="flex flex-col sm:flex-row justify-center gap-4">

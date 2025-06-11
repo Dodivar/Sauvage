@@ -4,7 +4,7 @@
       <!-- Header -->
       <div class="text-center mb-12">
         <h1 class="text-4xl font-serif font-bold text-text-main mb-4">
-          Collection de Montres de Luxe
+          Notre Collection de montres
         </h1>
         <p class="text-xl text-gray-600 font-light max-w-3xl mx-auto">
           Découvrez notre sélection exclusive de montres de prestige en dépôt-vente, authentifiées
