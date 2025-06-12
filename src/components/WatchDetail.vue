@@ -83,7 +83,7 @@
         <div class="space-y-8">
           <!-- Header -->
           <div>
-            <h1 class="text-3xl lg:text-4xl font-serif font-bold text-gray-900 mb-2">
+            <h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
               {{ watch.name }}
             </h1>
             <p class="text-lg text-gray-600 mb-4">Réf. {{ watch.reference }}</p>
@@ -94,9 +94,7 @@
 
           <!-- Key Features -->
           <div class="bg-white rounded-xl shadow-lg p-6">
-            <h3 class="text-xl font-serif font-semibold text-gray-900 mb-4">
-              Caractéristiques principales
-            </h3>
+            <h3 class="text-xl font-semibold text-gray-900 mb-4">Caractéristiques principales</h3>
             <div class="grid grid-cols-2 gap-4">
               <div class="flex items-center space-x-2">
                 <svg
@@ -167,9 +165,7 @@
 
           <!-- Contact Buttons -->
           <div class="bg-white rounded-xl shadow-lg p-6">
-            <h3 class="text-xl font-serif font-semibold text-gray-900 mb-4">
-              Intéressé par cette montre ?
-            </h3>
+            <h3 class="text-xl font-semibold text-gray-900 mb-4">Intéressé par cette montre ?</h3>
             <div class="flex flex-col sm:flex-row gap-4">
               <a
                 :href="
@@ -220,9 +216,7 @@
 
       <!-- Detailed Specifications -->
       <div class="bg-white rounded-xl shadow-lg p-8 mb-12">
-        <h2 class="text-2xl font-serif font-semibold text-gray-900 mb-8">
-          Caractéristiques détaillées
-        </h2>
+        <h2 class="text-2xl font-semibold text-gray-900 mb-8">Caractéristiques détaillées</h2>
 
         <div class="grid lg:grid-cols-2 gap-8">
           <!-- Basic Data -->
@@ -312,7 +306,7 @@
       <!-- Condition & Accessories -->
       <div class="grid lg:grid-cols-2 gap-8 mb-12">
         <div class="bg-white rounded-xl shadow-lg p-6">
-          <h3 class="text-xl font-serif font-semibold text-gray-900 mb-4">État et condition</h3>
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">État et condition</h3>
           <div class="space-y-3">
             <div class="flex justify-between py-2 border-b border-gray-100">
               <span class="text-gray-600">État général</span>
@@ -334,9 +328,7 @@
         </div>
 
         <div class="bg-white rounded-xl shadow-lg p-6">
-          <h3 class="text-xl font-serif font-semibold text-gray-900 mb-4">
-            Contenu de la livraison
-          </h3>
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">Contenu de la livraison</h3>
           <div class="space-y-3">
             <div
               v-for="(item, index) in watch.details.accessories"
@@ -366,7 +358,7 @@
 
       <!-- Description -->
       <div class="bg-white rounded-xl shadow-lg p-8">
-        <h2 class="text-2xl font-serif font-semibold text-gray-900 mb-6">Description</h2>
+        <h2 class="text-2xl font-semibold text-gray-900 mb-6">Description</h2>
         <div class="prose max-w-none text-gray-700 leading-relaxed">
           <p>{{ watch.description }}</p>
         </div>

@@ -28,7 +28,7 @@ function closeMobileMenu() {
     ref="mobile-menu-overlay"
     class="fixed inset-0 bg-white/70 backdrop-blur-lg z-30 hidden transition-opacity duration-300"
   >
-    <div class="absolute top-6 right-6">
+    <div class="absolute top-6 right-6 w-screen">
       <button
         @click="closeMobileMenu"
         ref="close-mobile-menu"

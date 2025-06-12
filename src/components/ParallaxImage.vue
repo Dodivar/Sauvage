@@ -47,15 +47,15 @@ const getSizeClass = (size) => {
       return 'w-32 md:w-40 lg:w-56 xl:w-80'
   }
 }
-
+/*
 const getDepthStyle = (depth) => {
   const blur = (depth - 1) * 2
   const scale = 1 - (depth - 1) * 0.1
   return {
-    filter: `blur(${blur}px)`,
-    transform: `scale(${scale})`,
+    //filter: `blur(${blur}px)`,
+    // transform: `scale(${scale})`,
   }
-}
+}*/
 
 const animate = (timestamp) => {
   if (!startTime) startTime = timestamp
@@ -65,7 +65,7 @@ const animate = (timestamp) => {
     // Calculate floating animation
     const xOffset = Math.sin(progress * 0.5) * 15 // 15px max horizontal movement
     const yOffset = Math.sin(progress * 0.3) * 10 // 10px max vertical movement
-    const rotation = Math.sin(progress * 0.2) * 3 // 3 degrees max rotation
+    const rotation = Math.sin(progress * 0.2) * 30 // 3 degrees max rotation
 
     // Apply transform with current scroll position
     const scrollY = window.scrollY
@@ -112,7 +112,7 @@ onUnmounted(() => {
     :style="{
       left: initialX,
       top: initialY,
-      ...getDepthStyle(depth),
+      //...getDepthStyle(depth),
     }"
     @mousedown="handlePress"
     @mouseup="handleRelease"

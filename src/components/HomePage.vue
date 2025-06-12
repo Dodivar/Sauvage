@@ -177,13 +177,13 @@ const toggleFaq = (id) => {
         </div>
       </div>
       <!-- PARALLAX OBJECTS -->
-      <div class="parallax-container relative h-full w-full overflow-hidden">
+      <div class="parallax-container absolute h-full w-full overflow-hidden">
         <ParallaxImage
           :src="navitimerImg"
           alt="Breitling Navitimer"
           initial-x="10%"
-          initial-y="20%"
-          size="medium"
+          initial-y="60%"
+          size="large"
           :depth="1"
           :scroll-speed="0.5"
         />
@@ -191,17 +191,16 @@ const toggleFaq = (id) => {
           :src="parallaxImg1"
           alt="Montre de luxe"
           initial-x="30%"
-          initial-y="40%"
+          initial-y="70%"
           size="large"
           :depth="2"
           :scroll-speed="0.4"
-          class="-scale-x-100"
         />
         <ParallaxImage
           :src="parallaxImg2"
           alt="Montre de luxe"
-          initial-x="15%"
-          initial-y="25%"
+          initial-x="50%"
+          initial-y="50%"
           size="large"
           :depth="3"
           :scroll-speed="0.3"
@@ -209,9 +208,9 @@ const toggleFaq = (id) => {
         <ParallaxImage
           :src="parallaxImg3"
           alt="Montre de luxe"
-          initial-x="45%"
-          initial-y="15%"
-          size="small"
+          initial-x="60%"
+          initial-y="50%"
+          size="large"
           :depth="2"
           :scroll-speed="0.45"
         />

@@ -3,9 +3,7 @@
     <div class="max-w-7xl mx-auto px-4">
       <!-- Header -->
       <div class="text-center mb-12">
-        <h1 class="text-4xl font-serif font-bold text-text-main mb-4">
-          Notre Collection de montres
-        </h1>
+        <h1 class="text-4xl font-bold text-text-main mb-4">Notre Collection de montres</h1>
         <p class="text-xl text-gray-600 font-light max-w-3xl mx-auto">
           Découvrez notre sélection exclusive de montres de prestige en dépôt-vente, authentifiées
           et garanties par nos experts horlogers
@@ -70,15 +68,13 @@
             />
           </svg>
         </div>
-        <h3 class="text-xl font-serif text-gray-600 mb-2">Aucune montre trouvée</h3>
+        <h3 class="text-xl text-gray-600 mb-2">Aucune montre trouvée</h3>
         <p class="text-gray-500">Essayez de modifier vos critères de recherche</p>
       </div>
 
       <!-- Contact Section -->
       <div class="bg-white rounded-xl shadow-lg p-8 text-center">
-        <h2 class="text-2xl font-serif font-semibold text-text-main mb-4">
-          Une montre vous intéresse ?
-        </h2>
+        <h2 class="text-2xl font-semibold text-text-main mb-4">Une montre vous intéresse ?</h2>
         <p class="text-lg text-gray-600 mb-6 font-light">
           Contactez-nous pour plus d'informations ou pour organiser une visite
         </p>
