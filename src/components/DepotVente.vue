@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import scrollAnimation from '@/animation'
+import { scrollAnimation } from '@/animation'
 
 const email = ref('contact@sauvage.fr')
 const whatsapp = ref('+33612843926')
@@ -14,9 +14,7 @@ onMounted(() => {
 <template>
   <section class="py-16 gradient-bg">
     <div class="max-w-4xl mx-auto px-4">
-      <h1 class="text-4xl font-bold text-text-main mb-8 text-center">
-        Dépôt-Vente de montres
-      </h1>
+      <h1 class="text-4xl font-bold text-text-main mb-8 text-center">Dépôt-Vente de montres</h1>
 
       <div class="prose-lg max-w-none">
         <p class="text-xl text-gray-600 mb-8 text-center">
@@ -144,10 +142,9 @@ onMounted(() => {
           </div>
 
           <p class="mb-8">
-            Notre réseau étendu de collectionneurs et d'amateurs de montres nous permet de
-            garantir une exposition optimale de votre pièce. Nous nous chargeons de toute la
-            logistique et de la sécurisation de la transaction, vous permettant de vous concentrer
-            sur l'essentiel.
+            Notre réseau étendu de collectionneurs et d'amateurs de montres nous permet de garantir
+            une exposition optimale de votre pièce. Nous nous chargeons de toute la logistique et de
+            la sécurisation de la transaction, vous permettant de vous concentrer sur l'essentiel.
           </p>
 
           <div class="bg-gray-50 rounded-lg p-6 mb-8">

@@ -1,6 +1,6 @@
 import { createWebHashHistory, createRouter } from 'vue-router'
 
-import HomeView from './components/Home.vue'
+import HomeView from './components/HomePage.vue'
 import Merci from './components/Merci.vue'
 import Recherche from './components/Recherche.vue'
 import DepotVente from './components/DepotVente.vue'

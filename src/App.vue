@@ -179,8 +179,8 @@ function closeMobileMenu() {
         <div class="sm:col-span-2">
           <div class="text-3xl font-bold text-primary mb-4">Sauvage</div>
           <p class="text-gray-300 mb-6 leading-relaxed">
-            Experts en rachat de montres de luxe, nous garantissons un service transparent, rapide
-            et sécurisé.
+            Experts en rachat de montres, nous garantissons un service transparent, rapide et
+            sécurisé.
           </p>
           <div class="flex space-x-4">
             <a href="#" class="text-gray-300 hover:text-primary transition-colors">

@@ -1,7 +1,7 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
 import { onMounted } from 'vue'
-import scrollAnimation from '@/animation'
+import { scrollAnimation } from '@/animation'
 const router = useRouter()
 
 function ToMerci() {
@@ -16,7 +16,7 @@ onMounted(() => {
   <section class="py-16 gradient-bg">
     <div class="max-w-4xl mx-auto px-4">
       <div class="mb-12 text-center">
-        <h1 class="text-3xl font-bold text-text-main">Recherche personnalisée de montre de luxe</h1>
+        <h1 class="text-3xl font-bold text-text-main">Recherche personnalisée de montre</h1>
         <h2 class="text-2xl font-bold text-text-main mb-4">Trouvez la montre de vos rêves</h2>
         <p class="text-lg text-gray-600">
           Notre équipe spécialisée vous aide à trouver des montres rares, discontinuées ou très

@@ -23,4 +23,4 @@ function scrollAnimation() {
   })
 }
 
-export default scrollAnimation
+export { scrollAnimation }

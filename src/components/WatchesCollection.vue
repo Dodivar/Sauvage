@@ -122,7 +122,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 import WatchCard from './WatchCard.vue'
-import scrollAnimation from '@/animation'
+import { scrollAnimation } from '@/animation'
 
 // Contact info
 const email = ref('contact@sauvage.fr')
