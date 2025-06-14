@@ -126,6 +126,10 @@ onMounted(() => {
             ></textarea>
           </div>
 
+          <p class="text-sm text-gray-600 mb-4 italic">
+            * Les champs marqués d'un astérisque sont obligatoires
+          </p>
+
           <button
             @click="ToMerci"
             class="w-full bg-primary text-white py-4 px-8 rounded-lg font-semibold text-lg hover:bg-green-700 transition-all transform hover:scale-105 shadow-lg"

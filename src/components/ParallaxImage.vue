@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 
 const props = defineProps({
   src: {
@@ -18,6 +18,14 @@ const props = defineProps({
     type: String,
     default: '0%',
   },
+  mobileInitialX: {
+    type: String,
+    default: null, // Si null, utilise initialX
+  },
+  mobileInitialY: {
+    type: String,
+    default: null, // Si null, utilise initialY
+  },
   size: {
     type: String,
     default: 'medium', // small, medium, large
@@ -30,12 +38,50 @@ const props = defineProps({
     type: Number,
     default: 0.5,
   },
+  floatSpeed: {
+    type: Number,
+    default: 0.5, // Vitesse de l'animation de flottement horizontal
+  },
+  floatAmplitude: {
+    type: Number,
+    default: 15, // Amplitude maximale du mouvement horizontal en pixels
+  },
+  verticalSpeed: {
+    type: Number,
+    default: 0.3, // Vitesse de l'animation verticale
+  },
+  verticalAmplitude: {
+    type: Number,
+    default: 10, // Amplitude maximale du mouvement vertical en pixels
+  },
+  rotationSpeed: {
+    type: Number,
+    default: 0.2, // Vitesse de rotation
+  },
+  rotationAmplitude: {
+    type: Number,
+    default: 3, // Amplitude maximale de rotation en degrés
+  },
+  scaleValue: {
+    type: Number,
+    default: 0.8, // Valeur de scale lors du clic
+  },
 })
 
 const imageRef = ref(null)
 const isPressed = ref(false)
 let animationFrame = null
 let startTime = null
+const windowWidth = ref(window.innerWidth)
+
+const updateWindowWidth = () => {
+  windowWidth.value = window.innerWidth
+}
+
+const position = computed(() => ({
+  left: windowWidth.value < 768 ? props.mobileInitialX || props.initialX : props.initialX,
+  top: windowWidth.value < 768 ? props.mobileInitialY || props.initialY : props.initialY,
+}))
 
 const getSizeClass = (size) => {
   switch (size) {
@@ -47,25 +93,16 @@ const getSizeClass = (size) => {
       return 'w-32 md:w-40 lg:w-56 xl:w-80'
   }
 }
-/*
-const getDepthStyle = (depth) => {
-  const blur = (depth - 1) * 2
-  const scale = 1 - (depth - 1) * 0.1
-  return {
-    //filter: `blur(${blur}px)`,
-    // transform: `scale(${scale})`,
-  }
-}*/
 
 const animate = (timestamp) => {
   if (!startTime) startTime = timestamp
   const progress = (timestamp - startTime) / 1000 // Convert to seconds
 
   if (imageRef.value) {
-    // Calculate floating animation
-    const xOffset = Math.sin(progress * 0.5) * 15 // 15px max horizontal movement
-    const yOffset = Math.sin(progress * 0.3) * 10 // 10px max vertical movement
-    const rotation = Math.sin(progress * 0.2) * 30 // 3 degrees max rotation
+    // Calculate floating animation with custom values
+    const xOffset = Math.sin(progress * props.floatSpeed) * props.floatAmplitude
+    const yOffset = Math.sin(progress * props.verticalSpeed) * props.verticalAmplitude
+    const rotation = Math.sin(progress * props.rotationSpeed) * props.rotationAmplitude
 
     // Apply transform with current scroll position
     const scrollY = window.scrollY
@@ -74,7 +111,7 @@ const animate = (timestamp) => {
     imageRef.value.style.transform = `
       translate(${xOffset}px, ${yOffset + translateY}px)
       rotate(${rotation}deg)
-      scale(${isPressed.value ? 0.95 : 1})
+      scale(${isPressed.value ? props.scaleValue : 1})
     `
   }
 
@@ -91,12 +128,14 @@ const handleRelease = () => {
 
 onMounted(() => {
   animationFrame = requestAnimationFrame(animate)
+  window.addEventListener('resize', updateWindowWidth)
 })
 
 onUnmounted(() => {
   if (animationFrame) {
     cancelAnimationFrame(animationFrame)
   }
+  window.removeEventListener('resize', updateWindowWidth)
 })
 </script>
 
@@ -105,15 +144,8 @@ onUnmounted(() => {
     ref="imageRef"
     :src="src"
     :alt="alt"
-    :class="[
-      'parallax-object absolute transition-transform duration-300 ease-out',
-      getSizeClass(size),
-    ]"
-    :style="{
-      left: initialX,
-      top: initialY,
-      //...getDepthStyle(depth),
-    }"
+    :class="['absolute transition-transform duration-300 ease-out', getSizeClass(size)]"
+    :style="position"
     @mousedown="handlePress"
     @mouseup="handleRelease"
     @mouseleave="handleRelease"
@@ -122,10 +154,4 @@ onUnmounted(() => {
   />
 </template>
 
-<style scoped>
-.parallax-object {
-  will-change: transform;
-  transform-origin: center center;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-</style>
+<style scoped></style>

@@ -11,6 +11,8 @@ import TooltipInfo from './TooltipInfo.vue'
 
 const router = useRouter()
 
+const whatsapp = ref('+33612843926')
+
 onMounted(() => {
   scrollAnimation()
 
@@ -177,42 +179,70 @@ const toggleFaq = (id) => {
         </div>
       </div>
       <!-- PARALLAX OBJECTS -->
-      <div class="parallax-container absolute h-full w-full overflow-hidden">
+      <div class="fixed top-0 h-full w-full overflow-hidden">
         <ParallaxImage
           :src="navitimerImg"
           alt="Breitling Navitimer"
-          initial-x="10%"
-          initial-y="60%"
+          initial-x="0%"
+          initial-y="45%"
+          mobile-initial-y="50%"
           size="large"
-          :depth="1"
           :scroll-speed="0.5"
+          :float-speed="0.4"
+          :float-amplitude="12"
+          :vertical-speed="0.7"
+          :vertical-amplitude="15"
+          :rotation-speed="1"
+          :rotation-amplitude="2"
+          :scale-value="0.85"
         />
         <ParallaxImage
           :src="parallaxImg1"
           alt="Montre de luxe"
           initial-x="30%"
-          initial-y="70%"
+          initial-y="50%"
+          mobile-initial-y="55%"
           size="large"
-          :depth="2"
-          :scroll-speed="0.4"
+          :scroll-speed="0.2"
+          :float-speed="0.6"
+          :float-amplitude="18"
+          :vertical-speed="0.35"
+          :vertical-amplitude="12"
+          :rotation-speed="0.25"
+          :rotation-amplitude="4"
+          :scale-value="0.75"
         />
         <ParallaxImage
           :src="parallaxImg2"
           alt="Montre de luxe"
           initial-x="50%"
           initial-y="50%"
+          mobile-initial-y="55%"
           size="large"
-          :depth="3"
-          :scroll-speed="0.3"
+          :scroll-speed="0.4"
+          :float-speed="0.45"
+          :float-amplitude="15"
+          :vertical-speed="0.3"
+          :vertical-amplitude="10"
+          :rotation-speed="0.2"
+          :rotation-amplitude="3"
+          :scale-value="0.8"
         />
         <ParallaxImage
           :src="parallaxImg3"
           alt="Montre de luxe"
-          initial-x="60%"
-          initial-y="50%"
+          initial-x="75%"
+          initial-y="40%"
+          mobile-initial-y="45%"
           size="large"
-          :depth="2"
-          :scroll-speed="0.45"
+          :scroll-speed="0.7"
+          :float-speed="0.55"
+          :float-amplitude="20"
+          :vertical-speed="0.4"
+          :vertical-amplitude="15"
+          :rotation-speed="0.3"
+          :rotation-amplitude="5"
+          :scale-value="0.7"
         />
       </div>
     </section>
@@ -411,7 +441,7 @@ const toggleFaq = (id) => {
                   >Photos de votre montre</label
                 >
                 <TooltipInfo
-                  tooltip-text="Un maximum de photos nuos permettra d'estimer au mieux votre montre"
+                  tooltip-text="Un maximum de photos nous permettra d'estimer au mieux votre montre"
                 />
               </div>
               <div
@@ -455,6 +485,9 @@ const toggleFaq = (id) => {
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
               ></textarea>
             </div>
+            <p class="text-sm text-gray-600 mb-4 italic">
+              * Les champs marqués d'un astérisque sont obligatoires
+            </p>
             <button
               @click="ToMerci"
               class="w-full bg-primary text-white py-4 px-8 rounded-lg font-semibold text-lg hover:bg-green-700 transition-all transform hover:scale-105 shadow-lg"
@@ -993,22 +1026,13 @@ const toggleFaq = (id) => {
             </p>
             <div class="flex space-x-4">
               <a
-                href="#"
+                href="https://www.tiktok.com/@sauvagewatches"
+                target="_blank"
                 class="bg-primary text-white p-3 rounded-full hover:bg-green-700 transition-colors"
               >
                 <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
                   <path
-                    d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"
-                  />
-                </svg>
-              </a>
-              <a
-                href="#"
-                class="bg-primary text-white p-3 rounded-full hover:bg-green-700 transition-colors"
-              >
-                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                  <path
-                    d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.74.099.120.112.225.085.347-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.758-1.378l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.624 0 11.99-5.367 11.99-11.987C24.007 5.367 18.641.001 12.017.001z"
+                    d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"
                   />
                 </svg>
               </a>
@@ -1019,6 +1043,17 @@ const toggleFaq = (id) => {
                 <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
                   <path
                     d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.254-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                  />
+                </svg>
+              </a>
+              <a
+                :href="'https://wa.me/' + whatsapp"
+                target="_blank"
+                class="bg-primary text-white p-3 rounded-full hover:bg-green-700 transition-colors"
+              >
+                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"
                   />
                 </svg>
               </a>
