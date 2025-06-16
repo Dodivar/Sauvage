@@ -27,11 +27,13 @@ const handleClickOutside = (event) => {
 
 onMounted(() => {
   window.addEventListener('click', handleClickOutside)
+  window.addEventListener('touchstart', handleClickOutside)
   tooltipTriggers()
 })
 
 onUnmounted(() => {
   window.removeEventListener('click', handleClickOutside)
+  window.removeEventListener('touchstart', handleClickOutside)
 })
 
 // Sélectionner tous les éléments avec la classe 'tooltip-trigger'
@@ -80,6 +82,19 @@ function tooltipTriggers() {
 
     // Gestionnaire d'événements pour le clic
     trigger.addEventListener('click', (e) => {
+      e.preventDefault()
+      e.stopPropagation()
+      if (tooltip.classList.contains('show')) {
+        hideTooltip()
+      } else {
+        showTooltip()
+        tooltip.dataset.clicked = 'true'
+      }
+    })
+
+    // Gestionnaire d'événements pour le toucher
+    trigger.addEventListener('touchstart', (e) => {
+      e.preventDefault()
       e.stopPropagation()
       if (tooltip.classList.contains('show')) {
         hideTooltip()
@@ -201,6 +216,10 @@ function tooltipTriggers() {
 
   .tooltip.show {
     animation: slideUp 0.2s ease-out;
+  }
+
+  .tooltip-arrow {
+    visibility: hidden;
   }
 
   @keyframes slideUp {
