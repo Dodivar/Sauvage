@@ -7,6 +7,46 @@ const API_URL = import.meta.env.PROD
   ? 'https://sauvage-watches-mail-server.onrender.com'
   : 'http://localhost:3000'
 
+// Fonction pour envoyer un email avec retry
+export const sendEmailWithRetry = async (endpoint, formData, maxRetries = 3) => {
+  let retries = 0
+  const retryDelay = 2000 // 2 secondes
+
+  while (retries < maxRetries) {
+    try {
+      console.log(`Tentative ${retries + 1} d'envoi à ${API_URL}${endpoint}`)
+
+      const response = await fetch(`${API_URL}${endpoint}`, {
+        method: 'POST',
+        body: formData,
+        credentials: 'include',
+        headers: {
+          Accept: 'application/json',
+        },
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.message || "Erreur lors de l'envoi de l'email")
+      }
+
+      return await response.json()
+    } catch (error) {
+      console.error(`Tentative ${retries + 1} échouée:`, error)
+      retries++
+
+      if (retries === maxRetries) {
+        throw new Error(
+          'Le serveur met du temps à démarrer. Veuillez réessayer dans quelques instants.',
+        )
+      }
+
+      // Attendre avant de réessayer
+      await new Promise((resolve) => setTimeout(resolve, retryDelay))
+    }
+  }
+}
+
 /**
  * Envoie un email à partir des données du formulaire
  * @param {FormData} formData - Les données du formulaire
@@ -15,19 +55,13 @@ const API_URL = import.meta.env.PROD
  */
 export async function sendEmail(formData) {
   try {
-    const response = await fetch(`${API_URL}/api/send-email`, {
-      method: 'POST',
-      body: formData,
-    })
-
-    if (!response.ok) {
-      throw new Error("Erreur lors de l'envoi du formulaire")
-    }
-
-    return await response.json()
+    console.log("Début de l'envoi de l'email...")
+    const response = await sendEmailWithRetry('/api/send-email', formData)
+    console.log('Email envoyé avec succès:', response)
+    return response
   } catch (error) {
     console.error("Erreur lors de l'envoi de l'email:", error)
-    throw error
+    throw new Error(error.message || "Une erreur est survenue lors de l'envoi de l'email")
   }
 }
 
@@ -76,41 +110,7 @@ export async function handleFormSubmit(form, prepareFormData, onSuccess, onError
     const response = await sendEmail(formData)
     onSuccess(response)
   } catch (error) {
+    console.error('Erreur détaillée dans handleFormSubmit:', error)
     onError(error)
-  }
-}
-
-// Fonction pour envoyer un email avec retry
-export const sendEmailWithRetry = async (endpoint, formData, maxRetries = 3) => {
-  let retries = 0
-  const retryDelay = 2000 // 2 secondes
-
-  while (retries < maxRetries) {
-    try {
-      const response = await fetch(`${API_URL}${endpoint}`, {
-        method: 'POST',
-        body: formData,
-        credentials: 'include',
-      })
-
-      if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.message || "Erreur lors de l'envoi de l'email")
-      }
-
-      return await response.json()
-    } catch (error) {
-      console.error(`Tentative ${retries + 1} échouée:`, error)
-      retries++
-
-      if (retries === maxRetries) {
-        throw new Error(
-          'Le serveur met du temps à démarrer. Veuillez réessayer dans quelques instants.',
-        )
-      }
-
-      // Attendre avant de réessayer
-      await new Promise((resolve) => setTimeout(resolve, retryDelay))
-    }
   }
 }

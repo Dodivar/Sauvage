@@ -11,7 +11,6 @@ import TooltipInfo from './TooltipInfo.vue'
 import { handleFormSubmit, prepareEstimationFormData } from '@/services/emailService'
 
 const router = useRouter()
-const formData = ref(new FormData())
 const isSubmitting = ref(false)
 const errorMessage = ref('')
 
@@ -20,20 +19,28 @@ async function submitEstimationForm(event) {
   isSubmitting.value = true
   errorMessage.value = ''
 
-  await handleFormSubmit(
-    event.target,
-    prepareEstimationFormData,
-    () => {
-      ToMerci()
-    },
-    (error) => {
-      errorMessage.value =
-        "Une erreur s'est produite lors de l'envoi du formulaire. Veuillez réessayer."
-      console.error('Erreur:', error)
-    },
-  ).finally(() => {
+  try {
+    await handleFormSubmit(
+      event.target,
+      prepareEstimationFormData,
+      () => {
+        ToMerci()
+      },
+      (error) => {
+        errorMessage.value =
+          error.message ||
+          "Une erreur s'est produite lors de l'envoi du formulaire. Veuillez réessayer."
+        console.error('Erreur détaillée:', error)
+      },
+    )
+  } catch (error) {
+    errorMessage.value =
+      error.message ||
+      "Une erreur s'est produite lors de l'envoi du formulaire. Veuillez réessayer."
+    console.error('Erreur détaillée:', error)
+  } finally {
     isSubmitting.value = false
-  })
+  }
 }
 
 const whatsapp = ref('+33612843926')
@@ -437,10 +444,10 @@ const toggleFaq = (id) => {
                 required
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary"
               >
-                <option value="Montre seule">Montre seule</option>
-                <option value="Boîte d'origine">Boîte d'origine</option>
-                <option value="Papiers d'origine">Papiers d'origine</option>
                 <option value="Full set (boîte + papiers)">Full set (boîte + papiers)</option>
+                <option value="Papiers d'origine">Papiers d'origine</option>
+                <option value="Boîte d'origine">Boîte d'origine</option>
+                <option value="Montre seule">Montre seule</option>
               </select>
             </div>
             <!-- Etat général  -->
@@ -453,10 +460,10 @@ const toggleFaq = (id) => {
                 required
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary"
               >
-                <option value="Usage courant">Usage courant</option>
-                <option value="Bon état">Bon état</option>
-                <option value="Très bon état">Très bon état</option>
                 <option value="Neuf/jamaus portée">Neuf/jamais portée</option>
+                <option value="Très bon état">Très bon état</option>
+                <option value="Bon état">Bon état</option>
+                <option value="Usage courant">Usage courant</option>
               </select>
             </div>
             <!-- Photos -->

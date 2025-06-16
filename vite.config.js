@@ -13,6 +13,9 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  define: {
+    'process.env': process.env,
+  },
   server: {
     fs: {
       // Allow serving files from one level up to the project root
