@@ -1,12 +1,38 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { scrollAnimation } from '@/animation'
+import { handleFormSubmit, prepareSearchFormData } from '@/services/emailService'
+
 const router = useRouter()
+const isSubmitting = ref(false)
+const errorMessage = ref('')
+
+async function submitSearchForm(event) {
+  event.preventDefault()
+  isSubmitting.value = true
+  errorMessage.value = ''
+
+  await handleFormSubmit(
+    event.target,
+    prepareSearchFormData,
+    () => {
+      ToMerci()
+    },
+    (error) => {
+      errorMessage.value =
+        "Une erreur s'est produite lors de l'envoi du formulaire. Veuillez réessayer."
+      console.error('Erreur:', error)
+    },
+  ).finally(() => {
+    isSubmitting.value = false
+  })
+}
 
 function ToMerci() {
   router.push({ path: '/merci', query: { from: 'recherche' } })
 }
+
 onMounted(() => {
   scrollAnimation()
 })
@@ -26,7 +52,7 @@ onMounted(() => {
       </div>
 
       <div class="bg-white rounded-2xl shadow-xl p-8">
-        <form class="space-y-6" action="/merci.html" method="POST">
+        <form class="space-y-6" @submit="submitSearchForm">
           <div class="grid md:grid-cols-2 gap-6">
             <div>
               <label class="block text-sm font-medium text-text-main mb-2">Prénom Nom *</label>
@@ -93,7 +119,6 @@ onMounted(() => {
                 required
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary"
               >
-                <option value="">Sélectionnez un état</option>
                 <option value="Neuf">Neuf</option>
                 <option value="Très bon état">Très bon état</option>
                 <option value="Bon état">Bon état</option>
@@ -130,11 +155,16 @@ onMounted(() => {
             * Les champs marqués d'un astérisque sont obligatoires
           </p>
 
+          <div v-if="errorMessage" class="text-red-500 text-sm mb-4">
+            {{ errorMessage }}
+          </div>
+
           <button
-            @click="ToMerci"
-            class="w-full bg-primary text-white py-4 px-8 rounded-lg font-semibold text-lg hover:bg-green-700 transition-all transform hover:scale-105 shadow-lg"
+            type="submit"
+            :disabled="isSubmitting"
+            class="w-full bg-primary text-white py-4 px-8 rounded-lg font-semibold text-lg hover:bg-green-700 transition-all transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Envoyer ma demande de recherche
+            {{ isSubmitting ? 'Envoi en cours...' : 'Envoyer ma demande de recherche' }}
           </button>
         </form>
       </div>

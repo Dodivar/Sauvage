@@ -8,8 +8,33 @@ import parallaxImg2 from '@/assets/hero section img/image-Photoroom (3).png'
 import parallaxImg3 from '@/assets/hero section img/image-Photoroom (2).png'
 import ParallaxImage from './ParallaxImage.vue'
 import TooltipInfo from './TooltipInfo.vue'
+import { handleFormSubmit, prepareEstimationFormData } from '@/services/emailService'
 
 const router = useRouter()
+const formData = ref(new FormData())
+const isSubmitting = ref(false)
+const errorMessage = ref('')
+
+async function submitEstimationForm(event) {
+  event.preventDefault()
+  isSubmitting.value = true
+  errorMessage.value = ''
+
+  await handleFormSubmit(
+    event.target,
+    prepareEstimationFormData,
+    () => {
+      ToMerci()
+    },
+    (error) => {
+      errorMessage.value =
+        "Une erreur s'est produite lors de l'envoi du formulaire. Veuillez réessayer."
+      console.error('Erreur:', error)
+    },
+  ).finally(() => {
+    isSubmitting.value = false
+  })
+}
 
 const whatsapp = ref('+33612843926')
 
@@ -306,7 +331,7 @@ const toggleFaq = (id) => {
           </p>
         </div>
         <div class="bg-white rounded-2xl shadow-2xl p-8">
-          <form class="space-y-6" id="form-estimation">
+          <form class="space-y-6" id="form-estimation" @submit="submitEstimationForm">
             <div class="grid md:grid gap-6">
               <div>
                 <label class="block text-sm font-medium text-text-main mb-2" for="name"
@@ -488,11 +513,15 @@ const toggleFaq = (id) => {
             <p class="text-sm text-gray-600 mb-4 italic">
               * Les champs marqués d'un astérisque sont obligatoires
             </p>
+            <div v-if="errorMessage" class="text-red-500 text-sm mb-4">
+              {{ errorMessage }}
+            </div>
             <button
-              @click="ToMerci"
-              class="w-full bg-primary text-white py-4 px-8 rounded-lg font-semibold text-lg hover:bg-green-700 transition-all transform hover:scale-105 shadow-lg"
+              type="submit"
+              :disabled="isSubmitting"
+              class="w-full bg-primary text-white py-4 px-8 rounded-lg font-semibold text-lg hover:bg-green-700 transition-all transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Recevoir mon estimation gratuite
+              {{ isSubmitting ? 'Envoi en cours...' : 'Faire estimer ma montre' }}
             </button>
           </form>
         </div>
