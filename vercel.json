@@ -15,6 +15,19 @@
             "dest": "/index.html"
         }
     ],
+    "redirects": [
+        {
+            "source": "/",
+            "destination": "/Sauvage/",
+            "permanent": true
+        }
+    ],
+    "rewrites": [
+        {
+            "source": "/Sauvage/(.*)",
+            "destination": "/Sauvage/index.html"
+        }
+    ],
     "env": {
         "MAIL_API_URL": "https://sauvage-watches-mail-server.onrender.com"
     }
