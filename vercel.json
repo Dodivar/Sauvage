@@ -16,6 +16,6 @@
         }
     ],
     "env": {
-        "MAIL_API_URL": "https://sauvage-watches-mail-server.onrender.com",
+        "MAIL_API_URL": "https://sauvage-watches-mail-server.onrender.com"
     }
 }
