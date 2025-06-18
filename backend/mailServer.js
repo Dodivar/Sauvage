@@ -12,8 +12,11 @@ const upload = multer({ dest: 'uploads/' })
 const corsOptions = {
   origin:
     process.env.NODE_ENV === 'production'
-      ? ['https://dodivar.github.io', 'https://sauvage-watches.com'
-          'https://www.sauvage-watches.fr']
+      ? [
+          'https://dodivar.github.io',
+          'https://sauvage-watches.com',
+          'https://www.sauvage-watches.fr',
+        ]
       : 'http://localhost:5173',
   methods: ['POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type'],
