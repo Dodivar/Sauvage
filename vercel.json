@@ -16,6 +16,10 @@
         }
     ],
     "env": {
-        "MAIL_API_URL": "https://sauvage-watches-mail-server.onrender.com"
+        "MAIL_API_URL": "https://sauvage-watches-mail-server.onrender.com",
+        "SMTP_HOST": "smtp.hostinger.com",
+        "SMTP_PORT": 465,
+        "SMTP_USER": "contact@sauvage-watches.fr",
+        "SMTP_PASS": "~v1IsJs@P"
     }
 }
