@@ -6,7 +6,4 @@
 - Contact whatsapp
 
 
-- Photo avoir une légende qlq part isncitant à mettre pleins de photos pour garantir une meilleure estimation
-- point d'intrerogation sur pthoso & numéro de série (non obligatoire lui)
 - Dans formulaire de recherche préciser avec quoi être recontacté, email obligatoire 
-- ajouter * champs obligatoires

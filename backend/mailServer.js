@@ -24,14 +24,17 @@ app.use(express.json())
 
 // Configuration du transporteur email
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || 'smtp.gmail.com',
-  port: process.env.SMTP_PORT || 587,
+  host: process.env.SMTP_HOST || 'smtp.hostinger.com',
+  port: process.env.SMTP_PORT || 465,
   secure: false,
   auth: {
     user: process.env.SMTP_USER || 'doryandillen@gmail.com',
     pass: process.env.SMTP_PASS,
   },
 })
+// GMAIL
+// host: process.env.SMTP_HOST || 'smtp.gmail.com',
+// port: process.env.SMTP_PORT || 587,
 
 // Fonction pour formater le contenu de l'email
 const formatEmailContent = (formData) => {
