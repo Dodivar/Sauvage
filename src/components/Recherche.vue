@@ -55,15 +55,27 @@ onMounted(() => {
         <form class="space-y-6" @submit="submitSearchForm">
           <div class="grid md:grid-cols-2 gap-6">
             <div>
-              <label class="block text-sm font-medium text-text-main mb-2">Prénom Nom *</label>
+              <label class="block text-sm font-medium text-text-main mb-2" for="nickname">Prénom *</label>
               <input
                 type="text"
-                name="nom"
+                name="nickname"
                 required
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
             <div>
+              <label class="block text-sm font-medium text-text-main mb-2" for="name">Nom *</label>
+              <input
+                type="text"
+                name="name"
+                required
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+              />
+            </div>
+          </div>
+		  
+          <div class="grid md:grid gap-6">
+			<div>
               <label class="block text-sm font-medium text-text-main mb-2">Email *</label>
               <input
                 type="email"
@@ -72,7 +84,7 @@ onMounted(() => {
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
-          </div>
+		  </div>
 
           <div class="grid md:grid-cols-2 gap-6">
             <div>

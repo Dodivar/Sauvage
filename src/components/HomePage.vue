@@ -85,8 +85,8 @@ onMounted(() => {
   }
 
   // Preview photos files
-  const fileInput = document.getElementById('photos')
-  const previewContainer = document.getElementById('preview-photos-container')
+  const fileInput = document.getElementById('attachments')
+  const previewContainer = document.getElementById('preview-attachments-container')
 
   fileInput.addEventListener('change', function () {
     previewContainer.innerHTML = '' // Réinitialise les aperçus
@@ -339,10 +339,21 @@ const toggleFaq = (id) => {
         </div>
         <div class="bg-white rounded-2xl shadow-2xl p-8">
           <form class="space-y-6" id="form-estimation" @submit="submitEstimationForm">
-            <div class="grid md:grid gap-6">
+            <div class="grid md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-text-main mb-2" for="nickname"
+                  >Prénom *</label
+                >
+                <input
+                  name="nickname"
+                  type="text"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                  required
+                />
+              </div>
               <div>
                 <label class="block text-sm font-medium text-text-main mb-2" for="name"
-                  >Prénom NOM *</label
+                  >NOM *</label
                 >
                 <input
                   name="name"
@@ -420,7 +431,7 @@ const toggleFaq = (id) => {
                 <label
                   class="block text-sm font-medium text-text-main mb-2"
                   title="Le numéro de série sera examiné pour garantir l'authenticité de la montre"
-                  for="serie"
+                  for="serienumber"
                   >Numéro de série</label
                 >
                 <TooltipInfo
@@ -480,14 +491,14 @@ const toggleFaq = (id) => {
                 class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-colors"
               >
                 <input
-                  name="photos"
+                  name="attachments"
                   type="file"
                   multiple
                   accept="image/*"
                   class="hidden"
-                  id="photos"
+                  id="attachments"
                 />
-                <label for="photos" class="cursor-pointer">
+                <label for="attachments" class="cursor-pointer">
                   <svg
                     class="mx-auto h-12 w-12 text-gray-400 mb-4"
                     stroke="currentColor"
@@ -505,7 +516,7 @@ const toggleFaq = (id) => {
                   <p class="text-gray-500 text-sm mt-1">PNG, JPG jusqu'à 10MB</p>
                 </label>
               </div>
-              <div id="preview-photos-container"></div>
+              <div id="preview-attachments-container"></div>
             </div>
             <div>
               <label class="block text-sm font-medium text-text-main mb-2"
