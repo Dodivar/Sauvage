@@ -14,7 +14,7 @@ const corsOptions = {
     process.env.NODE_ENV === 'production'
       ? [
           'https://dodivar.github.io',
-          'https://sauvage-watches.com',
+          'https://sauvage-watches.fr',
           'https://www.sauvage-watches.fr',
         ]
       : 'http://localhost:5173',
@@ -30,7 +30,8 @@ app.use(express.json())
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || 'smtp.hostinger.com',
   port: process.env.SMTP_PORT || 465,
-  secure: false,
+  secure: true,
+  connectionTimeout: 10000,
   auth: {
     user: process.env.SMTP_USER || 'doryandillen@gmail.com',
     pass: process.env.SMTP_PASS,
