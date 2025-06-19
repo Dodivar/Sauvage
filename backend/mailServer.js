@@ -33,7 +33,7 @@ const transporter = nodemailer.createTransport({
   secure: true,
   connectionTimeout: 10000,
   auth: {
-    user: process.env.SMTP_USER || 'doryandillen@gmail.com',
+    user: process.env.SMTP_USER || 'contact@sauvages-watches.fr',
     pass: process.env.SMTP_PASS,
   },
 })
@@ -83,8 +83,8 @@ app.post('/api/send-email', upload.array('attachments', 5), async (req, res) => 
 
     // Configuration de l'email
     const mailOptions = {
-      from: process.env.EMAIL_FROM || 'doryandillen@gmail.com',
-      to: 'doryandillen@gmail.com',
+      from: process.env.EMAIL_FROM || 'contact@sauvages-watches.fr',
+      to: 'contact@sauvages-watches.fr',
       subject:
         type === 'estimation'
           ? `Nouvelle demande d'estimation - ${formData.brand} ${formData.model}`
