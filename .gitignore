@@ -28,3 +28,9 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+
+# Environment and deployment files
+render.yaml
+.env
+.env.local
+.env.production
