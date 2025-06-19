@@ -73,17 +73,9 @@ export async function sendEmail(formData) {
 export function prepareEstimationFormData(form) {
   const formData = new FormData(form)
 
-  // Récupérer les fichiers du champ 'photos' et les ajouter comme 'attachments'
-  const fileInput = form.querySelector('input[name="photos"]')
-  if (fileInput && fileInput.files.length > 0) {
-    Array.from(fileInput.files).forEach((file) => {
-      formData.append('attachments', file)
-    })
-  }
-
-  // Supprimer le champ 'photos' original
-  formData.delete('photos')
-
+  // Ajoute le type de formulaire
+  formData.append('type', 'estimation')
+  
   return formData
 }
 
@@ -93,7 +85,12 @@ export function prepareEstimationFormData(form) {
  * @returns {FormData} Les données du formulaire formatées
  */
 export function prepareSearchFormData(form) {
-  return new FormData(form)
+  const formData = new FormData(form)
+  
+  // Ajoute le type de formulaire
+  formData.append('type', 'search')
+  
+  return formData
 }
 
 /**
