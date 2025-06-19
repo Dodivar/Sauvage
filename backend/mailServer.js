@@ -46,9 +46,10 @@ const formatEmailContent = (formData) => {
   let content = ''
 
   // Informations de base communes aux deux formulaires
+  content += `Prénom: ${formData.nickname}\n`
   content += `Nom: ${formData.name}\n`
   content += `Email: ${formData.email}\n`
-  content += `Téléphone: ${formData.phone}\n`
+  content += `Téléphone: ${formData.tel}\n`
 
   // Contenu spécifique au formulaire d'estimation
   if (formData.type === 'estimation') {
