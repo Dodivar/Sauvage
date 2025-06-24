@@ -72,8 +72,14 @@ const formatEmailContent = (formData) => {
   }
   // Contenu spécifique au formulaire de recherche personnalisée
   else if (formData.type === 'search') {
-    content += `\nType de montre: ${formData.watchType}\n`
-    content += `Budget: ${formData.budget}\n`
+    content += `\nType de montre: ${formData.watchType || ''}\n`
+    if (formData.budget_min && formData.budget_max) {
+      content += `Budget: ${formData.budget_min} € à ${formData.budget_max} €\n`
+    } else if (formData.budget_min) {
+      content += `Budget minimum: ${formData.budget_min} €\n`
+    } else if (formData.budget_max) {
+      content += `Budget maximum: ${formData.budget_max} €\n`
+    }
     content += `État souhaité: ${formData.condition}\n`
     content += `Message: ${formData.message}\n`
   }

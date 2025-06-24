@@ -101,6 +101,12 @@ export function prepareSearchFormData(form) {
     form.querySelector('input[name="contact_mode"]:checked')?.value || 'pas de préférence'
   formData.append('contact_mode', contactMode)
 
+  // Ajoute le budget min et max si présents
+  const budgetMin = form.querySelector('input[name="budget_min"]')?.value
+  const budgetMax = form.querySelector('input[name="budget_max"]')?.value
+  if (budgetMin) formData.append('budget_min', budgetMin)
+  if (budgetMax) formData.append('budget_max', budgetMax)
+
   return formData
 }
 

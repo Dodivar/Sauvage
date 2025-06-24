@@ -1,12 +1,8 @@
 - Améliorer Footer 
 - Améliorer sections réseaux
-- Ajouter blog 
 - Blog partie du site bien dédiée avec articles, lien tiktok, backend pour automatiser blog, insertion vidéo et 
 
-- Contact whatsapp
 
-
-- Dans formulaire de recherche préciser avec quoi être recontacté, email obligatoire 
 - Slider pour montant estimé de recherche de montre
 - Ajout des montres des dernières ventes réalisées
 
@@ -26,4 +22,4 @@ Hero image
 
 - Typographies du site
 
-- Envoi d'email KO
+- mettre logo en fond sur la page d'accueil

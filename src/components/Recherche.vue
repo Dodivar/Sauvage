@@ -3,12 +3,14 @@ import { useRouter } from 'vue-router'
 import { ref, onMounted } from 'vue'
 import { scrollAnimation } from '@/animation'
 import { handleFormSubmit, prepareSearchFormData } from '@/services/emailService'
+import BudgetSlider from './BudgetSlider.vue'
 
 defineOptions({ name: 'RechercheMontre' })
 
 const router = useRouter()
 const isSubmitting = ref(false)
 const errorMessage = ref('')
+const budgetRange = ref([1500, 15000])
 
 async function submitSearchForm(event) {
   event.preventDefault()
@@ -160,18 +162,17 @@ onMounted(() => {
             </div>
           </div>
 
+          <div>
+            <label class="block text-sm font-medium text-text-main mb-10"
+              >Budget approximatif (€)</label
+            >
+            <BudgetSlider v-model="budgetRange" />
+
+            <input type="hidden" name="budget_min" :value="budgetRange[0]" />
+            <input type="hidden" name="budget_max" :value="budgetRange[1]" />
+          </div>
+
           <div class="grid md:grid-cols-2 gap-6">
-            <div>
-              <label class="block text-sm font-medium text-text-main mb-2"
-                >Budget approximatif (€)</label
-              >
-              <input
-                type="number"
-                name="budget"
-                placeholder="Ex : 8000"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-              />
-            </div>
             <div>
               <label class="block text-sm font-medium text-text-main mb-2">État souhaité *</label>
               <select
@@ -185,18 +186,17 @@ onMounted(() => {
                 <option value="Peu importe">Peu importe</option>
               </select>
             </div>
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-text-main mb-2"
-              >Délai souhaité pour l'acquisition</label
-            >
-            <input
-              type="text"
-              name="delai"
-              placeholder="Ex : 1 mois, dès que possible..."
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary"
-            />
+            <div>
+              <label class="block text-sm font-medium text-text-main mb-2"
+                >Délai souhaité pour l'acquisition</label
+              >
+              <input
+                type="text"
+                name="delai"
+                placeholder="Ex : 1 mois, dès que possible..."
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary"
+              />
+            </div>
           </div>
 
           <div>
