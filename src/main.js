@@ -7,6 +7,13 @@ import router from './router'
 
 createApp(App).use(router).mount('#app')
 
+// Ecoute des changements de route pour GA
+router.afterEach((to) => {
+  if (window.gtag) {
+    window.gtag('config', import.meta.env.VITE_GA_ID, { page_path: to.fullPath })
+  }
+})
+
 // Écouter les changements de thème
 const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
 
