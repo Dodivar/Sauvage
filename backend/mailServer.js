@@ -82,10 +82,17 @@ const formatEmailContent = (formData) => {
 }
 
 // Route pour l'envoi d'email avec pièces jointes
-app.post('/api/send-email', upload.array('attachments', 5), async (req, res) => {
+app.post('/api/send-email', upload.array('attachments', 20), async (req, res) => {
   try {
+    console.log("--- Nouvelle requête d'envoi d'email reçue ---")
     const { type, ...formData } = req.body
     const files = req.files || []
+    console.log('Type de formulaire:', type)
+    console.log('Données reçues:', formData)
+    console.log(
+      'Fichiers reçus:',
+      files.map((f) => f.originalname),
+    )
 
     // Configuration de l'email
     const mailOptions = {
@@ -102,8 +109,9 @@ app.post('/api/send-email', upload.array('attachments', 5), async (req, res) => 
       })),
     }
 
-    // Envoi de l'email
+    console.log("Préparation de l'envoi du mail...")
     await transporter.sendMail(mailOptions)
+    console.log('✅ Email envoyé avec succès à', mailOptions.to)
 
     // Nettoyage des fichiers temporaires
     files.forEach((file) => {
@@ -115,7 +123,7 @@ app.post('/api/send-email', upload.array('attachments', 5), async (req, res) => 
 
     res.json({ success: true, message: 'Email envoyé avec succès' })
   } catch (error) {
-    console.error("Erreur lors de l'envoi de l'email:", error)
+    console.error("❌ Erreur lors de l'envoi de l'email:", error)
     res.status(500).json({
       success: false,
       message: "Erreur lors de l'envoi de l'email",

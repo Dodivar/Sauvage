@@ -3,9 +3,10 @@ import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { scrollAnimation } from '@/animation'
 import navitimerImg from '@/assets/watches/navitimer-b01-chronograph-43.png'
-import parallaxImg1 from '@/assets/hero section img/image-Photoroom (9).png'
-import parallaxImg2 from '@/assets/hero section img/image-Photoroom (3).png'
-import parallaxImg3 from '@/assets/hero section img/image-Photoroom (2).png'
+import parallaxImg1 from '@/assets/hero section img/montre-tag-heuer-monaco-calibre-11.png'
+import parallaxImg2 from '@/assets/hero section img/Rolex.png'
+import parallaxImg3 from '@/assets/hero section img/cartier-santos.png'
+import parallaxImg4 from '@/assets/hero section img/image-Photoroom (2).png'
 import ParallaxImage from './ParallaxImage.vue'
 import TooltipInfo from './TooltipInfo.vue'
 import { handleFormSubmit, prepareEstimationFormData } from '@/services/emailService'
@@ -91,7 +92,11 @@ onMounted(() => {
 
   function updatePreview() {
     previewContainer.innerHTML = ''
-    selectedFiles.forEach((file, idx) => {
+    // Trie : PDF d'abord, puis images
+    const pdfFiles = selectedFiles.filter((f) => f.type === 'application/pdf')
+    const imgFiles = selectedFiles.filter((f) => f.type.startsWith('image/'))
+    const allFiles = [...pdfFiles, ...imgFiles]
+    allFiles.forEach((file) => {
       let previewEl
       if (file.type.startsWith('image/')) {
         previewEl = document.createElement('div')
@@ -116,11 +121,11 @@ onMounted(() => {
         previewEl.style.margin = '10px 0'
         previewEl.style.position = 'relative'
         previewEl.innerHTML = `
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="32" height="32" class="text-primary">
-            <rect width="24" height="24" rx="4" fill="#22c55e"/>
-            <path d="M8 16h8M8 12h8M8 8h8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+          <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor' width='32' height='32' class='text-primary'>
+            <rect width='24' height='24' rx='4' fill='#22c55e'/>
+            <path d='M8 16h8M8 12h8M8 8h8' stroke='#fff' stroke-width='2' stroke-linecap='round'/>
           </svg>
-          <span style="color:#166534;font-weight:600;">${file.name}</span>
+          <span style='color:#166534;font-weight:600;'>${file.name}</span>
         `
       }
       // Ajout du bouton de suppression
@@ -141,9 +146,13 @@ onMounted(() => {
       removeBtn.style.cursor = 'pointer'
       removeBtn.style.boxShadow = '0 1px 4px rgba(0,0,0,0.08)'
       removeBtn.addEventListener('click', () => {
-        selectedFiles.splice(idx, 1)
-        updatePreview()
-        updateInputFiles()
+        // Trouver l'index réel dans selectedFiles
+        const realIdx = selectedFiles.findIndex((f) => f.name === file.name && f.size === file.size)
+        if (realIdx !== -1) {
+          selectedFiles.splice(realIdx, 1)
+          updatePreview()
+          updateInputFiles()
+        }
       })
       previewEl.appendChild(removeBtn)
       previewContainer.appendChild(previewEl)
@@ -296,7 +305,7 @@ const toggleFaq = (id) => {
         <ParallaxImage
           :src="parallaxImg1"
           alt="Montre de luxe"
-          initial-x="30%"
+          initial-x="40%"
           initial-y="50%"
           mobile-initial-y="55%"
           size="large"
@@ -312,7 +321,7 @@ const toggleFaq = (id) => {
         <ParallaxImage
           :src="parallaxImg2"
           alt="Montre de luxe"
-          initial-x="50%"
+          initial-x="60%"
           initial-y="50%"
           mobile-initial-y="55%"
           size="large"
@@ -328,7 +337,23 @@ const toggleFaq = (id) => {
         <ParallaxImage
           :src="parallaxImg3"
           alt="Montre de luxe"
-          initial-x="75%"
+          initial-x="80%"
+          initial-y="40%"
+          mobile-initial-y="45%"
+          size="large"
+          :scroll-speed="0.7"
+          :float-speed="0.55"
+          :float-amplitude="20"
+          :vertical-speed="0.4"
+          :vertical-amplitude="15"
+          :rotation-speed="0.3"
+          :rotation-amplitude="5"
+          :scale-value="0.7"
+        />
+        <ParallaxImage
+          :src="parallaxImg4"
+          alt="Montre de luxe"
+          initial-x="20%"
           initial-y="40%"
           mobile-initial-y="45%"
           size="large"

@@ -8,6 +8,7 @@
 
 - Dans formulaire de recherche préciser avec quoi être recontacté, email obligatoire 
 - Slider pour montant estimé de recherche de montre
+- Ajout des montres des dernières ventes réalisées
 
 - Analytics
      - Partage à antoine
@@ -22,3 +23,7 @@ Blog
 
 Hero image
     - images de montres
+
+- Typographies du site
+
+- Envoi d'email KO
