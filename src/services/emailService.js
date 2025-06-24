@@ -75,7 +75,13 @@ export function prepareEstimationFormData(form) {
 
   // Ajoute le type de formulaire
   formData.append('type', 'estimation')
-  
+
+  // Ajoute le mode de contact (plusieurs choix possibles)
+  const checked = Array.from(form.querySelectorAll('input[name="contact_mode[]"]:checked')).map(
+    (cb) => cb.value,
+  )
+  formData.append('contact_mode', checked.join(', '))
+
   return formData
 }
 
@@ -86,10 +92,15 @@ export function prepareEstimationFormData(form) {
  */
 export function prepareSearchFormData(form) {
   const formData = new FormData(form)
-  
+
   // Ajoute le type de formulaire
   formData.append('type', 'search')
-  
+
+  // Ajoute le mode de contact si présent
+  const contactMode =
+    form.querySelector('input[name="contact_mode"]:checked')?.value || 'pas de préférence'
+  formData.append('contact_mode', contactMode)
+
   return formData
 }
 

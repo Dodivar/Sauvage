@@ -87,28 +87,93 @@ onMounted(() => {
   // Preview photos files
   const fileInput = document.getElementById('attachments')
   const previewContainer = document.getElementById('preview-attachments-container')
+  let selectedFiles = []
 
-  fileInput.addEventListener('change', function () {
-    previewContainer.innerHTML = '' // Réinitialise les aperçus
-
-    const files = Array.from(fileInput.files)
-
-    files.forEach((file) => {
-      if (!file.type.startsWith('image/')) return
-
-      const reader = new FileReader()
-      reader.onload = function (e) {
+  function updatePreview() {
+    previewContainer.innerHTML = ''
+    selectedFiles.forEach((file, idx) => {
+      let previewEl
+      if (file.type.startsWith('image/')) {
+        previewEl = document.createElement('div')
+        previewEl.style.display = 'inline-block'
+        previewEl.style.position = 'relative'
+        previewEl.style.margin = '10px'
         const img = document.createElement('img')
-        img.src = e.target.result
+        img.src = URL.createObjectURL(file)
         img.style.maxWidth = '150px'
-        img.style.margin = '10px'
         img.style.borderRadius = '10px'
         img.style.boxShadow = '0 0 5px rgba(0,0,0,0.3)'
-        previewContainer.appendChild(img)
+        previewEl.appendChild(img)
+      } else if (file.type === 'application/pdf') {
+        previewEl = document.createElement('div')
+        previewEl.style.display = 'flex'
+        previewEl.style.alignItems = 'center'
+        previewEl.style.gap = '10px'
+        previewEl.style.background = '#e6f4ea'
+        previewEl.style.border = '1px solid #22c55e'
+        previewEl.style.borderRadius = '8px'
+        previewEl.style.padding = '10px 16px'
+        previewEl.style.margin = '10px 0'
+        previewEl.style.position = 'relative'
+        previewEl.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="32" height="32" class="text-primary">
+            <rect width="24" height="24" rx="4" fill="#22c55e"/>
+            <path d="M8 16h8M8 12h8M8 8h8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span style="color:#166534;font-weight:600;">${file.name}</span>
+        `
       }
-      reader.readAsDataURL(file)
+      // Ajout du bouton de suppression
+      const removeBtn = document.createElement('button')
+      removeBtn.type = 'button'
+      removeBtn.innerHTML = '&times;'
+      removeBtn.title = 'Supprimer'
+      removeBtn.style.position = 'absolute'
+      removeBtn.style.top = '4px'
+      removeBtn.style.right = '4px'
+      removeBtn.style.background = '#fff'
+      removeBtn.style.color = '#22c55e'
+      removeBtn.style.border = 'none'
+      removeBtn.style.borderRadius = '50%'
+      removeBtn.style.width = '24px'
+      removeBtn.style.height = '24px'
+      removeBtn.style.fontSize = '18px'
+      removeBtn.style.cursor = 'pointer'
+      removeBtn.style.boxShadow = '0 1px 4px rgba(0,0,0,0.08)'
+      removeBtn.addEventListener('click', () => {
+        selectedFiles.splice(idx, 1)
+        updatePreview()
+        updateInputFiles()
+      })
+      previewEl.appendChild(removeBtn)
+      previewContainer.appendChild(previewEl)
     })
+  }
+
+  function updateInputFiles() {
+    // Crée un nouvel objet DataTransfer pour mettre à jour l'input file
+    const dataTransfer = new DataTransfer()
+    selectedFiles.forEach((f) => dataTransfer.items.add(f))
+    fileInput.files = dataTransfer.files
+  }
+
+  fileInput.addEventListener('change', function () {
+    const newFiles = Array.from(fileInput.files)
+    // Ajoute les nouveaux fichiers sans doublons (par nom + taille)
+    newFiles.forEach((f) => {
+      if (!selectedFiles.some((sf) => sf.name === f.name && sf.size === f.size)) {
+        selectedFiles.push(f)
+      }
+    })
+    updatePreview()
+    updateInputFiles()
   })
+
+  // Initial preview si déjà des fichiers (rare mais possible)
+  if (fileInput.files.length > 0) {
+    selectedFiles = Array.from(fileInput.files)
+    updatePreview()
+  }
 })
 
 function ToMerci() {
@@ -386,6 +451,50 @@ const toggleFaq = (id) => {
                 />
               </div>
             </div>
+            <!-- Choix du mode de recontact -->
+            <div class="w-full">
+              <label class="block text-sm font-medium text-text-main mb-2"
+                >Comment souhaitez-vous être recontacté ?</label
+              >
+              <div class="flex flex-col md:flex-row gap-4 w-full">
+                <label class="inline-flex items-center w-full">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox accent-primary"
+                    name="contact_mode[]"
+                    value="pas de préférence"
+                  />
+                  <span class="ml-2">Pas de préférence</span>
+                </label>
+                <label class="inline-flex items-center w-full">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox accent-primary"
+                    name="contact_mode[]"
+                    value="email"
+                  />
+                  <span class="ml-2">Email</span>
+                </label>
+                <label class="inline-flex items-center w-full">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox accent-primary"
+                    name="contact_mode[]"
+                    value="whatsapp"
+                  />
+                  <span class="ml-2">WhatsApp</span>
+                </label>
+                <label class="inline-flex items-center w-full">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox accent-primary"
+                    name="contact_mode[]"
+                    value="sms"
+                  />
+                  <span class="ml-2">SMS</span>
+                </label>
+              </div>
+            </div>
             <div class="grid md:grid-cols-3 gap-6">
               <div>
                 <label class="block text-sm font-medium text-text-main mb-2" for="brand"
@@ -494,7 +603,7 @@ const toggleFaq = (id) => {
                   name="attachments"
                   type="file"
                   multiple
-                  accept="image/*"
+                  accept="image/*,application/pdf"
                   class="hidden"
                   id="attachments"
                 />
@@ -513,8 +622,15 @@ const toggleFaq = (id) => {
                     />
                   </svg>
                   <span class="text-primary font-medium">Cliquez pour ajouter des photos</span>
-                  <p class="text-gray-500 text-sm mt-1">PNG, JPG jusqu'à 10MB</p>
+                  <p class="text-gray-500 text-sm mt-1">PNG, JPG, PDF jusqu'à 10MB</p>
                 </label>
+              </div>
+              <!-- Message preuve d'achat -->
+              <div
+                class="w-full bg-green-50 border-l-4 border-primary text-primary font-semibold rounded-lg p-4 mt-4 text-center shadow-sm"
+              >
+                Merci d'ajouter <span class="underline">une photo de la preuve d'achat</span> de la
+                montre (facture, reçu, etc.).
               </div>
               <div id="preview-attachments-container"></div>
             </div>

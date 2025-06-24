@@ -1,8 +1,10 @@
 <script setup>
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { ref, onMounted } from 'vue'
 import { scrollAnimation } from '@/animation'
 import { handleFormSubmit, prepareSearchFormData } from '@/services/emailService'
+
+defineOptions({ name: 'RechercheMontre' })
 
 const router = useRouter()
 const isSubmitting = ref(false)
@@ -39,7 +41,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <section class="py-16 gradient-bg">
+  <section class="py-16 gradient-bg" name="RechercheMontre">
     <div class="max-w-4xl mx-auto px-4">
       <div class="mb-12 text-center">
         <h1 class="text-3xl font-bold text-text-main">Recherche personnalisée de montre</h1>
@@ -55,7 +57,9 @@ onMounted(() => {
         <form class="space-y-6" @submit="submitSearchForm">
           <div class="grid md:grid-cols-2 gap-6">
             <div>
-              <label class="block text-sm font-medium text-text-main mb-2" for="nickname">Prénom *</label>
+              <label class="block text-sm font-medium text-text-main mb-2" for="nickname"
+                >Prénom *</label
+              >
               <input
                 type="text"
                 name="nickname"
@@ -73,9 +77,9 @@ onMounted(() => {
               />
             </div>
           </div>
-		  
+
           <div class="grid md:grid gap-6">
-			<div>
+            <div>
               <label class="block text-sm font-medium text-text-main mb-2">Email *</label>
               <input
                 type="email"
@@ -84,7 +88,51 @@ onMounted(() => {
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
-		  </div>
+          </div>
+          <!-- Choix du mode de recontact -->
+          <div class="w-full">
+            <label class="block text-sm font-medium text-text-main mb-2"
+              >Comment souhaitez-vous être recontacté ?</label
+            >
+            <div class="flex flex-col md:flex-row gap-4 w-full">
+              <label class="inline-flex items-center w-full">
+                <input
+                  type="checkbox"
+                  class="form-checkbox accent-primary"
+                  name="contact_mode[]"
+                  value="pas de préférence"
+                />
+                <span class="ml-2">Pas de préférence</span>
+              </label>
+              <label class="inline-flex items-center w-full">
+                <input
+                  type="checkbox"
+                  class="form-checkbox accent-primary"
+                  name="contact_mode[]"
+                  value="email"
+                />
+                <span class="ml-2">Email</span>
+              </label>
+              <label class="inline-flex items-center w-full">
+                <input
+                  type="checkbox"
+                  class="form-checkbox accent-primary"
+                  name="contact_mode[]"
+                  value="whatsapp"
+                />
+                <span class="ml-2">WhatsApp</span>
+              </label>
+              <label class="inline-flex items-center w-full">
+                <input
+                  type="checkbox"
+                  class="form-checkbox accent-primary"
+                  name="contact_mode[]"
+                  value="sms"
+                />
+                <span class="ml-2">SMS</span>
+              </label>
+            </div>
+          </div>
 
           <div class="grid md:grid-cols-2 gap-6">
             <div>

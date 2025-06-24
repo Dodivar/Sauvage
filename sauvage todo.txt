@@ -7,3 +7,18 @@
 
 
 - Dans formulaire de recherche préciser avec quoi être recontacté, email obligatoire 
+- Slider pour montant estimé de recherche de montre
+
+- Analytics
+     - Partage à antoine
+     - Vérif temps réel prod
+
+Blog
+    - Vidéos et article ?
+    - Génération automatique
+    - Dashboard connecté, supabase ?
+    - Création et modification d'article 
+        - Ajout de vidéo
+
+Hero image
+    - images de montres

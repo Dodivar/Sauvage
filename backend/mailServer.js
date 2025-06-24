@@ -50,6 +50,11 @@ const formatEmailContent = (formData) => {
   content += `Nom: ${formData.name}\n`
   content += `Email: ${formData.email}\n`
   content += `Téléphone: ${formData.tel}\n`
+  let contactPref = formData.contact_mode || 'pas de préférence'
+  if (Array.isArray(contactPref)) {
+    contactPref = contactPref.join(', ')
+  }
+  content += `Préférence de contact: ${contactPref}\n`
 
   // Contenu spécifique au formulaire d'estimation
   if (formData.type === 'estimation') {
