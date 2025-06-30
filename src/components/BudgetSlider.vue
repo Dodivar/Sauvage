@@ -40,7 +40,7 @@ watch(range, (val) => {
       :max="max"
       :step="100"
       :tooltips="true"
-      :merge="200"
+      :merge="1000"
       :format="{ suffix: ' €', decimals: 0, thousand: ' ' }"
       class="w-full"
     />

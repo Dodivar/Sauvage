@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { scrollAnimation } from '@/animation'
 import { handleFormSubmit, prepareSearchFormData } from '@/services/emailService'
 import BudgetSlider from './BudgetSlider.vue'
@@ -11,6 +11,21 @@ const router = useRouter()
 const isSubmitting = ref(false)
 const errorMessage = ref('')
 const budgetRange = ref([1500, 15000])
+const loadingDots = ref('')
+let loadingInterval = null
+
+watch(isSubmitting, (val) => {
+  if (val) {
+    let count = 0
+    loadingInterval = setInterval(() => {
+      count = (count + 1) % 4
+      loadingDots.value = '.'.repeat(count)
+    }, 400)
+  } else {
+    loadingDots.value = ''
+    if (loadingInterval) clearInterval(loadingInterval)
+  }
+})
 
 async function submitSearchForm(event) {
   event.preventDefault()
@@ -80,14 +95,26 @@ onMounted(() => {
             </div>
           </div>
 
-          <div class="grid md:grid gap-6">
+          <div class="grid md:grid-cols-2 gap-6">
             <div>
-              <label class="block text-sm font-medium text-text-main mb-2">Email *</label>
+              <label class="block text-sm font-medium text-text-main mb-2" for="email"
+                >Email *</label
+              >
               <input
-                type="email"
                 name="email"
+                type="email"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                 required
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-text-main mb-2" for="tel"
+                >Téléphone</label
+              >
+              <input
+                name="tel"
+                type="tel"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
               />
             </div>
           </div>
@@ -174,7 +201,9 @@ onMounted(() => {
 
           <div class="grid md:grid-cols-2 gap-6">
             <div>
-              <label class="block text-sm font-medium text-text-main mb-2">État souhaité *</label>
+              <label class="block text-sm font-medium text-text-main mb-2" for="etat"
+                >État souhaité *</label
+              >
               <select
                 name="etat"
                 required
@@ -200,7 +229,7 @@ onMounted(() => {
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-text-main mb-2"
+            <label class="block text-sm font-medium text-text-main mb-2" for="message"
               >Commentaires ou précisions supplémentaires</label
             >
             <textarea
@@ -224,7 +253,7 @@ onMounted(() => {
             :disabled="isSubmitting"
             class="w-full bg-primary text-white py-4 px-8 rounded-lg font-semibold text-lg hover:bg-green-700 transition-all transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {{ isSubmitting ? 'Envoi en cours...' : 'Envoyer ma demande de recherche' }}
+            {{ isSubmitting ? `Envoi en cours${loadingDots}` : 'Envoyer ma demande de recherche' }}
           </button>
         </form>
       </div>

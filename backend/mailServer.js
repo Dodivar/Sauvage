@@ -61,11 +61,10 @@ const formatEmailContent = (formData) => {
     content += `\nType d'estimation: ${formData.estimationType}\n`
     content += `Marque: ${formData.brand}\n`
     content += `Modèle: ${formData.model}\n`
-    content += `Référence: ${formData.reference}\n`
+    content += `Numéro de série: ${formData.serienumber}\n`
     content += `Année: ${formData.year}\n`
     content += `État: ${formData.condition}\n`
     content += `Accessoires: ${formData.accessories}\n`
-    content += `Prix souhaité: ${formData.price}\n`
     content += `Possession: ${formData.possession}\n`
     content += `Série: ${formData.serie}\n`
     content += `Message: ${formData.message}\n`

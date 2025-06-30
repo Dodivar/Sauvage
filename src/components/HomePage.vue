@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { scrollAnimation } from '@/animation'
 import navitimerImg from '@/assets/watches/navitimer-b01-chronograph-43.png'
@@ -10,10 +10,26 @@ import parallaxImg4 from '@/assets/hero section img/image-Photoroom (2).png'
 import ParallaxImage from './ParallaxImage.vue'
 import TooltipInfo from './TooltipInfo.vue'
 import { handleFormSubmit, prepareEstimationFormData } from '@/services/emailService'
+import { createPreviewElement } from '@/services/imagePreviewService'
 
 const router = useRouter()
 const isSubmitting = ref(false)
 const errorMessage = ref('')
+const loadingDots = ref('')
+let loadingInterval = null
+
+watch(isSubmitting, (val) => {
+  if (val) {
+    let count = 0
+    loadingInterval = setInterval(() => {
+      count = (count + 1) % 4
+      loadingDots.value = '.'.repeat(count)
+    }, 400)
+  } else {
+    loadingDots.value = ''
+    if (loadingInterval) clearInterval(loadingInterval)
+  }
+})
 
 async function submitEstimationForm(event) {
   event.preventDefault()
@@ -94,40 +110,15 @@ onMounted(() => {
     previewContainer.innerHTML = ''
     // Trie : PDF d'abord, puis images
     const pdfFiles = selectedFiles.filter((f) => f.type === 'application/pdf')
-    const imgFiles = selectedFiles.filter((f) => f.type.startsWith('image/'))
+    const imgFiles = selectedFiles.filter(
+      (f) =>
+        f.type.startsWith('image/') ||
+        f.name.toLowerCase().endsWith('.heic') ||
+        f.type === 'image/heic',
+    )
     const allFiles = [...pdfFiles, ...imgFiles]
-    allFiles.forEach((file) => {
-      let previewEl
-      if (file.type.startsWith('image/')) {
-        previewEl = document.createElement('div')
-        previewEl.style.display = 'inline-block'
-        previewEl.style.position = 'relative'
-        previewEl.style.margin = '10px'
-        const img = document.createElement('img')
-        img.src = URL.createObjectURL(file)
-        img.style.maxWidth = '150px'
-        img.style.borderRadius = '10px'
-        img.style.boxShadow = '0 0 5px rgba(0,0,0,0.3)'
-        previewEl.appendChild(img)
-      } else if (file.type === 'application/pdf') {
-        previewEl = document.createElement('div')
-        previewEl.style.display = 'flex'
-        previewEl.style.alignItems = 'center'
-        previewEl.style.gap = '10px'
-        previewEl.style.background = '#e6f4ea'
-        previewEl.style.border = '1px solid #22c55e'
-        previewEl.style.borderRadius = '8px'
-        previewEl.style.padding = '10px 16px'
-        previewEl.style.margin = '10px 0'
-        previewEl.style.position = 'relative'
-        previewEl.innerHTML = `
-          <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor' width='32' height='32' class='text-primary'>
-            <rect width='24' height='24' rx='4' fill='#22c55e'/>
-            <path d='M8 16h8M8 12h8M8 8h8' stroke='#fff' stroke-width='2' stroke-linecap='round'/>
-          </svg>
-          <span style='color:#166534;font-weight:600;'>${file.name}</span>
-        `
-      }
+    allFiles.forEach(async (file) => {
+      const previewEl = await createPreviewElement(file)
       // Ajout du bouton de suppression
       const removeBtn = document.createElement('button')
       removeBtn.type = 'button'
@@ -573,10 +564,9 @@ const toggleFaq = (id) => {
                 />
               </div>
               <input
-                name="serie"
+                name="serienumber"
                 type="text"
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                required
               />
             </div>
             <!-- État de possession -->
@@ -660,10 +650,11 @@ const toggleFaq = (id) => {
               <div id="preview-attachments-container"></div>
             </div>
             <div>
-              <label class="block text-sm font-medium text-text-main mb-2"
+              <label class="block text-sm font-medium text-text-main mb-2" for="message"
                 >Message (optionnel)</label
               >
               <textarea
+                name="message"
                 rows="4"
                 placeholder="Précisez si vous êtes le premier propriétaire de la montre, son histoire..."
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
@@ -680,7 +671,7 @@ const toggleFaq = (id) => {
               :disabled="isSubmitting"
               class="w-full bg-primary text-white py-4 px-8 rounded-lg font-semibold text-lg hover:bg-green-700 transition-all transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {{ isSubmitting ? 'Envoi en cours...' : 'Faire estimer ma montre' }}
+              {{ isSubmitting ? `Envoi en cours${loadingDots}` : 'Faire estimer ma montre' }}
             </button>
           </form>
         </div>
@@ -722,7 +713,7 @@ const toggleFaq = (id) => {
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
-                  d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                  d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10l-8 4"
                 />
               </svg>
             </div>
@@ -1286,5 +1277,14 @@ const toggleFaq = (id) => {
 
 .faq-button:hover {
   background-color: rgba(0, 0, 0, 0.02);
+}
+
+@keyframes heic-spin {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
 }
 </style>
