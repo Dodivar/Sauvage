@@ -1,20 +1,19 @@
 <script setup>
 import { onMounted, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
 import { scrollAnimation } from '@/animation'
-import navitimerImg from '@/assets/watches/navitimer-b01-chronograph-43.png'
+import navitimerImg from '@/assets/hero section img/navitimer-b01-chronograph-43.png'
 import parallaxImg1 from '@/assets/hero section img/montre-tag-heuer-monaco-calibre-11.png'
 import parallaxImg2 from '@/assets/hero section img/Rolex.png'
 import parallaxImg3 from '@/assets/hero section img/cartier-santos.png'
 import parallaxImg4 from '@/assets/hero section img/image-Photoroom (2).png'
 import ParallaxImage from './ParallaxImage.vue'
-import TooltipInfo from './TooltipInfo.vue'
-import { handleFormSubmit, prepareEstimationFormData } from '@/services/emailService'
 import { createPreviewElement } from '@/services/imagePreviewService'
+import FaqSection from './Faq.vue'
+import { WHATSAPP_NUMBER } from '@/config'
+import CarouselVentes from './CarouselVentes.vue'
+import EstimationForm from './EstimationForm.vue'
 
-const router = useRouter()
 const isSubmitting = ref(false)
-const errorMessage = ref('')
 const loadingDots = ref('')
 let loadingInterval = null
 
@@ -31,37 +30,6 @@ watch(isSubmitting, (val) => {
   }
 })
 
-async function submitEstimationForm(event) {
-  event.preventDefault()
-  isSubmitting.value = true
-  errorMessage.value = ''
-
-  try {
-    await handleFormSubmit(
-      event.target,
-      prepareEstimationFormData,
-      () => {
-        ToMerci()
-      },
-      (error) => {
-        errorMessage.value =
-          error.message ||
-          "Une erreur s'est produite lors de l'envoi du formulaire. Veuillez réessayer."
-        console.error('Erreur détaillée:', error)
-      },
-    )
-  } catch (error) {
-    errorMessage.value =
-      error.message ||
-      "Une erreur s'est produite lors de l'envoi du formulaire. Veuillez réessayer."
-    console.error('Erreur détaillée:', error)
-  } finally {
-    isSubmitting.value = false
-  }
-}
-
-const whatsapp = ref('+33612843926')
-
 onMounted(() => {
   scrollAnimation()
 
@@ -74,32 +42,6 @@ onMounted(() => {
       element.style.transform = 'translateY(' + scrollPosition * 0.5 * speed + 'px)'
     })
   })
-
-  // Auto-scroll Script
-  const carousel = document.getElementById('sales-carousel')
-  if (carousel != null) {
-    let autoScrollActive = true
-
-    function startAutoScroll() {
-      if (!autoScrollActive) return
-      carousel.scrollBy({ left: 1, behavior: 'smooth' })
-    }
-
-    // Scroll every 30ms for slow smooth effect
-    let scrollInterval = setInterval(startAutoScroll, 30)
-
-    // Stop auto-scroll on user interaction
-    ;['wheel', 'touchstart', 'mousedown'].forEach((event) => {
-      carousel.addEventListener(
-        event,
-        () => {
-          autoScrollActive = false
-          clearInterval(scrollInterval)
-        },
-        { once: true },
-      )
-    })
-  }
 
   // Preview photos files
   const fileInput = document.getElementById('attachments')
@@ -175,73 +117,6 @@ onMounted(() => {
     updatePreview()
   }
 })
-
-function ToMerci() {
-  router.push({ path: '/merci', query: { from: 'estimation' } })
-}
-
-// FAQ data
-const faqItems = [
-  {
-    id: 1,
-    question: "L'estimation est-elle vraiment gratuite ?",
-    answer:
-      "Oui, l'estimation est <strong>100 % gratuite et sans aucun engagement</strong>. Vous êtes libre d'accepter ou de refuser notre proposition, sans aucune pression.",
-  },
-  {
-    id: 2,
-    question: "Comment est calculée l'estimation de ma montre ?",
-    answer:
-      "Nous basons notre estimation sur l'état de votre montre, sa cote actuelle sur le marché (Chrono24, ventes aux enchères, etc.), sa rareté, et la présence de la boîte/papiers. Nous vous fournissons une estimation transparente et argumentée.",
-  },
-  {
-    id: 3,
-    question: 'Dois-je fournir la boîte et les papiers ?',
-    answer:
-      "Ce n'est pas obligatoire, mais cela peut <strong>augmenter la valeur</strong> de votre montre. Nous acceptons également les montres sans papiers, à condition qu'elles soient authentiques.",
-  },
-  {
-    id: 4,
-    question: 'Comment puis-je être sûr(e) que vous êtes un professionnel sérieux ?',
-    answer:
-      'Notre activité est déclarée (SIRET visible sur le site), et nous avons déjà accompagné de nombreux clients satisfaits. Nous vous invitons à consulter nos avis Google, à vérifier notre profil professionnel et à nous contacter pour toute question.',
-  },
-  {
-    id: 5,
-    question:
-      'Je ne suis pas sûr(e) de vouloir vendre tout de suite. Puis-je quand même demander une estimation ?',
-    answer:
-      "Absolument. Vous pouvez obtenir une estimation et <strong>revenir vers nous plus tard</strong> si vous changez d'avis. Nous ne conservons vos données que pour vous recontacter si vous le souhaitez.",
-  },
-  {
-    id: 6,
-    question: 'Rachetez-vous toutes les marques de montres ?',
-    answer:
-      "Nous rachetons principalement les <strong>montres de marques</strong> comme Rolex, Omega, Cartier, Breitling, Audemars Piguet, Patek Philippe, etc. Si vous avez un doute, n'hésitez pas à nous envoyer les informations, nous vous répondrons rapidement.",
-  },
-  {
-    id: 7,
-    question: 'Comment se déroule le processus de vente ?',
-    answer: `<ul class="list-decimal">
-      <li>Vous remplissez notre formulaire en ligne (ou nous contactez directement).</li>
-      <li>Nous vous envoyons une estimation sous 24h.</li>
-      <li>Si vous acceptez, nous organisons la remise en main propre.</li>
-      <li>Une fois la montre vérifiée, vous recevez le paiement immédiat.</li>
-    </ul>`,
-  },
-  {
-    id: 8,
-    question: "Proposez vous d'autres services ?",
-    answer:
-      'Toute à fait ! Nous proposons également : La vente de montres de collection et de prestige Le dépôt-vente pour mettre en vente votre montre en toute sécurité La recherche personnalisée pour vous aider à trouver la montre de vos rêves selon vos critères spécifiques Notre expertise nous permet de vous offrir un service complet et sur-mesure, que vous souhaitiez vendre, acheter ou confier votre montre.',
-  },
-]
-
-const activeFaqId = ref(null)
-
-const toggleFaq = (id) => {
-  activeFaqId.value = activeFaqId.value === id ? null : id
-}
 </script>
 
 <template>
@@ -408,275 +283,7 @@ const toggleFaq = (id) => {
     </section>
 
     <!-- Formulaire d'estimation -->
-    <section id="estimation" class="py-20 gradient-bg">
-      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-4">
-            Estimation gratuite de votre montre
-          </h2>
-          <p class="text-xl text-gray-600">
-            Remplissez ce formulaire pour recevoir une estimation personnalisée
-          </p>
-        </div>
-        <div class="bg-white rounded-2xl shadow-2xl p-8">
-          <form class="space-y-6" id="form-estimation" @submit="submitEstimationForm">
-            <div class="grid md:grid-cols-2 gap-6">
-              <div>
-                <label class="block text-sm font-medium text-text-main mb-2" for="nickname"
-                  >Prénom *</label
-                >
-                <input
-                  name="nickname"
-                  type="text"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                  required
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-text-main mb-2" for="name"
-                  >NOM *</label
-                >
-                <input
-                  name="name"
-                  type="text"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                  required
-                />
-              </div>
-            </div>
-            <div class="grid md:grid-cols-2 gap-6">
-              <div>
-                <label class="block text-sm font-medium text-text-main mb-2" for="email"
-                  >Email *</label
-                >
-                <input
-                  name="email"
-                  type="email"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                  required
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-text-main mb-2" for="tel"
-                  >Téléphone</label
-                >
-                <input
-                  name="tel"
-                  type="tel"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                />
-              </div>
-            </div>
-            <!-- Choix du mode de recontact -->
-            <div class="w-full">
-              <label class="block text-sm font-medium text-text-main mb-2"
-                >Comment souhaitez-vous être recontacté ?</label
-              >
-              <div class="flex flex-col md:flex-row gap-4 w-full">
-                <label class="inline-flex items-center w-full">
-                  <input
-                    type="checkbox"
-                    class="form-checkbox accent-primary"
-                    name="contact_mode[]"
-                    value="pas de préférence"
-                  />
-                  <span class="ml-2">Pas de préférence</span>
-                </label>
-                <label class="inline-flex items-center w-full">
-                  <input
-                    type="checkbox"
-                    class="form-checkbox accent-primary"
-                    name="contact_mode[]"
-                    value="email"
-                  />
-                  <span class="ml-2">Email</span>
-                </label>
-                <label class="inline-flex items-center w-full">
-                  <input
-                    type="checkbox"
-                    class="form-checkbox accent-primary"
-                    name="contact_mode[]"
-                    value="whatsapp"
-                  />
-                  <span class="ml-2">WhatsApp</span>
-                </label>
-                <label class="inline-flex items-center w-full">
-                  <input
-                    type="checkbox"
-                    class="form-checkbox accent-primary"
-                    name="contact_mode[]"
-                    value="sms"
-                  />
-                  <span class="ml-2">SMS</span>
-                </label>
-              </div>
-            </div>
-            <div class="grid md:grid-cols-3 gap-6">
-              <div>
-                <label class="block text-sm font-medium text-text-main mb-2" for="brand"
-                  >Marque *</label
-                >
-                <input
-                  name="brand"
-                  type="text"
-                  placeholder="Ex: Rolex, Patek Philippe..."
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                  required
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-text-main mb-2" for="model"
-                  >Modèle</label
-                >
-                <input
-                  name="model"
-                  type="text"
-                  placeholder="Ex: Submariner, Nautilus..."
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-text-main mb-2" for="year"
-                  >Année</label
-                >
-                <input
-                  name="year"
-                  type="number"
-                  min="1900"
-                  max="2099"
-                  step="1"
-                  placeholder="2020"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                />
-              </div>
-            </div>
-            <!-- Numéro de série -->
-            <div>
-              <div class="flex align-center">
-                <label
-                  class="block text-sm font-medium text-text-main mb-2"
-                  title="Le numéro de série sera examiné pour garantir l'authenticité de la montre"
-                  for="serienumber"
-                  >Numéro de série</label
-                >
-                <TooltipInfo
-                  tooltip-text="Renseigner le numéro de série nous permettra de garantir l'authenticité de la montre"
-                />
-              </div>
-              <input
-                name="serienumber"
-                type="text"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-              />
-            </div>
-            <!-- État de possession -->
-            <div>
-              <label class="block text-sm font-medium text-text-main mb-2" for="possession"
-                >État de possession *</label
-              >
-              <select
-                name="possession"
-                required
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary"
-              >
-                <option value="Full set (boîte + papiers)">Full set (boîte + papiers)</option>
-                <option value="Papiers d'origine">Papiers d'origine</option>
-                <option value="Boîte d'origine">Boîte d'origine</option>
-                <option value="Montre seule">Montre seule</option>
-              </select>
-            </div>
-            <!-- Etat général  -->
-            <div>
-              <label class="block text-sm font-medium text-text-main mb-2" for="etat"
-                >État général *</label
-              >
-              <select
-                name="etat"
-                required
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary"
-              >
-                <option value="Neuf/jamaus portée">Neuf/jamais portée</option>
-                <option value="Très bon état">Très bon état</option>
-                <option value="Bon état">Bon état</option>
-                <option value="Usage courant">Usage courant</option>
-              </select>
-            </div>
-            <!-- Photos -->
-            <div>
-              <div class="flex align-center">
-                <label class="block text-sm font-medium text-text-main mb-2"
-                  >Photos de votre montre</label
-                >
-                <TooltipInfo
-                  tooltip-text="Un maximum de photos nous permettra d'estimer au mieux votre montre"
-                />
-              </div>
-              <div
-                class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-colors"
-              >
-                <input
-                  name="attachments"
-                  type="file"
-                  multiple
-                  accept="image/*,application/pdf"
-                  class="hidden"
-                  id="attachments"
-                />
-                <label for="attachments" class="cursor-pointer">
-                  <svg
-                    class="mx-auto h-12 w-12 text-gray-400 mb-4"
-                    stroke="currentColor"
-                    fill="none"
-                    viewBox="0 0 48 48"
-                  >
-                    <path
-                      d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                  <span class="text-primary font-medium">Cliquez pour ajouter des photos</span>
-                  <p class="text-gray-500 text-sm mt-1">PNG, JPG, PDF jusqu'à 10MB</p>
-                </label>
-              </div>
-              <!-- Message preuve d'achat -->
-              <div
-                class="w-full bg-green-50 border-l-4 border-primary text-primary font-semibold rounded-lg p-4 mt-4 text-center shadow-sm"
-              >
-                Merci d'ajouter <span class="underline">une photo de la preuve d'achat</span> de la
-                montre (facture, reçu, etc.).
-              </div>
-              <div id="preview-attachments-container"></div>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-text-main mb-2" for="message"
-                >Message (optionnel)</label
-              >
-              <textarea
-                name="message"
-                rows="4"
-                placeholder="Précisez si vous êtes le premier propriétaire de la montre, son histoire..."
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-              ></textarea>
-            </div>
-            <p class="text-sm text-gray-600 mb-4 italic">
-              * Les champs marqués d'un astérisque sont obligatoires
-            </p>
-            <div v-if="errorMessage" class="text-red-500 text-sm mb-4">
-              {{ errorMessage }}
-            </div>
-            <button
-              type="submit"
-              :disabled="isSubmitting"
-              class="w-full bg-primary text-white py-4 px-8 rounded-lg font-semibold text-lg hover:bg-green-700 transition-all transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {{ isSubmitting ? `Envoi en cours${loadingDots}` : 'Faire estimer ma montre' }}
-            </button>
-          </form>
-        </div>
-      </div>
-    </section>
+    <EstimationForm />
 
     <!-- Sécurité du service -->
     <section class="py-20 bg-white">
@@ -762,7 +369,7 @@ const toggleFaq = (id) => {
     </section>
 
     <!-- Avis et Témoignages -->
-    <section id="temoignages" class="py-20 bg-white">
+    <section id="temoignages" class="py-20 gradient-bg">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
           <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-4">
@@ -958,110 +565,6 @@ const toggleFaq = (id) => {
       </div>
     </section>
 
-    <!-- Dernières ventes -->
-    <section class="py-20 bg-gray-50">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-4">
-            Dernières ventes réalisées
-          </h2>
-          <p class="text-xl text-gray-600">Voici quelques montres récemment vendues</p>
-        </div>
-        <div class="overflow-x-auto hide-scrollbar scroll-smooth p-8" id="sales-carousel">
-          <div class="flex space-x-6 min-w-full">
-            <!-- Slide 1 -->
-            <div
-              class="flex-shrink-0 w-60 bg-white rounded-xl shadow-md hover:shadow-lg p-4 text-center transition-all duration-300 -z-1"
-            >
-              <img
-                src="../assets/sales/IMG_6983.jpg"
-                alt="Rolex Submariner"
-                class="rounded-lg mb-4 mx-auto h-48 w-96 object-contain"
-              />
-              <h4 class="text-lg font-semibold text-text-main">Rolex Submariner</h4>
-            </div>
-            <!-- Slide 2 -->
-            <div
-              class="flex-shrink-0 w-60 bg-white rounded-xl shadow-md hover:shadow-lg p-4 text-center transition-all duration-300 -z-1"
-            >
-              <img
-                src="https://placehold.co/200x200"
-                alt="Omega Speedmaster"
-                class="rounded-lg mb-4 mx-auto h-48 w-96 object-contain"
-              />
-              <h4 class="text-lg font-semibold text-text-main">Omega Speedmaster</h4>
-            </div>
-            <!-- Slide 3 -->
-            <div
-              class="flex-shrink-0 w-60 bg-white rounded-xl shadow-md hover:shadow-lg p-4 text-center transition-all duration-300 -z-1"
-            >
-              <img
-                src="https://placehold.co/200x200"
-                alt="Patek Nautilus"
-                class="rounded-lg mb-4 mx-auto"
-              />
-              <h4 class="text-lg font-semibold text-text-main">Patek Philippe Nautilus</h4>
-            </div>
-            <!-- Slide 4 -->
-            <div
-              class="flex-shrink-0 w-60 bg-white rounded-xl shadow-md hover:shadow-lg p-4 text-center transition-all duration-300 -z-1"
-            >
-              <img
-                src="https://placehold.co/200x200"
-                alt="Cartier Santos"
-                class="rounded-lg mb-4 mx-auto"
-              />
-              <h4 class="text-lg font-semibold text-text-main">Cartier Santos</h4>
-            </div>
-            <!-- Slide 5 -->
-            <div
-              class="flex-shrink-0 w-60 bg-white rounded-xl shadow-md hover:shadow-lg p-4 text-center transition-all duration-300 -z-1"
-            >
-              <img
-                src="https://placehold.co/200x200"
-                alt="Breitling Navitimer"
-                class="rounded-lg mb-4 mx-auto"
-              />
-              <h4 class="text-lg font-semibold text-text-main">Breitling Navitimer</h4>
-            </div>
-            <!-- Slide 6 -->
-            <div
-              class="flex-shrink-0 w-60 bg-white rounded-xl shadow-md hover:shadow-lg p-4 text-center transition-all duration-300 -z-1"
-            >
-              <img
-                src="https://placehold.co/200x200"
-                alt="Audemars Royal Oak"
-                class="rounded-lg mb-4 mx-auto"
-              />
-              <h4 class="text-lg font-semibold text-text-main">Audemars Piguet Royal Oak</h4>
-            </div>
-            <!-- Slide 7 -->
-            <div
-              class="flex-shrink-0 w-60 bg-white rounded-xl shadow-md hover:shadow-lg p-4 text-center transition-all duration-300 -z-1"
-            >
-              <img
-                src="https://placehold.co/200x200"
-                alt="TAG Heuer Carrera"
-                class="rounded-lg mb-4 mx-auto"
-              />
-              <h4 class="text-lg font-semibold text-text-main">TAG Heuer Carrera</h4>
-            </div>
-            <!-- Slide 8 -->
-            <div
-              class="flex-shrink-0 w-60 bg-white rounded-xl shadow-md hover:shadow-lg p-4 text-center transition-all duration-300 -z-1"
-            >
-              <img
-                src="https://placehold.co/200x200"
-                alt="Jaeger-LeCoultre Reverso"
-                class="rounded-lg mb-4 mx-auto"
-              />
-              <h4 class="text-lg font-semibold text-text-main">Jaeger-LeCoultre Reverso</h4>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- Nos services -->
     <section id="services" class="py-20 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1135,50 +638,11 @@ const toggleFaq = (id) => {
       </div>
     </section>
 
+    <!-- Dernières ventes -->
+    <CarouselVentes />
+
     <!-- FAQ -->
-    <section id="faq" class="py-20 gradient-bg">
-      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-          <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-4">Questions fréquentes</h2>
-          <p class="text-xl text-gray-600">Vos questions les plus fréquentes</p>
-        </div>
-        <div class="space-y-2">
-          <div v-for="item in faqItems" :key="item.id" class="bg-white rounded-2xl shadow-sm">
-            <button
-              class="w-full text-left p-6 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-inset faq-button"
-              @click="toggleFaq(item.id)"
-            >
-              <div class="flex justify-between items-center">
-                <h3 class="text-lg font-semibold">{{ item.question }}</h3>
-                <svg
-                  class="h-5 w-5 transform transition-transform duration-300"
-                  :class="{ 'rotate-180': activeFaqId === item.id }"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </div>
-            </button>
-            <div
-              class="faq-content overflow-hidden transition-all duration-300 ease-in-out"
-              :class="{
-                'max-h-0': activeFaqId !== item.id,
-                'max-h-[500px]': activeFaqId === item.id,
-              }"
-            >
-              <div class="px-6 pb-6" v-html="item.answer"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <FaqSection />
 
     <!-- Suivez-nous Section -->
     <section class="py-20 bg-white">
@@ -1226,7 +690,7 @@ const toggleFaq = (id) => {
                 </svg>
               </a>
               <a
-                :href="'https://wa.me/' + whatsapp"
+                :href="'https://wa.me/' + WHATSAPP_NUMBER"
                 target="_blank"
                 class="bg-primary text-white p-3 rounded-full hover:bg-green-700 transition-colors"
               >
@@ -1267,18 +731,6 @@ const toggleFaq = (id) => {
 </template>
 
 <style scoped>
-.faq-content {
-  transition: max-height 0.3s ease-in-out;
-}
-
-.faq-button {
-  transition: background-color 0.2s ease-in-out;
-}
-
-.faq-button:hover {
-  background-color: rgba(0, 0, 0, 0.02);
-}
-
 @keyframes heic-spin {
   0% {
     transform: translate(-50%, -50%) rotate(0deg);

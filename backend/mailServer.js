@@ -56,22 +56,21 @@ const formatEmailContent = (formData) => {
   }
   content += `Préférence de contact: ${contactPref}\n`
 
+  content += `\nMarque: ${formData.brand}\n`
+  content += `Modèle: ${formData.model}\n`
+
   // Contenu spécifique au formulaire d'estimation
   if (formData.type === 'estimation') {
-    content += `\nType d'estimation: ${formData.estimationType}\n`
-    content += `Marque: ${formData.brand}\n`
-    content += `Modèle: ${formData.model}\n`
+    content += `Type d'estimation: ${formData.estimationType}\n`
     content += `Numéro de série: ${formData.serienumber}\n`
     content += `Année: ${formData.year}\n`
     content += `État: ${formData.condition}\n`
     content += `Accessoires: ${formData.accessories}\n`
     content += `Possession: ${formData.possession}\n`
     content += `Série: ${formData.serie}\n`
-    content += `Message: ${formData.message}\n`
   }
   // Contenu spécifique au formulaire de recherche personnalisée
   else if (formData.type === 'search') {
-    content += `\nType de montre: ${formData.watchType || ''}\n`
     if (formData.budget_min && formData.budget_max) {
       content += `Budget: ${formData.budget_min} € à ${formData.budget_max} €\n`
     } else if (formData.budget_min) {
@@ -80,9 +79,9 @@ const formatEmailContent = (formData) => {
       content += `Budget maximum: ${formData.budget_max} €\n`
     }
     content += `État souhaité: ${formData.condition}\n`
-    content += `Message: ${formData.message}\n`
   }
 
+  content += `\nMessage: ${formData.message}\n`
   return content
 }
 

@@ -170,7 +170,7 @@
               <a
                 :href="
                   'https://wa.me/' +
-                  whatsapp +
+                  WHATSAPP_NUMBER +
                   '?text=' +
                   encodeURIComponent(
                     `Bonjour, je suis intéressé par la montre ${watch.name} (Réf. ${watch.reference}) au prix de ${formatPrice(watch.price)}`,
@@ -189,7 +189,7 @@
               <a
                 :href="
                   'mailto:' +
-                  email +
+                  EMAIL_CONTACT +
                   '?subject=' +
                   encodeURIComponent(`Demande d'information - ${watch.name}`) +
                   '&body=' +
@@ -370,10 +370,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { scrollAnimation } from '@/animation'
-
-// Contact info
-const email = ref('contact@sauvage.fr')
-const whatsapp = ref('+33612843926')
+import { WHATSAPP_NUMBER, EMAIL_CONTACT } from '@/config'
 
 // Current image index for slider
 const currentImageIndex = ref(0)

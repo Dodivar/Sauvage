@@ -19,109 +19,89 @@ const handleClickOutside = (event) => {
     triggerRef.value &&
     !triggerRef.value.contains(event.target)
   ) {
-    const tooltip = tooltipRef.value
-    tooltip.classList.remove('show')
-    delete tooltip.dataset.clicked
+    hideTooltip()
+  }
+}
+
+function showTooltip() {
+  if (tooltipRef.value) {
+    tooltipRef.value.classList.add('show')
+    tooltipRef.value.dataset.clicked = 'true'
+    positionTooltip()
+  }
+}
+
+function hideTooltip() {
+  if (tooltipRef.value) {
+    tooltipRef.value.classList.remove('show')
+    delete tooltipRef.value.dataset.clicked
+  }
+}
+
+function toggleTooltip(e) {
+  e.preventDefault()
+  e.stopPropagation()
+  if (tooltipRef.value.classList.contains('show')) {
+    hideTooltip()
+  } else {
+    showTooltip()
+  }
+}
+
+function handleMouseEnter() {
+  showTooltip()
+}
+
+function handleMouseLeave() {
+  hideTooltip()
+}
+
+function positionTooltip() {
+  if (!tooltipRef.value) return
+  const trigger = triggerRef.value
+  const tooltip = tooltipRef.value
+  const tooltipContent = tooltip.querySelector('.tooltip-content')
+  if (!trigger || !tooltipContent) return
+  const triggerRect = trigger.getBoundingClientRect()
+  const tooltipRect = tooltipContent.getBoundingClientRect()
+  const viewportWidth = window.innerWidth
+  tooltip.classList.remove('tooltip-left', 'tooltip-right', 'tooltip-center')
+  if (window.innerWidth <= 640) {
+    tooltip.classList.add('tooltip-center')
+  } else {
+    if (triggerRect.left + tooltipRect.width > viewportWidth) {
+      tooltip.classList.add('tooltip-right')
+    } else if (triggerRect.left - tooltipRect.width < 0) {
+      tooltip.classList.add('tooltip-left')
+    } else {
+      tooltip.classList.add('tooltip-center')
+    }
   }
 }
 
 onMounted(() => {
   window.addEventListener('click', handleClickOutside)
-  window.addEventListener('touchstart', handleClickOutside)
-  tooltipTriggers()
+  window.addEventListener('resize', positionTooltip)
+  if (triggerRef.value) {
+    triggerRef.value.addEventListener('mouseenter', handleMouseEnter)
+    triggerRef.value.addEventListener('mouseleave', handleMouseLeave)
+    triggerRef.value.addEventListener('click', toggleTooltip)
+  }
 })
 
 onUnmounted(() => {
   window.removeEventListener('click', handleClickOutside)
-  window.removeEventListener('touchstart', handleClickOutside)
+  window.removeEventListener('resize', positionTooltip)
+  if (triggerRef.value) {
+    triggerRef.value.removeEventListener('mouseenter', handleMouseEnter)
+    triggerRef.value.removeEventListener('mouseleave', handleMouseLeave)
+    triggerRef.value.removeEventListener('click', toggleTooltip)
+  }
 })
-
-// Sélectionner tous les éléments avec la classe 'tooltip-trigger'
-function tooltipTriggers() {
-  const tooltipTriggers = document.querySelectorAll('.tooltip-trigger')
-
-  tooltipTriggers.forEach((trigger) => {
-    const tooltip = trigger.nextElementSibling
-    const tooltipContent = tooltip.querySelector('.tooltip-content')
-
-    // Fonction pour afficher le tooltip
-    const showTooltip = () => {
-      tooltip.classList.add('show')
-
-      // Calculer la position optimale
-      const triggerRect = trigger.getBoundingClientRect()
-      const tooltipRect = tooltipContent.getBoundingClientRect()
-      const viewportWidth = window.innerWidth
-
-      // Réinitialiser les classes de position
-      tooltip.classList.remove('tooltip-left', 'tooltip-right', 'tooltip-center')
-
-      // Vérifier si le tooltip dépasse à droite
-      if (triggerRect.left + tooltipRect.width > viewportWidth) {
-        tooltip.classList.add('tooltip-right')
-      }
-      // Vérifier si le tooltip dépasse à gauche
-      else if (triggerRect.left - tooltipRect.width < 0) {
-        tooltip.classList.add('tooltip-left')
-      }
-      // Sinon centrer par rapport au trigger
-      else {
-        tooltip.classList.add('tooltip-center')
-      }
-    }
-
-    // Fonction pour cacher le tooltip
-    const hideTooltip = () => {
-      tooltip.classList.remove('show')
-      delete tooltip.dataset.clicked
-    }
-
-    // Gestionnaire d'événements pour le survol
-    trigger.addEventListener('mouseenter', showTooltip)
-    trigger.addEventListener('mouseleave', hideTooltip)
-
-    // Gestionnaire d'événements pour le clic
-    trigger.addEventListener('click', (e) => {
-      e.preventDefault()
-      e.stopPropagation()
-      if (tooltip.classList.contains('show')) {
-        hideTooltip()
-      } else {
-        showTooltip()
-        tooltip.dataset.clicked = 'true'
-      }
-    })
-
-    // Gestionnaire d'événements pour le toucher
-    trigger.addEventListener('touchstart', (e) => {
-      e.preventDefault()
-      e.stopPropagation()
-      if (tooltip.classList.contains('show')) {
-        hideTooltip()
-      } else {
-        showTooltip()
-        tooltip.dataset.clicked = 'true'
-      }
-    })
-
-    // Gestionnaire pour le survol du tooltip lui-même
-    tooltip.addEventListener('mouseenter', () => {
-      if (tooltip.dataset.clicked) {
-        tooltip.classList.add('show')
-      }
-    })
-
-    tooltip.addEventListener('mouseleave', () => {
-      if (tooltip.dataset.clicked) {
-        hideTooltip()
-      }
-    })
-  })
-}
 </script>
 
 <template>
-  <div class="relative ml-2">
+  <div class="relative">
     <i
       ref="triggerRef"
       class="fas fa-question-circle tooltip-trigger text-gray-400 hover:text-gray-600 cursor-help text-lg font-bold"

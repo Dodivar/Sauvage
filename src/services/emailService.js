@@ -36,9 +36,7 @@ export const sendEmailWithRetry = async (endpoint, formData, maxRetries = 3) => 
       retries++
 
       if (retries === maxRetries) {
-        throw new Error(
-          'Le serveur met du temps à démarrer. Veuillez réessayer dans quelques instants.',
-        )
+        throw new Error("Une erreur s'est produite, veuillez réessayer dans quelques instants.")
       }
 
       // Attendre avant de réessayer

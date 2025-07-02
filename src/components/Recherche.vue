@@ -165,24 +165,24 @@ onMounted(() => {
 
           <div class="grid md:grid-cols-2 gap-6">
             <div>
-              <label class="block text-sm font-medium text-text-main mb-2"
+              <label class="block text-sm font-medium text-text-main mb-2" for="brand"
                 >Marque souhaitée *</label
               >
               <input
                 type="text"
-                name="marque"
+                name="brand"
                 required
                 placeholder="Ex : Rolex, Patek Philippe..."
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
             <div>
-              <label class="block text-sm font-medium text-text-main mb-2"
+              <label class="block text-sm font-medium text-text-main mb-2" for="model"
                 >Modèle spécifique (si connu)</label
               >
               <input
                 type="text"
-                name="modele"
+                name="model"
                 placeholder="Ex : Daytona, Nautilus..."
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               />
@@ -201,11 +201,11 @@ onMounted(() => {
 
           <div class="grid md:grid-cols-2 gap-6">
             <div>
-              <label class="block text-sm font-medium text-text-main mb-2" for="etat"
+              <label class="block text-sm font-medium text-text-main mb-2" for="condition"
                 >État souhaité *</label
               >
               <select
-                name="etat"
+                name="condition"
                 required
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary"
               >
