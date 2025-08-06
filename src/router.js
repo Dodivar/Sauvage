@@ -1,4 +1,4 @@
-import { createWebHashHistory, createRouter } from 'vue-router'
+import { createWebHashHistory, createWebHistory, createRouter } from 'vue-router'
 
 import HomeView from './components/HomePage.vue'
 import Merci from './components/Merci.vue'
@@ -11,13 +11,13 @@ const routes = [
   { path: '/', component: HomeView },
   { path: '/merci', component: Merci },
   { path: '/recherche', component: Recherche },
-  { path: '/depot-vente', component: DepotVente },
+  // { path: '/depot-vente', component: DepotVente },
   { path: '/collection', component: WatchesCollection },
   { path: '/watch/:id', component: WatchDetail },
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(), //createWebHashHistory(),
   routes,
   scrollBehavior(to, from, savedPosition) {
     if (to.hash) {

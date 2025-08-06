@@ -575,7 +575,8 @@ onMounted(() => {
           </p>
         </div>
 
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- md:grid-cols-2 lg:grid-cols-4 -->
+        <div class="grid md:grid-cols-3 gap-8">
           <!-- Estimation gratuite -->
           <div class="bg-gray-50 rounded-2xl p-6 text-center hover:shadow-lg transition-all">
             <div class="text-primary text-4xl mb-4">
@@ -599,13 +600,13 @@ onMounted(() => {
             <p class="text-gray-600 mb-4">
               Découvrez notre offre de montre à saisir dès maitenant.
             </p>
-            <a href="#estimation" class="text-primary font-semibold hover:underline">
+            <a href="/collection" class="text-primary font-semibold hover:underline">
               Voir nos offres
             </a>
           </div>
 
           <!-- Dépôt-vente -->
-          <div class="bg-gray-50 rounded-2xl p-6 text-center hover:shadow-lg transition-all">
+          <!-- <div class="bg-gray-50 rounded-2xl p-6 text-center hover:shadow-lg transition-all">
             <div class="text-primary text-4xl mb-4">
               <i class="fas fa-store"></i>
             </div>
@@ -617,7 +618,7 @@ onMounted(() => {
             <RouterLink to="/depot-vente" class="text-primary font-semibold hover:underline">
               En savoir plus
             </RouterLink>
-          </div>
+          </div> -->
 
           <!-- Recherche personnalisée -->
           <div class="bg-gray-50 rounded-2xl p-6 text-center hover:shadow-lg transition-all">

@@ -62,12 +62,12 @@ function closeMobileMenu() {
         class="hover:text-primary transition-colors"
         >Nos montres</RouterLink
       >
-      <RouterLink
+      <!-- <RouterLink
         to="/depot-vente"
         @click="closeMobileMenu"
         class="hover:text-primary transition-colors"
         >Dépôt-vente</RouterLink
-      >
+      > -->
       <RouterLink
         to="/#temoignages"
         @click="closeMobileMenu"
@@ -128,11 +128,11 @@ function closeMobileMenu() {
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary"
                     >Nos montres</RouterLink
                   >
-                  <RouterLink
+                  <!-- <RouterLink
                     to="/depot-vente"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary"
                     >Dépôt-vente</RouterLink
-                  >
+                  > -->
                 </div>
               </div>
             </div>
@@ -234,13 +234,13 @@ function closeMobileMenu() {
                 >Nos montres</RouterLink
               >
             </li>
-            <li>
+            <!-- <li>
               <RouterLink
                 to="/depot-vente"
                 class="text-gray-300 hover:text-primary transition-colors"
                 >Dépôt-vente</RouterLink
               >
-            </li>
+            </li> -->
           </ul>
         </div>
         <div>
