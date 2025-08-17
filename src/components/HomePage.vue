@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, ref, watch } from 'vue'
 import { scrollAnimation } from '@/animation'
+import { WHATSAPP_NUMBER } from '@/config'
 import navitimerImg from '@/assets/hero section img/navitimer-b01-chronograph-43.png'
 import parallaxImg1 from '@/assets/hero section img/montre-tag-heuer-monaco-calibre-11.png'
 import parallaxImg2 from '@/assets/hero section img/Rolex.png'
@@ -9,7 +10,6 @@ import parallaxImg4 from '@/assets/hero section img/image-Photoroom (2).png'
 import ParallaxImage from './ParallaxImage.vue'
 import { createPreviewElement } from '@/services/imagePreviewService'
 import FaqSection from './Faq.vue'
-import { WHATSAPP_NUMBER } from '@/config'
 import CarouselVentes from './CarouselVentes.vue'
 import EstimationForm from './EstimationForm.vue'
 
@@ -132,7 +132,7 @@ onMounted(() => {
             <i class="fas fa-check-circle text-primary ml-2"></i>
           </h1>
           <p class="text-xl text-gray-600 mb-8 leading-relaxed">
-            Estimation gratuite, offre sous 24h, remise en main propre dans un lieu sécurisé.
+            Estimation gratuite, offre sous 24h, remise en main propre sécurisée.
           </p>
           <RouterLink
             to="/#estimation"
@@ -157,6 +157,7 @@ onMounted(() => {
           alt="Breitling Navitimer"
           initial-x="0%"
           initial-y="45%"
+          mobile-initial-x="0%"
           mobile-initial-y="50%"
           size="large"
           :scroll-speed="0.5"
@@ -169,10 +170,28 @@ onMounted(() => {
           :scale-value="0.85"
         />
         <ParallaxImage
+          :src="parallaxImg4"
+          alt="Montre de luxe"
+          initial-x="20%"
+          initial-y="40%"
+          mobile-initial-x="20%"
+          mobile-initial-y="45%"
+          size="large"
+          :scroll-speed="0.7"
+          :float-speed="0.55"
+          :float-amplitude="20"
+          :vertical-speed="0.4"
+          :vertical-amplitude="15"
+          :rotation-speed="0.3"
+          :rotation-amplitude="5"
+          :scale-value="0.7"
+        />
+        <ParallaxImage
           :src="parallaxImg1"
           alt="Montre de luxe"
           initial-x="40%"
           initial-y="50%"
+          mobile-initial-x="40%"
           mobile-initial-y="55%"
           size="large"
           :scroll-speed="0.2"
@@ -189,6 +208,7 @@ onMounted(() => {
           alt="Montre de luxe"
           initial-x="60%"
           initial-y="50%"
+          mobile-initial-x="60%"
           mobile-initial-y="55%"
           size="large"
           :scroll-speed="0.4"
@@ -205,24 +225,10 @@ onMounted(() => {
           alt="Montre de luxe"
           initial-x="80%"
           initial-y="40%"
+          mobile-initial-x="80%"
           mobile-initial-y="45%"
           size="large"
-          :scroll-speed="0.7"
-          :float-speed="0.55"
-          :float-amplitude="20"
-          :vertical-speed="0.4"
-          :vertical-amplitude="15"
-          :rotation-speed="0.3"
-          :rotation-amplitude="5"
-          :scale-value="0.7"
-        />
-        <ParallaxImage
-          :src="parallaxImg4"
-          alt="Montre de luxe"
-          initial-x="20%"
-          initial-y="40%"
-          mobile-initial-y="45%"
-          size="large"
+          :initial-rotation="300"
           :scroll-speed="0.7"
           :float-speed="0.55"
           :float-amplitude="20"

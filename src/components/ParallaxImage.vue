@@ -62,6 +62,10 @@ const props = defineProps({
     type: Number,
     default: 3, // Amplitude maximale de rotation en degrés
   },
+  initialRotation: {
+    type: Number,
+    default: 0, // Rotation de base de l'image en degrés
+  },
   scaleValue: {
     type: Number,
     default: 0.8, // Valeur de scale lors du clic
@@ -110,7 +114,7 @@ const animate = (timestamp) => {
 
     imageRef.value.style.transform = `
       translate(${xOffset}px, ${yOffset + translateY}px)
-      rotate(${rotation}deg)
+      rotate(${rotation + props.initialRotation}deg)
       scale(${isPressed.value ? props.scaleValue : 1})
     `
   }

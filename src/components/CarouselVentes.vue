@@ -7,11 +7,11 @@
         </h2>
         <p class="text-xl text-gray-600">Voici quelques montres récemment vendues</p>
       </div>
-      <div class="overflow-x-auto hide-scrollbar scroll-smooth p-8">
+      <div class="overflow-x-auto custom-scrollbar-carrousel scroll-smooth p-8 relative">
         <div class="flex space-x-6 min-w-full">
           <template v-for="(watch, i) in salesWatches" :key="`${i}-${watch.name}`">
             <div
-              class="flex-shrink-0 w-80 bg-white rounded-xl shadow-md hover:shadow-lg p-4 text-center transition-all duration-300 -z-1"
+              class="flex-shrink-0 w-80 bg-white rounded-xl shadow-md hover:shadow-lg p-4 text-center transition-all duration-300 hover:scale-105"
             >
               <img
                 :src="watch.img"
