@@ -57,12 +57,12 @@ function closeMobileMenu() {
         class="hover:text-primary transition-colors"
         >Recherche personnalisée</RouterLink
       >
-      <RouterLink
+      <!-- <RouterLink
         to="/collection"
         @click="closeMobileMenu"
         class="hover:text-primary transition-colors"
         >Nos montres</RouterLink
-      >
+      > -->
       <!-- <RouterLink
         to="/depot-vente"
         @click="closeMobileMenu"
@@ -124,11 +124,11 @@ function closeMobileMenu() {
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary"
                     >Recherche personnalisée</RouterLink
                   >
-                  <RouterLink
+                  <!-- <RouterLink
                     to="/collection"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary"
                     >Nos montres</RouterLink
-                  >
+                  > -->
                   <!-- <RouterLink
                     to="/depot-vente"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary"
@@ -228,13 +228,13 @@ function closeMobileMenu() {
                 >Recherche personnalisée</RouterLink
               >
             </li>
-            <li>
+            <!-- <li>
               <RouterLink
                 to="/collection"
                 class="text-gray-300 hover:text-primary transition-colors"
                 >Nos montres</RouterLink
               >
-            </li>
+            </li> -->
             <!-- <li>
               <RouterLink
                 to="/depot-vente"

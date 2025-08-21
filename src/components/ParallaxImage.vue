@@ -114,7 +114,7 @@ const animate = (timestamp) => {
 
     imageRef.value.style.transform = `
       translate(${xOffset}px, ${yOffset + translateY}px)
-      rotate(${rotation + props.initialRotation}deg)
+      rotate(${props.initialRotation + rotation}deg)
       scale(${isPressed.value ? props.scaleValue : 1})
     `
   }
@@ -131,6 +131,11 @@ const handleRelease = () => {
 }
 
 onMounted(() => {
+  // Appliquer la rotation initiale par défaut
+  if (imageRef.value && props.initialRotation !== 0) {
+    imageRef.value.style.transform = `rotate(${props.initialRotation}deg)`
+  }
+  
   animationFrame = requestAnimationFrame(animate)
   window.addEventListener('resize', updateWindowWidth)
 })

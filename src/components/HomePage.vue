@@ -129,7 +129,7 @@ onMounted(() => {
             Vendez votre montre
             <span class="text-primary">rapidement</span> et au
             <span class="text-primary">meilleur prix</span>
-            <i class="fas fa-check-circle text-primary ml-2"></i>
+            <i class="fas fa-circle-check text-primary ml-2"></i>
           </h1>
           <p class="text-xl text-gray-600 mb-8 leading-relaxed">
             Estimation gratuite, offre sous 24h, remise en main propre sécurisée.

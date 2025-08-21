@@ -20,7 +20,8 @@
         </p>
       </div>
 
-      <div class="grid lg:grid-cols-2 gap-16 items-center">
+      <!-- grid lg:grid-cols-2 gap-16  -->
+      <div class="items-center">
         <!-- Contenu principal avec réseaux sociaux mis en avant -->
         <div class="space-y-8">
          

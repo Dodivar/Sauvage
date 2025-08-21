@@ -12,8 +12,8 @@ const routes = [
   { path: '/merci', component: Merci },
   { path: '/recherche', component: Recherche },
   // { path: '/depot-vente', component: DepotVente },
-  { path: '/collection', component: WatchesCollection },
-  { path: '/watch/:id', component: WatchDetail },
+  // { path: '/collection', component: WatchesCollection },
+  // { path: '/watch/:id', component: WatchDetail },
 ]
 
 const router = createRouter({
