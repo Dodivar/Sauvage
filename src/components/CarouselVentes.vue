@@ -28,51 +28,44 @@
 </template>
 
 <script setup>
-import imgRolexSubmariner from '@/assets/sales/IMG_6983.jpg'
-import imgRolexDatejust from '@/assets/sales/Rolex Datejust 16013 - 1980.jpg'
-import imgWatch1 from '@/assets/sales/C9C8F604-6B20-46BC-8488-C94581F41B99.jpg'
-import imgWatch2 from '@/assets/sales/92771C4F-12CC-4C8F-B236-2F2B25515FAB.jpg'
-import imgWatch3 from '@/assets/sales/BF4FEA3A-4ACB-4EB6-92BA-CD335590273C.jpg'
-import imgWatch4 from '@/assets/sales/D12C83C4-1C7B-4FDE-883A-23733E089260.jpg'
+import imgRolexDatejust from '@/assets/sales/Rolex Datejust.jpg'
+import imgBeritlingNavitimer1 from '@/assets/sales/Beritling Navitimer 1.jpg'
+import imgBeritlingNavitimer2 from '@/assets/sales/Beritling Navitimer 2.jpg'
+import imgRolexOyster from '@/assets/sales/Rolex Oyster.jpg'
 import imgTudorBlackBay58 from '@/assets/sales/Tudor Black Bay 58.jpg'
 import imgTagHeuerMonaco from '@/assets/sales/Tag Heuer Monaco Steeve McQueen.jpg'
 import imgTudorBlackBay41 from '@/assets/sales/Tudor Black Bay 41.jpg'
 
 const salesWatches = [
   {
-    img: imgRolexSubmariner,
-    alt: 'Rolex Submariner',
-    name: 'Rolex Submariner',
+    img: imgTudorBlackBay58,
+    alt: 'Tudor Black Bay 58',
+    name: 'Tudor Black Bay 58',
   },
   {
     img: imgRolexDatejust,
-    alt: 'Omega Speedmaster',
-    name: 'Omega Speedmaster',
+    alt: 'Rolex Datejust',
+    name: 'Rolex Datejust',
   },
   {
-    img: imgWatch1,
-    alt: 'Patek Nautilus',
-    name: 'Patek Philippe Nautilus',
+    img: imgBeritlingNavitimer1,
+    alt: 'Breitling Navitimer',
+    name: 'Breitling Navitimer',
   },
   {
-    img: imgWatch2,
-    alt: 'Cartier Santos',
-    name: 'Cartier Santos',
+    img: imgRolexOyster,
+    alt: 'Rolex Oyster',
+    name: 'Rolex Oyster',
   },
   {
-    img: imgWatch4,
-    alt: 'Audemars Royal Oak',
-    name: 'Audemars Piguet Royal Oak',
-  },
-  {
-    img: imgWatch3,
+    img: imgBeritlingNavitimer2,
     alt: 'Breitling Navitimer',
     name: 'Breitling Navitimer',
   },
   {
     img: imgTagHeuerMonaco,
-    alt: 'Jaeger-LeCoultre Reverso',
-    name: 'Jaeger-LeCoultre Reverso',
+    alt: 'Tag Heuer Monaco',
+    name: 'Tag Heuer Monaco',
   },
   {
     img: imgTudorBlackBay41,
@@ -81,8 +74,8 @@ const salesWatches = [
   },
   {
     img: imgTudorBlackBay58,
-    alt: 'TAG Heuer Carrera',
-    name: 'TAG Heuer Carrera',
+    alt: 'Tudor Black Bay 58',
+    name: 'Tudor Black Bay 58',
   },
 ]
 </script>
