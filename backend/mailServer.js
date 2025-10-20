@@ -169,7 +169,7 @@ const createEmailTemplate = (formData) => {
                 </div>
                 <div class="field">
                     <span class="field-label">Préférence de contact:</span>
-                    <span class="field-value">${Array.isArray(formData.contact_mode) ? formData.contact_mode.join(', ') : (formData.contact_mode || 'Pas de préférence')}</span>
+                    <span class="field-value">${formData.contact_mode || 'Pas de préférence'}</span>
                 </div>
             </div>
 
@@ -223,6 +223,12 @@ const createEmailTemplate = (formData) => {
                         <span class="field-label">État souhaité:</span>
                         <span class="field-value">${formData.condition || 'Non renseigné'}</span>
                     </div>
+                    ${formData.delai ? `
+                        <div class="field">
+                            <span class="field-label">Délai souhaité:</span>
+                            <span class="field-value">${formData.delai}</span>
+                        </div>
+                    ` : ''}
                 `}
             </div>
 
@@ -252,11 +258,7 @@ const formatEmailContent = (formData) => {
   content += `Nom: ${formData.name}\n`
   content += `Email: ${formData.email}\n`
   content += `Téléphone: ${formData.tel}\n`
-  let contactPref = formData.contact_mode || 'pas de préférence'
-  if (Array.isArray(contactPref)) {
-    contactPref = contactPref.join(', ')
-  }
-  content += `Préférence de contact: ${contactPref}\n`
+  content += `Préférence de contact: ${formData.contact_mode || 'pas de préférence'}\n`
 
   content += `\nMarque: ${formData.brand}\n`
   content += `Modèle: ${formData.model}\n`
@@ -278,6 +280,9 @@ const formatEmailContent = (formData) => {
       content += `Budget maximum: ${formData.budget_max} €\n`
     }
     content += `État souhaité: ${formData.condition}\n`
+    if (formData.delai) {
+      content += `Délai souhaité: ${formData.delai}\n`
+    }
   }
 
   content += `\nMessage: ${formData.message}\n`

@@ -95,9 +95,10 @@ export function prepareSearchFormData(form) {
   formData.append('type', 'search')
 
   // Ajoute le mode de contact si présent
-  const contactMode =
-    form.querySelector('input[name="contact_mode"]:checked')?.value || 'pas de préférence'
-  formData.append('contact_mode', contactMode)
+  const checked = Array.from(form.querySelectorAll('input[name="contact_mode[]"]:checked')).map(
+    (cb) => cb.value,
+  )
+  formData.append('contact_mode', checked.join(', '))
 
   return formData
 }
