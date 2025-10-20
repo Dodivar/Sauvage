@@ -185,10 +185,6 @@ const createEmailTemplate = (formData) => {
                 </div>
                 ${isEstimation ? `
                     <div class="field">
-                        <span class="field-label">Type d'estimation:</span>
-                        <span class="field-value">${formData.estimationType || 'Non renseigné'}</span>
-                    </div>
-                    <div class="field">
                         <span class="field-label">Numéro de série:</span>
                         <span class="field-value">${formData.serienumber || 'Non renseigné'}</span>
                     </div>
@@ -197,20 +193,12 @@ const createEmailTemplate = (formData) => {
                         <span class="field-value">${formData.year || 'Non renseigné'}</span>
                     </div>
                     <div class="field">
-                        <span class="field-label">État:</span>
-                        <span class="field-value">${formData.condition || 'Non renseigné'}</span>
+                        <span class="field-label">État général:</span>
+                        <span class="field-value">${formData.etat || formData.condition || 'Non renseigné'}</span>
                     </div>
                     <div class="field">
-                        <span class="field-label">Accessoires:</span>
-                        <span class="field-value">${formData.accessories || 'Non renseigné'}</span>
-                    </div>
-                    <div class="field">
-                        <span class="field-label">Possession:</span>
+                        <span class="field-label">État de possession:</span>
                         <span class="field-value">${formData.possession || 'Non renseigné'}</span>
-                    </div>
-                    <div class="field">
-                        <span class="field-label">Série:</span>
-                        <span class="field-value">${formData.serie || 'Non renseigné'}</span>
                     </div>
                 ` : `
                     ${formData.budget_min && formData.budget_max ? `
@@ -275,13 +263,10 @@ const formatEmailContent = (formData) => {
 
   // Contenu spécifique au formulaire d'estimation
   if (formData.type === 'estimation') {
-    content += `Type d'estimation: ${formData.estimationType}\n`
     content += `Numéro de série: ${formData.serienumber}\n`
     content += `Année: ${formData.year}\n`
-    content += `État: ${formData.condition}\n`
-    content += `Accessoires: ${formData.accessories}\n`
-    content += `Possession: ${formData.possession}\n`
-    content += `Série: ${formData.serie}\n`
+    content += `État général: ${formData.etat || formData.condition}\n`
+    content += `État de possession: ${formData.possession}\n`
   }
   // Contenu spécifique au formulaire de recherche personnalisée
   else if (formData.type === 'search') {
@@ -306,7 +291,7 @@ app.post('/api/send-email', upload.array('attachments', 20), async (req, res) =>
     const { type, ...formData } = req.body
     const files = req.files || []
     console.log('Type de formulaire:', type)
-    console.log('Données reçues:', formData)
+    console.log('Données reçues:', JSON.stringify(formData, null, 2))
     console.log(
       'Fichiers reçus:',
       files.map((f) => f.originalname),

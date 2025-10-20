@@ -61,7 +61,6 @@ const formatEmailContent = (formData) => {
 
   // Contenu spécifique au formulaire d'estimation
   if (formData.type === 'estimation') {
-    content += `Type d'estimation: ${formData.estimationType}\n`
     content += `Numéro de série: ${formData.serienumber}\n`
     content += `Année: ${formData.year}\n`
     content += `État: ${formData.condition}\n`
