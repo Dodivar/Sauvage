@@ -1,9 +1,14 @@
 <script setup>
-import { ref, useTemplateRef } from 'vue'
+import { ref, useTemplateRef, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import { WHATSAPP_NUMBER, EMAIL_CONTACT } from '@/config'
 
 //const displayMobileMenu = ref(false)
 const overlay = useTemplateRef('mobile-menu-overlay')
+const route = useRoute()
+
+// Vérifier si on est sur la page de maintenance
+const isMaintenancePage = computed(() => route.path === '/maintenance')
 
 function displayMobileMenu() {
   overlay.value.classList.remove('hidden')
@@ -24,6 +29,7 @@ function closeMobileMenu() {
 <template>
   <!-- Menu mobile-->
   <div
+    v-if="!isMaintenancePage"
     ref="mobile-menu-overlay"
     class="fixed inset-0 bg-white/70 backdrop-blur-lg z-30 hidden transition-opacity duration-300"
   >
@@ -88,7 +94,7 @@ function closeMobileMenu() {
   </div>
 
   <!-- Menu desktop -->
-  <header id="header" class="shadow-sm backdrop-blur-sm sticky top-0 z-20">
+  <header v-if="!isMaintenancePage" id="header" class="shadow-sm backdrop-blur-sm sticky top-0 z-20">
     <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center">
@@ -169,7 +175,7 @@ function closeMobileMenu() {
   </main>
 
   <!-- Footer -->
-  <footer id="contact" class="bg-text-main text-white py-16">
+  <footer v-if="!isMaintenancePage" id="contact" class="bg-text-main text-white py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid md:grid-cols-4 gap-8">
         <div class="sm:col-span-2">
