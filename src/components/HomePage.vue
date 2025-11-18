@@ -134,20 +134,36 @@ onMounted(() => {
           <p class="text-xl text-gray-600 mb-8 leading-relaxed">
             Estimation gratuite, offre sous 24h, remise en main propre sécurisée.
           </p>
-          <RouterLink
-            to="/#estimation"
-            class="inline-flex items-center bg-primary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-green-700 transition-all transform hover:scale-105 shadow-lg"
-          >
-            Faire estimer ma montre
-            <svg class="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M13 7l5 5m0 0l-5 5m5-5H6"
-              />
-            </svg>
-          </RouterLink>
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <RouterLink
+              to="/collection"
+              class="inline-flex items-center bg-primary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-green-700 transition-all transform hover:scale-105 shadow-lg"
+            >
+              Voir les montres en stock
+              <svg class="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                />
+              </svg>
+            </RouterLink>
+            <RouterLink
+              to="/recherche"
+              class="inline-flex items-center px-8 py-4 rounded-lg text-lg font-semibold border-2 border-primary text-primary bg-white hover:bg-green-50 transition-all hover:scale-105 shadow"
+            >
+              Recherche personnalisée
+              <svg class="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 16l-4-4m0 0l4-4m-4 4h18"
+                />
+              </svg>
+            </RouterLink>
+          </div>
         </div>
       </div>
       <!-- PARALLAX OBJECTS -->
@@ -241,7 +257,7 @@ onMounted(() => {
     </section>
 
     <!-- Comment ça marche -->
-    <section class="py-20 bg-white relative z-10">
+    <!-- <section class="py-20 bg-white relative z-10">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
           <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-4">Comment ça marche ?</h2>
@@ -285,291 +301,83 @@ onMounted(() => {
           </div>
         </div>
       </div>
-    </section>
+    </section> -->
 
     <!-- Formulaire d'estimation -->
     <EstimationForm />
 
-    <!-- Sécurité du service -->
+    <!-- Sécurité et avantages pour ACHETER ou rechercher une montre -->
     <section class="py-20 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
           <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-4">
-            Pourquoi nous faire confiance ?
+            Achetez ou recherchez votre montre en toute confiance
           </h2>
-          <p class="text-xl text-gray-600">Votre sécurité et satisfaction sont nos priorités</p>
+          <p class="text-xl text-gray-600">
+            Profitez d'un accompagnement personnalisé, d'une sécurité totale et de tous les avantages de mon réseau d'expert pour un achat serein ou la quête du modèle qui vous fait rêver.
+          </p>
         </div>
         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <!-- Service personnalisé -->
           <div class="text-center p-6 rounded-2xl bg-green-50 hover:bg-green-100 transition-colors">
             <div
               class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4"
             >
               <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
-                />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3zm0 13c-4.418 0-8-3.582-8-8a8 8 0 1116 0c0 4.418-3.582 8-8 8z" />
               </svg>
             </div>
-            <h3 class="text-lg font-semibold mb-2">Estimation gratuite</h3>
-            <p class="text-gray-600">Aucun frais, aucun engagement jusqu'à votre accord final</p>
-          </div>
-          <div class="text-center p-6 rounded-2xl bg-green-50 hover:bg-green-100 transition-colors">
-            <div
-              class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4"
-            >
-              <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10l-8 4"
-                />
-              </svg>
-            </div>
-            <h3 class="text-lg font-semibold mb-2">Prix du marché</h3>
+            <h3 class="text-lg font-semibold mb-2">Accompagnement personnalisé</h3>
             <p class="text-gray-600">
-              Nous fournissons une estimation claire selon différents critères que nous vous
-              argumenterons
+              Conseils, sourcing sur-mesure et suivi tout au long de votre projet d'achat ou de recherche de montre.
             </p>
           </div>
+          <!-- Authenticité et sécurité des transactions -->
           <div class="text-center p-6 rounded-2xl bg-green-50 hover:bg-green-100 transition-colors">
             <div
               class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4"
             >
               <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c.943 0 1.708-.765 1.708-1.708s-.765-1.708-1.708-1.708-1.708.765-1.708 1.708S11.057 11 12 11zm0 8c-4.418 0-8-3.582-8-8a8 8 0 1116 0c0 4.418-3.582 8-8 8zm3-6l-3-3-3 3" />
               </svg>
             </div>
-            <h3 class="text-lg font-semibold mb-2">Paiement rapide</h3>
-            <p class="text-gray-600">Virement bancaire immédiat dès validation de votre montre</p>
-          </div>
-          <div class="text-center p-6 rounded-2xl bg-green-50 hover:bg-green-100 transition-colors">
-            <div
-              class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4"
-            >
-              <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </div>
-            <h3 class="text-lg font-semibold mb-2">Aucune commission</h3>
+            <h3 class="text-lg font-semibold mb-2">Authenticité & sécurité</h3>
             <p class="text-gray-600">
-              Le prix proposé est le prix que vous recevez, sans frais cachés
+              Chaque montre est minutieusement vérifiée : authenticité certifiée, paiement sécurisé, transaction protégée.
+            </p>
+          </div>
+          <!-- Accès à un large réseau et sourcing -->
+          <div class="text-center p-6 rounded-2xl bg-green-50 hover:bg-green-100 transition-colors">
+            <div
+              class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4"
+            >
+              <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-4-4h-1m-4 6H7v-2a4 4 0 014-4h1m0-6V4a4 4 0 011-7V4a4 4 0 01-1 7zm0 0v2a2 2 0 002 2h2" />
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">Sourcing & réseau international</h3>
+            <p class="text-gray-600">
+              Profitez de mon réseau français et européen pour accéder à des modèles rares, exclusifs ou au meilleur rapport qualité/prix.
+            </p>
+          </div>
+          <!-- Transparence et sérénité -->
+          <div class="text-center p-6 rounded-2xl bg-green-50 hover:bg-green-100 transition-colors">
+            <div
+              class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4"
+            >
+              <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m-7 9a9 9 0 1118 0 9 9 0 01-18 0z" />
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">Transparence & satisfaction</h3>
+            <p class="text-gray-600">
+              Processus limpide, aucune commission cachée, votre tranquillité est notre priorité.
             </p>
           </div>
         </div>
       </div>
     </section>
-
-    <!-- Avis et Témoignages -->
-    <section id="temoignages" class="py-20 gradient-bg">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-          <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-4">
-            Ils nous font confiance
-          </h2>
-          <p class="text-xl text-gray-600">Découvrez les témoignages de nos clients satisfaits</p>
-          <div class="flex justify-center items-center mt-6 space-x-2">
-            <div class="flex space-x-1">
-              <svg class="h-6 w-6 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                />
-              </svg>
-              <svg class="h-6 w-6 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                />
-              </svg>
-              <svg class="h-6 w-6 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                />
-              </svg>
-              <svg class="h-6 w-6 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                />
-              </svg>
-              <svg class="h-6 w-6 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                />
-              </svg>
-            </div>
-            <span class="text-lg font-semibold text-text-main ml-3">4.9/5</span>
-            <span class="text-gray-600 ml-2">(247 avis)</span>
-          </div>
-        </div>
-
-        <div class="grid lg:grid-cols-3 gap-8">
-          <!-- Témoignage 1 -->
-          <div
-            class="bg-gray-50 rounded-2xl p-8 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
-          >
-            <div class="flex items-center mb-3">
-              <div
-                class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white font-semibold"
-              >
-                P.M
-              </div>
-              <div class="ml-4">
-                <p class="font-semibold text-text-main">Pierre Martin</p>
-                <p class="text-sm text-gray-600">Rolex Submariner • Janvier 2025</p>
-              </div>
-            </div>
-            <div class="flex items-center mb-3">
-              <div class="flex space-x-1">
-                <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                  />
-                </svg>
-                <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                  />
-                </svg>
-                <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                  />
-                </svg>
-                <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                  />
-                </svg>
-                <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                  />
-                </svg>
-              </div>
-            </div>
-            <p class="text-gray-700 leading-relaxed italic">
-              "Service exceptionnel ! J'ai vendu ma Rolex Submariner et l'estimation était très
-              juste. Le processus était simple et le paiement rapide comme promis. Je recommande
-              vivement."
-            </p>
-          </div>
-
-          <!-- Témoignage 2 -->
-          <div
-            class="bg-gray-50 rounded-2xl p-8 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
-          >
-            <div class="flex items-center mb-3">
-              <div
-                class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white font-semibold"
-              >
-                S.L
-              </div>
-              <div class="ml-4">
-                <p class="font-semibold text-text-main">Sophie Lefebvre</p>
-                <p class="text-sm text-gray-600">Patek Philippe Calatrava • Décembre 2024</p>
-              </div>
-            </div>
-            <div class="flex items-center mb-3">
-              <div class="flex space-x-1">
-                <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                  />
-                </svg>
-                <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                  />
-                </svg>
-                <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                  />
-                </svg>
-                <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                  />
-                </svg>
-                <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                  />
-                </svg>
-              </div>
-            </div>
-            <p class="text-gray-700 leading-relaxed italic">
-              "Excellente expérience avec LuxTime. Ma Patek Philippe a été expertisée avec soin et
-              professionnalisme. L'offre reçue était au-dessus de mes attentes. Transparence totale
-              !"
-            </p>
-          </div>
-
-          <!-- Témoignage 3 -->
-          <div
-            class="bg-gray-50 rounded-2xl p-8 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
-          >
-            <div class="flex items-center mb-3">
-              <div
-                class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white font-semibold"
-              >
-                A.D
-              </div>
-              <div class="ml-4">
-                <p class="font-semibold text-text-main">Antoine Dubois</p>
-                <p class="text-sm text-gray-600">Omega Speedmaster • Novembre 2024</p>
-              </div>
-            </div>
-            <div class="flex items-center mb-3">
-              <div class="flex space-x-1">
-                <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                  />
-                </svg>
-                <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                  />
-                </svg>
-                <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                  />
-                </svg>
-                <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                  />
-                </svg>
-                <svg class="h-5 w-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                  />
-                </svg>
-              </div>
-            </div>
-            <p class="text-gray-700 leading-relaxed italic">
-              "Processus très professionnel du début à la fin. J'avais des doutes au départ mais
-              l'équipe m'a rassuré à chaque étape. Ma montre Omega a été parfaitement évaluée."
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
+    
     <!-- Nos services -->
     <section id="services" class="py-20 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

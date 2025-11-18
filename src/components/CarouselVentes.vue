@@ -49,13 +49,13 @@ const salesWatches = [
   },
   {
     img: imgBeritlingNavitimer1,
-    alt: 'Breitling Navitimer',
-    name: 'Breitling Navitimer',
+    alt: 'Breitling Old Navitimer',
+    name: 'Breitling Old Navitimer',
   },
   {
     img: imgRolexOyster,
-    alt: 'Rolex Oyster',
-    name: 'Rolex Oyster',
+    alt: 'Rolex Air King Oyster',
+    name: 'Rolex Air King Oyster',
   },
   {
     img: imgBeritlingNavitimer2,

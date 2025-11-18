@@ -52,10 +52,10 @@ function closeMobileMenu() {
         >Accueil</RouterLink
       >
       <RouterLink
-        to="/#estimation"
+        to="/collection"
         @click="closeMobileMenu"
         class="hover:text-primary transition-colors"
-        >Estimation</RouterLink
+        >Nos montres</RouterLink
       >
       <RouterLink
         to="/recherche"
@@ -63,24 +63,18 @@ function closeMobileMenu() {
         class="hover:text-primary transition-colors"
         >Recherche personnalisée</RouterLink
       >
-      <!-- <RouterLink
-        to="/collection"
+      <RouterLink
+        to="/#estimation"
         @click="closeMobileMenu"
         class="hover:text-primary transition-colors"
-        >Nos montres</RouterLink
-      > -->
+        >Estimation</RouterLink
+      >
       <!-- <RouterLink
         to="/depot-vente"
         @click="closeMobileMenu"
         class="hover:text-primary transition-colors"
         >Dépôt-vente</RouterLink
       > -->
-      <RouterLink
-        to="/#temoignages"
-        @click="closeMobileMenu"
-        class="hover:text-primary transition-colors"
-        >Témoignages</RouterLink
-      >
       <RouterLink to="/#faq" @click="closeMobileMenu" class="hover:text-primary transition-colors"
         >FAQ</RouterLink
       >
@@ -104,6 +98,11 @@ function closeMobileMenu() {
         </div>
         <div class="hidden md:block">
           <div class="ml-10 flex items-baseline space-x-8">
+            <RouterLink
+              to="/collection"
+              class="text-text-main hover:text-primary transition-colors"
+              >Nos montres</RouterLink
+            >
             <div class="relative group">
               <p class="text-text-main hover:text-primary transition-colors flex items-center">
                 Nos services
@@ -119,22 +118,17 @@ function closeMobileMenu() {
               <div
                 class="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
               >
+                  <RouterLink
+                    to="/recherche"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary"
+                    >Recherche personnalisée</RouterLink
+                  >
                 <div class="py-1">
                   <RouterLink
                     to="/#estimation"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary"
                     >Estimation</RouterLink
                   >
-                  <RouterLink
-                    to="/recherche"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary"
-                    >Recherche personnalisée</RouterLink
-                  >
-                  <!-- <RouterLink
-                    to="/collection"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary"
-                    >Nos montres</RouterLink
-                  > -->
                   <!-- <RouterLink
                     to="/depot-vente"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary"
@@ -143,11 +137,6 @@ function closeMobileMenu() {
                 </div>
               </div>
             </div>
-            <RouterLink
-              to="/#temoignages"
-              class="text-text-main hover:text-primary transition-colors"
-              >Témoignages</RouterLink
-            >
             <RouterLink to="/#faq" class="text-text-main hover:text-primary transition-colors"
               >FAQ</RouterLink
             >
@@ -224,9 +213,9 @@ function closeMobileMenu() {
             </li>
             <li>
               <RouterLink
-                to="/#estimation"
+                to="/collection"
                 class="text-gray-300 hover:text-primary transition-colors"
-                >Estimation</RouterLink
+                >Nos montres</RouterLink
               >
             </li>
             <li>
@@ -234,13 +223,13 @@ function closeMobileMenu() {
                 >Recherche personnalisée</RouterLink
               >
             </li>
-            <!-- <li>
+            <li>
               <RouterLink
-                to="/collection"
+                to="/#estimation"
                 class="text-gray-300 hover:text-primary transition-colors"
-                >Nos montres</RouterLink
+                >Estimation</RouterLink
               >
-            </li> -->
+            </li>
             <!-- <li>
               <RouterLink
                 to="/depot-vente"

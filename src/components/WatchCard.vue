@@ -68,7 +68,7 @@
     </div>
 
     <!-- Watch Info -->
-    <div class="p-6">
+    <div class="p-6 cursor-pointer" @click="$emit('viewDetails', watch.id)">
       <h3 class="text-xl font-semibold text-gray-900 mb-2 leading-tight">
         {{ watch.name }}
       </h3>
@@ -76,7 +76,7 @@
       <p class="text-sm text-gray-600 mb-4 font-light">Réf. {{ watch.reference }}</p>
 
       <div class="flex items-center justify-between">
-        <div class="text-2xl font-light text-primary">
+        <div class="text-2xl font-normal text-primary">
           {{ formatPrice(watch.price) }}
         </div>
 
@@ -84,15 +84,15 @@
           @click="$emit('viewDetails', watch.id)"
           class="bg-primary hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200"
         >
-          Voir détails
+          Voir le détail
         </button>
       </div>
 
-      <!-- Optional: Watch condition or year -->
+      <!-- Optional: Watch content or year -->
       <div class="mt-4 flex items-center justify-between text-sm text-gray-500">
         <span v-if="watch.year">{{ watch.year }}</span>
-        <span v-if="watch.condition" class="bg-gray-100 px-2 py-1 rounded text-xs">
-          {{ watch.condition }}
+        <span v-if="watch.contenu" class="bg-gray-100 px-2 py-1 rounded text-xs">
+          {{ watch.contenu }}
         </span>
       </div>
     </div>

@@ -3,11 +3,11 @@
     <div class="max-w-7xl mx-auto px-4">
       <!-- Header -->
       <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-text-main mb-4">Notre Collection de montres</h1>
-        <p class="text-xl text-gray-600 font-light max-w-3xl mx-auto">
+        <h1 class="text-4xl font-bold text-text-main mb-4">Notre collection de montres</h1>
+<!--         <p class="text-xl text-gray-600 font-light max-w-3xl mx-auto">
           Découvrez notre sélection exclusive de montres de prestige en dépôt-vente, authentifiées
           et garanties par nos experts horlogers
-        </p>
+        </p> -->
       </div>
 
       <!-- Filters Bar -->
@@ -134,6 +134,7 @@ const watches = ref([
     price: 12500,
     year: 2019,
     condition: 'Excellent',
+    contenu: 'full set',
     brand: 'Rolex',
     model: 'Submariner Date',
     adCode: 'RLX001',
@@ -152,6 +153,7 @@ const watches = ref([
     price: 4800,
     year: 2020,
     condition: 'Comme neuf',
+    contenu: 'Boîte',
     brand: 'Omega',
     images: [
       'https://images.unsplash.com/photo-1594534475808-b18fc33b045e?w=500&h=500&fit=crop',
@@ -166,6 +168,7 @@ const watches = ref([
     price: 28900,
     year: 2021,
     condition: 'Neuf',
+    contenu: 'Certificat',
     brand: 'Patek Philippe',
     images: [
       'https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=500&h=500&fit=crop',
@@ -180,6 +183,7 @@ const watches = ref([
     price: 45000,
     year: 2018,
     condition: 'Très bon',
+    contenu: 'Full set',
     brand: 'Audemars Piguet',
     images: [
       'https://images.unsplash.com/photo-1622434641406-a158123450f9?w=500&h=500&fit=crop',
@@ -194,6 +198,7 @@ const watches = ref([
     price: 3200,
     year: 2022,
     condition: 'Excellent',
+    contenu: 'Full set',
     brand: 'Tudor',
     images: [
       'https://images.unsplash.com/photo-1606220068020-b9d2313e6d45?w=500&h=500&fit=crop',
@@ -207,7 +212,7 @@ const watches = ref([
     reference: 'WSSA0029',
     price: 6800,
     year: 2021,
-    condition: 'Comme neuf',
+    contenu: 'Full set',
     brand: 'Cartier',
     images: [
       'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=500&fit=crop',

@@ -3,12 +3,7 @@
 - Blog partie du site bien dédiée avec articles, lien tiktok, backend pour automatiser blog, insertion vidéo et 
 
 
-- Slider pour montant estimé de recherche de montre
 - Ajout des montres des dernières ventes réalisées
-
-- Analytics
-     - Partage à antoine
-     - Vérif temps réel prod
 
 Blog
     - Vidéos et article ?
@@ -17,9 +12,18 @@ Blog
     - Création et modification d'article 
         - Ajout de vidéo
 
-Hero image
-    - images de montres
-
 - Typographies du site
 
-- mettre logo en fond sur la page d'accueil
+- denirères ventes réalisées    
+    - connecter à la bdd pour afficher les dernières qui ont été MAJ en tant que vendu
+
+- nos nouveautés sur la page d'accueil avec les 4 dernières rentrées
+
+- Mettre plus en avant la recherche
+    - stratégie moins basé sur le rachat de montre
+    - ajouter et améliorer la FAQ pour la recherche de montres
+        - exemple sourcing dans mon réseau franais et européen pour trouver la meilleure offre
+
+- Page d'accueil suivez nous sur nos réseaux au milieu de la page d'accueil
+    - liens vers les réseaux
+    - remplacer du coup la section en bas 
