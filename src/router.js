@@ -8,12 +8,14 @@ import DepotVente from './components/DepotVente.vue'
 import WatchesCollection from './components/WatchesCollection.vue'
 import WatchDetail from './components/WatchDetail.vue'
 import Maintenance from './components/Maintenance.vue'
+import EstimationPage from './components/EstimationPage.vue'
 
 const routes = [
   { path: '/maintenance', component: Maintenance },
   { path: '/', component: HomeView },
   { path: '/merci', component: Merci },
   { path: '/recherche', component: Recherche },
+  { path: '/estimation', component: EstimationPage },
   // { path: '/depot-vente', component: DepotVente },
    { path: '/collection', component: WatchesCollection },
    { path: '/watch/:id', component: WatchDetail },

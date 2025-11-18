@@ -18,12 +18,3 @@ Blog
     - connecter à la bdd pour afficher les dernières qui ont été MAJ en tant que vendu
 
 - nos nouveautés sur la page d'accueil avec les 4 dernières rentrées
-
-- Mettre plus en avant la recherche
-    - stratégie moins basé sur le rachat de montre
-    - ajouter et améliorer la FAQ pour la recherche de montres
-        - exemple sourcing dans mon réseau franais et européen pour trouver la meilleure offre
-
-- Page d'accueil suivez nous sur nos réseaux au milieu de la page d'accueil
-    - liens vers les réseaux
-    - remplacer du coup la section en bas 

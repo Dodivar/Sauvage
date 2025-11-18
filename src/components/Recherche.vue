@@ -267,11 +267,39 @@ onMounted(() => {
       <div class="text-center mb-12">
         <h2 class="text-3xl font-bold text-text-main mb-4">Nos autres services</h2>
         <p class="text-lg text-gray-600">
-          Découvrez nos autres services spécialisés dans l'univers des montres de luxe
+          Découvrez nos autres services spécialisés dans l'univers des montres
         </p>
       </div>
 
       <div class="grid md:grid-cols-2 gap-8">
+        
+        <!-- Lien vers la collection de montres -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all transform hover:scale-105">
+          <div class="text-center">
+            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg class="inline-block w-8 h-8 text-white align-middle" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="7" stroke="currentColor" stroke-width="2" fill="none"/>
+              <rect x="9.5" y="1.5" width="5" height="3" rx="1" stroke="currentColor" stroke-width="2" fill="none"/>
+              <rect x="9.5" y="19.5" width="5" height="3" rx="1" stroke="currentColor" stroke-width="2" fill="none"/>
+              <path d="M12 8v4l2.5 2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-text-main mb-4">Notre collection de montres</h3>
+            <p class="text-gray-600 mb-6">
+              Parcourez notre sélection de montres de prestige actuellement disponibles à la vente.
+            </p>
+            <RouterLink
+              to="/collection"
+              class="inline-flex items-center bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-all transform hover:scale-105"
+            >
+              Découvrir la collection
+              <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </RouterLink>
+          </div>
+        </div>
+        
         <!-- Estimation de montre -->
         <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all transform hover:scale-105">
           <div class="text-center">
@@ -285,34 +313,10 @@ onMounted(() => {
               Obtenez une estimation précise et gratuite de votre montre. Notre expertise vous garantit une évaluation juste de la valeur de votre pièce.
             </p>
             <RouterLink
-              to="/#estimation"
+              to="/estimation"
               class="inline-flex items-center bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-all transform hover:scale-105"
             >
               Estimer ma montre
-              <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-              </svg>
-            </RouterLink>
-          </div>
-        </div>
-
-        <!-- Nos services -->
-        <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all transform hover:scale-105">
-          <div class="text-center">
-            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-            </div>
-            <h3 class="text-2xl font-bold text-text-main mb-4">Nos services</h3>
-            <p class="text-gray-600 mb-6">
-              Découvrez notre gamme complète de services : rachat, vente, expertise et conseil personnalisé pour vos montres de luxe.
-            </p>
-            <RouterLink
-              to="/#services"
-              class="inline-flex items-center bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-all transform hover:scale-105"
-            >
-              Découvrir nos services
               <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
               </svg>

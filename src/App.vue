@@ -64,7 +64,7 @@ function closeMobileMenu() {
         >Recherche personnalisée</RouterLink
       >
       <RouterLink
-        to="/#estimation"
+        to="/estimation"
         @click="closeMobileMenu"
         class="hover:text-primary transition-colors"
         >Estimation</RouterLink
@@ -125,7 +125,7 @@ function closeMobileMenu() {
                   >
                 <div class="py-1">
                   <RouterLink
-                    to="/#estimation"
+                    to="/estimation"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary"
                     >Estimation</RouterLink
                   >
@@ -225,7 +225,7 @@ function closeMobileMenu() {
             </li>
             <li>
               <RouterLink
-                to="/#estimation"
+                to="/estimation"
                 class="text-gray-300 hover:text-primary transition-colors"
                 >Estimation</RouterLink
               >

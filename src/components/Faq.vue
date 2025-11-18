@@ -49,6 +49,36 @@ import { ref } from 'vue'
 
 const faqItems = [
   {
+    id: 12,
+    question: 'Comment fonctionne la recherche personnalisée ?',
+    answer:
+      'Notre service de recherche personnalisée vous aide à trouver la montre de vos rêves selon vos critères précis (marque, modèle, année, budget, état, etc.). Nous recherchons dans notre réseau et sur le marché pour vous proposer des options qui correspondent exactement à vos attentes. <strong>Vous ne payez que si nous trouvons la montre qui vous convient</strong>. C\'est un service sur-mesure qui vous fait gagner du temps et vous garantit l\'authenticité.',
+  },
+  {
+    id: 13,
+    question: 'Quels types de montres proposez-vous à la vente ?',
+    answer:
+      'Nous proposons une sélection de <strong>montres de collection et de prestige</strong> : Rolex, Omega, Cartier, Breitling, Audemars Piguet, Patek Philippe, Tag Heuer, Tudor, et bien d\'autres. Toutes nos montres sont authentifiées, vérifiées et accompagnées de leur historique. Nous mettons régulièrement à jour notre collection avec de nouveaux modèles.',
+  },
+  {
+    id: 14,
+    question: 'Puis-je voir les montres avant d\'acheter ?',
+    answer:
+      'Absolument ! Nous organisons des <strong>rendez-vous en main propre</strong> pour que vous puissiez examiner la montre, la porter et poser toutes vos questions. Nous croyons en la transparence et voulons que vous soyez entièrement satisfait de votre achat. Nous pouvons également vous envoyer des photos détaillées et des vidéos avant le rendez-vous.',
+  },
+  {
+    id: 15,
+    question: 'Les montres que vous vendez sont-elles authentiques et garanties ?',
+    answer:
+      'Oui, <strong>toutes nos montres sont authentifiées</strong> par nos experts avant d\'être mises en vente. Nous vérifions l\'authenticité, l\'état, et l\'historique de chaque pièce. Nous proposons également une garantie sur nos ventes et nous engageons sur la qualité et l\'authenticité de chaque montre que nous vendons.',
+  },
+  {
+    id: 16,
+    question: 'Combien coûte le service de recherche personnalisée ?',
+    answer:
+      'Le service de recherche personnalisée est <strong>gratuit jusqu\'à ce que nous trouvions la montre qui vous convient</strong>. Une fois que vous avez validé votre achat, des frais de service s\'appliquent. Nous vous fournissons un devis transparent avant de commencer la recherche, sans aucun engagement de votre part.',
+  },
+  {
     id: 1,
     question: "L'estimation est-elle vraiment gratuite ?",
     answer:
