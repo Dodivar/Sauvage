@@ -45,8 +45,36 @@
         </div>
       </div>
 
+      <!-- Loading State -->
+      <div v-if="isLoading" class="text-center py-16">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+        <p class="text-gray-600">Chargement des montres...</p>
+      </div>
+
+      <!-- Error State -->
+      <div v-else-if="error" class="text-center py-16">
+        <div class="text-red-500 mb-4">
+          <svg class="w-16 h-16 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+        </div>
+        <h3 class="text-xl text-gray-900 mb-2">Erreur de chargement</h3>
+        <p class="text-gray-600 mb-4">{{ error }}</p>
+        <button
+          @click="loadWatches"
+          class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-green-700 transition-colors"
+        >
+          Réessayer
+        </button>
+      </div>
+
       <!-- Watches Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
         <WatchCard
           v-for="watch in filteredWatches"
           :key="watch.id"
@@ -57,7 +85,7 @@
       </div>
 
       <!-- Empty State -->
-      <div v-if="filteredWatches.length === 0" class="text-center py-16">
+      <div v-if="!isLoading && !error && filteredWatches.length === 0" class="text-center py-16">
         <div class="text-gray-400 mb-4">
           <svg class="w-16 h-16 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path
@@ -120,114 +148,20 @@ const router = useRouter()
 import WatchCard from './WatchCard.vue'
 import { scrollAnimation } from '@/animation'
 import { WHATSAPP_NUMBER, EMAIL_CONTACT } from '@/config'
+import { getAllWatches } from '@/services/watchService'
 
 // Filters
 const selectedBrand = ref('')
 const priceRange = ref('')
 
-// Mock data for luxury watches with detailed specs
-const watches = ref([
-  {
-    id: 1,
-    name: 'Rolex Submariner Date',
-    reference: '116610LN',
-    price: 12500,
-    year: 2019,
-    condition: 'Excellent',
-    contenu: 'full set',
-    brand: 'Rolex',
-    model: 'Submariner Date',
-    adCode: 'RLX001',
-    images: [
-      'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=500&h=500&fit=crop',
-      'https://images.unsplash.com/photo-1548169874-53e85f753f1e?w=500&h=500&fit=crop',
-      'https://images.unsplash.com/photo-1609587312208-cea54be969e7?w=500&h=500&fit=crop',
-    ],
-    description:
-      "Rolex Submariner Date iconique en excellent état, parfaite pour la plongée et l'usage quotidien.",
-  },
-  {
-    id: 2,
-    name: 'Omega Speedmaster Professional',
-    reference: '311.30.42.30.01.005',
-    price: 4800,
-    year: 2020,
-    condition: 'Comme neuf',
-    contenu: 'Boîte',
-    brand: 'Omega',
-    images: [
-      'https://images.unsplash.com/photo-1594534475808-b18fc33b045e?w=500&h=500&fit=crop',
-      'https://images.unsplash.com/photo-1610554010059-1c527bc23295?w=500&h=500&fit=crop',
-      'https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=500&h=500&fit=crop',
-    ],
-  },
-  {
-    id: 3,
-    name: 'Patek Philippe Calatrava',
-    reference: '5227G-001',
-    price: 28900,
-    year: 2021,
-    condition: 'Neuf',
-    contenu: 'Certificat',
-    brand: 'Patek Philippe',
-    images: [
-      'https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=500&h=500&fit=crop',
-      'https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?w=500&h=500&fit=crop',
-      'https://images.unsplash.com/photo-1611192554068-b1a2320dc5da?w=500&h=500&fit=crop',
-    ],
-  },
-  {
-    id: 4,
-    name: 'Audemars Piguet Royal Oak',
-    reference: '15400ST.OO.1220ST.02',
-    price: 45000,
-    year: 2018,
-    condition: 'Très bon',
-    contenu: 'Full set',
-    brand: 'Audemars Piguet',
-    images: [
-      'https://images.unsplash.com/photo-1622434641406-a158123450f9?w=500&h=500&fit=crop',
-      'https://images.unsplash.com/photo-1615117949036-e57c8a11ea65?w=500&h=500&fit=crop',
-      'https://images.unsplash.com/photo-1509048191080-d2126cc47342?w=500&h=500&fit=crop',
-    ],
-  },
-  {
-    id: 5,
-    name: 'Tudor Black Bay 58',
-    reference: '79030N',
-    price: 3200,
-    year: 2022,
-    condition: 'Excellent',
-    contenu: 'Full set',
-    brand: 'Tudor',
-    images: [
-      'https://images.unsplash.com/photo-1606220068020-b9d2313e6d45?w=500&h=500&fit=crop',
-      'https://images.unsplash.com/photo-1434493907317-a46b5bbe7834?w=500&h=500&fit=crop',
-      'https://images.unsplash.com/photo-1586943101559-4cdcf86a6f87?w=500&h=500&fit=crop',
-    ],
-  },
-  {
-    id: 6,
-    name: 'Cartier Santos de Cartier',
-    reference: 'WSSA0029',
-    price: 6800,
-    year: 2021,
-    contenu: 'Full set',
-    brand: 'Cartier',
-    images: [
-      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=500&fit=crop',
-      'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=500&h=500&fit=crop',
-      'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=500&h=500&fit=crop',
-    ],
-  },
-])
+// State
+const watches = ref([])
+const isLoading = ref(true)
+const error = ref(null)
 
 // Navigation method
 const handleViewDetails = (watchId) => {
-  // In a real Vue Router app, you would use:
   router.push(`/watch/${watchId}`)
-  console.log(`Navigating to watch detail page for ID: ${watchId}`)
-  // For demo purposes, you could open in a new window or show a modal
 }
 
 // Computed properties
@@ -259,7 +193,23 @@ const filteredWatches = computed(() => {
   return filtered
 })
 
-onMounted(() => {
+// Load watches from Supabase
+const loadWatches = async () => {
+  try {
+    isLoading.value = true
+    error.value = null
+    const data = await getAllWatches()
+    watches.value = data
+  } catch (err) {
+    console.error('Erreur lors du chargement des montres:', err)
+    error.value = err.message || 'Une erreur est survenue lors du chargement des montres'
+  } finally {
+    isLoading.value = false
+  }
+}
+
+onMounted(async () => {
+  await loadWatches()
   scrollAnimation()
 })
 </script>

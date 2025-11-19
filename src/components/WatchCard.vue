@@ -6,7 +6,7 @@
     <div class="relative h-80 bg-gray-100">
       <div
         class="absolute inset-0 flex items-center justify-center"
-        v-if="watch.images.length === 0"
+        v-if="!watch.images || watch.images.length === 0"
       >
         <div class="text-gray-400 text-lg">Image non disponible</div>
       </div>
@@ -20,7 +20,7 @@
 
         <!-- Navigation arrows -->
         <button
-          v-if="watch.images.length > 1"
+          v-if="watch.images && watch.images.length > 1"
           @click="previousImage"
           class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-2 transition-all duration-200"
         >
@@ -35,7 +35,7 @@
         </button>
 
         <button
-          v-if="watch.images.length > 1"
+          v-if="watch.images && watch.images.length > 1"
           @click="nextImage"
           class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-2 transition-all duration-200"
         >
@@ -51,7 +51,7 @@
 
         <!-- Image indicators -->
         <div
-          v-if="watch.images.length > 1"
+          v-if="watch.images && watch.images.length > 1"
           class="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex space-x-1"
         >
           <button
@@ -91,8 +91,8 @@
       <!-- Optional: Watch content or year -->
       <div class="mt-4 flex items-center justify-between text-sm text-gray-500">
         <span v-if="watch.year">{{ watch.year }}</span>
-        <span v-if="watch.contenu" class="bg-gray-100 px-2 py-1 rounded text-xs">
-          {{ watch.contenu }}
+        <span v-if="watch.contenu || watch.details?.content" class="bg-gray-100 px-2 py-1 rounded text-xs">
+          {{ watch.contenu || watch.details?.content }}
         </span>
       </div>
     </div>
@@ -115,13 +115,13 @@ const emit = defineEmits(['viewDetails'])
 const currentImageIndex = ref(0)
 
 const nextImage = () => {
-  if (props.watch.images.length > 1) {
+  if (props.watch.images && props.watch.images.length > 1) {
     currentImageIndex.value = (currentImageIndex.value + 1) % props.watch.images.length
   }
 }
 
 const previousImage = () => {
-  if (props.watch.images.length > 1) {
+  if (props.watch.images && props.watch.images.length > 1) {
     currentImageIndex.value =
       currentImageIndex.value === 0 ? props.watch.images.length - 1 : currentImageIndex.value - 1
   }

@@ -1,6 +1,36 @@
 <template>
   <section class="py-16 gradient-bg min-h-screen">
     <div class="max-w-7xl mx-auto px-4">
+      <!-- Loading State -->
+      <div v-if="isLoading" class="text-center py-16">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+        <p class="text-gray-600">Chargement de la montre...</p>
+      </div>
+
+      <!-- Error State -->
+      <div v-else-if="error" class="text-center py-16">
+        <div class="text-red-500 mb-4">
+          <svg class="w-16 h-16 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+        </div>
+        <h3 class="text-xl text-gray-900 mb-2">Erreur de chargement</h3>
+        <p class="text-gray-600 mb-4">{{ error }}</p>
+        <button
+          @click="loadWatch"
+          class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-green-700 transition-colors"
+        >
+          Réessayer
+        </button>
+      </div>
+
+      <!-- Watch Content -->
+      <template v-else-if="watchItem">
       <!-- Breadcrumb -->
 <!--       <nav class="mb-8">
         <ol class="flex items-center space-x-2 text-sm text-gray-600">
@@ -19,11 +49,15 @@
           <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
             <div class="relative h-96 lg:h-[500px]">
               <img
+                v-if="watchItem && watchItem.images && watchItem.images.length > 0"
                 :src="watchItem.images[currentImageIndex]"
                 :alt="watchItem.name"
                 class="w-full h-full object-cover object-center cursor-pointer"
                 @click="openLightbox"
               />
+              <div v-else class="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
+                Image non disponible
+              </div>
 
               <!-- Zoom button -->
               <button
@@ -43,7 +77,7 @@
 
               <!-- Navigation arrows -->
               <button
-                v-if="watchItem.images.length > 1"
+                v-if="watchItem && watchItem.images && watchItem.images.length > 1"
                 @click="previousImage"
                 class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-3 transition-all duration-200"
               >
@@ -58,7 +92,7 @@
               </button>
 
               <button
-                v-if="watchItem.images.length > 1"
+                v-if="watchItem && watchItem.images && watchItem.images.length > 1"
                 @click="nextImage"
                 class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-3 transition-all duration-200"
               >
@@ -75,7 +109,7 @@
           </div>
 
           <!-- Thumbnail Gallery -->
-          <div v-if="watchItem.images.length > 1" class="grid grid-cols-4 gap-2">
+          <div v-if="watchItem && watchItem.images && watchItem.images.length > 1" class="grid grid-cols-4 gap-2">
             <button
               v-for="(image, index) in watchItem.images"
               :key="index"
@@ -183,12 +217,14 @@
             <div class="flex flex-col sm:flex-row gap-4">
               <a
                 :href="
-                  'https://wa.me/' +
-                  WHATSAPP_NUMBER +
-                  '?text=' +
-                  encodeURIComponent(
-                    `Bonjour, je suis intéressé par la montre ${watchItem.name} (Réf. ${watchItem.reference}) au prix de ${formatPrice(watchItem.price)}`,
-                  )
+                  watchItem
+                    ? 'https://wa.me/' +
+                      WHATSAPP_NUMBER +
+                      '?text=' +
+                      encodeURIComponent(
+                        `Bonjour, je suis intéressé par la montre ${watchItem.name} (Réf. ${watchItem.reference}) au prix de ${formatPrice(watchItem.price)}`,
+                      )
+                    : '#'
                 "
                 target="_blank"
                 class="flex-1 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-primary hover:bg-green-700 transition-colors duration-200"
@@ -202,14 +238,16 @@
               </a>
               <a
                 :href="
-                  'mailto:' +
-                  EMAIL_CONTACT +
-                  '?subject=' +
-                  encodeURIComponent(`Demande d'information - ${watchItem.name}`) +
-                  '&body=' +
-                  encodeURIComponent(
-                    `Bonjour,\n\nJe souhaiterais avoir plus d'informations concernant la montre ${watchItem.name} (Réf. ${watchItem.reference}) proposée au prix de ${formatPrice(watchItem.price)}.\n\nCordialement`,
-                  )
+                  watchItem
+                    ? 'mailto:' +
+                      EMAIL_CONTACT +
+                      '?subject=' +
+                      encodeURIComponent(`Demande d'information - ${watchItem.name}`) +
+                      '&body=' +
+                      encodeURIComponent(
+                        `Bonjour,\n\nJe souhaiterais avoir plus d'informations concernant la montre ${watchItem.name} (Réf. ${watchItem.reference}) proposée au prix de ${formatPrice(watchItem.price)}.\n\nCordialement`,
+                      )
+                    : '#'
                 "
                 class="flex-1 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-primary hover:bg-green-700 transition-colors duration-200"
               >
@@ -389,12 +427,14 @@
         <div class="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto">
           <a
             :href="
-              'https://wa.me/' +
-              WHATSAPP_NUMBER +
-              '?text=' +
-              encodeURIComponent(
-                `Bonjour, je suis intéressé par la montre ${watchItem.name} (Réf. ${watchItem.reference}) au prix de ${formatPrice(watchItem.price)}`,
-              )
+              watchItem
+                ? 'https://wa.me/' +
+                  WHATSAPP_NUMBER +
+                  '?text=' +
+                  encodeURIComponent(
+                    `Bonjour, je suis intéressé par la montre ${watchItem.name} (Réf. ${watchItem.reference}) au prix de ${formatPrice(watchItem.price)}`,
+                  )
+                : '#'
             "
             target="_blank"
             class="flex-1 inline-flex items-center justify-center px-6 py-4 border border-transparent text-base font-medium rounded-lg text-white bg-primary hover:bg-green-700 transition-colors duration-200"
@@ -408,14 +448,16 @@
           </a>
           <a
             :href="
-              'mailto:' +
-              EMAIL_CONTACT +
-              '?subject=' +
-              encodeURIComponent(`Demande d'information - ${watchItem.name}`) +
-              '&body=' +
-              encodeURIComponent(
-                `Bonjour,\n\nJe souhaiterais avoir plus d'informations concernant la montre ${watchItem.name} (Réf. ${watchItem.reference}) proposée au prix de ${formatPrice(watchItem.price)}.\n\nCordialement`,
-              )
+              watchItem
+                ? 'mailto:' +
+                  EMAIL_CONTACT +
+                  '?subject=' +
+                  encodeURIComponent(`Demande d'information - ${watchItem.name}`) +
+                  '&body=' +
+                  encodeURIComponent(
+                    `Bonjour,\n\nJe souhaiterais avoir plus d'informations concernant la montre ${watchItem.name} (Réf. ${watchItem.reference}) proposée au prix de ${formatPrice(watchItem.price)}.\n\nCordialement`,
+                  )
+                : '#'
             "
             class="flex-1 inline-flex items-center justify-center px-6 py-4 border border-transparent text-base font-medium rounded-lg text-white bg-primary hover:bg-green-700 transition-colors duration-200"
           >
@@ -431,6 +473,7 @@
           </a>
         </div>
       </div>
+      </template>
     </div>
 
     <!-- Lightbox Modal -->
@@ -461,6 +504,7 @@
 
         <!-- Main image in lightbox -->
         <img
+          v-if="watchItem"
           :src="watchItem.images[currentImageIndex]"
           :alt="watchItem.name"
           class="max-w-[90vw] max-h-[90vh] object-contain"
@@ -469,7 +513,7 @@
 
         <!-- Navigation arrows in lightbox -->
         <button
-          v-if="watchItem.images.length > 1"
+          v-if="watchItem && watchItem.images && watchItem.images.length > 1"
           @click.stop="previousImage"
           class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white rounded-full p-4 transition-all duration-200 z-10"
           aria-label="Image précédente"
@@ -485,7 +529,7 @@
         </button>
 
         <button
-          v-if="watchItem.images.length > 1"
+          v-if="watchItem && watchItem.images && watchItem.images.length > 1"
           @click.stop="nextImage"
           class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white rounded-full p-4 transition-all duration-200 z-10"
           aria-label="Image suivante"
@@ -502,7 +546,7 @@
 
         <!-- Image counter -->
         <div
-          v-if="watchItem.images.length > 1"
+          v-if="watchItem && watchItem.images.length > 1"
           class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-4 py-2 rounded-full text-sm pointer-events-none"
         >
           {{ currentImageIndex + 1 }} / {{ watchItem.images.length }}
@@ -514,8 +558,12 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
+import { useRoute } from 'vue-router'
 import { scrollAnimation } from '@/animation'
 import { WHATSAPP_NUMBER, EMAIL_CONTACT } from '@/config'
+import { getWatchById } from '@/services/watchService'
+
+const route = useRoute()
 
 // Current image index for slider
 const currentImageIndex = ref(0)
@@ -523,61 +571,41 @@ const currentImageIndex = ref(0)
 // Lightbox state
 const isLightboxOpen = ref(false)
 
-// Props (in a real app, this would come from route params or API)
-const watchItem = ref({
-  id: 1,
-  adCode: 'NQBPQ8',
-  name: 'Rolex Sea-Dweller Deepsea',
-  brand: 'Rolex',
-  model: 'Sea-Dweller Deepsea',
-  reference: '116660',
-  price: 15900,
-  year: 2010,
-  condition: 'Très bon état',
-  images: [
-    'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=800&h=800&fit=crop',
-    'https://images.unsplash.com/photo-1548169874-53e85f753f1e?w=800&h=800&fit=crop',
-    'https://images.unsplash.com/photo-1609587312208-cea54be969e7?w=800&h=800&fit=crop',
-    'https://images.unsplash.com/photo-1594534475808-b18fc33b045e?w=800&h=800&fit=crop',
-  ],
-  details: {
-    content: 'Full set',
-    movement: 'Remontage automatique',
-    caseMaterial: 'Acier inoxydable',
-    braceletMaterial: 'Acier inoxydable',
-    caseSize: '44 mm',
-    thickness: '17.7 mm',
-    dialColor: 'Noir',
-    crystal: 'Saphir',
-    waterResistance: '3900 m (12800 ft)',
-    functions: 'Heures, minutes, secondes, date',
-    powerReserve: '48 heures',
-    frequency: '28800 alt/h',
-    caseCondition: 'Très bon état',
-    dialCondition: 'Excellent état',
-    braceletCondition: 'Bon état',
-    guarantee: '1 an de garantie',
-    accessories: [
-      { name: "Boîte d'origine", included: true },
-      { name: "Papiers d'origine", included: true },
-      { name: "Certificat d'authenticité", included: true },
-      { name: "Manuel d'utilisation", included: false },
-      { name: 'Étiquettes', included: false },
-    ],
-  },
-  description:
-    "Cette Rolex Sea-Dweller Deepsea de 2010 est une montre de plongée professionnelle exceptionnelle, conçue pour résister aux pressions extrêmes des grands fonds marins. Avec son boîtier robuste de 44mm en acier inoxydable et son étanchéité remarquable de 3900 mètres, elle représente le summum de l'ingénierie horlogère Rolex. Le cadran noir offre une lisibilité parfaite grâce à ses index et aiguilles luminescents. Cette pièce rare, en très bon état général, est livrée avec sa boîte et ses papiers d'origine, garantissant son authenticité et sa valeur patrimoniale.",
-})
+// State
+const watchItem = ref(null)
+const isLoading = ref(true)
+const error = ref(null)
+
+// Load watch from Supabase
+const loadWatch = async () => {
+  try {
+    isLoading.value = true
+    error.value = null
+    const watchId = route.params.id
+    if (!watchId) {
+      throw new Error('ID de montre manquant')
+    }
+    const data = await getWatchById(watchId)
+    watchItem.value = data
+    // Reset image index when watch changes
+    currentImageIndex.value = 0
+  } catch (err) {
+    console.error('Erreur lors du chargement de la montre:', err)
+    error.value = err.message || 'Une erreur est survenue lors du chargement de la montre'
+  } finally {
+    isLoading.value = false
+  }
+}
 
 // Image navigation methods
 const nextImage = () => {
-  if (watchItem.value.images.length > 1) {
+  if (watchItem.value && watchItem.value.images.length > 1) {
     currentImageIndex.value = (currentImageIndex.value + 1) % watchItem.value.images.length
   }
 }
 
 const previousImage = () => {
-  if (watchItem.value.images.length > 1) {
+  if (watchItem.value && watchItem.value.images.length > 1) {
     currentImageIndex.value =
       currentImageIndex.value === 0 ? watchItem.value.images.length - 1 : currentImageIndex.value - 1
   }
@@ -643,8 +671,16 @@ watch(isLightboxOpen, async (isOpen) => {
   }
 })
 
-onMounted(() => {
+onMounted(async () => {
+  await loadWatch()
   scrollAnimation()
+})
+
+// Watch for route changes
+watch(() => route.params.id, async (newId) => {
+  if (newId) {
+    await loadWatch()
+  }
 })
 
 onUnmounted(() => {
