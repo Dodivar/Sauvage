@@ -1,5 +1,6 @@
 import { createWebHashHistory, createWebHistory, createRouter } from 'vue-router'
 import { isAuthenticated } from './services/maintenanceService'
+import { isAdminAuthenticated } from './services/adminAuthService'
 
 import HomeView from './components/HomePage.vue'
 import Merci from './components/Merci.vue'
@@ -9,6 +10,9 @@ import WatchesCollection from './components/WatchesCollection.vue'
 import WatchDetail from './components/WatchDetail.vue'
 import Maintenance from './components/Maintenance.vue'
 import EstimationPage from './components/EstimationPage.vue'
+import AdminLogin from './components/AdminLogin.vue'
+import AdminDashboard from './components/AdminDashboard.vue'
+import AdminWatchForm from './components/AdminWatchForm.vue'
 
 const routes = [
   { path: '/maintenance', component: Maintenance },
@@ -19,6 +23,11 @@ const routes = [
   // { path: '/depot-vente', component: DepotVente },
    { path: '/collection', component: WatchesCollection },
    { path: '/watch/:id', component: WatchDetail },
+  // Admin routes
+  { path: '/admin/login', component: AdminLogin },
+  { path: '/admin', component: AdminDashboard },
+  { path: '/admin/watches/new', component: AdminWatchForm },
+  { path: '/admin/watches/:id/edit', component: AdminWatchForm },
 ]
 
 const router = createRouter({
@@ -40,7 +49,32 @@ const router = createRouter({
 })
 
 // Guard de maintenance - bloque toutes les routes sauf /maintenance si non authentifié
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
+  // Routes admin - vérifier l'authentification admin
+  if (to.path.startsWith('/admin')) {
+    // Si on va vers la page de login admin, autoriser l'accès
+    if (to.path === '/admin/login') {
+      // Si déjà authentifié, rediriger vers /admin
+      const authenticated = await isAdminAuthenticated()
+      if (authenticated) {
+        next('/admin')
+        return
+      }
+      next()
+      return
+    }
+
+    // Pour toutes les autres routes admin, vérifier l'authentification
+    const authenticated = await isAdminAuthenticated()
+    if (!authenticated) {
+      next('/admin/login')
+      return
+    }
+
+    next()
+    return
+  }
+
   // Si on va vers la page de maintenance, autoriser l'accès
   if (to.path === '/maintenance') {
     next()

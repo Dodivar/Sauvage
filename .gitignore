@@ -39,3 +39,4 @@ render.yaml
 .env.production
 
 SUPABASE_SETUP.md
+supabase_admin_setup.sql

@@ -15,6 +15,7 @@ function transformWatchData(watchData, details, accessories, images) {
     year: watchData.year,
     condition: watchData.condition,
     description: watchData.description || '',
+    isAvailable: watchData.is_available !== undefined ? watchData.is_available : true,
     contenu: details?.content || '', // Pour compatibilité avec WatchCard
     images: images.map((img) => img.image_url).filter(Boolean),
     details: {
@@ -48,10 +49,11 @@ function transformWatchData(watchData, details, accessories, images) {
  */
 export async function getAllWatches() {
   try {
-    // Récupérer toutes les montres
+    // Récupérer uniquement les montres disponibles (en vente)
     const { data: watches, error: watchesError } = await supabase
       .from('watches')
       .select('*')
+      .eq('is_available', true)
       .order('created_at', { ascending: false })
 
     if (watchesError) {
@@ -100,11 +102,16 @@ export async function getWatchById(id) {
       if (watchError.code === 'PGRST116') {
         throw new Error('Montre non trouvée')
       }
-      throw new Error(`Erreur lors de la récupération de la montre: ${watchError.message}`)
+      throw new Error(`La montre demandée n'existe pas`)
     }
 
     if (!watch) {
       throw new Error('Montre non trouvée')
+    }
+
+    // Vérifier si la montre est disponible
+    if (watch.is_available === false) {
+      throw new Error('UNAVAILABLE')
     }
 
     // Récupérer les détails, accessoires et images

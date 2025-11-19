@@ -12,8 +12,6 @@ Blog
     - Création et modification d'article 
         - Ajout de vidéo
 
-- Typographies du site
-
 - denirères ventes réalisées    
     - connecter à la bdd pour afficher les dernières qui ont été MAJ en tant que vendu
 

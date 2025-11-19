@@ -1,0 +1,506 @@
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { getAllWatchesForAdmin, deleteWatch, toggleWatchAvailability } from '@/services/adminWatchService'
+import { logoutAdmin, getCurrentAdmin } from '@/services/adminAuthService'
+import logoNoir from '@/assets/logo noir.png'
+
+const router = useRouter()
+
+// State
+const watches = ref([])
+const isLoading = ref(true)
+const error = ref(null)
+const searchQuery = ref('')
+const selectedBrand = ref('')
+const currentAdmin = ref(null)
+const showDeleteConfirm = ref(false)
+const watchToDelete = ref(null)
+const activeTab = ref('available') // 'available' ou 'unavailable'
+
+// Computed
+const availableBrands = computed(() => {
+  const brands = [...new Set(watches.value.map((watch) => watch.brand))]
+  return brands.sort()
+})
+
+const filteredWatches = computed(() => {
+  let filtered = watches.value
+
+  // Filter by availability status
+  filtered = filtered.filter((watch) => {
+    const isAvailable = watch.is_available !== undefined ? watch.is_available : true
+    return activeTab.value === 'available' ? isAvailable : !isAvailable
+  })
+
+  // Filter by search query
+  if (searchQuery.value) {
+    const query = searchQuery.value.toLowerCase()
+    filtered = filtered.filter(
+      (watch) =>
+        watch.name?.toLowerCase().includes(query) ||
+        watch.brand?.toLowerCase().includes(query) ||
+        watch.model?.toLowerCase().includes(query) ||
+        watch.reference?.toLowerCase().includes(query) ||
+        watch.ad_code?.toLowerCase().includes(query),
+    )
+  }
+
+  // Filter by brand
+  if (selectedBrand.value) {
+    filtered = filtered.filter((watch) => watch.brand === selectedBrand.value)
+  }
+
+  return filtered
+})
+
+const totalWatches = computed(() => watches.value.length)
+const totalValue = computed(() => {
+  return watches.value.reduce((sum, watch) => sum + (parseFloat(watch.price) || 0), 0)
+})
+
+// Methods
+const loadWatches = async () => {
+  try {
+    isLoading.value = true
+    error.value = null
+    const data = await getAllWatchesForAdmin()
+    watches.value = data
+  } catch (err) {
+    console.error('Erreur lors du chargement des montres:', err)
+    error.value = err.message || 'Une erreur est survenue lors du chargement des montres'
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const handleEdit = (watchId) => {
+  router.push(`/admin/watches/${watchId}/edit`)
+}
+
+const handleDelete = (watch) => {
+  watchToDelete.value = watch
+  showDeleteConfirm.value = true
+}
+
+const confirmDelete = async () => {
+  if (!watchToDelete.value) return
+
+  try {
+    const result = await deleteWatch(watchToDelete.value.id)
+    if (result.success) {
+      await loadWatches()
+      showDeleteConfirm.value = false
+      watchToDelete.value = null
+    } else {
+      error.value = result.error || 'Erreur lors de la suppression'
+    }
+  } catch (err) {
+    error.value = 'Une erreur est survenue lors de la suppression'
+    console.error(err)
+  }
+}
+
+const cancelDelete = () => {
+  showDeleteConfirm.value = false
+  watchToDelete.value = null
+}
+
+const handleToggleAvailability = async (watch) => {
+  try {
+    const result = await toggleWatchAvailability(watch.id)
+    if (result.success) {
+      // Mettre à jour le statut localement
+      watch.is_available = result.data.is_available
+    } else {
+      error.value = result.error || 'Erreur lors du changement de statut'
+    }
+  } catch (err) {
+    error.value = 'Une erreur est survenue lors du changement de statut'
+    console.error(err)
+  }
+}
+
+const handleLogout = async () => {
+  await logoutAdmin()
+  router.push('/admin/login')
+}
+
+const formatPrice = (price) => {
+  return new Intl.NumberFormat('fr-FR', {
+    style: 'currency',
+    currency: 'EUR',
+  }).format(price)
+}
+
+const formatDate = (dateString) => {
+  if (!dateString) return '-'
+  return new Date(dateString).toLocaleDateString('fr-FR', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  })
+}
+
+onMounted(async () => {
+  await loadWatches()
+  const admin = await getCurrentAdmin()
+  currentAdmin.value = admin
+})
+</script>
+
+<template>
+  <div class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center py-4">
+          <div class="flex items-center space-x-4">
+            <img :src="logoNoir" alt="Sauvage" class="h-10 w-auto" />
+            <h1 class="text-2xl font-bold text-text-main">Administration</h1>
+          </div>
+          <div class="flex items-center space-x-4">
+            <span v-if="currentAdmin" class="text-sm text-gray-600">
+              {{ currentAdmin.email }}
+            </span>
+            <button
+              @click="handleLogout"
+              class="px-4 py-2 text-sm text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              Déconnexion
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow p-6">
+          <div class="text-sm text-gray-600 mb-1">Total montres</div>
+          <div class="text-3xl font-bold text-text-main">{{ totalWatches }}</div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+          <div class="text-sm text-gray-600 mb-1">Valeur totale</div>
+          <div class="text-3xl font-bold text-text-main">{{ formatPrice(totalValue) }}</div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+          <div class="text-sm text-gray-600 mb-1">Montres filtrées</div>
+          <div class="text-3xl font-bold text-text-main">{{ filteredWatches.length }}</div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="bg-white rounded-lg shadow mb-6">
+        <div class="border-b border-gray-200">
+          <nav class="flex -mb-px">
+            <button
+              @click="activeTab = 'available'"
+              :class="[
+                activeTab === 'available'
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+                'whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm',
+              ]"
+            >
+              Montres en stock
+              <span class="ml-2 text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+                {{ watches.filter((w) => w.is_available !== false).length }}
+              </span>
+            </button>
+            <button
+              @click="activeTab = 'unavailable'"
+              :class="[
+                activeTab === 'unavailable'
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+                'whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm',
+              ]"
+            >
+              Montres hors stock
+              <span class="ml-2 text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+                {{ watches.filter((w) => w.is_available === false).length }}
+              </span>
+            </button>
+          </nav>
+        </div>
+      </div>
+
+      <!-- Actions Bar -->
+      <div class="bg-white rounded-lg shadow p-6 mb-6">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div class="flex flex-col sm:flex-row gap-4 flex-1">
+            <input
+              v-model="searchQuery"
+              type="text"
+              placeholder="Rechercher (nom, marque, modèle, référence, code)..."
+              class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            />
+            <select
+              v-model="selectedBrand"
+              class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            >
+              <option value="">Toutes les marques</option>
+              <option v-for="brand in availableBrands" :key="brand" :value="brand">
+                {{ brand }}
+              </option>
+            </select>
+          </div>
+          <button
+            @click="router.push('/admin/watches/new')"
+            class="px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-green-700 transition-colors whitespace-nowrap"
+          >
+            + Ajouter une montre
+          </button>
+        </div>
+      </div>
+
+      <!-- Error State -->
+      <div v-if="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+        {{ error }}
+        <button @click="error = null" class="ml-4 text-red-500 hover:text-red-700">×</button>
+      </div>
+
+      <!-- Loading State -->
+      <div v-if="isLoading" class="text-center py-16">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+        <p class="text-gray-600">Chargement des montres...</p>
+      </div>
+
+      <!-- Watches Table -->
+      <div v-else-if="filteredWatches.length > 0" class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Image
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Code
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Nom
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Marque
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Modèle
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Prix
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Date
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Statut
+                </th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr v-for="watch in filteredWatches" :key="watch.id" class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="h-16 w-16 bg-gray-200 rounded overflow-hidden">
+                    <img
+                      v-if="watch.images && watch.images.length > 0"
+                      :src="watch.images[0]"
+                      :alt="watch.name"
+                      class="h-full w-full object-cover"
+                    />
+                    <div v-else class="h-full w-full flex items-center justify-center text-gray-400 text-xs">
+                      Pas d'image
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  {{ watch.ad_code }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {{ watch.name }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {{ watch.brand }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {{ watch.model }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
+                  {{ formatPrice(watch.price) }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {{ formatDate(watch.created_at) }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span
+                    :class="[
+                      watch.is_available !== false
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-gray-100 text-gray-800',
+                      'px-2 py-1 text-xs font-semibold rounded-full',
+                    ]"
+                  >
+                    {{ watch.is_available !== false ? 'En stock' : 'Hors stock' }}
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <div class="flex justify-end space-x-2">
+                    <button
+                      @click="router.push(`/watch/${watch.id}`)"
+                      class="text-blue-600 hover:text-blue-900"
+                      title="Voir"
+                    >
+                      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                        />
+                      </svg>
+                    </button>
+                    <button
+                      @click="handleEdit(watch.id)"
+                      class="text-green-600 hover:text-green-900"
+                      title="Modifier"
+                    >
+                      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                        />
+                      </svg>
+                    </button>
+                    <button
+                      @click="handleToggleAvailability(watch)"
+                      :class="[
+                        watch.is_available !== false
+                          ? 'text-orange-600 hover:text-orange-900'
+                          : 'text-green-600 hover:text-green-900',
+                      ]"
+                      :title="watch.is_available !== false ? 'Marquer comme hors stock' : 'Marquer comme en stock'"
+                    >
+                      <svg
+                        v-if="watch.is_available !== false"
+                        class="w-5 h-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
+                        />
+                      </svg>
+                      <svg
+                        v-else
+                        class="w-5 h-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    </button>
+                    <button
+                      v-if="watch.is_available === false"
+                      @click="handleDelete(watch)"
+                      class="text-red-600 hover:text-red-900"
+                      title="Supprimer"
+                    >
+                      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div v-else class="bg-white rounded-lg shadow p-16 text-center">
+        <div class="text-gray-400 mb-4">
+          <svg class="w-16 h-16 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1"
+              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+        </div>
+        <h3 class="text-xl text-gray-600 mb-2">Aucune montre trouvée</h3>
+        <p class="text-gray-500 mb-6">
+          {{ searchQuery || selectedBrand ? 'Essayez de modifier vos critères de recherche' : 'Commencez par ajouter une montre' }}
+        </p>
+        <button
+          v-if="!searchQuery && !selectedBrand"
+          @click="router.push('/admin/watches/new')"
+          class="px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-green-700 transition-colors"
+        >
+          + Ajouter une montre
+        </button>
+      </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div
+      v-if="showDeleteConfirm"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      @click="cancelDelete"
+    >
+      <div
+        class="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4"
+        @click.stop
+      >
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Confirmer la suppression</h3>
+        <p class="text-gray-600 mb-6">
+          Êtes-vous sûr de vouloir supprimer la montre <strong>{{ watchToDelete?.name }}</strong> ? Cette action est irréversible.
+        </p>
+        <div class="flex justify-end space-x-4">
+          <button
+            @click="cancelDelete"
+            class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+          >
+            Annuler
+          </button>
+          <button
+            @click="confirmDelete"
+            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+          >
+            Supprimer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
