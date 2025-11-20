@@ -65,7 +65,7 @@ const loadWatch = async () => {
   try {
     isLoading.value = true
     error.value = null
-    const watch = await getWatchById(watchId.value)
+    const watch = await getWatchById(watchId.value, true)
 
     formData.value = {
       adCode: watch.adCode || '',
