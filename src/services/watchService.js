@@ -87,9 +87,10 @@ export async function getAllWatches() {
 /**
  * Récupère une montre par son ID avec tous ses détails
  * @param {string} id - ID de la montre
+ * @param {bool} isAdmin - Indique si l'utilisateur est administrateur
  * @returns {Promise<Object>} Données de la montre
  */
-export async function getWatchById(id) {
+export async function getWatchById(id, isAdmin = false) {
   try {
     // Récupérer la montre
     const { data: watch, error: watchError } = await supabase
@@ -110,7 +111,7 @@ export async function getWatchById(id) {
     }
 
     // Vérifier si la montre est disponible
-    if (watch.is_available === false) {
+    if (watch.is_available === false && !isAdmin) {
       throw new Error('UNAVAILABLE')
     }
 
