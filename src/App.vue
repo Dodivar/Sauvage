@@ -1,7 +1,8 @@
 <script setup>
-import { ref, useTemplateRef, computed } from 'vue'
+import { ref, useTemplateRef, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { WHATSAPP_NUMBER, EMAIL_CONTACT } from '@/config'
+import { isAdminAuthenticated } from '@/services/adminAuthService'
 
 //const displayMobileMenu = ref(false)
 const overlay = useTemplateRef('mobile-menu-overlay')
@@ -9,6 +10,22 @@ const route = useRoute()
 
 // Vérifier si on est sur la page de maintenance
 const isMaintenancePage = computed(() => route.path === '/maintenance')
+
+// Vérifier si un admin est connecté
+const isAdmin = ref(false)
+
+const checkAdminStatus = async () => {
+  isAdmin.value = await isAdminAuthenticated()
+}
+
+onMounted(() => {
+  checkAdminStatus()
+})
+
+// Re-vérifier quand la route change (au cas où l'admin se connecte/déconnecte)
+watch(() => route.path, () => {
+  checkAdminStatus()
+})
 
 function displayMobileMenu() {
   overlay.value.classList.remove('hidden')
@@ -48,48 +65,72 @@ function closeMobileMenu() {
       <RouterLink to="/" @click="closeMobileMenu">
         <img width="100px" src="./assets/logo noir.png" />
       </RouterLink>
-      <RouterLink to="/" @click="closeMobileMenu" class="hover:text-primary transition-colors"
-        >Accueil</RouterLink
-      >
-      <RouterLink
-        to="/collection"
-        @click="closeMobileMenu"
-        class="hover:text-primary transition-colors"
-        >Nos montres</RouterLink
-      >
-      <RouterLink
-        to="/recherche"
-        @click="closeMobileMenu"
-        class="hover:text-primary transition-colors"
-        >Recherche personnalisée</RouterLink
-      >
-      <RouterLink
-        to="/estimation"
-        @click="closeMobileMenu"
-        class="hover:text-primary transition-colors"
-        >Estimation</RouterLink
-      >
-      <!-- <RouterLink
-        to="/depot-vente"
-        @click="closeMobileMenu"
-        class="hover:text-primary transition-colors"
-        >Dépôt-vente</RouterLink
-      > -->
-      <RouterLink
-        to="/blog"
-        @click="closeMobileMenu"
-        class="hover:text-primary transition-colors"
-        >Blog</RouterLink
-      >
-      <RouterLink to="/#faq" @click="closeMobileMenu" class="hover:text-primary transition-colors"
-        >FAQ</RouterLink
-      >
-      <RouterLink
-        to="/#contact"
-        @click="closeMobileMenu"
-        class="hover:text-primary transition-colors"
-        >Contact</RouterLink
-      >
+      <!-- Menu admin simplifié -->
+      <template v-if="isAdmin">
+        <RouterLink
+          to="/collection"
+          @click="closeMobileMenu"
+          class="hover:text-primary transition-colors"
+          >Nos montres</RouterLink
+        >
+        <RouterLink
+          to="/admin"
+          @click="closeMobileMenu"
+          class="hover:text-primary transition-colors"
+          >Tableau de bord</RouterLink
+        >
+        <RouterLink
+          to="/admin/articles"
+          @click="closeMobileMenu"
+          class="hover:text-primary transition-colors"
+          >Articles</RouterLink
+        >
+      </template>
+      <!-- Menu utilisateur complet -->
+      <template v-else>
+        <RouterLink to="/" @click="closeMobileMenu" class="hover:text-primary transition-colors"
+          >Accueil</RouterLink
+        >
+        <RouterLink
+          to="/collection"
+          @click="closeMobileMenu"
+          class="hover:text-primary transition-colors"
+          >Nos montres</RouterLink
+        >
+        <RouterLink
+          to="/recherche"
+          @click="closeMobileMenu"
+          class="hover:text-primary transition-colors"
+          >Recherche personnalisée</RouterLink
+        >
+        <RouterLink
+          to="/estimation"
+          @click="closeMobileMenu"
+          class="hover:text-primary transition-colors"
+          >Estimation</RouterLink
+        >
+        <!-- <RouterLink
+          to="/depot-vente"
+          @click="closeMobileMenu"
+          class="hover:text-primary transition-colors"
+          >Dépôt-vente</RouterLink
+        > -->
+        <RouterLink
+          to="/blog"
+          @click="closeMobileMenu"
+          class="hover:text-primary transition-colors"
+          >Blog</RouterLink
+        >
+        <RouterLink to="/#faq" @click="closeMobileMenu" class="hover:text-primary transition-colors"
+          >FAQ</RouterLink
+        >
+        <RouterLink
+          to="/#contact"
+          @click="closeMobileMenu"
+          class="hover:text-primary transition-colors"
+          >Contact</RouterLink
+        >
+      </template>
     </nav>
   </div>
 
@@ -104,54 +145,75 @@ function closeMobileMenu() {
         </div>
         <div class="hidden md:block">
           <div class="ml-10 flex items-baseline space-x-8">
-            <RouterLink
-              to="/collection"
-              class="text-text-main hover:text-primary transition-colors"
-              >Nos montres</RouterLink
-            >
-            <div class="relative group">
-              <p class="text-text-main hover:text-primary transition-colors flex items-center">
-                Nos services
-                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </p>
-              <div
-                class="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
+            <!-- Menu admin simplifié -->
+            <template v-if="isAdmin">
+              <RouterLink
+                to="/collection"
+                class="text-text-main hover:text-primary transition-colors"
+                >Nos montres</RouterLink
               >
+              <RouterLink
+                to="/admin"
+                class="text-text-main hover:text-primary transition-colors"
+                >Tableau de bord</RouterLink
+              >
+              <RouterLink
+                to="/admin/articles"
+                class="text-text-main hover:text-primary transition-colors"
+                >Articles</RouterLink
+              >
+            </template>
+            <!-- Menu utilisateur complet -->
+            <template v-else>
+              <RouterLink
+                to="/collection"
+                class="text-text-main hover:text-primary transition-colors"
+                >Nos montres</RouterLink
+              >
+              <div class="relative group">
+                <p class="text-text-main hover:text-primary transition-colors flex items-center">
+                  Nos services
+                  <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </p>
+                <div
+                  class="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
+                >
                   <RouterLink
                     to="/recherche"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary"
                     >Recherche personnalisée</RouterLink
                   >
-                <div class="py-1">
-                  <RouterLink
-                    to="/estimation"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary"
-                    >Estimation</RouterLink
-                  >
-                  <!-- <RouterLink
-                    to="/depot-vente"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary"
-                    >Dépôt-vente</RouterLink
-                  > -->
+                  <div class="py-1">
+                    <RouterLink
+                      to="/estimation"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary"
+                      >Estimation</RouterLink
+                    >
+                    <!-- <RouterLink
+                      to="/depot-vente"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary"
+                      >Dépôt-vente</RouterLink
+                    > -->
+                  </div>
                 </div>
               </div>
-            </div>
-            <RouterLink to="/blog" class="text-text-main hover:text-primary transition-colors"
-              >Blog</RouterLink
-            >
-            <RouterLink to="/#faq" class="text-text-main hover:text-primary transition-colors"
-              >FAQ</RouterLink
-            >
-            <RouterLink to="#contact" class="text-text-main hover:text-primary transition-colors"
-              >Contact</RouterLink
-            >
+              <RouterLink to="/blog" class="text-text-main hover:text-primary transition-colors"
+                >Blog</RouterLink
+              >
+              <RouterLink to="/#faq" class="text-text-main hover:text-primary transition-colors"
+                >FAQ</RouterLink
+              >
+              <RouterLink to="#contact" class="text-text-main hover:text-primary transition-colors"
+                >Contact</RouterLink
+              >
+            </template>
           </div>
         </div>
         <button class="md:hidden" ref="mobile-menu-toggle" @click="displayMobileMenu">
