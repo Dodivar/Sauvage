@@ -38,7 +38,7 @@ const formData = ref({
     caseCondition: '',
     dialCondition: '',
     braceletCondition: '',
-    guarantee: '',
+    guarantee: '1 an de garantie',
     accessories: [],
   },
 })

@@ -62,8 +62,27 @@ const filteredWatches = computed(() => {
 })
 
 const totalWatches = computed(() => watches.value.length)
-const totalValue = computed(() => {
-  return watches.value.reduce((sum, watch) => sum + (parseFloat(watch.price) || 0), 0)
+
+const soldWatchesCount = computed(() => {
+  return watches.value.filter((watch) => watch.is_sold === true).length
+})
+
+const availableWatchesValue = computed(() => {
+  return watches.value
+    .filter((watch) => watch.is_available !== false)
+    .reduce((sum, watch) => sum + (parseFloat(watch.price) || 0), 0)
+})
+
+const unavailableWatchesValue = computed(() => {
+  return watches.value
+    .filter((watch) => watch.is_available === false)
+    .reduce((sum, watch) => sum + (parseFloat(watch.price) || 0), 0)
+})
+
+const soldWatchesValue = computed(() => {
+  return watches.value
+    .filter((watch) => watch.is_sold === true)
+    .reduce((sum, watch) => sum + (parseFloat(watch.price) || 0), 0)
 })
 
 // Methods
@@ -198,15 +217,21 @@ onMounted(async () => {
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Stats -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div class="bg-white rounded-lg shadow p-6">
-          <div class="text-sm text-gray-600 mb-1">Total montres</div>
-          <div class="text-3xl font-bold text-text-main">{{ totalWatches }}</div>
+          <div class="text-sm text-gray-600 mb-1">Valeur totale en stock</div>
+          <div class="text-3xl font-bold text-text-main">{{ formatPrice(availableWatchesValue) }}</div>
+          <div class="text-xs text-gray-500 mt-2">Hors stock : {{ formatPrice(unavailableWatchesValue) }}</div>
         </div>
         <div class="bg-white rounded-lg shadow p-6">
-          <div class="text-sm text-gray-600 mb-1">Valeur totale</div>
-          <div class="text-3xl font-bold text-text-main">{{ formatPrice(totalValue) }}</div>
+          <div class="text-sm text-gray-600 mb-1">Valeur totale vendues</div>
+          <div class="text-3xl font-bold text-text-main">{{ formatPrice(soldWatchesValue) }}</div>
         </div>
+         <div class="bg-white rounded-lg shadow p-6">
+           <div class="text-sm text-gray-600 mb-1">Total montres</div>
+           <div class="text-3xl font-bold text-text-main">{{ totalWatches }}</div>
+           <div class="text-xs text-gray-500 mt-2">Vendues : {{ soldWatchesCount }}</div>
+         </div>
         <div class="bg-white rounded-lg shadow p-6">
           <div class="text-sm text-gray-600 mb-1">Montres filtrées</div>
           <div class="text-3xl font-bold text-text-main">{{ filteredWatches.length }}</div>
@@ -357,8 +382,10 @@ onMounted(async () => {
                     </div>
                   </div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {{ watch.ad_code }}
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 max-w-40">
+                  <div class="truncate" :title="watch.ad_code">
+                    {{ watch.ad_code }}
+                  </div>
                 </td>
                 <td class="px-6 py-4 text-sm text-gray-900 max-w-40">
                   <div class="truncate" :title="watch.name">
