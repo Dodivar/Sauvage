@@ -75,6 +75,12 @@ function closeMobileMenu() {
         class="hover:text-primary transition-colors"
         >Dépôt-vente</RouterLink
       > -->
+      <RouterLink
+        to="/blog"
+        @click="closeMobileMenu"
+        class="hover:text-primary transition-colors"
+        >Blog</RouterLink
+      >
       <RouterLink to="/#faq" @click="closeMobileMenu" class="hover:text-primary transition-colors"
         >FAQ</RouterLink
       >
@@ -137,6 +143,9 @@ function closeMobileMenu() {
                 </div>
               </div>
             </div>
+            <RouterLink to="/blog" class="text-text-main hover:text-primary transition-colors"
+              >Blog</RouterLink
+            >
             <RouterLink to="/#faq" class="text-text-main hover:text-primary transition-colors"
               >FAQ</RouterLink
             >
@@ -228,6 +237,13 @@ function closeMobileMenu() {
                 to="/estimation"
                 class="text-gray-300 hover:text-primary transition-colors"
                 >Estimation</RouterLink
+              >
+            </li>
+            <li>
+              <RouterLink
+                to="/blog"
+                class="text-gray-300 hover:text-primary transition-colors"
+                >Blog</RouterLink
               >
             </li>
             <!-- <li>

@@ -13,6 +13,8 @@ import EstimationPage from './components/EstimationPage.vue'
 import AdminLogin from './components/AdminLogin.vue'
 import AdminDashboard from './components/AdminDashboard.vue'
 import AdminWatchForm from './components/AdminWatchForm.vue'
+import BlogList from './components/BlogList.vue'
+import BlogDetail from './components/BlogDetail.vue'
 
 const routes = [
   { path: '/maintenance', component: Maintenance },
@@ -23,6 +25,8 @@ const routes = [
   // { path: '/depot-vente', component: DepotVente },
    { path: '/collection', component: WatchesCollection },
    { path: '/watch/:id', component: WatchDetail },
+   { path: '/blog', component: BlogList },
+   { path: '/blog/:id', component: BlogDetail },
   // Admin routes
   { path: '/admin/login', component: AdminLogin },
   { path: '/admin', component: AdminDashboard },

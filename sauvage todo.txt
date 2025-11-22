@@ -10,9 +10,6 @@ Blog
     - Génération automatique
     - Dashboard connecté, supabase ?
     - Création et modification d'article 
-        - Ajout de vidéo
-
-- denirères ventes réalisées    
-    - connecter à la bdd pour afficher les dernières qui ont été MAJ en tant que vendu
+        - Ajout de vidéo des réseaux ?
 
 - nos nouveautés sur la page d'accueil avec les 4 dernières rentrées

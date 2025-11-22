@@ -1,0 +1,306 @@
+<template>
+  <section class="py-16 gradient-bg min-h-screen">
+    <div class="max-w-4xl mx-auto px-4">
+      <!-- Loading State -->
+      <div v-if="isLoading" class="text-center py-16">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+        <p class="text-gray-600">Chargement de l'article...</p>
+      </div>
+
+      <!-- Error State -->
+      <div v-else-if="error" class="text-center py-16">
+        <div class="text-red-500 mb-4">
+          <svg class="w-16 h-16 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+        </div>
+        <h3 class="text-xl text-gray-900 mb-2">Erreur de chargement</h3>
+        <p class="text-gray-600 mb-4">{{ error }}</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <button
+            @click="loadArticle"
+            class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-green-700 transition-colors"
+          >
+            Réessayer
+          </button>
+          <router-link
+            to="/blog"
+            class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors inline-flex items-center justify-center"
+          >
+            Retour au blog
+          </router-link>
+        </div>
+      </div>
+
+      <!-- Article Content -->
+      <article v-else-if="article" class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <!-- Header -->
+        <div class="p-8 border-b border-gray-200">
+          <div class="mb-4">
+            <router-link
+              to="/blog"
+              class="inline-flex items-center text-primary hover:text-green-700 transition-colors mb-6"
+            >
+              <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                />
+              </svg>
+              Retour au blog
+            </router-link>
+          </div>
+
+          <h1 class="text-4xl font-bold text-text-main mb-4">{{ article.title }}</h1>
+
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+
+            <!-- Date -->
+            <div v-if="article.created_at" class="flex items-center text-gray-600 text-sm">
+              <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+              {{ formatDate(article.created_at) }}
+            </div>
+            
+            <!-- Catégories -->
+            <div v-if="article.categories && article.categories.length > 0" class="flex flex-wrap gap-2">
+              <span
+                v-for="cat in article.categories"
+                :key="cat"
+                class="inline-block px-4 py-2 text-sm font-semibold rounded-full bg-primary/10 text-primary"
+              >
+                {{ cat }}
+              </span>
+            </div>
+            <div v-else class="flex-1"></div>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div class="p-8 prose prose-lg max-w-none">
+          <div v-html="htmlContent" class="article-content"></div>
+        </div>
+
+        <!-- Footer -->
+        <div class="p-8 border-t border-gray-200 bg-gray-50">
+          <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+            <router-link
+              to="/blog"
+              class="inline-flex items-center text-primary hover:text-green-700 transition-colors"
+            >
+              <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                />
+              </svg>
+              Retour au blog
+            </router-link>
+
+            <div v-if="article.categories && article.categories.length > 0" class="flex items-center gap-2 flex-wrap">
+              <span class="text-sm text-gray-600">Catégories :</span>
+              <span
+                v-for="cat in article.categories"
+                :key="cat"
+                class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-primary/10 text-primary"
+              >
+                {{ cat }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+</template>
+
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { marked } from 'marked'
+import { getArticleById } from '@/services/articleService'
+import { scrollAnimation } from '@/animation'
+
+const route = useRoute()
+
+// State
+const article = ref(null)
+const isLoading = ref(true)
+const error = ref(null)
+
+// Computed
+const htmlContent = computed(() => {
+  if (!article.value || !article.value.text) return ''
+  return marked.parse(article.value.text)
+})
+
+// Methods
+const formatDate = (dateString) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  return date.toLocaleDateString('fr-FR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+}
+
+const loadArticle = async () => {
+  try {
+    isLoading.value = true
+    error.value = null
+
+    const articleId = route.params.id
+    const data = await getArticleById(articleId)
+    article.value = data
+  } catch (err) {
+    console.error('Erreur lors du chargement de l\'article:', err)
+    error.value = err.message || 'Une erreur est survenue lors du chargement de l\'article'
+  } finally {
+    isLoading.value = false
+  }
+}
+
+onMounted(async () => {
+  await loadArticle()
+  scrollAnimation()
+})
+</script>
+
+<style scoped>
+.gradient-bg {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+/* Styles pour le contenu markdown */
+:deep(.article-content) {
+  color: #374151;
+  line-height: 1.75;
+}
+
+:deep(.article-content h1),
+:deep(.article-content h2),
+:deep(.article-content h3),
+:deep(.article-content h4) {
+  color: #1f2937;
+  font-weight: 700;
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
+
+:deep(.article-content h1) {
+  font-size: 2.25em;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 0.5em;
+}
+
+:deep(.article-content h2) {
+  font-size: 1.875em;
+}
+
+:deep(.article-content h3) {
+  font-size: 1.5em;
+}
+
+:deep(.article-content p) {
+  margin-bottom: 1.25em;
+}
+
+:deep(.article-content ul),
+:deep(.article-content ol) {
+  margin-bottom: 1.25em;
+  padding-left: 1.625em;
+}
+
+:deep(.article-content li) {
+  margin-bottom: 0.5em;
+}
+
+:deep(.article-content a) {
+  color: #16a34a;
+  text-decoration: underline;
+}
+
+:deep(.article-content a:hover) {
+  color: #15803d;
+}
+
+:deep(.article-content code) {
+  background-color: #f3f4f6;
+  padding: 0.125em 0.375em;
+  border-radius: 0.25em;
+  font-size: 0.875em;
+  font-family: 'Courier New', monospace;
+}
+
+:deep(.article-content pre) {
+  background-color: #1f2937;
+  color: #f9fafb;
+  padding: 1em;
+  border-radius: 0.5em;
+  overflow-x: auto;
+  margin-bottom: 1.25em;
+}
+
+:deep(.article-content pre code) {
+  background-color: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+:deep(.article-content blockquote) {
+  border-left: 4px solid #16a34a;
+  padding-left: 1em;
+  margin-left: 0;
+  margin-bottom: 1.25em;
+  color: #6b7280;
+  font-style: italic;
+}
+
+:deep(.article-content img) {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5em;
+  margin: 1.5em 0;
+}
+
+:deep(.article-content table) {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5em 0;
+}
+
+:deep(.article-content th),
+:deep(.article-content td) {
+  border: 1px solid #e5e7eb;
+  padding: 0.75em;
+  text-align: left;
+}
+
+:deep(.article-content th) {
+  background-color: #f9fafb;
+  font-weight: 600;
+}
+
+:deep(.article-content hr) {
+  border: none;
+  border-top: 2px solid #e5e7eb;
+  margin: 2em 0;
+}
+</style>
+
