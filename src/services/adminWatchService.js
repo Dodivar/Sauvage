@@ -15,6 +15,7 @@ function transformWatchToDB(watchData) {
     condition: watchData.condition || null,
     description: watchData.description || null,
     is_available: watchData.isAvailable !== undefined ? watchData.isAvailable : true,
+    is_sold: watchData.isSold !== undefined ? watchData.isSold : false,
   }
 }
 
@@ -453,6 +454,224 @@ export async function toggleWatchAvailability(watchId) {
     return {
       success: false,
       error: error.message || 'Erreur lors du changement de statut',
+    }
+  }
+}
+
+/**
+ * Marque une montre comme vendue
+ * @param {string} watchId - ID de la montre
+ * @returns {Promise<{success: boolean, data?: Object, error?: string}>}
+ */
+export async function markWatchAsSold(watchId) {
+  try {
+    const { data: updatedWatch, error: updateError } = await supabase
+      .from('watches')
+      .update({ is_sold: true })
+      .eq('id', watchId)
+      .select()
+      .single()
+
+    if (updateError) {
+      throw new Error(`Erreur lors de la mise à jour du statut: ${updateError.message}`)
+    }
+
+    return {
+      success: true,
+      data: updatedWatch,
+    }
+  } catch (error) {
+    console.error('Erreur dans markWatchAsSold:', error)
+    return {
+      success: false,
+      error: error.message || 'Erreur lors du marquage comme vendue',
+    }
+  }
+}
+
+/**
+ * Récupère une montre par son ID pour l'admin (sans filtre de disponibilité)
+ * @param {string} watchId - ID de la montre
+ * @returns {Promise<Object>} Données complètes de la montre
+ */
+export async function getWatchByIdForAdmin(watchId) {
+  try {
+    // Récupérer la montre
+    const { data: watch, error: watchError } = await supabase
+      .from('watches')
+      .select('*')
+      .eq('id', watchId)
+      .single()
+
+    if (watchError) {
+      throw new Error(`Erreur lors de la récupération de la montre: ${watchError.message}`)
+    }
+
+    if (!watch) {
+      throw new Error('Montre non trouvée')
+    }
+
+    // Récupérer les détails techniques
+    const { data: details } = await supabase
+      .from('watch_details')
+      .select('*')
+      .eq('watch_id', watchId)
+      .single()
+
+    // Récupérer les accessoires
+    const { data: accessories } = await supabase
+      .from('watch_accessories')
+      .select('*')
+      .eq('watch_id', watchId)
+      .order('name', { ascending: true })
+
+    // Récupérer les images
+    const { data: images } = await supabase
+      .from('watch_images')
+      .select('*')
+      .eq('watch_id', watchId)
+      .order('image_order', { ascending: true })
+
+    // Transformer les images avec leurs URLs et IDs
+    const imagesWithUrls = (images || []).map((img) => {
+      let imageUrl = img.image_url
+      if (!imageUrl && img.image_path) {
+        const { data } = supabase.storage.from('watch-images').getPublicUrl(img.image_path)
+        imageUrl = data.publicUrl
+      }
+      return {
+        id: img.id,
+        url: imageUrl,
+        order: img.image_order,
+      }
+    })
+
+    // Transformer en format formulaire
+    return {
+      adCode: watch.ad_code,
+      name: watch.name,
+      brand: watch.brand,
+      model: watch.model,
+      reference: watch.reference,
+      price: watch.price?.toString() || '',
+      year: watch.year?.toString() || '',
+      condition: watch.condition || '',
+      description: watch.description || '',
+      isAvailable: watch.is_available !== undefined ? watch.is_available : true,
+      isSold: watch.is_sold !== undefined ? watch.is_sold : false,
+      details: {
+        content: details?.content || '',
+        movement: details?.movement || '',
+        caseMaterial: details?.case_material || '',
+        braceletMaterial: details?.bracelet_material || '',
+        caseSize: details?.case_size || '',
+        thickness: details?.thickness || '',
+        dialColor: details?.dial_color || '',
+        crystal: details?.crystal || '',
+        waterResistance: details?.water_resistance || '',
+        functions: details?.functions || '',
+        powerReserve: details?.power_reserve || '',
+        frequency: details?.frequency || '',
+        caseCondition: details?.case_condition || '',
+        dialCondition: details?.dial_condition || '',
+        braceletCondition: details?.bracelet_condition || '',
+        guarantee: details?.guarantee || '',
+        accessories: (accessories || []).map((acc) => ({
+          name: acc.name,
+          included: acc.included || false,
+        })),
+      },
+      images: imagesWithUrls,
+    }
+  } catch (error) {
+    console.error('Erreur dans getWatchByIdForAdmin:', error)
+    throw error
+  }
+}
+
+/**
+ * Télécharge une image depuis une URL et la convertit en File
+ * @param {string} imageUrl - URL de l'image
+ * @param {string} fileName - Nom du fichier
+ * @returns {Promise<File>} Fichier image
+ */
+async function downloadImageAsFile(imageUrl, fileName) {
+  try {
+    const response = await fetch(imageUrl)
+    if (!response.ok) {
+      throw new Error(`Erreur lors du téléchargement de l'image: ${response.statusText}`)
+    }
+    const blob = await response.blob()
+    return new File([blob], fileName, { type: blob.type })
+  } catch (error) {
+    console.error('Erreur dans downloadImageAsFile:', error)
+    throw error
+  }
+}
+
+/**
+ * Duplique une montre avec toutes ses données et images
+ * @param {string} watchId - ID de la montre à dupliquer
+ * @returns {Promise<{success: boolean, data?: Object, error?: string}>}
+ */
+export async function duplicateWatch(watchId) {
+  try {
+    // 1. Récupérer toutes les données de la montre originale
+    const originalWatch = await getWatchByIdForAdmin(watchId)
+
+    // 2. Générer un nouveau code annonce (ajouter " - Copie" ou un suffixe)
+    const newAdCode = `${originalWatch.adCode} - Copie`
+
+    // 3. Créer la nouvelle montre avec toutes les données
+    const newWatchData = {
+      ...originalWatch,
+      adCode: newAdCode,
+      isAvailable: false, // La montre dupliquée est toujours hors stock par défaut
+      isSold: false, // La montre dupliquée n'est jamais vendue
+    }
+
+    const createResult = await createWatch(newWatchData)
+
+    if (!createResult.success) {
+      throw new Error(createResult.error || 'Erreur lors de la création de la montre dupliquée')
+    }
+
+    const newWatchId = createResult.data.id
+
+    // 4. Dupliquer les images
+    if (originalWatch.images && originalWatch.images.length > 0) {
+      for (let i = 0; i < originalWatch.images.length; i++) {
+        const image = originalWatch.images[i]
+        if (image.url) {
+          try {
+            // Extraire le nom de fichier de l'URL ou générer un nouveau nom
+            const urlParts = image.url.split('/')
+            const originalFileName = urlParts[urlParts.length - 1].split('?')[0] // Enlever les query params
+            const fileExt = originalFileName.split('.').pop() || 'jpg'
+            const newFileName = `duplicate-${Date.now()}-${i}.${fileExt}`
+
+            // Télécharger l'image depuis l'URL
+            const imageFile = await downloadImageAsFile(image.url, newFileName)
+
+            // Uploader l'image pour la nouvelle montre
+            await uploadWatchImage(newWatchId, imageFile, image.order || i + 1)
+          } catch (imageError) {
+            console.error(`Erreur lors de la duplication de l'image ${i + 1}:`, imageError)
+            // Continuer avec les autres images même si une échoue
+          }
+        }
+      }
+    }
+
+    return {
+      success: true,
+      data: { id: newWatchId },
+    }
+  } catch (error) {
+    console.error('Erreur dans duplicateWatch:', error)
+    return {
+      success: false,
+      error: error.message || 'Erreur lors de la duplication de la montre',
     }
   }
 }

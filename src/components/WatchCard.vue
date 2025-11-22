@@ -69,9 +69,17 @@
 
     <!-- Watch Info -->
     <div class="p-6 cursor-pointer" @click="$emit('viewDetails', watch.id)">
-      <h3 class="text-xl font-semibold text-gray-900 mb-2 leading-tight">
-        {{ watch.name }}
-      </h3>
+      <div class="flex items-start justify-between mb-2">
+        <h3 class="text-xl font-semibold text-gray-900 leading-tight flex-1">
+          {{ watch.name }}
+        </h3>
+        <span
+          v-if="watch.isSold"
+          class="ml-2 px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 whitespace-nowrap"
+        >
+          Vendue
+        </span>
+      </div>
 
       <p class="text-sm text-gray-600 mb-4 font-light">Réf. {{ watch.reference }}</p>
 

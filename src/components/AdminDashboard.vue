@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { getAllWatchesForAdmin, deleteWatch, toggleWatchAvailability } from '@/services/adminWatchService'
+import { getAllWatchesForAdmin, deleteWatch, toggleWatchAvailability, markWatchAsSold } from '@/services/adminWatchService'
 import { logoutAdmin, getCurrentAdmin } from '@/services/adminAuthService'
 import logoNoir from '@/assets/logo noir.png'
 
@@ -11,12 +11,14 @@ const router = useRouter()
 const watches = ref([])
 const isLoading = ref(true)
 const error = ref(null)
+const success = ref(null)
 const searchQuery = ref('')
 const selectedBrand = ref('')
 const currentAdmin = ref(null)
 const showDeleteConfirm = ref(false)
 const watchToDelete = ref(null)
 const activeTab = ref('available') // 'available' ou 'unavailable'
+const showSoldWatches = ref(false) // Filtre pour afficher les montres vendues
 
 // Computed
 const availableBrands = computed(() => {
@@ -32,6 +34,11 @@ const filteredWatches = computed(() => {
     const isAvailable = watch.is_available !== undefined ? watch.is_available : true
     return activeTab.value === 'available' ? isAvailable : !isAvailable
   })
+
+  // Filter by sold status
+  if (showSoldWatches.value) {
+    filtered = filtered.filter((watch) => watch.is_sold === true)
+  }
 
   // Filter by search query
   if (searchQuery.value) {
@@ -117,6 +124,21 @@ const handleToggleAvailability = async (watch) => {
     }
   } catch (err) {
     error.value = 'Une erreur est survenue lors du changement de statut'
+    console.error(err)
+  }
+}
+
+const handleMarkAsSold = async (watch) => {
+  try {
+    const result = await markWatchAsSold(watch.id)
+    if (result.success) {
+      // Mettre à jour le statut localement
+      watch.is_sold = result.data.is_sold
+    } else {
+      error.value = result.error || 'Erreur lors du marquage comme vendue'
+    }
+  } catch (err) {
+    error.value = 'Une erreur est survenue lors du marquage comme vendue'
     console.error(err)
   }
 }
@@ -246,6 +268,14 @@ onMounted(async () => {
                 {{ brand }}
               </option>
             </select>
+            <label class="flex items-center px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+              <input
+                v-model="showSoldWatches"
+                type="checkbox"
+                class="mr-2 w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+              />
+              <span class="text-sm font-medium text-gray-700 whitespace-nowrap">Afficher les montres vendues</span>
+            </label>
           </div>
           <button
             @click="router.push('/admin/watches/new')"
@@ -260,6 +290,12 @@ onMounted(async () => {
       <div v-if="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
         {{ error }}
         <button @click="error = null" class="ml-4 text-red-500 hover:text-red-700">×</button>
+      </div>
+
+      <!-- Success State -->
+      <div v-if="success" class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6">
+        {{ success }}
+        <button @click="success = null" class="ml-4 text-green-500 hover:text-green-700">×</button>
       </div>
 
       <!-- Loading State -->
@@ -298,6 +334,9 @@ onMounted(async () => {
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Statut
                 </th>
+                <!-- <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Statut vente
+                </th> -->
                 <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions
                 </th>
@@ -321,14 +360,20 @@ onMounted(async () => {
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                   {{ watch.ad_code }}
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {{ watch.name }}
+                <td class="px-6 py-4 text-sm text-gray-900 max-w-40">
+                  <div class="truncate" :title="watch.name">
+                    {{ watch.name }}
+                  </div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {{ watch.brand }}
+                <td class="px-6 py-4 text-sm text-gray-500 max-w-40">
+                  <div class="truncate" :title="watch.brand">
+                    {{ watch.brand }}
+                  </div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {{ watch.model }}
+                <td class="px-6 py-4 text-sm text-gray-500 max-w-40">
+                  <div class="truncate" :title="watch.model">
+                    {{ watch.model }}
+                  </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
                   {{ formatPrice(watch.price) }}
@@ -336,7 +381,7 @@ onMounted(async () => {
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {{ formatDate(watch.created_at) }}
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap">
+               <!--  <td class="px-6 py-4 whitespace-nowrap">
                   <span
                     :class="[
                       watch.is_available !== false
@@ -346,6 +391,18 @@ onMounted(async () => {
                     ]"
                   >
                     {{ watch.is_available !== false ? 'En stock' : 'Hors stock' }}
+                  </span>
+                </td> -->
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span
+                    :class="[
+                      watch.is_sold === true
+                        ? 'bg-red-100 text-red-800'
+                        : 'bg-green-100 text-green-800',
+                      'px-2 py-1 text-xs font-semibold rounded-full',
+                    ]"
+                  >
+                  {{ watch.is_sold === true ? 'Vendue' : 'En vente' }}
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -419,6 +476,21 @@ onMounted(async () => {
                           stroke-linejoin="round"
                           stroke-width="2"
                           d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    </button>
+                    <button
+                      v-if="watch.is_available === false && watch.is_sold !== true"
+                      @click="handleMarkAsSold(watch)"
+                      class="text-purple-600 hover:text-purple-900"
+                      title="Marquer comme vendue"
+                    >
+                      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                         />
                       </svg>
                     </button>

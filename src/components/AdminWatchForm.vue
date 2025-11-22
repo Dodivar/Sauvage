@@ -1,9 +1,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { createWatch, updateWatch, uploadWatchImage, deleteWatchImage, reorderWatchImages } from '@/services/adminWatchService'
-import { getWatchById } from '@/services/watchService'
-import { getWatchImages } from '@/services/watchService'
+import { createWatch, updateWatch, uploadWatchImage, deleteWatchImage, reorderWatchImages, getWatchByIdForAdmin, duplicateWatch } from '@/services/adminWatchService'
 
 const router = useRouter()
 const route = useRoute()
@@ -23,6 +21,7 @@ const formData = ref({
   condition: '',
   description: '',
   isAvailable: true,
+  isSold: false,
   details: {
     content: '',
     movement: '',
@@ -65,7 +64,7 @@ const loadWatch = async () => {
   try {
     isLoading.value = true
     error.value = null
-    const watch = await getWatchById(watchId.value)
+    const watch = await getWatchByIdForAdmin(watchId.value)
 
     formData.value = {
       adCode: watch.adCode || '',
@@ -78,6 +77,7 @@ const loadWatch = async () => {
       condition: watch.condition || '',
       description: watch.description || '',
       isAvailable: watch.isAvailable !== undefined ? watch.isAvailable : true,
+      isSold: watch.isSold !== undefined ? watch.isSold : false,
       details: {
         content: watch.details?.content || '',
         movement: watch.details?.movement || '',
@@ -99,12 +99,11 @@ const loadWatch = async () => {
       },
     }
 
-    // Load images
-    const watchImages = await getWatchImages(watchId.value)
-    images.value = watchImages.map((img) => ({
+    // Load images (getWatchByIdForAdmin retourne déjà les images avec leurs IDs)
+    images.value = (watch.images || []).map((img) => ({
       id: img.id,
-      url: img.image_url,
-      order: img.image_order,
+      url: img.url,
+      order: img.order,
     })).sort((a, b) => a.order - b.order)
   } catch (err) {
     console.error('Erreur lors du chargement de la montre:', err)
@@ -293,6 +292,28 @@ const handleSubmit = async () => {
   }
 }
 
+const handleDuplicate = async () => {
+  if (!isEditMode.value) return
+
+  try {
+    error.value = null
+    success.value = null
+    const result = await duplicateWatch(watchId.value)
+    if (result.success) {
+      success.value = `Montre "${formData.value.name}" dupliquée avec succès. Redirection...`
+      // Rediriger vers la liste après 1.5 secondes
+      setTimeout(() => {
+        router.push('/admin')
+      }, 1500)
+    } else {
+      error.value = result.error || 'Erreur lors de la duplication'
+    }
+  } catch (err) {
+    error.value = 'Une erreur est survenue lors de la duplication'
+    console.error(err)
+  }
+}
+
 onMounted(() => {
   if (isEditMode.value) {
     loadWatch()
@@ -432,6 +453,16 @@ onMounted(() => {
                   class="mr-2 w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
                 />
                 <span class="text-sm font-medium text-gray-700">En vente / Disponible</span>
+              </label>
+            </div>
+            <div>
+              <label class="flex items-center">
+                <input
+                  v-model="formData.isSold"
+                  type="checkbox"
+                  class="mr-2 w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                />
+                <span class="text-sm font-medium text-gray-700">Vendue</span>
               </label>
             </div>
             <div class="md:col-span-2">
@@ -733,6 +764,23 @@ onMounted(() => {
             class="px-6 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors"
           >
             Annuler
+          </button>
+          <button
+            v-if="isEditMode"
+            type="button"
+            @click="handleDuplicate"
+            :disabled="isSaving"
+            class="px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center"
+          >
+            <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+              />
+            </svg>
+            Dupliquer
           </button>
           <button
             type="submit"

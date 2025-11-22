@@ -71,6 +71,9 @@ export async function sendEmail(formData) {
 export function prepareEstimationFormData(form) {
   const formData = new FormData(form)
 
+  // Supprime les entrées contact_mode[] du FormData pour éviter les doublons
+  formData.delete('contact_mode[]')
+
   // Ajoute le type de formulaire
   formData.append('type', 'estimation')
 
@@ -90,6 +93,9 @@ export function prepareEstimationFormData(form) {
  */
 export function prepareSearchFormData(form) {
   const formData = new FormData(form)
+
+  // Supprime les entrées contact_mode[] du FormData pour éviter les doublons
+  formData.delete('contact_mode[]')
 
   // Ajoute le type de formulaire
   formData.append('type', 'search')

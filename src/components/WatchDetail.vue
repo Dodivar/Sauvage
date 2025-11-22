@@ -174,9 +174,17 @@
         <div class="space-y-8">
           <!-- Header -->
           <div>
-            <h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
-              {{ watchItem.name }}
-            </h1>
+            <div class="flex items-start justify-between mb-2">
+              <h1 class="text-3xl lg:text-4xl font-bold text-gray-900">
+                {{ watchItem.name }}
+              </h1>
+              <span
+                v-if="watchItem.isSold"
+                class="ml-4 px-3 py-1 text-sm font-semibold rounded-full bg-red-100 text-red-800 whitespace-nowrap"
+              >
+                Vendue
+              </span>
+            </div>
             <p class="text-lg text-gray-600 mb-4">Réf. {{ watchItem.reference }}</p>
             <div class="text-3xl font-normal text-primary mb-6">
               {{ formatPrice(watchItem.price) }}
