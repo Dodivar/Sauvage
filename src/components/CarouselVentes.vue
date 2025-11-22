@@ -1,5 +1,5 @@
 <template>
-  <section class="py-20 bg-gray-50">
+  <section v-if="salesWatches.length > 0" class="py-20 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12">
         <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-4">
@@ -9,15 +9,22 @@
       </div>
       <div class="overflow-x-auto custom-scrollbar-carrousel scroll-smooth p-8 relative">
         <div class="flex space-x-6 min-w-full">
-          <template v-for="(watch, i) in salesWatches" :key="`${i}-${watch.name}`">
+          <template v-for="(watch, i) in salesWatches" :key="`${i}-${watch.id || watch.name}`">
             <div
               class="flex-shrink-0 w-60 bg-white rounded-xl shadow-md hover:shadow-lg p-4 text-center transition-all duration-300 hover:scale-105"
             >
               <img
-                :src="watch.img"
-                :alt="watch.alt"
+                v-if="watch.imageUrl"
+                :src="watch.imageUrl"
+                :alt="watch.name"
                 class="rounded-lg mb-4 mx-auto h-64 w-full object-cover"
               />
+              <div
+                v-else
+                class="rounded-lg mb-4 mx-auto h-64 w-full bg-gray-200 flex items-center justify-center"
+              >
+                <span class="text-gray-400 text-sm">Pas d'image</span>
+              </div>
               <h4 class="text-lg font-semibold text-text-main">{{ watch.name }}</h4>
             </div>
           </template>
@@ -28,54 +35,18 @@
 </template>
 
 <script setup>
-import imgRolexDatejust from '@/assets/sales/Rolex Datejust.jpg'
-import imgBeritlingNavitimer1 from '@/assets/sales/Beritling Navitimer 1.jpg'
-import imgBeritlingNavitimer2 from '@/assets/sales/Beritling Navitimer 2.jpg'
-import imgRolexOyster from '@/assets/sales/Rolex Oyster.jpg'
-import imgTudorBlackBay58 from '@/assets/sales/Tudor Black Bay 58.jpg'
-import imgTagHeuerMonaco from '@/assets/sales/Tag Heuer Monaco Steeve McQueen.jpg'
-import imgTudorBlackBay41 from '@/assets/sales/Tudor Black Bay 41.jpg'
+import { ref, onMounted } from 'vue'
+import { getSoldWatches } from '@/services/watchService'
 
-const salesWatches = [
-  {
-    img: imgTudorBlackBay58,
-    alt: 'Tudor Black Bay 58',
-    name: 'Tudor Black Bay 58',
-  },
-  {
-    img: imgRolexDatejust,
-    alt: 'Rolex Datejust',
-    name: 'Rolex Datejust',
-  },
-  {
-    img: imgBeritlingNavitimer1,
-    alt: 'Breitling Old Navitimer',
-    name: 'Breitling Old Navitimer',
-  },
-  {
-    img: imgRolexOyster,
-    alt: 'Rolex Air King Oyster',
-    name: 'Rolex Air King Oyster',
-  },
-  {
-    img: imgBeritlingNavitimer2,
-    alt: 'Breitling Navitimer',
-    name: 'Breitling Navitimer',
-  },
-  {
-    img: imgTagHeuerMonaco,
-    alt: 'Tag Heuer Monaco',
-    name: 'Tag Heuer Monaco',
-  },
-  {
-    img: imgTudorBlackBay41,
-    alt: 'Tudor Black Bay 41',
-    name: 'Tudor Black Bay 41',
-  },
-  {
-    img: imgTudorBlackBay58,
-    alt: 'Tudor Black Bay 58',
-    name: 'Tudor Black Bay 58',
-  },
-]
+const salesWatches = ref([])
+
+onMounted(async () => {
+  try {
+    const watches = await getSoldWatches()
+    salesWatches.value = watches
+  } catch (error) {
+    console.error('Erreur lors du chargement des montres vendues:', error)
+    salesWatches.value = []
+  }
+})
 </script>

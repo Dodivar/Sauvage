@@ -169,6 +169,64 @@ async function getWatchAccessories(watchId) {
 }
 
 /**
+ * Récupère les 7 dernières montres vendues avec leur première image
+ * @returns {Promise<Array>} Liste des montres vendues (max 7)
+ */
+export async function getSoldWatches(limit = 7) {
+  try {
+    // Récupérer les montres vendues, triées par date de mise à jour (plus récentes en premier)
+    const { data: watches, error: watchesError } = await supabase
+      .from('watches')
+      .select('id, name, ad_code, updated_at')
+      .eq('is_sold', true)
+      .order('updated_at', { ascending: false })
+      .limit(limit)
+
+    if (watchesError) {
+      throw new Error(`Erreur lors de la récupération des montres vendues: ${watchesError.message}`)
+    }
+
+    if (!watches || watches.length === 0) {
+      return []
+    }
+
+    // Pour chaque montre, récupérer uniquement la première image
+    const watchesWithImages = await Promise.all(
+      watches.map(async (watch) => {
+        const { data: firstImage } = await supabase
+          .from('watch_images')
+          .select('image_url, image_path')
+          .eq('watch_id', watch.id)
+          .order('image_order', { ascending: true })
+          .limit(1)
+          .single()
+
+        let imageUrl = null
+        if (firstImage) {
+          if (firstImage.image_url) {
+            imageUrl = firstImage.image_url
+          } else if (firstImage.image_path) {
+            const { data } = supabase.storage.from('watch-images').getPublicUrl(firstImage.image_path)
+            imageUrl = data.publicUrl
+          }
+        }
+
+        return {
+          id: watch.id,
+          name: watch.name,
+          imageUrl: imageUrl,
+        }
+      }),
+    )
+
+    return watchesWithImages
+  } catch (error) {
+    console.error('Erreur dans getSoldWatches:', error)
+    return []
+  }
+}
+
+/**
  * Récupère les images d'une montre depuis Supabase Storage
  * @param {string} watchId - ID de la montre
  * @returns {Promise<Array>} Liste des images avec leurs URLs
