@@ -178,12 +178,20 @@
               <h1 class="text-3xl lg:text-4xl font-bold text-gray-900">
                 {{ watchItem.name }}
               </h1>
-              <span
-                v-if="watchItem.isSold"
-                class="ml-4 px-3 py-1 text-sm font-semibold rounded-full bg-red-100 text-red-800 whitespace-nowrap"
-              >
-                Vendue
-              </span>
+              <div class="flex items-center space-x-2">
+                <span
+                  v-if="!watchItem.isAvailable"
+                  class="ml-4 px-3 py-1 text-sm font-semibold rounded-full bg-orange-100 text-orange-800 whitespace-nowrap"
+                >
+                  Hors stock
+                </span>
+                <span
+                  v-if="watchItem.isSold"
+                  class="ml-4 px-3 py-1 text-sm font-semibold rounded-full bg-red-100 text-red-800 whitespace-nowrap"
+                >
+                  Vendue
+                </span>
+              </div>
             </div>
             <p class="text-lg text-gray-600 mb-4">Réf. {{ watchItem.reference }}</p>
             <div class="text-3xl font-normal text-primary mb-6">
@@ -195,7 +203,7 @@
           <div class="bg-white rounded-xl shadow-lg p-6">
             <h3 class="text-xl font-semibold text-gray-900 mb-4">Caractéristiques principales</h3>
             <div class="grid grid-cols-2 gap-4">
-              <div class="flex items-center space-x-2">
+              <div v-if="hasValue(watchItem.year)" class="flex items-center space-x-2">
                 <svg
                   class="w-5 h-5 text-primary"
                   fill="none"
@@ -211,7 +219,7 @@
                 </svg>
                 <span class="text-sm text-gray-600">{{ watchItem.year }}</span>
               </div>
-              <div class="flex items-center space-x-2">
+              <div v-if="hasValue(watchItem.condition)" class="flex items-center space-x-2">
                 <svg
                   class="w-5 h-5 text-primary"
                   fill="none"
@@ -227,7 +235,7 @@
                 </svg>
                 <span class="text-sm text-gray-600">{{ watchItem.condition }}</span>
               </div>
-              <div class="flex items-center space-x-2">
+              <div v-if="hasValue(watchItem.details?.content)" class="flex items-center space-x-2">
                 <svg
                   class="w-5 h-5 text-primary"
                   fill="none"
@@ -240,7 +248,7 @@
                 </svg>
                 <span class="text-sm text-gray-600">{{ watchItem.details.content }}</span>
               </div>
-              <div class="flex items-center space-x-2">
+              <div v-if="hasValue(watchItem.details?.guarantee)" class="flex items-center space-x-2">
                 <svg
                   class="w-5 h-5 text-primary"
                   fill="none"
@@ -325,35 +333,35 @@
               Données de base
             </h3>
             <div class="space-y-3">
-              <div class="flex justify-between py-2 border-b border-gray-100">
+              <div v-if="hasValue(watchItem.adCode)" class="flex justify-between py-2 border-b border-gray-100">
                 <span class="text-gray-600">Code annonce</span>
                 <span class="font-medium">{{ watchItem.adCode }}</span>
               </div>
-              <div class="flex justify-between py-2 border-b border-gray-100">
+              <div v-if="hasValue(watchItem.brand)" class="flex justify-between py-2 border-b border-gray-100">
                 <span class="text-gray-600">Marque</span>
                 <span class="font-medium">{{ watchItem.brand }}</span>
               </div>
-              <div class="flex justify-between py-2 border-b border-gray-100">
+              <div v-if="hasValue(watchItem.model)" class="flex justify-between py-2 border-b border-gray-100">
                 <span class="text-gray-600">Modèle</span>
                 <span class="font-medium">{{ watchItem.model }}</span>
               </div>
-              <div class="flex justify-between py-2 border-b border-gray-100">
+              <div v-if="hasValue(watchItem.reference)" class="flex justify-between py-2 border-b border-gray-100">
                 <span class="text-gray-600">Numéro de référence</span>
                 <span class="font-medium">{{ watchItem.reference }}</span>
               </div>
-              <div class="flex justify-between py-2 border-b border-gray-100">
+              <div v-if="hasValue(watchItem.details?.movement)" class="flex justify-between py-2 border-b border-gray-100">
                 <span class="text-gray-600">Mouvement</span>
                 <span class="font-medium">{{ watchItem.details.movement }}</span>
               </div>
-              <div class="flex justify-between py-2 border-b border-gray-100">
+              <div v-if="hasValue(watchItem.details?.caseMaterial)" class="flex justify-between py-2 border-b border-gray-100">
                 <span class="text-gray-600">Boîtier</span>
                 <span class="font-medium">{{ watchItem.details.caseMaterial }}</span>
               </div>
-              <div class="flex justify-between py-2 border-b border-gray-100">
+              <div v-if="hasValue(watchItem.details?.braceletMaterial)" class="flex justify-between py-2 border-b border-gray-100">
                 <span class="text-gray-600">Matière du bracelet</span>
                 <span class="font-medium">{{ watchItem.details.braceletMaterial }}</span>
               </div>
-              <div class="flex justify-between py-2 border-b border-gray-100">
+              <div v-if="hasValue(watchItem.year)" class="flex justify-between py-2 border-b border-gray-100">
                 <span class="text-gray-600">Année de fabrication</span>
                 <span class="font-medium">{{ watchItem.year }}</span>
               </div>
@@ -366,35 +374,35 @@
               Spécifications techniques
             </h3>
             <div class="space-y-3">
-              <div class="flex justify-between py-2 border-b border-gray-100">
+              <div v-if="hasValue(watchItem.details?.caseSize)" class="flex justify-between py-2 border-b border-gray-100">
                 <span class="text-gray-600">Diamètre du boîtier</span>
                 <span class="font-medium">{{ watchItem.details.caseSize }}</span>
               </div>
-              <div class="flex justify-between py-2 border-b border-gray-100">
+              <div v-if="hasValue(watchItem.details?.thickness)" class="flex justify-between py-2 border-b border-gray-100">
                 <span class="text-gray-600">Épaisseur</span>
                 <span class="font-medium">{{ watchItem.details.thickness }}</span>
               </div>
-              <div class="flex justify-between py-2 border-b border-gray-100">
+              <div v-if="hasValue(watchItem.details?.dialColor)" class="flex justify-between py-2 border-b border-gray-100">
                 <span class="text-gray-600">Couleur du cadran</span>
                 <span class="font-medium">{{ watchItem.details.dialColor }}</span>
               </div>
-              <div class="flex justify-between py-2 border-b border-gray-100">
+              <div v-if="hasValue(watchItem.details?.crystal)" class="flex justify-between py-2 border-b border-gray-100">
                 <span class="text-gray-600">Matière de la glace</span>
                 <span class="font-medium">{{ watchItem.details.crystal }}</span>
               </div>
-              <div class="flex justify-between py-2 border-b border-gray-100">
+              <div v-if="hasValue(watchItem.details?.waterResistance)" class="flex justify-between py-2 border-b border-gray-100">
                 <span class="text-gray-600">Étanchéité</span>
                 <span class="font-medium">{{ watchItem.details.waterResistance }}</span>
               </div>
-              <div class="flex justify-between py-2 border-b border-gray-100">
+              <div v-if="hasValue(watchItem.details?.functions)" class="flex justify-between py-2 border-b border-gray-100">
                 <span class="text-gray-600">Fonctions</span>
                 <span class="font-medium">{{ watchItem.details.functions }}</span>
               </div>
-              <div class="flex justify-between py-2 border-b border-gray-100">
+              <div v-if="hasValue(watchItem.details?.powerReserve)" class="flex justify-between py-2 border-b border-gray-100">
                 <span class="text-gray-600">Réserve de marche</span>
                 <span class="font-medium">{{ watchItem.details.powerReserve }}</span>
               </div>
-              <div class="flex justify-between py-2 border-b border-gray-100">
+              <div v-if="hasValue(watchItem.details?.frequency)" class="flex justify-between py-2 border-b border-gray-100">
                 <span class="text-gray-600">Fréquence</span>
                 <span class="font-medium">{{ watchItem.details.frequency }}</span>
               </div>
@@ -408,19 +416,19 @@
         <div class="bg-white rounded-xl shadow-lg p-6">
           <h3 class="text-xl font-semibold text-gray-900 mb-4">État et condition</h3>
           <div class="space-y-3">
-            <div class="flex justify-between py-2 border-b border-gray-100">
+            <div v-if="hasValue(watchItem.condition)" class="flex justify-between py-2 border-b border-gray-100">
               <span class="text-gray-600">État général</span>
               <span class="font-medium">{{ watchItem.condition }}</span>
             </div>
-            <div class="flex justify-between py-2 border-b border-gray-100">
+            <div v-if="hasValue(watchItem.details?.caseCondition)" class="flex justify-between py-2 border-b border-gray-100">
               <span class="text-gray-600">Boîtier</span>
               <span class="font-medium">{{ watchItem.details.caseCondition }}</span>
             </div>
-            <div class="flex justify-between py-2 border-b border-gray-100">
+            <div v-if="hasValue(watchItem.details?.dialCondition)" class="flex justify-between py-2 border-b border-gray-100">
               <span class="text-gray-600">Cadran</span>
               <span class="font-medium">{{ watchItem.details.dialCondition }}</span>
             </div>
-            <div class="flex justify-between py-2 border-b border-gray-100">
+            <div v-if="hasValue(watchItem.details?.braceletCondition)" class="flex justify-between py-2 border-b border-gray-100">
               <span class="text-gray-600">Bracelet</span>
               <span class="font-medium">{{ watchItem.details.braceletCondition }}</span>
             </div>
@@ -457,7 +465,7 @@
       </div>
 
       <!-- Description -->
-      <div class="bg-white rounded-xl shadow-lg p-8 mb-12">
+      <div v-if="hasValue(watchItem.description)" class="bg-white rounded-xl shadow-lg p-8 mb-12">
         <h2 class="text-2xl font-semibold text-gray-900 mb-6">Description</h2>
         <div class="prose max-w-none text-gray-700 leading-relaxed">
           <p>{{ watchItem.description }}</p>
@@ -610,6 +618,7 @@ import { useRoute } from 'vue-router'
 import { scrollAnimation } from '@/animation'
 import { WHATSAPP_NUMBER, EMAIL_CONTACT } from '@/config'
 import { getWatchById } from '@/services/watchService'
+import { isAdminAuthenticated } from '@/services/adminAuthService'
 
 const route = useRoute()
 
@@ -624,6 +633,7 @@ const watchItem = ref(null)
 const isLoading = ref(true)
 const error = ref(null)
 const isUnavailable = ref(false)
+const isAdmin = ref(false)
 
 // Load watch from Supabase
 const loadWatch = async () => {
@@ -631,11 +641,17 @@ const loadWatch = async () => {
     isLoading.value = true
     error.value = null
     isUnavailable.value = false
+    
+    // Vérifier si l'utilisateur est admin
+    isAdmin.value = await isAdminAuthenticated()
+    
     const watchId = route.params.id
     if (!watchId) {
       throw new Error('ID de montre manquant')
     }
-    const data = await getWatchById(watchId)
+    
+    // Si l'utilisateur est admin, permettre de voir les montres hors-stock
+    const data = await getWatchById(watchId, isAdmin.value)
     watchItem.value = data
     // Reset image index when watch changes
     currentImageIndex.value = 0
@@ -674,6 +690,11 @@ const formatPrice = (price) => {
     currency: 'EUR',
     minimumFractionDigits: 0,
   }).format(price)
+}
+
+// Helper function to check if a value exists and is not empty
+const hasValue = (value) => {
+  return value !== null && value !== undefined && value !== '' && String(value).trim() !== ''
 }
 
 // Lightbox methods

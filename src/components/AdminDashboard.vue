@@ -17,8 +17,7 @@ const selectedBrand = ref('')
 const currentAdmin = ref(null)
 const showDeleteConfirm = ref(false)
 const watchToDelete = ref(null)
-const activeTab = ref('available') // 'available' ou 'unavailable'
-const showSoldWatches = ref(false) // Filtre pour afficher les montres vendues
+const activeTab = ref('available') // 'available', 'unavailable', 'sold', ou 'all'
 
 // Computed
 const availableBrands = computed(() => {
@@ -29,16 +28,18 @@ const availableBrands = computed(() => {
 const filteredWatches = computed(() => {
   let filtered = watches.value
 
-  // Filter by availability status
-  filtered = filtered.filter((watch) => {
-    const isAvailable = watch.is_available !== undefined ? watch.is_available : true
-    return activeTab.value === 'available' ? isAvailable : !isAvailable
-  })
-
-  // Filter by sold status
-  if (showSoldWatches.value) {
+  // Filter by tab selection
+  if (activeTab.value === 'available') {
+    filtered = filtered.filter((watch) => {
+      const isAvailable = watch.is_available !== undefined ? watch.is_available : true
+      return isAvailable
+    })
+  } else if (activeTab.value === 'unavailable') {
+    filtered = filtered.filter((watch) => watch.is_available === false)
+  } else if (activeTab.value === 'sold') {
     filtered = filtered.filter((watch) => watch.is_sold === true)
   }
+  // 'all' shows all watches, no filter needed
 
   // Filter by search query
   if (searchQuery.value) {
@@ -192,32 +193,27 @@ onMounted(async () => {
 
 <template>
   <div class="min-h-screen bg-gray-50">
-    <!-- Header -->
-    <header class="bg-white shadow-sm border-b">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center py-4">
-          <div class="flex items-center space-x-4">
-            <img :src="logoNoir" alt="Sauvage" class="h-10 w-auto" />
-            <h1 class="text-2xl font-bold text-text-main">Administration</h1>
-          </div>
-          <div class="flex items-center space-x-4">
-            <span v-if="currentAdmin" class="text-sm text-gray-600">
-              {{ currentAdmin.email }}
-            </span>
-            <button
-              @click="handleLogout"
-              class="px-4 py-2 text-sm text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              Déconnexion
-            </button>
-          </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Top Section -->
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <div class="flex items-center space-x-4">
+          <img :src="logoNoir" alt="Sauvage" class="h-10 w-auto" />
+          <h1 class="text-2xl font-bold text-text-main">Administration</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span v-if="currentAdmin" class="text-sm text-gray-600">
+            {{ currentAdmin.email }}
+          </span>
+          <button
+            @click="handleLogout"
+            class="px-4 py-2 text-sm text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            Déconnexion
+          </button>
         </div>
       </div>
-    </header>
-
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Stats -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div class="bg-white rounded-lg shadow p-6">
           <div class="text-sm text-gray-600 mb-1">Valeur totale en stock</div>
           <div class="text-3xl font-bold text-text-main">{{ formatPrice(availableWatchesValue) }}</div>
@@ -232,16 +228,12 @@ onMounted(async () => {
            <div class="text-3xl font-bold text-text-main">{{ totalWatches }}</div>
            <div class="text-xs text-gray-500 mt-2">Vendues : {{ soldWatchesCount }}</div>
          </div>
-        <div class="bg-white rounded-lg shadow p-6">
-          <div class="text-sm text-gray-600 mb-1">Montres filtrées</div>
-          <div class="text-3xl font-bold text-text-main">{{ filteredWatches.length }}</div>
-        </div>
       </div>
 
       <!-- Tabs -->
       <div class="bg-white rounded-lg shadow mb-6">
-        <div class="border-b border-gray-200">
-          <nav class="flex -mb-px">
+        <div class="border-b border-gray-200 overflow-x-auto hide-scrollbar">
+          <nav class="flex -mb-px min-w-max">
             <button
               @click="activeTab = 'available'"
               :class="[
@@ -270,6 +262,34 @@ onMounted(async () => {
                 {{ watches.filter((w) => w.is_available === false).length }}
               </span>
             </button>
+            <button
+              @click="activeTab = 'sold'"
+              :class="[
+                activeTab === 'sold'
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+                'whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm',
+              ]"
+            >
+              Montres vendues
+              <span class="ml-2 text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+                {{ watches.filter((w) => w.is_sold === true).length }}
+              </span>
+            </button>
+            <button
+              @click="activeTab = 'all'"
+              :class="[
+                activeTab === 'all'
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+                'whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm',
+              ]"
+            >
+              Toutes les montres
+              <span class="ml-2 text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+                {{ watches.length }}
+              </span>
+            </button>
           </nav>
         </div>
       </div>
@@ -293,14 +313,6 @@ onMounted(async () => {
                 {{ brand }}
               </option>
             </select>
-            <label class="flex items-center px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
-              <input
-                v-model="showSoldWatches"
-                type="checkbox"
-                class="mr-2 w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
-              />
-              <span class="text-sm font-medium text-gray-700 whitespace-nowrap">Afficher les montres vendues</span>
-            </label>
           </div>
           <button
             @click="router.push('/admin/watches/new')"
@@ -339,9 +351,6 @@ onMounted(async () => {
                   Image
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Code
-                </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Nom
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -365,6 +374,9 @@ onMounted(async () => {
                 <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions
                 </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Code
+                </th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -380,11 +392,6 @@ onMounted(async () => {
                     <div v-else class="h-full w-full flex items-center justify-center text-gray-400 text-xs">
                       Pas d'image
                     </div>
-                  </div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 max-w-40">
-                  <div class="truncate" :title="watch.ad_code">
-                    {{ watch.ad_code }}
                   </div>
                 </td>
                 <td class="px-6 py-4 text-sm text-gray-900 max-w-40">
@@ -538,9 +545,19 @@ onMounted(async () => {
                     </button>
                   </div>
                 </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 max-w-40">
+                  <div class="truncate" :title="watch.ad_code">
+                    {{ watch.ad_code }}
+                  </div>
+                </td>
               </tr>
             </tbody>
           </table>
+        </div>
+        <div class="px-6 py-3 bg-gray-50 border-t border-gray-200">
+          <p class="text-sm text-gray-500 italic">
+            {{ filteredWatches.length }} montre{{ filteredWatches.length > 1 ? 's' : '' }} affichée{{ filteredWatches.length > 1 ? 's' : '' }}
+          </p>
         </div>
       </div>
 

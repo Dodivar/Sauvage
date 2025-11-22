@@ -88,9 +88,10 @@ export async function getAllWatches() {
 /**
  * Récupère une montre par son ID avec tous ses détails
  * @param {string} id - ID de la montre
+ * @param {boolean} allowUnavailable - Si true, permet de récupérer les montres hors-stock (pour les admins)
  * @returns {Promise<Object>} Données de la montre
  */
-export async function getWatchById(id) {
+export async function getWatchById(id, allowUnavailable = false) {
   try {
     // Récupérer la montre
     const { data: watch, error: watchError } = await supabase
@@ -110,8 +111,8 @@ export async function getWatchById(id) {
       throw new Error('Montre non trouvée')
     }
 
-    // Vérifier si la montre est disponible
-    if (watch.is_available === false) {
+    // Vérifier si la montre est disponible (sauf si allowUnavailable est true)
+    if (!allowUnavailable && watch.is_available === false) {
       throw new Error('UNAVAILABLE')
     }
 
