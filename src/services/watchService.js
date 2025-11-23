@@ -229,6 +229,50 @@ export async function getSoldWatches(limit = 7) {
 }
 
 /**
+ * Récupère les dernières montres disponibles (non vendues) avec leurs détails complets
+ * @param {number} limit - Nombre maximum de montres à récupérer (défaut: 7)
+ * @returns {Promise<Array>} Liste des montres disponibles triées par date de création
+ */
+export async function getLatestAvailableWatches(limit = 7) {
+  try {
+    // Récupérer les montres disponibles (non vendues), triées par date de création (plus récentes en premier)
+    const { data: watches, error: watchesError } = await supabase
+      .from('watches')
+      .select('*')
+      .eq('is_available', true)
+      .eq('is_sold', false)
+      .order('created_at', { ascending: false })
+      .limit(limit)
+
+    if (watchesError) {
+      throw new Error(`Erreur lors de la récupération des montres: ${watchesError.message}`)
+    }
+
+    if (!watches || watches.length === 0) {
+      return []
+    }
+
+    // Pour chaque montre, récupérer les détails, accessoires et images
+    const watchesWithDetails = await Promise.all(
+      watches.map(async (watch) => {
+        const [details, accessories, images] = await Promise.all([
+          getWatchDetails(watch.id),
+          getWatchAccessories(watch.id),
+          getWatchImages(watch.id),
+        ])
+
+        return transformWatchData(watch, details, accessories, images)
+      }),
+    )
+
+    return watchesWithDetails
+  } catch (error) {
+    console.error('Erreur dans getLatestAvailableWatches:', error)
+    throw error
+  }
+}
+
+/**
  * Récupère les images d'une montre depuis Supabase Storage
  * @param {string} watchId - ID de la montre
  * @returns {Promise<Array>} Liste des images avec leurs URLs

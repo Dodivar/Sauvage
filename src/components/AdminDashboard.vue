@@ -2,8 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getAllWatchesForAdmin, deleteWatch, toggleWatchAvailability, markWatchAsSold } from '@/services/adminWatchService'
-import { logoutAdmin, getCurrentAdmin } from '@/services/adminAuthService'
-import logoNoir from '@/assets/logo noir.png'
+import AdminHeader from './AdminHeader.vue'
 
 const router = useRouter()
 
@@ -14,7 +13,6 @@ const error = ref(null)
 const success = ref(null)
 const searchQuery = ref('')
 const selectedBrand = ref('')
-const currentAdmin = ref(null)
 const showDeleteConfirm = ref(false)
 const watchToDelete = ref(null)
 const showSoldConfirm = ref(false)
@@ -192,11 +190,6 @@ const cancelMarkAsSold = () => {
   watchToMarkAsSold.value = null
 }
 
-const handleLogout = async () => {
-  await logoutAdmin()
-  router.push('/admin/login')
-}
-
 const formatPrice = (price) => {
   return new Intl.NumberFormat('fr-FR', {
     style: 'currency',
@@ -215,8 +208,6 @@ const formatDate = (dateString) => {
 
 onMounted(async () => {
   await loadWatches()
-  const admin = await getCurrentAdmin()
-  currentAdmin.value = admin
 })
 </script>
 
@@ -224,23 +215,7 @@ onMounted(async () => {
   <div class="min-h-screen bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Top Section -->
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-        <div class="flex items-center space-x-4">
-          <img :src="logoNoir" alt="Sauvage" class="h-10 w-auto" />
-          <h1 class="text-2xl font-bold text-text-main">Administration</h1>
-        </div>
-        <div class="flex items-center space-x-4">
-          <span v-if="currentAdmin" class="text-sm text-gray-600">
-            {{ currentAdmin.email }}
-          </span>
-          <button
-            @click="handleLogout"
-            class="px-4 py-2 text-sm text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            Déconnexion
-          </button>
-        </div>
-      </div>
+      <AdminHeader title="Administration" />
       <!-- Stats -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div class="bg-white rounded-lg shadow p-6">

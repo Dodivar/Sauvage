@@ -2,6 +2,7 @@
 import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { createWatch, updateWatch, uploadWatchImage, deleteWatchImage, reorderWatchImages, getWatchByIdForAdmin, duplicateWatch } from '@/services/adminWatchService'
+import AdminHeader from './AdminHeader.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -379,20 +380,12 @@ onMounted(() => {
   <div class="min-h-screen bg-gray-50 py-8">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header -->
-      <div class="mb-8">
-        <button
-          @click="router.push('/admin')"
-          class="text-gray-600 hover:text-gray-900 mb-4 flex items-center"
-        >
-          <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-          </svg>
-          Retour à la liste
-        </button>
-        <h1 class="text-3xl font-bold text-text-main">
-          {{ isEditMode ? 'Modifier la montre' : 'Ajouter une montre' }}
-        </h1>
-      </div>
+      <AdminHeader
+        :title="isEditMode ? 'Modifier la montre' : 'Ajouter une montre'"
+        :show-back-button="true"
+        back-button-text="Retour à la liste"
+        back-button-route="/admin"
+      />
 
       <!-- Loading State -->
       <div v-if="isLoading" class="text-center py-16">

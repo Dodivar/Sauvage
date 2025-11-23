@@ -9,6 +9,7 @@ import parallaxImg4 from '@/assets/hero section img/image-Photoroom (2).png'
 import ParallaxImage from './ParallaxImage.vue'
 import FaqSection from './Faq.vue'
 import CarouselVentes from './CarouselVentes.vue'
+import CarouselNouvelles from './CarouselNouvelles.vue'
 import SuivezNous from './SuivezNous.vue'
 
 onMounted(() => {
@@ -150,11 +151,11 @@ onMounted(() => {
       </div>
     </section>
 
-    <!-- Dernières ventes -->
-    <CarouselVentes />
+    <!-- Nouvelles arrivées -->
+    <CarouselNouvelles />
 
     <!-- Sécurité et avantages pour ACHETER ou rechercher une montre -->
-    <section class="py-20 bg-white">
+    <section class="py-20 bg-gray-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
           <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-4">
@@ -166,7 +167,7 @@ onMounted(() => {
         </div>
         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           <!-- Service personnalisé -->
-          <div class="text-center p-6 rounded-2xl bg-green-50 hover:bg-green-100 transition-colors">
+          <div class="text-center p-6 rounded-2xl bg-white shadow-lg transition-colors">
             <div
               class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4"
             >
@@ -181,7 +182,7 @@ onMounted(() => {
             </p>
           </div>
           <!-- Authenticité et sécurité des transactions -->
-          <div class="text-center p-6 rounded-2xl bg-green-50 hover:bg-green-100 transition-colors">
+          <div class="text-center p-6 rounded-2xl bg-white shadow-lg transition-colors">
             <div
               class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4"
             >
@@ -197,7 +198,7 @@ onMounted(() => {
             </p>
           </div>
           <!-- Accès à un large réseau et sourcing -->
-          <div class="text-center p-6 rounded-2xl bg-green-50 hover:bg-green-100 transition-colors">
+          <div class="text-center p-6 rounded-2xl bg-white shadow-lg transition-colors">
             <div
               class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4"
             >
@@ -214,7 +215,7 @@ onMounted(() => {
             </p>
           </div>
           <!-- Transparence et sérénité -->
-          <div class="text-center p-6 rounded-2xl bg-green-50 hover:bg-green-100 transition-colors">
+          <div class="text-center p-6 rounded-2xl bg-white shadow-lg transition-colors">
             <div
               class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4"
             >
@@ -233,6 +234,9 @@ onMounted(() => {
         </div>
       </div>
     </section>
+
+    <!-- Dernières ventes -->
+    <CarouselVentes />
     
     <SuivezNous />
     

@@ -2,8 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { createArticle, updateArticle, getArticleByIdForAdmin } from '@/services/adminArticleService'
-import { getCurrentAdmin, logoutAdmin } from '@/services/adminAuthService'
-import logoNoir from '@/assets/logo noir.png'
+import AdminHeader from './AdminHeader.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -23,7 +22,6 @@ const isLoading = ref(false)
 const isSaving = ref(false)
 const error = ref(null)
 const success = ref(null)
-const currentAdmin = ref(null)
 
 // Methods
 const loadArticle = async () => {
@@ -120,15 +118,8 @@ const handleCancel = () => {
   router.push('/admin/articles')
 }
 
-const handleLogout = async () => {
-  await logoutAdmin()
-  router.push('/admin/login')
-}
-
 onMounted(async () => {
   await loadArticle()
-  const admin = await getCurrentAdmin()
-  currentAdmin.value = admin
 })
 </script>
 
@@ -136,31 +127,12 @@ onMounted(async () => {
   <div class="min-h-screen bg-gray-50">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Top Section -->
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-        <div class="flex items-center space-x-4">
-          <img :src="logoNoir" alt="Sauvage" class="h-10 w-auto" />
-          <h1 class="text-2xl font-bold text-text-main">
-            {{ isEditMode ? 'Modifier l\'article' : 'Nouvel article' }}
-          </h1>
-        </div>
-        <div class="flex items-center space-x-4">
-          <span v-if="currentAdmin" class="text-sm text-gray-600">
-            {{ currentAdmin.email }}
-          </span>
-          <button
-            @click="router.push('/admin')"
-            class="px-4 py-2 text-sm text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            Tableau de bord
-          </button>
-          <button
-            @click="handleLogout"
-            class="px-4 py-2 text-sm text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            Déconnexion
-          </button>
-        </div>
-      </div>
+      <AdminHeader
+        :title="isEditMode ? 'Modifier l\'article' : 'Nouvel article'"
+        :show-back-button="true"
+        back-button-text="Tableau de bord"
+        back-button-route="/admin"
+      />
 
       <!-- Error State -->
       <div v-if="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">

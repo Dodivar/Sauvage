@@ -1,8 +1,8 @@
 <template>
-  <section v-if="salesWatches.length > 0" class="py-20 bg-gray-50">
+  <section v-if="salesWatches.length > 0" class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-4">
+      <div class="text-center mb-4">
+        <h2 class="text-3xl lg:text-4xl font-bold text-text-main">
           Dernières ventes réalisées
         </h2>
         <p class="text-xl text-gray-600">Voici quelques montres récemment vendues</p>

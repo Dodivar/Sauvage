@@ -12,4 +12,6 @@ Blog
     - Création et modification d'article 
         - Ajout de vidéo des réseaux ?
 
-- nos nouveautés sur la page d'accueil avec les 4 dernières rentrées
+- mettre nb de vues sur les articles
+- inclure images
+- page de statistiques des articles et des ventes de montre
