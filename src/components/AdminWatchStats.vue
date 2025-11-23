@@ -1,0 +1,280 @@
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { Line } from 'vue-chartjs'
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+} from 'chart.js'
+import { getWatchStatsByDay } from '@/services/adminWatchService'
+import AdminHeader from './AdminHeader.vue'
+
+// Enregistrer les composants Chart.js
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler)
+
+// State
+const stats = ref([])
+const isLoading = ref(true)
+const error = ref(null)
+
+// Computed
+const chartData = computed(() => {
+  if (!stats.value || stats.value.length === 0) {
+    return {
+      labels: [],
+      datasets: [],
+    }
+  }
+
+  return {
+    labels: stats.value.map((item) => {
+      // Formater la date pour l'affichage (DD/MM/YYYY)
+      const date = new Date(item.date)
+      return date.toLocaleDateString('fr-FR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      })
+    }),
+    datasets: [
+      {
+        label: 'Montres créées',
+        data: stats.value.map((item) => item.created),
+        borderColor: 'rgb(34, 197, 94)', // green-500
+        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+        borderWidth: 2,
+        fill: true,
+        tension: 0.4,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        pointBackgroundColor: 'rgb(34, 197, 94)',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+      },
+      {
+        label: 'Montres vendues',
+        data: stats.value.map((item) => item.sold),
+        borderColor: 'rgb(239, 68, 68)', // red-500
+        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+        borderWidth: 2,
+        fill: true,
+        tension: 0.4,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        pointBackgroundColor: 'rgb(239, 68, 68)',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+      },
+    ],
+  }
+})
+
+const chartOptions = computed(() => {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top',
+      },
+      tooltip: {
+        mode: 'index',
+        intersect: false,
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          stepSize: 1,
+          precision: 0,
+        },
+      },
+    },
+  }
+})
+
+const totalWatches = computed(() => {
+  return stats.value.reduce((sum, item) => sum + item.created, 0)
+})
+
+const totalSold = computed(() => {
+  return stats.value.reduce((sum, item) => sum + item.sold, 0)
+})
+
+const averagePerDay = computed(() => {
+  if (stats.value.length === 0) return 0
+  return (totalWatches.value / stats.value.length).toFixed(2)
+})
+
+const averageSoldPerDay = computed(() => {
+  if (stats.value.length === 0) return 0
+  return (totalSold.value / stats.value.length).toFixed(2)
+})
+
+const maxDay = computed(() => {
+  if (stats.value.length === 0) return null
+  const maxItem = stats.value.reduce((max, item) => (item.created > max.created ? item : max), stats.value[0])
+  return {
+    date: new Date(maxItem.date).toLocaleDateString('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }),
+    count: maxItem.created,
+  }
+})
+
+const maxSoldDay = computed(() => {
+  if (stats.value.length === 0) return null
+  const maxItem = stats.value.reduce((max, item) => (item.sold > max.sold ? item : max), stats.value[0])
+  if (maxItem.sold === 0) return null
+  return {
+    date: new Date(maxItem.date).toLocaleDateString('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }),
+    count: maxItem.sold,
+  }
+})
+
+const dateRange = computed(() => {
+  if (stats.value.length === 0) return null
+  const firstDate = new Date(stats.value[0].date)
+  const lastDate = new Date(stats.value[stats.value.length - 1].date)
+  return {
+    start: firstDate.toLocaleDateString('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }),
+    end: lastDate.toLocaleDateString('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }),
+  }
+})
+
+// Methods
+const loadStats = async () => {
+  try {
+    isLoading.value = true
+    error.value = null
+    const data = await getWatchStatsByDay()
+    stats.value = data
+  } catch (err) {
+    console.error('Erreur lors du chargement des statistiques:', err)
+    error.value = err.message || 'Une erreur est survenue lors du chargement des statistiques'
+  } finally {
+    isLoading.value = false
+  }
+}
+
+onMounted(async () => {
+  await loadStats()
+})
+</script>
+
+<template>
+  <div class="min-h-screen bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Top Section -->
+      <AdminHeader title="Statistiques des montres" :show-back-button="true" />
+
+      <!-- Error State -->
+      <div v-if="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+        {{ error }}
+        <button @click="error = null" class="ml-4 text-red-500 hover:text-red-700">×</button>
+      </div>
+
+      <!-- Loading State -->
+      <div v-if="isLoading" class="text-center py-16">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+        <p class="text-gray-600">Chargement des statistiques...</p>
+      </div>
+
+      <!-- Stats Content -->
+      <div v-else>
+        <!-- Summary Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div class="bg-white rounded-lg shadow p-6">
+            <div class="text-sm text-gray-600 mb-1">Total montres créées</div>
+            <div class="text-3xl font-bold text-text-main">{{ totalWatches }}</div>
+            <div class="text-xs text-gray-500 mt-2">Toutes périodes confondues</div>
+          </div>
+          <div class="bg-white rounded-lg shadow p-6">
+            <div class="text-sm text-gray-600 mb-1">Total montres vendues</div>
+            <div class="text-3xl font-bold text-red-600">{{ totalSold }}</div>
+            <div class="text-xs text-gray-500 mt-2">Toutes périodes confondues</div>
+          </div>
+          <div class="bg-white rounded-lg shadow p-6">
+            <div class="text-sm text-gray-600 mb-1">Moyenne créées/jour</div>
+            <div class="text-3xl font-bold text-text-main">{{ averagePerDay }}</div>
+            <div class="text-xs text-gray-500 mt-2">Sur {{ stats.length }} jour{{ stats.length > 1 ? 's' : '' }}</div>
+          </div>
+          <div class="bg-white rounded-lg shadow p-6">
+            <div class="text-sm text-gray-600 mb-1">Moyenne vendues/jour</div>
+            <div class="text-3xl font-bold text-red-600">{{ averageSoldPerDay }}</div>
+            <div class="text-xs text-gray-500 mt-2">Sur {{ stats.length }} jour{{ stats.length > 1 ? 's' : '' }}</div>
+          </div>
+        </div>
+
+        <!-- Additional Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div class="bg-white rounded-lg shadow p-6">
+            <div class="text-sm text-gray-600 mb-1">Meilleur jour (créations)</div>
+            <div class="text-3xl font-bold text-text-main" v-if="maxDay">{{ maxDay.count }}</div>
+            <div class="text-xs text-gray-500 mt-2" v-if="maxDay">Le {{ maxDay.date }}</div>
+            <div v-else class="text-gray-400">Aucune donnée</div>
+          </div>
+          <div class="bg-white rounded-lg shadow p-6">
+            <div class="text-sm text-gray-600 mb-1">Meilleur jour (ventes)</div>
+            <div class="text-3xl font-bold text-red-600" v-if="maxSoldDay">{{ maxSoldDay.count }}</div>
+            <div class="text-xs text-gray-500 mt-2" v-if="maxSoldDay">Le {{ maxSoldDay.date }}</div>
+            <div v-else class="text-gray-400">Aucune vente</div>
+          </div>
+          <div class="bg-white rounded-lg shadow p-6">
+            <div class="text-sm text-gray-600 mb-1">Période</div>
+            <div class="text-lg font-semibold text-text-main" v-if="dateRange">
+              {{ dateRange.start }}
+            </div>
+            <div class="text-xs text-gray-500 mt-1" v-if="dateRange">au {{ dateRange.end }}</div>
+            <div v-else class="text-gray-400">Aucune donnée</div>
+          </div>
+        </div>
+
+        <!-- Chart -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+          <h2 class="text-xl font-semibold text-gray-900 mb-4">Évolution des montres créées et vendues</h2>
+          <div v-if="stats.length === 0" class="text-center py-16">
+            <div class="text-gray-400 mb-4">
+              <svg class="w-16 h-16 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1"
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl text-gray-600 mb-2">Aucune donnée disponible</h3>
+            <p class="text-gray-500">Aucune montre n'a encore été créée.</p>
+          </div>
+          <div v-else class="h-96">
+            <Line :data="chartData" :options="chartOptions" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+

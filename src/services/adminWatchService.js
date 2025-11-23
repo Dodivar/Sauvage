@@ -775,3 +775,61 @@ export async function getAllWatchesForAdmin() {
   }
 }
 
+/**
+ * Récupère les statistiques des montres groupées par jour (créées et vendues)
+ * @returns {Promise<Array<{date: string, created: number, sold: number}>>} Tableau des statistiques par jour, trié par date
+ */
+export async function getWatchStatsByDay() {
+  try {
+    // Récupérer toutes les montres
+    const watches = await getAllWatchesForAdmin()
+
+    if (!watches || watches.length === 0) {
+      return []
+    }
+
+    // Grouper les montres par jour (créées et vendues)
+    const statsMap = new Map()
+
+    watches.forEach((watch) => {
+      // Statistiques des montres créées
+      if (watch.created_at) {
+        const createdDate = new Date(watch.created_at)
+        const createdDateKey = createdDate.toISOString().split('T')[0]
+
+        if (!statsMap.has(createdDateKey)) {
+          statsMap.set(createdDateKey, { created: 0, sold: 0 })
+        }
+        const stats = statsMap.get(createdDateKey)
+        stats.created += 1
+      }
+
+      // Statistiques des montres vendues (utiliser sale_date si disponible, sinon vérifier is_sold)
+      if (watch.is_sold === true && watch.sale_date) {
+        const soldDate = new Date(watch.sale_date)
+        const soldDateKey = soldDate.toISOString().split('T')[0]
+
+        if (!statsMap.has(soldDateKey)) {
+          statsMap.set(soldDateKey, { created: 0, sold: 0 })
+        }
+        const stats = statsMap.get(soldDateKey)
+        stats.sold += 1
+      }
+    })
+
+    // Convertir la Map en tableau d'objets et trier par date
+    const stats = Array.from(statsMap.entries())
+      .map(([date, counts]) => ({
+        date,
+        created: counts.created,
+        sold: counts.sold,
+      }))
+      .sort((a, b) => a.date.localeCompare(b.date))
+
+    return stats
+  } catch (error) {
+    console.error('Erreur dans getWatchStatsByDay:', error)
+    throw error
+  }
+}
+
