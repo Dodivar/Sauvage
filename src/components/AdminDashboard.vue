@@ -17,6 +17,8 @@ const selectedBrand = ref('')
 const currentAdmin = ref(null)
 const showDeleteConfirm = ref(false)
 const watchToDelete = ref(null)
+const showSoldConfirm = ref(false)
+const watchToMarkAsSold = ref(null)
 const activeTab = ref('available') // 'available', 'unavailable', 'sold', ou 'all'
 
 // Computed
@@ -86,6 +88,19 @@ const soldWatchesValue = computed(() => {
     .reduce((sum, watch) => sum + (parseFloat(watch.price) || 0), 0)
 })
 
+const soldWatchesValueLastMonth = computed(() => {
+  const now = new Date()
+  const oneMonthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate())
+  
+  return watches.value
+    .filter((watch) => {
+      if (watch.is_sold !== true || !watch.sale_date) return false
+      const saleDate = new Date(watch.sale_date)
+      return saleDate >= oneMonthAgo && saleDate <= now
+    })
+    .reduce((sum, watch) => sum + (parseFloat(watch.price) || 0), 0)
+})
+
 // Methods
 const loadWatches = async () => {
   try {
@@ -148,12 +163,21 @@ const handleToggleAvailability = async (watch) => {
   }
 }
 
-const handleMarkAsSold = async (watch) => {
+const handleMarkAsSold = (watch) => {
+  watchToMarkAsSold.value = watch
+  showSoldConfirm.value = true
+}
+
+const confirmMarkAsSold = async () => {
+  if (!watchToMarkAsSold.value) return
+
   try {
-    const result = await markWatchAsSold(watch.id)
+    const result = await markWatchAsSold(watchToMarkAsSold.value.id)
     if (result.success) {
-      // Mettre à jour le statut localement
-      watch.is_sold = result.data.is_sold
+      // Recharger les montres pour afficher la date de mise en vente
+      await loadWatches()
+      showSoldConfirm.value = false
+      watchToMarkAsSold.value = null
     } else {
       error.value = result.error || 'Erreur lors du marquage comme vendue'
     }
@@ -161,6 +185,11 @@ const handleMarkAsSold = async (watch) => {
     error.value = 'Une erreur est survenue lors du marquage comme vendue'
     console.error(err)
   }
+}
+
+const cancelMarkAsSold = () => {
+  showSoldConfirm.value = false
+  watchToMarkAsSold.value = null
 }
 
 const handleLogout = async () => {
@@ -222,6 +251,7 @@ onMounted(async () => {
         <div class="bg-white rounded-lg shadow p-6">
           <div class="text-sm text-gray-600 mb-1">Valeur totale vendues</div>
           <div class="text-3xl font-bold text-text-main">{{ formatPrice(soldWatchesValue) }}</div>
+          <div class="text-xs text-gray-500 mt-2">Dernier mois : {{ formatPrice(soldWatchesValueLastMonth) }}</div>
         </div>
          <div class="bg-white rounded-lg shadow p-6">
            <div class="text-sm text-gray-600 mb-1">Total montres</div>
@@ -413,7 +443,12 @@ onMounted(async () => {
                   {{ formatPrice(watch.price) }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {{ formatDate(watch.created_at) }}
+                  <div v-if="watch.sale_date" class="text-purple-600 font-medium">
+                    Vendue: {{ formatDate(watch.sale_date) }}
+                  </div>
+                  <div v-else class="text-gray-500">
+                    Créée: {{ formatDate(watch.created_at) }}
+                  </div>
                 </td>
                <!--  <td class="px-6 py-4 whitespace-nowrap">
                   <span
@@ -514,7 +549,7 @@ onMounted(async () => {
                       </svg>
                     </button>
                     <button
-                      v-if="watch.is_available === false && watch.is_sold !== true"
+                      v-if="watch.is_sold !== true"
                       @click="handleMarkAsSold(watch)"
                       class="text-purple-600 hover:text-purple-900"
                       title="Marquer comme vendue"
@@ -613,6 +648,37 @@ onMounted(async () => {
             class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
           >
             Supprimer
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mark as Sold Confirmation Modal -->
+    <div
+      v-if="showSoldConfirm"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      @click="cancelMarkAsSold"
+    >
+      <div
+        class="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4"
+        @click.stop
+      >
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Confirmer la vente</h3>
+        <p class="text-gray-600 mb-6">
+          Êtes-vous sûr de vouloir marquer la montre <strong>{{ watchToMarkAsSold?.name }}</strong> comme vendue ? Cette action est <strong class="text-red-600">irréversible</strong>.
+        </p>
+        <div class="flex justify-end space-x-4">
+          <button
+            @click="cancelMarkAsSold"
+            class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+          >
+            Annuler
+          </button>
+          <button
+            @click="confirmMarkAsSold"
+            class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+          >
+            Confirmer la vente
           </button>
         </div>
       </div>

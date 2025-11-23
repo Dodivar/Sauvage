@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { createWatch, updateWatch, uploadWatchImage, deleteWatchImage, reorderWatchImages, getWatchByIdForAdmin, duplicateWatch } from '@/services/adminWatchService'
 
@@ -22,6 +22,7 @@ const formData = ref({
   description: '',
   isAvailable: true,
   isSold: false,
+  saleDate: null,
   details: {
     content: '',
     movement: '',
@@ -48,6 +49,8 @@ const isLoading = ref(false)
 const isSaving = ref(false)
 const error = ref(null)
 const success = ref(null)
+const showSoldConfirm = ref(false)
+const initialIsSold = ref(false)
 
 // Image upload
 const imageInput = ref(null)
@@ -66,6 +69,8 @@ const loadWatch = async () => {
     error.value = null
     const watch = await getWatchByIdForAdmin(watchId.value)
 
+    const isSoldValue = watch.isSold !== undefined ? watch.isSold : false
+    initialIsSold.value = isSoldValue
     formData.value = {
       adCode: watch.adCode || '',
       name: watch.name || '',
@@ -77,7 +82,8 @@ const loadWatch = async () => {
       condition: watch.condition || '',
       description: watch.description || '',
       isAvailable: watch.isAvailable !== undefined ? watch.isAvailable : true,
-      isSold: watch.isSold !== undefined ? watch.isSold : false,
+      isSold: isSoldValue,
+      saleDate: watch.saleDate || null,
       details: {
         content: watch.details?.content || '',
         movement: watch.details?.movement || '',
@@ -256,6 +262,23 @@ const handleSubmit = async () => {
     return
   }
 
+  // Empêcher de décocher "vendue" si la montre était initialement vendue
+  if (isEditMode.value && initialIsSold.value && !formData.value.isSold) {
+    error.value = 'Impossible de décocher "vendue" pour une montre qui a été vendue. Vous pouvez cependant la remettre en stock en cochant "En vente / Disponible".'
+    formData.value.isSold = true
+    return
+  }
+
+  // Vérifier si on passe de "non vendue" à "vendue" en mode édition
+  if (isEditMode.value && !initialIsSold.value && formData.value.isSold) {
+    showSoldConfirm.value = true
+    return
+  }
+
+  await performSubmit()
+}
+
+const performSubmit = async () => {
   isSaving.value = true
 
   try {
@@ -278,6 +301,7 @@ const handleSubmit = async () => {
 
     if (result.success) {
       success.value = isEditMode.value ? 'Montre mise à jour avec succès' : 'Montre créée avec succès'
+      showSoldConfirm.value = false
       setTimeout(() => {
         router.push('/admin')
       }, 1500)
@@ -290,6 +314,28 @@ const handleSubmit = async () => {
   } finally {
     isSaving.value = false
   }
+}
+
+const confirmSold = async () => {
+  showSoldConfirm.value = false
+  await performSubmit()
+}
+
+const cancelSold = () => {
+  showSoldConfirm.value = false
+  // Remettre isSold à false si l'utilisateur annule
+  formData.value.isSold = initialIsSold.value
+}
+
+const formatDate = (dateString) => {
+  if (!dateString) return '-'
+  return new Date(dateString).toLocaleDateString('fr-FR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
 }
 
 const handleDuplicate = async () => {
@@ -313,6 +359,14 @@ const handleDuplicate = async () => {
     console.error(err)
   }
 }
+
+// Watcher pour empêcher de décocher "vendue" si la montre était initialement vendue
+watch(() => formData.value.isSold, (newValue) => {
+  if (isEditMode.value && initialIsSold.value && newValue === false) {
+    formData.value.isSold = true
+    error.value = 'Impossible de décocher "vendue" pour une montre qui a été vendue. Vous pouvez cependant la remettre en stock en cochant "En vente / Disponible".'
+  }
+})
 
 onMounted(() => {
   if (isEditMode.value) {
@@ -460,10 +514,20 @@ onMounted(() => {
                 <input
                   v-model="formData.isSold"
                   type="checkbox"
-                  class="mr-2 w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                  :disabled="initialIsSold"
+                  class="mr-2 w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
                 />
-                <span class="text-sm font-medium text-gray-700">Vendue</span>
+                <span class="text-sm font-medium text-gray-700" :class="{ 'text-gray-400': initialIsSold }">
+                  Vendue
+                  <span v-if="initialIsSold" class="text-xs text-gray-500 block">(Ne peut pas être décochée)</span>
+                </span>
               </label>
+            </div>
+            <div v-if="formData.isSold && formData.saleDate" class="md:col-span-2">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Date de mise en vente</label>
+              <div class="px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg text-sm text-gray-700">
+                {{ formatDate(formData.saleDate) }}
+              </div>
             </div>
             <div class="md:col-span-2">
               <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
@@ -791,6 +855,37 @@ onMounted(() => {
           </button>
         </div>
       </form>
+    </div>
+
+    <!-- Mark as Sold Confirmation Modal -->
+    <div
+      v-if="showSoldConfirm"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      @click="cancelSold"
+    >
+      <div
+        class="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4"
+        @click.stop
+      >
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Confirmer la vente</h3>
+        <p class="text-gray-600 mb-6">
+          Êtes-vous sûr de vouloir marquer la montre <strong>{{ formData.name }}</strong> comme vendue ? Cette action est <strong class="text-red-600">irréversible</strong>.
+        </p>
+        <div class="flex justify-end space-x-4">
+          <button
+            @click="cancelSold"
+            class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+          >
+            Annuler
+          </button>
+          <button
+            @click="confirmSold"
+            class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+          >
+            Confirmer la vente
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>

@@ -16,6 +16,7 @@ function transformWatchToDB(watchData) {
     description: watchData.description || null,
     is_available: watchData.isAvailable !== undefined ? watchData.isAvailable : true,
     is_sold: watchData.isSold !== undefined ? watchData.isSold : false,
+    sale_date: watchData.saleDate || null,
   }
 }
 
@@ -116,9 +117,33 @@ export async function createWatch(watchData) {
  */
 export async function updateWatch(watchId, watchData) {
   try {
+    // Vérifier le statut actuel de la montre avant la mise à jour
+    const { data: currentWatch, error: fetchError } = await supabase
+      .from('watches')
+      .select('is_sold, sale_date')
+      .eq('id', watchId)
+      .single()
+
+    if (fetchError) {
+      throw new Error(`Erreur lors de la récupération de la montre: ${fetchError.message}`)
+    }
+
+    // Empêcher de décocher "vendue" si la montre était initialement vendue
+    if (currentWatch && currentWatch.is_sold === true && watchData.isSold === false) {
+      throw new Error('Impossible de décocher "vendue" pour une montre qui a été vendue. Vous pouvez cependant la remettre en stock en cochant "En vente / Disponible".')
+    }
+
     // 1. Mettre à jour la montre principale
     const watchDB = transformWatchToDB(watchData)
     watchDB.updated_at = new Date().toISOString()
+
+    // Si is_sold passe de false à true, définir sale_date à la date actuelle (seulement si elle n'existe pas déjà)
+    if (currentWatch && currentWatch.is_sold === false && watchData.isSold === true) {
+      // Ne définir la date que si elle n'existe pas déjà
+      if (!currentWatch.sale_date) {
+        watchDB.sale_date = new Date().toISOString()
+      }
+    }
 
     const { error: watchError } = await supabase
       .from('watches')
@@ -465,9 +490,28 @@ export async function toggleWatchAvailability(watchId) {
  */
 export async function markWatchAsSold(watchId) {
   try {
+    // Récupérer le statut actuel pour vérifier si sale_date existe déjà
+    const { data: currentWatch, error: fetchError } = await supabase
+      .from('watches')
+      .select('sale_date')
+      .eq('id', watchId)
+      .single()
+
+    if (fetchError) {
+      throw new Error(`Erreur lors de la récupération de la montre: ${fetchError.message}`)
+    }
+
+    // Préparer les données à mettre à jour
+    const updateData = { is_sold: true }
+    
+    // Ne définir sale_date que si elle n'existe pas déjà
+    if (!currentWatch.sale_date) {
+      updateData.sale_date = new Date().toISOString()
+    }
+
     const { data: updatedWatch, error: updateError } = await supabase
       .from('watches')
-      .update({ is_sold: true })
+      .update(updateData)
       .eq('id', watchId)
       .select()
       .single()
@@ -559,6 +603,7 @@ export async function getWatchByIdForAdmin(watchId) {
       description: watch.description || '',
       isAvailable: watch.is_available !== undefined ? watch.is_available : true,
       isSold: watch.is_sold !== undefined ? watch.is_sold : false,
+      saleDate: watch.sale_date || null,
       details: {
         content: details?.content || '',
         movement: details?.movement || '',

@@ -17,6 +17,7 @@ function transformWatchData(watchData, details, accessories, images) {
     description: watchData.description || '',
     isAvailable: watchData.is_available !== undefined ? watchData.is_available : true,
     isSold: watchData.is_sold !== undefined ? watchData.is_sold : false,
+    saleDate: watchData.sale_date || null,
     contenu: details?.content || '', // Pour compatibilité avec WatchCard
     images: images.map((img) => img.image_url).filter(Boolean),
     details: {

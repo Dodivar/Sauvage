@@ -29,10 +29,10 @@
               class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="">Tous les prix</option>
-              <option value="0-10000">Moins de 10 000 €</option>
-              <option value="10000-25000">10 000 € - 25 000 €</option>
-              <option value="25000-50000">25 000 € - 50 000 €</option>
-              <option value="50000+">Plus de 50 000 €</option>
+              <option value="0-500">Moins de 500 €</option>
+              <option value="500-2000">500 € - 2 000 €</option>
+              <option value="2000-5000">2 000 € - 5 000 €</option>
+              <option value="5000+">Plus de 5 000 €</option>
             </select>
           </div>
 
