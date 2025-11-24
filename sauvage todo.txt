@@ -9,7 +9,9 @@ Blog
 Article :
 - mettre nb de vues sur les articles ?
 - Ajouter des images pour les articles
-    - Nouvelles méthodologies
+    - Nouvelles méthode et storage, à voir pour la limite si toujours ok voir payer 25€ par mois
+
+Statistiques :
 - ajouter statistiques sur les articles vues
 
 SEO :
@@ -19,4 +21,4 @@ Google Search Console :
 Utilisez Google Search Console pour surveiller l'indexation de votre site. Vous pouvez demander à Google de réindexer des pages spécifiques après des mises à jour importantes.
 
 FAQ :
-- Améliorer le expand pour plus fluide
+- Améliorer les questions avec Antoine
