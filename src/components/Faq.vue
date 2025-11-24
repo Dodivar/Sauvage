@@ -14,7 +14,7 @@
             <div class="flex justify-between items-center">
               <h3 class="text-lg font-semibold">{{ item.question }}</h3>
               <svg
-                class="h-5 w-5 transform transition-transform duration-300"
+                class="h-5 w-5 transform transition-transform duration-300 ease-out"
                 :class="{ 'rotate-180': activeFaqId === item.id }"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -30,13 +30,16 @@
             </div>
           </button>
           <div
-            class="faq-content overflow-hidden transition-all duration-300 ease-in-out"
-            :class="{
-              'max-h-0': activeFaqId !== item.id,
-              'max-h-[500px]': activeFaqId === item.id,
+            class="faq-content overflow-hidden"
+            :style="{
+              height: activeFaqId === item.id ? `${contentHeights[item.id]}px` : '0px',
             }"
           >
-            <div class="px-6 pb-6" v-html="item.answer"></div>
+            <div
+              :ref="(el) => setContentRef(el, item.id)"
+              class="px-6 pb-6"
+              v-html="item.answer"
+            ></div>
           </div>
         </div>
       </div>
@@ -45,7 +48,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 
 const faqItems = [
   {
@@ -82,7 +85,7 @@ const faqItems = [
     id: 1,
     question: "L'estimation est-elle vraiment gratuite ?",
     answer:
-      "Oui, l'estimation est <strong>100 % gratuite et sans aucun engagement</strong>. Vous êtes libre d'accepter ou de refuser notre proposition, sans aucune pression.",
+      "Oui, l'estimation est <strong>100 % gratuite et sans aucun engagement</strong>. Vous êtes libres d'accepter ou de refuser notre proposition, sans aucune pression.",
   },
   {
     id: 2,
@@ -134,10 +137,43 @@ const faqItems = [
 ]
 
 const activeFaqId = ref(null)
+const contentHeights = ref({})
+const contentRefs = ref({})
 
-const toggleFaq = (id) => {
+const setContentRef = (el, id) => {
+  if (el) {
+    contentRefs.value[id] = el
+    // Calculer la hauteur réelle du contenu
+    nextTick(() => {
+      if (el) {
+        contentHeights.value[id] = el.scrollHeight
+      }
+    })
+  }
+}
+
+const toggleFaq = async (id) => {
+  // Si on ouvre une FAQ, calculer la hauteur si nécessaire
+  if (activeFaqId.value !== id) {
+    await nextTick()
+    const contentEl = contentRefs.value[id]
+    if (contentEl && !contentHeights.value[id]) {
+      contentHeights.value[id] = contentEl.scrollHeight
+    }
+  }
   activeFaqId.value = activeFaqId.value === id ? null : id
 }
+
+// Calculer les hauteurs au montage du composant
+onMounted(async () => {
+  await nextTick()
+  faqItems.forEach((item) => {
+    const contentEl = contentRefs.value[item.id]
+    if (contentEl) {
+      contentHeights.value[item.id] = contentEl.scrollHeight
+    }
+  })
+})
 </script>
 
 <script>
@@ -148,7 +184,8 @@ export default {
 
 <style scoped>
 .faq-content {
-  transition: max-height 0.3s ease-in-out;
+  transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: height;
 }
 
 .faq-button {

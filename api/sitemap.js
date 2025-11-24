@@ -1,10 +1,23 @@
 import { createClient } from '@supabase/supabase-js'
 
 export default async function handler(req, res) {
+  // Gérer les requêtes OPTIONS pour CORS
+  if (req.method === 'OPTIONS') {
+    res.status(200).end()
+    return
+  }
+
+  // Seulement GET est autorisé
+  if (req.method !== 'GET') {
+    res.status(405).json({ error: 'Method not allowed' })
+    return
+  }
   try {
     // Récupération des variables d'environnement
-    const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL
-    const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
+    // Note: Les variables VITE_* ne sont pas disponibles dans les fonctions serverless Vercel
+    // Il faut utiliser les variables sans préfixe VITE_ dans Vercel
+    const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL
+    const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY
     
     // Déterminer l'URL de base : utiliser le domaine de production en production, sinon VERCEL_URL pour les previews
     let baseUrl = 'https://sauvage-watches.fr'
@@ -17,7 +30,15 @@ export default async function handler(req, res) {
     }
 
     if (!supabaseUrl || !supabaseKey) {
-      throw new Error('Variables d\'environnement Supabase manquantes')
+      console.error('Variables d\'environnement manquantes:', {
+        hasSupabaseUrl: !!supabaseUrl,
+        hasSupabaseKey: !!supabaseKey,
+        envKeys: Object.keys(process.env).filter(k => k.includes('SUPABASE'))
+      })
+      return res.status(500).json({ 
+        error: 'Configuration manquante',
+        message: 'Les variables d\'environnement Supabase ne sont pas configurées. Veuillez ajouter SUPABASE_URL et SUPABASE_ANON_KEY dans les paramètres Vercel.'
+      })
     }
 
     const supabase = createClient(supabaseUrl, supabaseKey)

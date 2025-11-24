@@ -1,5 +1,6 @@
 Montres :
 - Ajouter des articles liés à la montres
+
 Blog
     - Vidéos et article ?
     - Génération automatique -> N8n à voir comment hit facilement
@@ -12,9 +13,7 @@ Article :
 - ajouter statistiques sur les articles vues
 
 SEO :
-- Voir si le SSR peut être utile pour générer certaines pages pour le SEO
-- Architecture claire : Une structure de site bien organisée avec une hiérarchie logique.
-    - Vérifier si c'est le cas grâce à la solution Vite
+
 
 Google Search Console :
 Utilisez Google Search Console pour surveiller l'indexation de votre site. Vous pouvez demander à Google de réindexer des pages spécifiques après des mises à jour importantes.
