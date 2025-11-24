@@ -19,6 +19,8 @@ SEO :
 
 Google Search Console :
 Utilisez Google Search Console pour surveiller l'indexation de votre site. Vous pouvez demander à Google de réindexer des pages spécifiques après des mises à jour importantes.
+- ajouter sitemap sur google console et sur Bing Webmaster Tools : https://www.bing.com/webmasters
+
 
 FAQ :
 - Améliorer les questions avec Antoine
