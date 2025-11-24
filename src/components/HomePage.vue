@@ -1,5 +1,6 @@
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, nextTick, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { useHead } from '@vueuse/head'
 import { scrollAnimation } from '@/animation'
 import navitimerImg from '@/assets/hero section img/navitimer-b01-chronograph-43.png'
@@ -12,6 +13,8 @@ import FaqSection from './Faq.vue'
 import CarouselVentes from './CarouselVentes.vue'
 import CarouselNouvelles from './CarouselNouvelles.vue'
 import SuivezNous from './SuivezNous.vue'
+
+const route = useRoute()
 
 // SEO Meta Tags
 useHead({
@@ -58,7 +61,83 @@ useHead({
   ],
 })
 
-onMounted(() => {
+// Fonction pour scroller vers une ancre après le chargement complet
+const scrollToHash = async () => {
+  if (route.hash) {
+    // Attendre plusieurs ticks pour que tous les composants soient montés
+    await nextTick()
+    await new Promise((resolve) => setTimeout(resolve, 300))
+    
+    // Attendre que toutes les images soient chargées (avec plusieurs tentatives)
+    // car les images des carrousels peuvent se charger progressivement
+    for (let i = 0; i < 3; i++) {
+      await waitForAllImages()
+      await new Promise((resolve) => setTimeout(resolve, 300))
+    }
+    
+    // Attendre encore un peu pour que le layout soit stabilisé
+    await new Promise((resolve) => setTimeout(resolve, 200))
+    
+    const element = document.querySelector(route.hash)
+    if (element) {
+      // Utiliser scrollIntoView avec un offset pour éviter que l'élément soit caché par un header fixe si nécessaire
+      const yOffset = -20 // Ajustez selon vos besoins
+      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset
+      window.scrollTo({ top: y, behavior: 'instant' })
+    }
+  }
+}
+
+// Fonction pour attendre que toutes les images soient chargées
+const waitForAllImages = () => {
+  return new Promise((resolve) => {
+    const images = document.querySelectorAll('img')
+    if (images.length === 0) {
+      resolve()
+      return
+    }
+    
+    let loadedCount = 0
+    const totalImages = images.length
+    const timeout = setTimeout(() => {
+      // Timeout après 2 secondes pour ne pas bloquer indéfiniment
+      resolve()
+    }, 2000)
+    
+    images.forEach((img) => {
+      if (img.complete) {
+        loadedCount++
+        if (loadedCount === totalImages) {
+          clearTimeout(timeout)
+          resolve()
+        }
+      } else {
+        img.addEventListener('load', () => {
+          loadedCount++
+          if (loadedCount === totalImages) {
+            clearTimeout(timeout)
+            resolve()
+          }
+        }, { once: true })
+        img.addEventListener('error', () => {
+          loadedCount++
+          if (loadedCount === totalImages) {
+            clearTimeout(timeout)
+            resolve()
+          }
+        }, { once: true })
+      }
+    })
+    
+    // Si toutes les images sont déjà chargées
+    if (loadedCount === totalImages) {
+      clearTimeout(timeout)
+      resolve()
+    }
+  })
+}
+
+onMounted(async () => {
   scrollAnimation()
 
   // Add JavaScript to handle parallax effect on scroll
@@ -70,6 +149,14 @@ onMounted(() => {
       element.style.transform = 'translateY(' + scrollPosition * 0.5 * speed + 'px)'
     })
   })
+  
+  // Scroller vers l'ancre après le chargement complet
+  await scrollToHash()
+})
+
+// Surveiller les changements de hash dans l'URL
+watch(() => route.hash, async () => {
+  await scrollToHash()
 })
 </script>
 
