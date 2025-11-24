@@ -1,10 +1,5 @@
-- Améliorer Footer 
-- Améliorer sections réseaux
-- Blog partie du site bien dédiée avec articles, lien tiktok, backend pour automatiser blog, insertion vidéo et 
-
-
-- Ajout des montres des dernières ventes réalisées
-
+Montres :
+- Ajouter des articles liés à la montres
 Blog
     - Vidéos et article ?
     - Génération automatique -> N8n à voir comment hit facilement
@@ -24,3 +19,6 @@ SEO :
 
 Google Search Console :
 Utilisez Google Search Console pour surveiller l'indexation de votre site. Vous pouvez demander à Google de réindexer des pages spécifiques après des mises à jour importantes.
+
+FAQ :
+- Améliorer le expand pour plus fluide

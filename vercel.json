@@ -7,9 +7,17 @@
             "config": {
                 "distDir": "dist"
             }
+        },
+        {
+            "src": "api/sitemap.js",
+            "use": "@vercel/node"
         }
     ],
     "rewrites": [
+        {
+            "source": "/sitemap.xml",
+            "destination": "/api/sitemap"
+        },
         {
             "source": "/(.*)",
             "destination": "/index.html"
