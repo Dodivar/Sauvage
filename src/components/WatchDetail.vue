@@ -613,8 +613,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
+import { useHead } from '@vueuse/head'
 import { scrollAnimation } from '@/animation'
 import { WHATSAPP_NUMBER, EMAIL_CONTACT } from '@/config'
 import { getWatchById } from '@/services/watchService'
@@ -696,6 +697,135 @@ const formatPrice = (price) => {
 const hasValue = (value) => {
   return value !== null && value !== undefined && value !== '' && String(value).trim() !== ''
 }
+
+// SEO Meta Tags and Structured Data
+const pageTitle = computed(() => {
+  if (!watchItem.value) return 'Montre - Sauvage'
+  return `${watchItem.value.name} - ${formatPrice(watchItem.value.price)} | Sauvage`
+})
+
+const pageDescription = computed(() => {
+  if (!watchItem.value) return 'Découvrez cette montre de luxe sur Sauvage'
+  const desc = watchItem.value.description || ''
+  const brand = watchItem.value.brand || ''
+  const ref = watchItem.value.reference || ''
+  return `${desc || `Montre ${brand} ${ref}`.trim()}. Garantie 1 an, authentification certifiée. Prix: ${formatPrice(watchItem.value.price)}`
+})
+
+const ogImage = computed(() => {
+  if (!watchItem.value || !watchItem.value.images || watchItem.value.images.length === 0) {
+    return 'https://sauvage-watches.fr/logo500x500.png'
+  }
+  return watchItem.value.images[0]
+})
+
+const canonicalUrl = computed(() => {
+  return `https://sauvage-watches.fr/watch/${route.params.id}`
+})
+
+// Structured Data (JSON-LD)
+const structuredData = computed(() => {
+  if (!watchItem.value) return null
+  
+  const baseData = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: watchItem.value.name,
+    description: watchItem.value.description || `${watchItem.value.brand} ${watchItem.value.reference}`,
+    image: watchItem.value.images || [],
+    brand: {
+      '@type': 'Brand',
+      name: watchItem.value.brand || 'Marque inconnue',
+    },
+    sku: watchItem.value.reference || watchItem.value.id,
+    offers: {
+      '@type': 'Offer',
+      price: watchItem.value.price,
+      priceCurrency: 'EUR',
+      availability: watchItem.value.is_available && !watchItem.value.is_sold
+        ? 'https://schema.org/InStock'
+        : 'https://schema.org/OutOfStock',
+      url: canonicalUrl.value,
+      seller: {
+        '@type': 'Organization',
+        name: 'Sauvage',
+        url: 'https://sauvage-watches.fr',
+      },
+    },
+  }
+
+  // Add condition if available
+  if (watchItem.value.condition) {
+    baseData.itemCondition = `https://schema.org/${watchItem.value.condition === 'Neuf' ? 'NewCondition' : 'UsedCondition'}`
+  }
+
+  return baseData
+})
+
+// Update head when watch data changes
+watch([watchItem, pageTitle, pageDescription, ogImage, canonicalUrl], () => {
+  if (!watchItem.value) return
+
+  useHead({
+    title: pageTitle.value,
+    meta: [
+      {
+        name: 'description',
+        content: pageDescription.value,
+      },
+      {
+        property: 'og:title',
+        content: pageTitle.value,
+      },
+      {
+        property: 'og:description',
+        content: pageDescription.value,
+      },
+      {
+        property: 'og:image',
+        content: ogImage.value,
+      },
+      {
+        property: 'og:url',
+        content: canonicalUrl.value,
+      },
+      {
+        property: 'og:type',
+        content: 'product',
+      },
+      {
+        name: 'twitter:card',
+        content: 'summary_large_image',
+      },
+      {
+        name: 'twitter:title',
+        content: pageTitle.value,
+      },
+      {
+        name: 'twitter:description',
+        content: pageDescription.value,
+      },
+      {
+        name: 'twitter:image',
+        content: ogImage.value,
+      },
+    ],
+    link: [
+      {
+        rel: 'canonical',
+        href: canonicalUrl.value,
+      },
+    ],
+    script: structuredData.value
+      ? [
+          {
+            type: 'application/ld+json',
+            children: JSON.stringify(structuredData.value),
+          },
+        ]
+      : [],
+  })
+}, { immediate: true })
 
 // Lightbox methods
 const openLightbox = () => {

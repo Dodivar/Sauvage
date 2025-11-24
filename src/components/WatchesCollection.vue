@@ -143,12 +143,58 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useHead } from '@vueuse/head'
 const router = useRouter()
 
 import WatchCard from './WatchCard.vue'
 import { scrollAnimation } from '@/animation'
 import { WHATSAPP_NUMBER, EMAIL_CONTACT } from '@/config'
 import { getAllWatches } from '@/services/watchService'
+
+// SEO Meta Tags
+useHead({
+  title: 'Collection de Montres de Luxe | Sauvage',
+  meta: [
+    {
+      name: 'description',
+      content: 'Découvrez notre collection complète de montres de luxe. Rolex, Breitling, Tag Heuer, Cartier et plus. Toutes nos montres sont garanties 1 an et authentifiées.',
+    },
+    {
+      property: 'og:title',
+      content: 'Collection de Montres de Luxe | Sauvage',
+    },
+    {
+      property: 'og:description',
+      content: 'Découvrez notre collection complète de montres de luxe garanties 1 an et authentifiées.',
+    },
+    {
+      property: 'og:url',
+      content: 'https://sauvage-watches.fr/collection',
+    },
+    {
+      property: 'og:type',
+      content: 'website',
+    },
+    {
+      name: 'twitter:card',
+      content: 'summary',
+    },
+    {
+      name: 'twitter:title',
+      content: 'Collection de Montres de Luxe | Sauvage',
+    },
+    {
+      name: 'twitter:description',
+      content: 'Découvrez notre collection complète de montres de luxe garanties 1 an.',
+    },
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: 'https://sauvage-watches.fr/collection',
+    },
+  ],
+})
 
 // Filters
 const selectedBrand = ref('')

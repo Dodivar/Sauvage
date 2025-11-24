@@ -1,6 +1,7 @@
 <script setup>
 import { ref, useTemplateRef, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { Head } from '@vueuse/head'
 import { WHATSAPP_NUMBER, EMAIL_CONTACT } from '@/config'
 import { isAdminAuthenticated } from '@/services/adminAuthService'
 
@@ -44,6 +45,7 @@ function closeMobileMenu() {
 </script>
 
 <template>
+  <Head />
   <!-- Menu mobile-->
   <div
     v-if="!isMaintenancePage"

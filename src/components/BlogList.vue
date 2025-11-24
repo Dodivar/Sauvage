@@ -172,8 +172,54 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useHead } from '@vueuse/head'
 import { getAllArticles, getAllCategories } from '@/services/articleService'
 import { scrollAnimation } from '@/animation'
+
+// SEO Meta Tags
+useHead({
+  title: 'Blog Horlogerie | Articles sur les Montres | Sauvage',
+  meta: [
+    {
+      name: 'description',
+      content: 'Découvrez nos articles sur les montres et l\'horlogerie. Guides, actualités, conseils d\'achat et expertise sur les montres de luxe.',
+    },
+    {
+      property: 'og:title',
+      content: 'Blog Horlogerie | Articles sur les Montres | Sauvage',
+    },
+    {
+      property: 'og:description',
+      content: 'Découvrez nos articles sur les montres et l\'horlogerie. Guides, actualités et conseils d\'achat.',
+    },
+    {
+      property: 'og:url',
+      content: 'https://sauvage-watches.fr/blog',
+    },
+    {
+      property: 'og:type',
+      content: 'website',
+    },
+    {
+      name: 'twitter:card',
+      content: 'summary',
+    },
+    {
+      name: 'twitter:title',
+      content: 'Blog Horlogerie | Sauvage',
+    },
+    {
+      name: 'twitter:description',
+      content: 'Découvrez nos articles sur les montres et l\'horlogerie.',
+    },
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: 'https://sauvage-watches.fr/blog',
+    },
+  ],
+})
 
 const router = useRouter()
 const route = useRoute()

@@ -130,8 +130,9 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { useHead } from '@vueuse/head'
 import { marked } from 'marked'
 import { getArticleById } from '@/services/articleService'
 import { scrollAnimation } from '@/animation'
@@ -175,6 +176,131 @@ const loadArticle = async () => {
     isLoading.value = false
   }
 }
+
+// SEO Meta Tags and Structured Data
+const pageTitle = computed(() => {
+  if (!article.value) return 'Article - Sauvage'
+  return `${article.value.title} | Blog Sauvage`
+})
+
+const pageDescription = computed(() => {
+  if (!article.value) return 'Découvrez cet article sur les montres et l\'horlogerie'
+  // Extract first paragraph from markdown or use a default description
+  const text = article.value.text || ''
+  const firstParagraph = text.split('\n\n')[0]?.replace(/[#*]/g, '').trim() || ''
+  return firstParagraph.substring(0, 160) || 'Article sur les montres et l\'horlogerie'
+})
+
+const canonicalUrl = computed(() => {
+  return `https://sauvage-watches.fr/blog/${route.params.id}`
+})
+
+const publishedDate = computed(() => {
+  if (!article.value?.created_at) return null
+  return new Date(article.value.created_at).toISOString()
+})
+
+const modifiedDate = computed(() => {
+  if (!article.value?.updated_at) return publishedDate.value
+  return new Date(article.value.updated_at).toISOString()
+})
+
+// Structured Data (JSON-LD) for Article
+const structuredData = computed(() => {
+  if (!article.value) return null
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: article.value.title,
+    description: pageDescription.value,
+    datePublished: publishedDate.value,
+    dateModified: modifiedDate.value || publishedDate.value,
+    author: {
+      '@type': 'Organization',
+      name: 'Sauvage',
+      url: 'https://sauvage-watches.fr',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Sauvage',
+      url: 'https://sauvage-watches.fr',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://sauvage-watches.fr/logo500x500.png',
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': canonicalUrl.value,
+    },
+  }
+})
+
+// Update head when article data changes
+watch([article, pageTitle, pageDescription, canonicalUrl], () => {
+  if (!article.value) return
+
+  useHead({
+    title: pageTitle.value,
+    meta: [
+      {
+        name: 'description',
+        content: pageDescription.value,
+      },
+      {
+        property: 'og:title',
+        content: pageTitle.value,
+      },
+      {
+        property: 'og:description',
+        content: pageDescription.value,
+      },
+      {
+        property: 'og:url',
+        content: canonicalUrl.value,
+      },
+      {
+        property: 'og:type',
+        content: 'article',
+      },
+      {
+        property: 'article:published_time',
+        content: publishedDate.value,
+      },
+      {
+        property: 'article:modified_time',
+        content: modifiedDate.value || publishedDate.value,
+      },
+      {
+        name: 'twitter:card',
+        content: 'summary',
+      },
+      {
+        name: 'twitter:title',
+        content: pageTitle.value,
+      },
+      {
+        name: 'twitter:description',
+        content: pageDescription.value,
+      },
+    ],
+    link: [
+      {
+        rel: 'canonical',
+        href: canonicalUrl.value,
+      },
+    ],
+    script: structuredData.value
+      ? [
+          {
+            type: 'application/ld+json',
+            children: JSON.stringify(structuredData.value),
+          },
+        ]
+      : [],
+  })
+}, { immediate: true })
 
 onMounted(async () => {
   await loadArticle()

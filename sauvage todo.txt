@@ -13,7 +13,6 @@ Article :
 
 SEO :
 - Voir si le SSR peut être utile pour générer certaines pages pour le SEO
-- Fichier robots.txt et sitemap.xml : Bien configurés pour aider les crawlers de Google.
 - Architecture claire : Une structure de site bien organisée avec une hiérarchie logique.
     - Vérifier si c'est le cas grâce à la solution Vite
 
