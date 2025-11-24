@@ -777,7 +777,7 @@ export async function getAllWatchesForAdmin() {
 
 /**
  * Récupère les statistiques des montres groupées par jour (créées et vendues)
- * @returns {Promise<Array<{date: string, created: number, sold: number}>>} Tableau des statistiques par jour, trié par date
+ * @returns {Promise<Array<{date: string, created: number, sold: number, totalValue: number}>>} Tableau des statistiques par jour, trié par date
  */
 export async function getWatchStatsByDay() {
   try {
@@ -798,7 +798,7 @@ export async function getWatchStatsByDay() {
         const createdDateKey = createdDate.toISOString().split('T')[0]
 
         if (!statsMap.has(createdDateKey)) {
-          statsMap.set(createdDateKey, { created: 0, sold: 0 })
+          statsMap.set(createdDateKey, { created: 0, sold: 0, totalValue: 0 })
         }
         const stats = statsMap.get(createdDateKey)
         stats.created += 1
@@ -810,10 +810,14 @@ export async function getWatchStatsByDay() {
         const soldDateKey = soldDate.toISOString().split('T')[0]
 
         if (!statsMap.has(soldDateKey)) {
-          statsMap.set(soldDateKey, { created: 0, sold: 0 })
+          statsMap.set(soldDateKey, { created: 0, sold: 0, totalValue: 0 })
         }
         const stats = statsMap.get(soldDateKey)
         stats.sold += 1
+        // Ajouter la valeur de la montre vendue (prix)
+        if (watch.price && typeof watch.price === 'number') {
+          stats.totalValue += watch.price
+        }
       }
     })
 
@@ -823,6 +827,7 @@ export async function getWatchStatsByDay() {
         date,
         created: counts.created,
         sold: counts.sold,
+        totalValue: counts.totalValue,
       }))
       .sort((a, b) => a.date.localeCompare(b.date))
 

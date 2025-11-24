@@ -7,6 +7,7 @@ import logoNoir from '@/assets/logo noir.png'
 const router = useRouter()
 const email = ref('')
 const password = ref('')
+const rememberMe = ref(false)
 const error = ref('')
 const isLoading = ref(false)
 
@@ -23,7 +24,7 @@ const handleSubmit = async () => {
   isLoading.value = true
 
   try {
-    const result = await loginAdmin(email.value, password.value)
+    const result = await loginAdmin(email.value, password.value, rememberMe.value)
     if (result.success) {
       router.push('/admin')
     } else {
@@ -91,6 +92,19 @@ const handleSubmit = async () => {
               required
               autocomplete="current-password"
             />
+          </div>
+
+          <div class="flex items-center">
+            <input
+              id="rememberMe"
+              v-model="rememberMe"
+              type="checkbox"
+              class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+              :disabled="isLoading"
+            />
+            <label for="rememberMe" class="ml-2 text-sm text-gray-600">
+              Se souvenir de moi
+            </label>
           </div>
 
           <div v-if="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">

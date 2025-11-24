@@ -35,9 +35,10 @@ async function isAuthorizedAdmin(email) {
  * Connecte un utilisateur admin avec email et mot de passe
  * @param {string} email - L'email de l'utilisateur
  * @param {string} password - Le mot de passe
+ * @param {boolean} remember - Si true, utilise localStorage pour persister la session, sinon sessionStorage
  * @returns {Promise<{success: boolean, error?: string}>}
  */
-export async function loginAdmin(email, password) {
+export async function loginAdmin(email, password, remember = false) {
   try {
     // Authentifier avec Supabase Auth
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
@@ -70,9 +71,18 @@ export async function loginAdmin(email, password) {
       }
     }
 
-    // Stocker l'état d'authentification
-    sessionStorage.setItem(STORAGE_KEY, 'true')
-    localStorage.setItem('admin_email', email)
+    // Stocker l'état d'authentification selon le choix de l'utilisateur
+    if (remember) {
+      localStorage.setItem(STORAGE_KEY, 'true')
+      localStorage.setItem('admin_email', email)
+      // Nettoyer sessionStorage pour éviter les conflits
+      sessionStorage.removeItem(STORAGE_KEY)
+    } else {
+      sessionStorage.setItem(STORAGE_KEY, 'true')
+      localStorage.setItem('admin_email', email)
+      // Nettoyer localStorage pour éviter les conflits
+      localStorage.removeItem(STORAGE_KEY)
+    }
 
     return {
       success: true,
@@ -102,9 +112,13 @@ export async function isAdminAuthenticated() {
       return false
     }
 
-    // Vérifier dans sessionStorage
+    // Vérifier dans sessionStorage (session temporaire)
     const sessionAuth = sessionStorage.getItem(STORAGE_KEY)
-    if (sessionAuth !== 'true') {
+    // Vérifier dans localStorage (session persistante)
+    const localAuth = localStorage.getItem(STORAGE_KEY)
+    
+    // Si aucune des deux n'est présente, l'utilisateur n'est pas authentifié
+    if (sessionAuth !== 'true' && localAuth !== 'true') {
       return false
     }
 
@@ -152,6 +166,7 @@ export async function logoutAdmin() {
   try {
     await supabase.auth.signOut()
     sessionStorage.removeItem(STORAGE_KEY)
+    localStorage.removeItem(STORAGE_KEY)
     localStorage.removeItem('admin_email')
   } catch (error) {
     console.error('Erreur dans logoutAdmin:', error)
@@ -171,6 +186,7 @@ export async function refreshAdminSession() {
 
     if (error || !session) {
       sessionStorage.removeItem(STORAGE_KEY)
+      localStorage.removeItem(STORAGE_KEY)
       return false
     }
 
@@ -181,8 +197,13 @@ export async function refreshAdminSession() {
       return false
     }
 
-    // Mettre à jour le flag d'authentification
-    sessionStorage.setItem(STORAGE_KEY, 'true')
+    // Mettre à jour le flag d'authentification selon le type de session
+    const localAuth = localStorage.getItem(STORAGE_KEY)
+    if (localAuth === 'true') {
+      localStorage.setItem(STORAGE_KEY, 'true')
+    } else {
+      sessionStorage.setItem(STORAGE_KEY, 'true')
+    }
     return true
   } catch (error) {
     console.error('Erreur dans refreshAdminSession:', error)

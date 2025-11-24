@@ -1,12 +1,13 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { Line } from 'vue-chartjs'
+import { Chart } from 'vue-chartjs'
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
@@ -16,7 +17,7 @@ import { getWatchStatsByDay } from '@/services/adminWatchService'
 import AdminHeader from './AdminHeader.vue'
 
 // Enregistrer les composants Chart.js
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler)
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend, Filler)
 
 // State
 const stats = ref([])
@@ -44,6 +45,7 @@ const chartData = computed(() => {
     }),
     datasets: [
       {
+        type: 'line',
         label: 'Montres créées',
         data: stats.value.map((item) => item.created),
         borderColor: 'rgb(34, 197, 94)', // green-500
@@ -56,8 +58,10 @@ const chartData = computed(() => {
         pointBackgroundColor: 'rgb(34, 197, 94)',
         pointBorderColor: '#fff',
         pointBorderWidth: 2,
+        yAxisID: 'y',
       },
       {
+        type: 'line',
         label: 'Montres vendues',
         data: stats.value.map((item) => item.sold),
         borderColor: 'rgb(239, 68, 68)', // red-500
@@ -70,6 +74,16 @@ const chartData = computed(() => {
         pointBackgroundColor: 'rgb(239, 68, 68)',
         pointBorderColor: '#fff',
         pointBorderWidth: 2,
+        yAxisID: 'y',
+      },
+      {
+        type: 'bar',
+        label: 'Valeur totale vendue (€)',
+        data: stats.value.map((item) => item.totalValue || 0),
+        backgroundColor: 'rgba(59, 130, 246, 0.2)', // blue-500 with higher opacity
+        borderColor: 'rgb(59, 130, 246)', // blue-500
+        borderWidth: 1,
+        yAxisID: 'y1',
       },
     ],
   }
@@ -87,14 +101,62 @@ const chartOptions = computed(() => {
       tooltip: {
         mode: 'index',
         intersect: false,
+        callbacks: {
+          label: function (context) {
+            let label = context.dataset.label || ''
+            if (label) {
+              label += ': '
+            }
+            if (context.dataset.type === 'bar') {
+              // Formater la valeur en euros pour les barres
+              label += new Intl.NumberFormat('fr-FR', {
+                style: 'currency',
+                currency: 'EUR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              }).format(context.parsed.y)
+            } else {
+              label += context.parsed.y
+            }
+            return label
+          },
+        },
       },
     },
     scales: {
       y: {
+        type: 'linear',
+        position: 'left',
         beginAtZero: true,
         ticks: {
           stepSize: 1,
           precision: 0,
+        },
+        title: {
+          display: true,
+          text: 'Nombre de montres',
+        },
+      },
+      y1: {
+        type: 'linear',
+        position: 'right',
+        beginAtZero: true,
+        grid: {
+          drawOnChartArea: false,
+        },
+        ticks: {
+          callback: function (value) {
+            return new Intl.NumberFormat('fr-FR', {
+              style: 'currency',
+              currency: 'EUR',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            }).format(value)
+          },
+        },
+        title: {
+          display: true,
+          text: 'Valeur (€)',
         },
       },
     },
@@ -107,6 +169,10 @@ const totalWatches = computed(() => {
 
 const totalSold = computed(() => {
   return stats.value.reduce((sum, item) => sum + item.sold, 0)
+})
+
+const totalValueSold = computed(() => {
+  return stats.value.reduce((sum, item) => sum + (item.totalValue || 0), 0)
 })
 
 const averagePerDay = computed(() => {
@@ -229,7 +295,7 @@ onMounted(async () => {
         </div>
 
         <!-- Additional Stats -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div class="bg-white rounded-lg shadow p-6">
             <div class="text-sm text-gray-600 mb-1">Meilleur jour (créations)</div>
             <div class="text-3xl font-bold text-text-main" v-if="maxDay">{{ maxDay.count }}</div>
@@ -241,6 +307,13 @@ onMounted(async () => {
             <div class="text-3xl font-bold text-red-600" v-if="maxSoldDay">{{ maxSoldDay.count }}</div>
             <div class="text-xs text-gray-500 mt-2" v-if="maxSoldDay">Le {{ maxSoldDay.date }}</div>
             <div v-else class="text-gray-400">Aucune vente</div>
+          </div>
+          <div class="bg-white rounded-lg shadow p-6">
+            <div class="text-sm text-gray-600 mb-1">Valeur totale vendue</div>
+            <div class="text-3xl font-bold text-blue-600">
+              {{ new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(totalValueSold) }}
+            </div>
+            <div class="text-xs text-gray-500 mt-2">Toutes périodes confondues</div>
           </div>
           <div class="bg-white rounded-lg shadow p-6">
             <div class="text-sm text-gray-600 mb-1">Période</div>
@@ -270,7 +343,7 @@ onMounted(async () => {
             <p class="text-gray-500">Aucune montre n'a encore été créée.</p>
           </div>
           <div v-else class="h-96">
-            <Line :data="chartData" :options="chartOptions" />
+            <Chart :data="chartData" :options="chartOptions" />
           </div>
         </div>
       </div>
