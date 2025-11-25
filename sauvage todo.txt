@@ -14,6 +14,9 @@ Accueil :
 - Enlever au survol la taille qui augmente
 - réduire la taille des cartes pour en voir plus du premier coup d'oeil
 
+Recherche :
+- Ajouter un table permettant d'enregistrer toutes les demandes de recherche de montre pour avoir un tableau recensant toutes les demandes et voir des tendances
+
 Admin :
 - ajouter un filtre sur les colonnes des dashboard montre & article
 
