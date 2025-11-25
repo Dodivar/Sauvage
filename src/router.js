@@ -16,6 +16,7 @@ import AdminWatchForm from './components/AdminWatchForm.vue'
 import AdminWatchStats from './components/AdminWatchStats.vue'
 import AdminArticleList from './components/AdminArticleList.vue'
 import AdminArticleForm from './components/AdminArticleForm.vue'
+import AdminArticleGenerator from './components/AdminArticleGenerator.vue'
 import BlogList from './components/BlogList.vue'
 import BlogDetail from './components/BlogDetail.vue'
 
@@ -38,6 +39,7 @@ const routes = [
   { path: '/admin/watches/stats', component: AdminWatchStats },
   { path: '/admin/articles', component: AdminArticleList },
   { path: '/admin/articles/new', component: AdminArticleForm },
+  { path: '/admin/articles/generate', component: AdminArticleGenerator },
   { path: '/admin/articles/:id/edit', component: AdminArticleForm },
 ]
 

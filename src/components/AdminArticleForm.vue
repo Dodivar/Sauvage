@@ -16,6 +16,7 @@ const formData = ref({
   title: '',
   text: '',
   categories: [],
+  is_visible: false,
 })
 
 const currentCategory = ref('')
@@ -48,6 +49,7 @@ const loadArticle = async () => {
       title: article.title || '',
       text: article.text || '',
       categories: article.categories && Array.isArray(article.categories) ? [...article.categories] : [],
+      is_visible: article.is_visible !== undefined ? article.is_visible : true,
     }
   } catch (err) {
     console.error('Erreur lors du chargement de l\'article:', err)
@@ -101,6 +103,7 @@ const handleSubmit = async () => {
       title: formData.value.title,
       text: formData.value.text,
       categories: formData.value.categories,
+      is_visible: formData.value.is_visible,
     }
 
     let result
@@ -241,6 +244,25 @@ onMounted(async () => {
               </span>
             </div>
             <p v-else class="text-xs sm:text-sm text-gray-500">Aucune catégorie ajoutée</p>
+          </div>
+
+          <!-- Visibility -->
+          <div>
+            <label class="flex items-center gap-3 cursor-pointer">
+              <input
+                v-model="formData.is_visible"
+                type="checkbox"
+                class="w-5 h-5 text-primary border-gray-300 rounded focus:ring-primary focus:ring-2"
+              />
+              <div>
+                <span class="block text-sm font-medium text-gray-700">
+                  Rendre l'article visible par le public
+                </span>
+                <span class="block text-xs text-gray-500 mt-0.5">
+                  Si désactivé, l'article ne sera pas visible sur le site public
+                </span>
+              </div>
+            </label>
           </div>
 
           <!-- Preview Section -->

@@ -11,8 +11,8 @@ export async function getAllArticles(page = 1, limit = 10, category = null) {
   try {
     const offset = (page - 1) * limit
 
-    // Construire la requête de base
-    let query = supabase.from('articles').select('*', { count: 'exact' })
+    // Construire la requête de base - filtrer uniquement les articles visibles
+    let query = supabase.from('articles').select('*', { count: 'exact' }).eq('is_visible', true)
 
     // Appliquer le filtre de catégorie si fourni (categories est un array)
     if (category) {
@@ -53,6 +53,7 @@ export async function getArticleById(id) {
       .from('articles')
       .select('*')
       .eq('id', id)
+      .eq('is_visible', true)
       .single()
 
     if (error) {
@@ -66,6 +67,11 @@ export async function getArticleById(id) {
       throw new Error('Article non trouvé')
     }
 
+    // Vérifier que l'article est visible (double vérification)
+    if (!article.is_visible) {
+      throw new Error('Article non trouvé')
+    }
+
     return article
   } catch (error) {
     console.error('Erreur dans getArticleById:', error)
@@ -74,7 +80,7 @@ export async function getArticleById(id) {
 }
 
 /**
- * Récupère toutes les catégories uniques depuis les articles
+ * Récupère toutes les catégories uniques depuis les articles visibles
  * @returns {Promise<Array<string>>} Liste des catégories
  */
 export async function getAllCategories() {
@@ -82,6 +88,7 @@ export async function getAllCategories() {
     const { data: articles, error } = await supabase
       .from('articles')
       .select('categories')
+      .eq('is_visible', true)
 
     if (error) {
       throw new Error(`Erreur lors de la récupération des catégories: ${error.message}`)
@@ -102,6 +109,56 @@ export async function getAllCategories() {
   } catch (error) {
     console.error('Erreur dans getAllCategories:', error)
     throw error
+  }
+}
+
+/**
+ * Incrémente le compteur de vues d'un article
+ * @param {string|number} id - ID de l'article
+ * @returns {Promise<{success: boolean, error?: string}>}
+ */
+export async function incrementArticleViewCount(id) {
+  try {
+    const { error } = await supabase.rpc('increment_article_view_count', {
+      article_id: id,
+    })
+
+    // Si la fonction RPC n'existe pas, utiliser une mise à jour directe
+    if (error && error.message?.includes('function') && error.message?.includes('does not exist')) {
+      // Fallback : récupérer l'article, incrémenter et mettre à jour
+      const { data: article, error: fetchError } = await supabase
+        .from('articles')
+        .select('view_count')
+        .eq('id', id)
+        .single()
+
+      if (fetchError || !article) {
+        throw new Error('Article non trouvé')
+      }
+
+      const { error: updateError } = await supabase
+        .from('articles')
+        .update({ view_count: (article.view_count || 0) + 1 })
+        .eq('id', id)
+
+      if (updateError) {
+        throw new Error(`Erreur lors de l'incrémentation: ${updateError.message}`)
+      }
+
+      return { success: true }
+    }
+
+    if (error) {
+      throw new Error(`Erreur lors de l'incrémentation: ${error.message}`)
+    }
+
+    return { success: true }
+  } catch (error) {
+    console.error('Erreur dans incrementArticleViewCount:', error)
+    return {
+      success: false,
+      error: error.message || 'Une erreur est survenue lors de l\'incrémentation du compteur',
+    }
   }
 }
 

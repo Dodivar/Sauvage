@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { getAllArticlesForAdmin, deleteArticle } from '@/services/adminArticleService'
+import { getAllArticlesForAdmin, deleteArticle, toggleArticleVisibility } from '@/services/adminArticleService'
 import AdminHeader from './AdminHeader.vue'
 
 const router = useRouter()
@@ -12,8 +12,10 @@ const isLoading = ref(true)
 const error = ref(null)
 const success = ref(null)
 const searchQuery = ref('')
+const visibilityFilter = ref('all') // 'all', 'visible', 'hidden'
 const showDeleteConfirm = ref(false)
 const articleToDelete = ref(null)
+const togglingVisibility = ref(null)
 
 // Computed
 const filteredArticles = computed(() => {
@@ -29,6 +31,13 @@ const filteredArticles = computed(() => {
         (article.categories &&
           article.categories.some((cat) => cat?.toLowerCase().includes(query))),
     )
+  }
+
+  // Filter by visibility
+  if (visibilityFilter.value === 'visible') {
+    filtered = filtered.filter((article) => article.is_visible === true)
+  } else if (visibilityFilter.value === 'hidden') {
+    filtered = filtered.filter((article) => article.is_visible === false)
   }
 
   return filtered
@@ -98,6 +107,37 @@ const formatDate = (dateString) => {
   })
 }
 
+const handleToggleVisibility = async (article) => {
+  if (togglingVisibility.value === article.id) return
+
+  try {
+    togglingVisibility.value = article.id
+    error.value = null
+    const result = await toggleArticleVisibility(article.id)
+    
+    if (result.success) {
+      // Mettre à jour l'article localement
+      const index = articles.value.findIndex((a) => a.id === article.id)
+      if (index !== -1) {
+        articles.value[index].is_visible = result.data.is_visible
+      }
+      success.value = result.data.is_visible 
+        ? 'Article rendu visible' 
+        : 'Article masqué'
+      setTimeout(() => {
+        success.value = null
+      }, 3000)
+    } else {
+      error.value = result.error || 'Erreur lors du changement de visibilité'
+    }
+  } catch (err) {
+    error.value = 'Une erreur est survenue lors du changement de visibilité'
+    console.error(err)
+  } finally {
+    togglingVisibility.value = null
+  }
+}
+
 onMounted(async () => {
   await loadArticles()
 })
@@ -120,12 +160,64 @@ onMounted(async () => {
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             />
           </div>
-          <button
-            @click="router.push('/admin/articles/new')"
-            class="px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-green-700 transition-colors whitespace-nowrap"
-          >
-            + Ajouter un article
-          </button>
+          <div class="flex flex-wrap gap-3">
+            <!-- Filtre de visibilité -->
+            <div class="flex items-center gap-2 bg-gray-100 rounded-lg p-1">
+              <button
+                @click="visibilityFilter = 'all'"
+                :class="[
+                  'px-3 py-1 text-sm font-medium rounded transition-colors',
+                  visibilityFilter === 'all'
+                    ? 'bg-white text-gray-900 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                ]"
+              >
+                Tous
+              </button>
+              <button
+                @click="visibilityFilter = 'visible'"
+                :class="[
+                  'px-3 py-1 text-sm font-medium rounded transition-colors',
+                  visibilityFilter === 'visible'
+                    ? 'bg-white text-gray-900 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                ]"
+              >
+                Visibles
+              </button>
+              <button
+                @click="visibilityFilter = 'hidden'"
+                :class="[
+                  'px-3 py-1 text-sm font-medium rounded transition-colors',
+                  visibilityFilter === 'hidden'
+                    ? 'bg-white text-gray-900 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                ]"
+              >
+                Masqués
+              </button>
+            </div>
+            <button
+              @click="router.push('/admin/articles/generate')"
+              class="px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors whitespace-nowrap flex items-center gap-2"
+            >
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
+              </svg>
+              Générer un article
+            </button>
+            <button
+              @click="router.push('/admin/articles/new')"
+              class="px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-green-700 transition-colors whitespace-nowrap"
+            >
+              + Ajouter un article
+            </button>
+          </div>
         </div>
       </div>
 
@@ -160,6 +252,12 @@ onMounted(async () => {
                   Catégories
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Statut
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Vues
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Date de création
                 </th>
                 <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -186,11 +284,62 @@ onMounted(async () => {
                   </div>
                   <span v-else class="text-sm text-gray-400">Aucune catégorie</span>
                 </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span
+                    :class="[
+                      'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
+                      article.is_visible
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-gray-100 text-gray-800'
+                    ]"
+                  >
+                    {{ article.is_visible ? 'Visible' : 'Masqué' }}
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {{ article.view_count || 0 }}
+                </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {{ formatDate(article.created_at) }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <div class="flex justify-end space-x-2">
+                    <button
+                      @click="handleToggleVisibility(article)"
+                      :disabled="togglingVisibility === article.id"
+                      :class="[
+                        'transition-colors',
+                        article.is_visible
+                          ? 'text-gray-600 hover:text-gray-900'
+                          : 'text-yellow-600 hover:text-yellow-900',
+                        togglingVisibility === article.id ? 'opacity-50 cursor-not-allowed' : ''
+                      ]"
+                      :title="article.is_visible ? 'Masquer' : 'Rendre visible'"
+                    >
+                      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path
+                          v-if="article.is_visible"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                        <path
+                          v-if="article.is_visible"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                        />
+                        <path
+                          v-else
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                        />
+                      </svg>
+                    </button>
                     <button
                       @click="handleView(article.id)"
                       class="text-blue-600 hover:text-blue-900"

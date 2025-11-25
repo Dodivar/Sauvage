@@ -134,7 +134,9 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useHead } from '@vueuse/head'
 import { marked } from 'marked'
-import { getArticleById } from '@/services/articleService'
+import { getArticleById, incrementArticleViewCount } from '@/services/articleService'
+import { getArticleByIdForAdmin } from '@/services/adminArticleService'
+import { isAdminAuthenticated } from '@/services/adminAuthService'
 import { scrollAnimation } from '@/animation'
 
 const route = useRoute()
@@ -167,8 +169,25 @@ const loadArticle = async () => {
     error.value = null
 
     const articleId = route.params.id
-    const data = await getArticleById(articleId)
+    
+    // Vérifier si l'utilisateur est admin pour permettre l'affichage des articles non visibles
+    const isAdmin = await isAdminAuthenticated()
+    
+    // Utiliser le service admin si l'utilisateur est admin, sinon le service public
+    const data = isAdmin 
+      ? await getArticleByIdForAdmin(articleId)
+      : await getArticleById(articleId)
+    
     article.value = data
+
+    // Incrémenter le compteur de vues uniquement si l'utilisateur n'est pas admin
+    if (!isAdmin) {
+      // Appeler de manière asynchrone sans bloquer l'affichage
+      incrementArticleViewCount(articleId).catch((err) => {
+        // Ne pas afficher d'erreur à l'utilisateur si l'incrémentation échoue
+        console.warn('Erreur lors de l\'incrémentation du compteur de vues:', err)
+      })
+    }
   } catch (err) {
     console.error('Erreur lors du chargement de l\'article:', err)
     error.value = err.message || 'Une erreur est survenue lors du chargement de l\'article'

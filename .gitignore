@@ -38,5 +38,7 @@ render.yaml
 .env.local
 .env.production
 
-SUPABASE_SETUP.md
-supabase_admin_setup.sql
+# Documentation et scripts de setup (garder localement, ne pas commiter)
+*.md
+!README.md
+*.sql

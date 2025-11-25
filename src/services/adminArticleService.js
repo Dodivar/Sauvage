@@ -82,6 +82,7 @@ export async function createArticle(articleData) {
       categories: articleData.categories && Array.isArray(articleData.categories)
         ? articleData.categories.filter((cat) => cat && cat.trim())
         : [],
+      is_visible: articleData.is_visible !== undefined ? articleData.is_visible : true,
     }
 
     const { data: article, error } = await supabase
@@ -138,6 +139,11 @@ export async function updateArticle(id, articleData) {
         ? articleData.categories.filter((cat) => cat && cat.trim())
         : [],
       updated_at: new Date().toISOString(),
+    }
+
+    // Inclure is_visible si fourni
+    if (articleData.is_visible !== undefined) {
+      articleDB.is_visible = articleData.is_visible
     }
 
     const { data: article, error } = await supabase
@@ -197,6 +203,64 @@ export async function deleteArticle(id) {
     return {
       success: false,
       error: error.message || 'Une erreur est survenue lors de la suppression de l\'article',
+    }
+  }
+}
+
+/**
+ * Bascule la visibilité d'un article (visible/non visible)
+ * @param {string|number} id - ID de l'article
+ * @returns {Promise<{success: boolean, data?: Object, error?: string}>}
+ */
+export async function toggleArticleVisibility(id) {
+  try {
+    // Récupérer l'article actuel pour obtenir l'état de visibilité
+    const { data: article, error: fetchError } = await supabase
+      .from('articles')
+      .select('is_visible')
+      .eq('id', id)
+      .single()
+
+    if (fetchError) {
+      if (fetchError.code === 'PGRST116') {
+        return {
+          success: false,
+          error: 'Article non trouvé',
+        }
+      }
+      throw new Error(`Erreur lors de la récupération de l'article: ${fetchError.message}`)
+    }
+
+    if (!article) {
+      return {
+        success: false,
+        error: 'Article non trouvé',
+      }
+    }
+
+    // Bascule la visibilité
+    const newVisibility = !article.is_visible
+
+    const { data: updatedArticle, error: updateError } = await supabase
+      .from('articles')
+      .update({ is_visible: newVisibility })
+      .eq('id', id)
+      .select()
+      .single()
+
+    if (updateError) {
+      throw new Error(`Erreur lors de la mise à jour: ${updateError.message}`)
+    }
+
+    return {
+      success: true,
+      data: updatedArticle,
+    }
+  } catch (error) {
+    console.error('Erreur dans toggleArticleVisibility:', error)
+    return {
+      success: false,
+      error: error.message || 'Une erreur est survenue lors du changement de visibilité',
     }
   }
 }
