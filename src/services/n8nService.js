@@ -51,6 +51,18 @@ export async function generateArticleFromWatch(watchName) {
     const contentType = response.headers.get('content-type')
     if (contentType && contentType.includes('application/json')) {
       result = await response.json()
+      
+      // Normaliser la réponse n8n (n8n peut retourner les données dans un tableau)
+      // Si c'est un tableau, prendre le premier élément
+      if (Array.isArray(result) && result.length > 0) {
+        result = result[0]
+      }
+      
+      // Si n8n retourne les données dans un objet avec une structure spécifique
+      // (par exemple { body: {...}, headers: {...} }), extraire le body
+      if (result && typeof result === 'object' && result.body && !result.id && !result.articleId) {
+        result = result.body
+      }
     } else {
       const text = await response.text()
       result = { success: true, message: text || 'Article généré avec succès' }

@@ -265,3 +265,51 @@ export async function toggleArticleVisibility(id) {
   }
 }
 
+/**
+ * Récupère les statistiques des articles groupées par jour (créés et vues)
+ * @returns {Promise<Array<{date: string, created: number, views: number}>>} Tableau des statistiques par jour, trié par date
+ */
+export async function getArticleStatsByDay() {
+  try {
+    // Récupérer tous les articles
+    const articles = await getAllArticlesForAdmin()
+
+    if (!articles || articles.length === 0) {
+      return []
+    }
+
+    // Grouper les articles par jour (créés et vues)
+    const statsMap = new Map()
+
+    articles.forEach((article) => {
+      // Statistiques des articles créés
+      if (article.created_at) {
+        const createdDate = new Date(article.created_at)
+        const createdDateKey = createdDate.toISOString().split('T')[0]
+
+        if (!statsMap.has(createdDateKey)) {
+          statsMap.set(createdDateKey, { created: 0, views: 0 })
+        }
+        const stats = statsMap.get(createdDateKey)
+        stats.created += 1
+        // Ajouter les vues de cet article (view_count cumulatif)
+        stats.views += article.view_count || 0
+      }
+    })
+
+    // Convertir la Map en tableau d'objets et trier par date
+    const stats = Array.from(statsMap.entries())
+      .map(([date, counts]) => ({
+        date,
+        created: counts.created,
+        views: counts.views,
+      }))
+      .sort((a, b) => a.date.localeCompare(b.date))
+
+    return stats
+  } catch (error) {
+    console.error('Erreur dans getArticleStatsByDay:', error)
+    throw error
+  }
+}
+

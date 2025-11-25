@@ -14,6 +14,7 @@ import {
   Filler,
 } from 'chart.js'
 import { getWatchStatsByDay } from '@/services/adminWatchService'
+import { getArticleStatsByDay } from '@/services/adminArticleService'
 import AdminHeader from './AdminHeader.vue'
 
 // Enregistrer les composants Chart.js
@@ -21,6 +22,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarEleme
 
 // State
 const stats = ref([])
+const articleStats = ref([])
 const isLoading = ref(true)
 const error = ref(null)
 
@@ -230,13 +232,108 @@ const dateRange = computed(() => {
   }
 })
 
+// Computed pour le graphique des articles
+const articleChartData = computed(() => {
+  if (!articleStats.value || articleStats.value.length === 0) {
+    return {
+      labels: [],
+      datasets: [],
+    }
+  }
+
+  return {
+    labels: articleStats.value.map((item) => {
+      // Formater la date pour l'affichage (DD/MM/YYYY)
+      const date = new Date(item.date)
+      return date.toLocaleDateString('fr-FR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      })
+    }),
+    datasets: [
+      {
+        type: 'bar',
+        label: 'Articles créés',
+        data: articleStats.value.map((item) => item.created),
+        backgroundColor: 'rgba(168, 85, 247, 0.6)', // purple-500
+        borderColor: 'rgb(168, 85, 247)', // purple-500
+        borderWidth: 1,
+        yAxisID: 'y',
+      },
+      {
+        type: 'line',
+        label: 'Articles vus',
+        data: articleStats.value.map((item) => item.views || 0),
+        borderColor: 'rgb(251, 146, 60)', // orange-500
+        backgroundColor: 'rgba(251, 146, 60, 0.1)',
+        borderWidth: 2,
+        fill: true,
+        tension: 0.4,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        pointBackgroundColor: 'rgb(251, 146, 60)',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        yAxisID: 'y',
+      },
+    ],
+  }
+})
+
+const articleChartOptions = computed(() => {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top',
+      },
+      tooltip: {
+        mode: 'index',
+        intersect: false,
+        callbacks: {
+          label: function (context) {
+            let label = context.dataset.label || ''
+            if (label) {
+              label += ': '
+            }
+            label += context.parsed.y
+            return label
+          },
+        },
+      },
+    },
+    scales: {
+      y: {
+        type: 'linear',
+        position: 'left',
+        beginAtZero: true,
+        ticks: {
+          stepSize: 1,
+          precision: 0,
+        },
+        title: {
+          display: true,
+          text: 'Nombre',
+        },
+      },
+    },
+  }
+})
+
 // Methods
 const loadStats = async () => {
   try {
     isLoading.value = true
     error.value = null
-    const data = await getWatchStatsByDay()
-    stats.value = data
+    const [watchData, articleData] = await Promise.all([
+      getWatchStatsByDay(),
+      getArticleStatsByDay(),
+    ])
+    stats.value = watchData
+    articleStats.value = articleData
   } catch (err) {
     console.error('Erreur lors du chargement des statistiques:', err)
     error.value = err.message || 'Une erreur est survenue lors du chargement des statistiques'
@@ -344,6 +441,28 @@ onMounted(async () => {
           </div>
           <div v-else class="h-96">
             <Chart :data="chartData" :options="chartOptions" />
+          </div>
+        </div>
+
+        <!-- Article Chart -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+          <h2 class="text-xl font-semibold text-gray-900 mb-4">Évolution des articles créés et vus</h2>
+          <div v-if="articleStats.length === 0" class="text-center py-16">
+            <div class="text-gray-400 mb-4">
+              <svg class="w-16 h-16 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl text-gray-600 mb-2">Aucune donnée disponible</h3>
+            <p class="text-gray-500">Aucun article n'a encore été créé.</p>
+          </div>
+          <div v-else class="h-96">
+            <Chart :data="articleChartData" :options="articleChartOptions" />
           </div>
         </div>
       </div>

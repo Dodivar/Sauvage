@@ -7,12 +7,15 @@ Blog
     - Les derniers posts des réseaux sociaux
 
 Article :
-- mettre nb de vues sur les articles ?
 - Ajouter des images pour les articles
     - Nouvelles méthode et storage, à voir pour la limite si toujours ok voir payer 25€ par mois
 
 Statistiques :
-- ajouter statistiques sur les articles vues
+
+Montres :
+- sur desktop ajouter une loop au survol de l'image principale à fix !
+
+- ajouter un filtre sur les colonnes des dashboard montre & article
 
 SEO :
 

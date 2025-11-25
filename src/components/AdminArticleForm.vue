@@ -49,7 +49,7 @@ const loadArticle = async () => {
       title: article.title || '',
       text: article.text || '',
       categories: article.categories && Array.isArray(article.categories) ? [...article.categories] : [],
-      is_visible: article.is_visible !== undefined ? article.is_visible : true,
+      is_visible: article.is_visible !== undefined ? article.is_visible : false,
     }
   } catch (err) {
     console.error('Erreur lors du chargement de l\'article:', err)

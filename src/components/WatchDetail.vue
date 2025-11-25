@@ -87,16 +87,35 @@
         <div class="space-y-4">
           <!-- Main Image -->
           <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-            <div class="relative h-96 lg:h-[500px]">
+            <div 
+              ref="imageContainerRef"
+              class="relative h-96 lg:h-[500px] image-zoom-container"
+              @mouseenter="handleMouseEnter"
+              @mouseleave="handleMouseLeave"
+              @mousemove="handleMouseMove"
+            >
               <img
                 v-if="watchItem && watchItem.images && watchItem.images.length > 0"
                 :src="watchItem.images[currentImageIndex]"
                 :alt="watchItem.name"
-                class="w-full h-full object-cover object-center cursor-pointer"
+                class="w-full h-full object-cover object-center cursor-zoom-in"
                 @click="openLightbox"
               />
               <div v-else class="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
                 Image non disponible
+              </div>
+
+              <!-- Zoom Preview Encart -->
+              <div
+                v-if="isHovering && watchItem && watchItem.images && watchItem.images.length > 0"
+                class="zoom-preview hidden lg:block"
+                :style="zoomPreviewStyle"
+              >
+                <div 
+                  class="zoom-preview-inner"
+                  :style="zoomImageStyle"
+                >
+                </div>
               </div>
 
               <!-- Zoom button -->
@@ -629,6 +648,13 @@ const currentImageIndex = ref(0)
 // Lightbox state
 const isLightboxOpen = ref(false)
 
+// Zoom on hover state
+const isHovering = ref(false)
+const mousePosition = ref({ x: 0, y: 0 })
+const imageContainerRef = ref(null)
+const imageNaturalSize = ref({ width: 0, height: 0 })
+const zoomLevel = 1 // Niveau de zoom (3x pour garantir que l'image couvre toujours l'encart)
+
 // State
 const watchItem = ref(null)
 const isLoading = ref(true)
@@ -656,6 +682,10 @@ const loadWatch = async () => {
     watchItem.value = data
     // Reset image index when watch changes
     currentImageIndex.value = 0
+    // Load image dimensions
+    if (data && data.images && data.images.length > 0) {
+      await loadImageDimensions(data.images[0])
+    }
   } catch (err) {
     console.error('Erreur lors du chargement de la montre:', err)
     // Vérifier si c'est une erreur de disponibilité
@@ -683,6 +713,195 @@ const previousImage = () => {
       currentImageIndex.value === 0 ? watchItem.value.images.length - 1 : currentImageIndex.value - 1
   }
 }
+
+// Load image natural dimensions
+const loadImageDimensions = (imageSrc) => {
+  return new Promise((resolve) => {
+    const img = new Image()
+    img.onload = () => {
+      imageNaturalSize.value = {
+        width: img.naturalWidth,
+        height: img.naturalHeight
+      }
+      resolve()
+    }
+    img.onerror = () => {
+      // En cas d'erreur, utiliser les dimensions du conteneur comme fallback
+      if (imageContainerRef.value) {
+        const rect = imageContainerRef.value.getBoundingClientRect()
+        imageNaturalSize.value = {
+          width: rect.width,
+          height: rect.height
+        }
+      }
+      resolve()
+    }
+    img.src = imageSrc
+  })
+}
+
+// Zoom on hover methods
+const handleMouseEnter = () => {
+  // Only enable on desktop (not touch devices)
+  if (window.innerWidth >= 1024 && !('ontouchstart' in window)) {
+    isHovering.value = true
+  }
+}
+
+const handleMouseLeave = () => {
+  isHovering.value = false
+}
+
+const handleMouseMove = (event) => {
+  if (!imageContainerRef.value || !isHovering.value) return
+  
+  const rect = imageContainerRef.value.getBoundingClientRect()
+  const x = event.clientX - rect.left
+  const y = event.clientY - rect.top
+  
+  mousePosition.value = {
+    x: Math.max(0, Math.min(x, rect.width)),
+    y: Math.max(0, Math.min(y, rect.height))
+  }
+}
+
+// Computed styles for zoom preview
+const zoomPreviewStyle = computed(() => {
+  if (!imageContainerRef.value) return {}
+  
+  const rect = imageContainerRef.value.getBoundingClientRect()
+  const previewSize = 400 // Taille de l'encart de zoom
+  const offset = 20 // Distance depuis l'image
+  const isDesktop = window.innerWidth >= 1024
+  
+  let left, top
+  
+  // En desktop, utiliser l'offset normal
+  // En responsive, utiliser un offset minimal pour coller l'encart à l'image
+  const actualOffset = isDesktop ? offset : 5
+  
+  // Toujours essayer de positionner à droite de l'image d'abord
+  left = rect.right + actualOffset
+  
+  // Si pas assez de place à droite, mettre à gauche
+  if (left + previewSize > window.innerWidth) {
+    left = rect.left - previewSize - actualOffset
+    
+    // En responsive, si même à gauche ça dépasse, coller directement au bord de l'image
+    if (!isDesktop && left < 0) {
+      // Coller à droite sans offset
+      left = rect.right
+      // Si ça dépasse encore, mettre à gauche sans offset
+      if (left + previewSize > window.innerWidth) {
+        left = rect.left - previewSize
+        // Si même ça dépasse, ajuster pour rester visible mais le plus proche possible
+        if (left < 0) {
+          left = Math.max(10, window.innerWidth - previewSize - 10)
+        }
+      }
+    }
+  }
+  
+  // Ajuster verticalement pour rester dans la fenêtre
+  top = rect.top
+  if (top + previewSize > window.innerHeight) {
+    top = window.innerHeight - previewSize - 20
+  }
+  if (top < 20) {
+    top = 20
+  }
+  
+  return {
+    left: `${left}px`,
+    top: `${top}px`,
+    width: `${previewSize}px`,
+    height: `${previewSize}px`
+  }
+})
+
+// Computed styles for zoomed image
+const zoomImageStyle = computed(() => {
+  if (!imageContainerRef.value || !watchItem.value || !isHovering.value) return {}
+  if (imageNaturalSize.value.width === 0 || imageNaturalSize.value.height === 0) return {}
+  
+  const rect = imageContainerRef.value.getBoundingClientRect()
+  const previewSize = 400 // Taille de l'encart de zoom
+  
+  // S'assurer que rect a des dimensions valides
+  if (rect.width === 0 || rect.height === 0) return {}
+  
+  // Calculer comment l'image est affichée dans le conteneur (avec object-cover)
+  // object-cover remplit le conteneur en préservant le ratio, donc l'image peut être rognée
+  const containerAspect = rect.width / rect.height
+  const imageAspect = imageNaturalSize.value.width / imageNaturalSize.value.height
+  
+  // Calculer quelle partie de l'image naturelle est visible dans le conteneur
+  let visibleImageWidth, visibleImageHeight, cropOffsetX, cropOffsetY
+  
+  if (imageAspect > containerAspect) {
+    // L'image est plus large que le conteneur, elle est rognée sur les côtés
+    // L'image remplit la hauteur du conteneur
+    visibleImageHeight = imageNaturalSize.value.height
+    visibleImageWidth = visibleImageHeight * containerAspect
+    // L'image est centrée horizontalement, donc on rogne les côtés
+    cropOffsetX = (imageNaturalSize.value.width - visibleImageWidth) / 2
+    cropOffsetY = 0
+  } else {
+    // L'image est plus haute que le conteneur, elle est rognée en haut/bas
+    // L'image remplit la largeur du conteneur
+    visibleImageWidth = imageNaturalSize.value.width
+    visibleImageHeight = visibleImageWidth / containerAspect
+    // L'image est centrée verticalement, donc on rogne en haut et en bas
+    cropOffsetX = 0
+    cropOffsetY = (imageNaturalSize.value.height - visibleImageHeight) / 2
+  }
+  
+  // La position de la souris dans le conteneur (0 à rect.width/height)
+  // On doit la mapper à la position dans l'image naturelle complète
+  // Le conteneur montre la partie visible de l'image (visibleImageWidth x visibleImageHeight)
+  // qui commence à (cropOffsetX, cropOffsetY) dans l'image naturelle
+  
+  // Convertir la position de la souris en ratio dans la partie visible (0-1)
+  const visibleXRatio = mousePosition.value.x / rect.width
+  const visibleYRatio = mousePosition.value.y / rect.height
+  
+  // Convertir ce ratio en position dans l'image naturelle complète
+  const xRatio = (cropOffsetX + visibleXRatio * visibleImageWidth) / imageNaturalSize.value.width
+  const yRatio = (cropOffsetY + visibleYRatio * visibleImageHeight) / imageNaturalSize.value.height
+  
+  // Clamp pour rester dans les limites (ne devrait pas être nécessaire mais sécurité)
+  const finalXRatio = Math.max(0, Math.min(1, xRatio))
+  const finalYRatio = Math.max(0, Math.min(1, yRatio))
+  
+  // Calculer les dimensions de l'image zoomée en préservant le ratio d'aspect
+  const zoomedWidth = imageNaturalSize.value.width * zoomLevel
+  const zoomedHeight = imageNaturalSize.value.height * zoomLevel
+  
+  // Calculer la position dans l'image zoomée où se trouve le point sous la souris
+  const zoomedX = finalXRatio * zoomedWidth
+  const zoomedY = finalYRatio * zoomedHeight
+  
+  // Pour centrer ce point dans l'encart, on doit calculer la position du background
+  const backgroundX = (previewSize / 2) - zoomedX
+  const backgroundY = (previewSize / 2) - zoomedY
+  
+  // Limiter la position pour éviter les zones blanches
+  const minBackgroundX = Math.min(0, previewSize - zoomedWidth)
+  const maxBackgroundX = 0
+  const minBackgroundY = Math.min(0, previewSize - zoomedHeight)
+  const maxBackgroundY = 0
+  
+  // Clamp les valeurs entre les limites
+  const finalBackgroundX = Math.max(minBackgroundX, Math.min(maxBackgroundX, backgroundX))
+  const finalBackgroundY = Math.max(minBackgroundY, Math.min(maxBackgroundY, backgroundY))
+  
+  return {
+    backgroundImage: `url(${watchItem.value.images[currentImageIndex.value]})`,
+    backgroundSize: `${zoomedWidth}px ${zoomedHeight}px`,
+    backgroundPosition: `${finalBackgroundX}px ${finalBackgroundY}px`,
+    backgroundRepeat: 'no-repeat'
+  }
+})
 
 // Price formatting
 const formatPrice = (price) => {
@@ -890,6 +1109,21 @@ watch(() => route.params.id, async (newId) => {
   }
 })
 
+// Reset zoom and load image dimensions when image changes
+watch(currentImageIndex, async () => {
+  isHovering.value = false
+  if (watchItem.value && watchItem.value.images && watchItem.value.images.length > 0) {
+    await loadImageDimensions(watchItem.value.images[currentImageIndex.value])
+  }
+})
+
+// Load image dimensions when watch item changes
+watch(() => watchItem.value, async (newWatchItem) => {
+  if (newWatchItem && newWatchItem.images && newWatchItem.images.length > 0) {
+    await loadImageDimensions(newWatchItem.images[currentImageIndex.value])
+  }
+})
+
 onUnmounted(() => {
   // Cleanup: restore body scroll and remove event listeners
   document.body.style.overflow = ''
@@ -929,6 +1163,55 @@ onUnmounted(() => {
   }
   to {
     opacity: 1;
+  }
+}
+
+/* Zoom on hover styles - Desktop only */
+.image-zoom-container {
+  position: relative;
+}
+
+.zoom-preview {
+  position: fixed;
+  z-index: 1000;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  pointer-events: none;
+  animation: zoomFadeIn 0.2s ease-out;
+}
+
+.zoom-preview-inner {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  background-color: white;
+  transition: background-position 0.05s ease-out;
+  will-change: background-position;
+}
+
+@keyframes zoomFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Disable zoom on mobile/touch devices */
+@media (max-width: 1023px) {
+  .image-zoom-container {
+    pointer-events: auto;
+  }
+  
+  .zoom-preview {
+    display: none !important;
   }
 }
 </style>

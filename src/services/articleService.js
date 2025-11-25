@@ -119,13 +119,43 @@ export async function getAllCategories() {
  */
 export async function incrementArticleViewCount(id) {
   try {
-    const { error } = await supabase.rpc('increment_article_view_count', {
-      article_id: id,
+    // S'assurer que l'ID est une string (UUID)
+    const articleId = String(id)
+    
+    // Essayer d'utiliser la fonction RPC (recommandée car elle contourne RLS avec SECURITY DEFINER)
+    const { data: rowsAffected, error: rpcError } = await supabase.rpc('increment_article_view_count', {
+      article_id: articleId,
     })
 
-    // Si la fonction RPC n'existe pas, utiliser une mise à jour directe
-    if (error && error.message?.includes('function') && error.message?.includes('does not exist')) {
+    // Si la RPC fonctionne, vérifier que des lignes ont été affectées
+    if (!rpcError) {
+      // La fonction peut retourner void (ancienne version) ou INTEGER (nouvelle version)
+      if (rowsAffected === undefined || rowsAffected === null) {
+        return { success: true }
+      } else if (rowsAffected === 1) {
+        return { success: true }
+      } else if (rowsAffected === 0) {
+        return {
+          success: false,
+          error: 'Article non trouvé ou déjà supprimé',
+        }
+      } else {
+        return { success: true } // On considère quand même que c'est un succès
+      }
+    }
+    
+    console.error('[incrementArticleViewCount] Erreur RPC:', rpcError)
+
+    // Si la fonction RPC n'existe pas, essayer un fallback
+    if (rpcError.message?.includes('function') && rpcError.message?.includes('does not exist')) {
+      console.warn(
+        'La fonction RPC increment_article_view_count n\'existe pas. ' +
+        'Veuillez exécuter le script SQL supabase_articles_visibility_migration.sql dans Supabase.'
+      )
+
       // Fallback : récupérer l'article, incrémenter et mettre à jour
+      // Note: Ce fallback ne fonctionnera pas pour les utilisateurs anonymes à cause de RLS
+      // mais on essaie quand même pour les logs
       const { data: article, error: fetchError } = await supabase
         .from('articles')
         .select('view_count')
@@ -133,7 +163,10 @@ export async function incrementArticleViewCount(id) {
         .single()
 
       if (fetchError || !article) {
-        throw new Error('Article non trouvé')
+        return {
+          success: false,
+          error: `Article non trouvé: ${fetchError?.message || 'Article introuvable'}`,
+        }
       }
 
       const { error: updateError } = await supabase
@@ -142,17 +175,23 @@ export async function incrementArticleViewCount(id) {
         .eq('id', id)
 
       if (updateError) {
-        throw new Error(`Erreur lors de l'incrémentation: ${updateError.message}`)
+        // Probablement un problème de permissions RLS
+        console.error('Erreur RLS lors de l\'incrémentation (fallback):', updateError.message)
+        return {
+          success: false,
+          error: `Permissions insuffisantes. La fonction RPC doit être créée dans Supabase.`,
+        }
       }
 
       return { success: true }
     }
 
-    if (error) {
-      throw new Error(`Erreur lors de l'incrémentation: ${error.message}`)
+    // Autre erreur de la RPC
+    console.error('Erreur lors de l\'appel RPC increment_article_view_count:', rpcError)
+    return {
+      success: false,
+      error: `Erreur RPC: ${rpcError.message}`,
     }
-
-    return { success: true }
   } catch (error) {
     console.error('Erreur dans incrementArticleViewCount:', error)
     return {

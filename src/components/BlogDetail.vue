@@ -183,9 +183,13 @@ const loadArticle = async () => {
     // Incrémenter le compteur de vues uniquement si l'utilisateur n'est pas admin
     if (!isAdmin) {
       // Appeler de manière asynchrone sans bloquer l'affichage
-      incrementArticleViewCount(articleId).catch((err) => {
-        // Ne pas afficher d'erreur à l'utilisateur si l'incrémentation échoue
-        console.warn('Erreur lors de l\'incrémentation du compteur de vues:', err)
+      incrementArticleViewCount(articleId).then((result) => {
+        if (!result.success) {
+          console.warn('Erreur lors de l\'incrémentation du compteur de vues:', result.error)
+        }
+      }).catch((err) => {
+        // Gérer les erreurs de promesse (ne devrait normalement pas arriver)
+        console.error('Erreur inattendue lors de l\'incrémentation du compteur de vues:', err)
       })
     }
   } catch (err) {

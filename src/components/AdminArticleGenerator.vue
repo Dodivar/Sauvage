@@ -33,9 +33,23 @@ const handleSubmit = async (event) => {
     // Réinitialiser le formulaire
     watchName.value = ''
 
-    // Rediriger vers la liste des articles après 2 secondes
+    // Extraire l'ID de l'article depuis la réponse n8n
+    // Le workflow n8n peut retourner l'ID dans différentes structures
+    let articleId = null
+    if (result) {
+      // Essayer différentes structures possibles
+      articleId = result.id || result.articleId || result.article_id || 
+                  (result.data && (result.data.id || result.data.articleId || result.data.article_id)) ||
+                  (result.body && (result.body.id || result.body.articleId || result.body.article_id))
+    }
+
+    // Rediriger vers l'édition de l'article si l'ID est disponible, sinon vers la liste
     setTimeout(() => {
-      router.push('/admin/articles')
+      if (articleId) {
+        router.push(`/admin/articles/${articleId}/edit`)
+      } else {
+        router.push('/admin/articles')
+      }
     }, 2000)
   } catch (err) {
     console.error('Erreur lors de la génération:', err)
