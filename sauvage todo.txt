@@ -1,6 +1,7 @@
 Montres :
 - Ajouter des articles liés à la montres
 - sur desktop ajouter une loop au survol de l'image principale à fix !
+- Ajouter vidéo 360° sur les bestsellers
 
 Blog
 - Les derniers posts des réseaux sociaux
@@ -16,6 +17,10 @@ Accueil :
 
 Recherche :
 - Ajouter un table permettant d'enregistrer toutes les demandes de recherche de montre pour avoir un tableau recensant toutes les demandes et voir des tendances
+
+Estimation :
+- Préciser sur une page type article comment l'estimation d'une montre est faite
+- Ajouter un article de blog "Anatomie d'une arnaque" / "Comment repérer une arnaque"
 
 Admin :
 - ajouter un filtre sur les colonnes des dashboard montre & article
