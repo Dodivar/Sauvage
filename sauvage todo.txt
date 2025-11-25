@@ -1,23 +1,23 @@
 Montres :
 - Ajouter des articles liés à la montres
+- sur desktop ajouter une loop au survol de l'image principale à fix !
 
 Blog
-    - Vidéos et article ?
-    - Génération automatique -> N8n à voir comment hit facilement
-    - Les derniers posts des réseaux sociaux
+- Les derniers posts des réseaux sociaux
 
 Article :
 - Ajouter des images pour les articles
     - Nouvelles méthode et storage, à voir pour la limite si toujours ok voir payer 25€ par mois
 
-Statistiques :
+Accueil :
+- Slider des carrousels pour que ce soit plus voyant ou défilement tout seul
+- Enlever au survol la taille qui augmente
+- réduire la taille des cartes pour en voir plus du premier coup d'oeil
 
-Montres :
-- sur desktop ajouter une loop au survol de l'image principale à fix !
-
+Admin :
 - ajouter un filtre sur les colonnes des dashboard montre & article
 
+Statistiques :
 SEO :
-
 FAQ :
 - Améliorer les questions avec Antoine
