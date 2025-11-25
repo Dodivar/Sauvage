@@ -22,7 +22,12 @@
                   <div class="text-gray-400 text-lg">Image non disponible</div>
                 </div>
 
-                <div v-else class="relative h-full">
+                <div 
+                  v-else 
+                  class="relative h-full"
+                  @touchstart="(e) => handleTouchStart(e, i)"
+                  @touchend="(e) => handleTouchEnd(e, i)"
+                >
                   <img
                     :src="watch.images[currentImageIndices[i]]"
                     :alt="watch.name"
@@ -173,6 +178,32 @@ const formatPrice = (price) => {
 
 const handleViewDetails = (watchId) => {
   router.push(`/watch/${watchId}`)
+}
+
+// Touch/swipe support for image navigation
+const touchStartPositions = ref({})
+
+const handleTouchStart = (e, watchIndex) => {
+  touchStartPositions.value[watchIndex] = e.changedTouches[0].screenX
+}
+
+const handleTouchEnd = (e, watchIndex) => {
+  if (!touchStartPositions.value[watchIndex]) return
+  
+  const touchEndX = e.changedTouches[0].screenX
+  const touchStartX = touchStartPositions.value[watchIndex]
+  const swipeThreshold = 50
+  const diff = touchStartX - touchEndX
+
+  if (Math.abs(diff) > swipeThreshold) {
+    if (diff > 0) {
+      nextImage(watchIndex)
+    } else {
+      previousImage(watchIndex)
+    }
+  }
+  
+  delete touchStartPositions.value[watchIndex]
 }
 </script>
 

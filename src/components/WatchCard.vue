@@ -11,7 +11,12 @@
         <div class="text-gray-400 text-lg">Image non disponible</div>
       </div>
 
-      <div v-else class="relative h-full">
+      <div 
+        v-else 
+        class="relative h-full"
+        @touchstart="handleTouchStart"
+        @touchend="handleTouchEnd"
+      >
         <img
           :src="watch.images[currentImageIndex]"
           :alt="watch.name"

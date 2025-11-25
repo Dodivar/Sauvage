@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { getAllWatchesForAdmin, deleteWatch, toggleWatchAvailability, markWatchAsSold } from '@/services/adminWatchService'
+import { getAllWatchesForAdmin, deleteWatch, toggleWatchAvailability, markWatchAsSold, reorderWatches } from '@/services/adminWatchService'
 import AdminHeader from './AdminHeader.vue'
 
 const router = useRouter()
@@ -18,6 +18,10 @@ const watchToDelete = ref(null)
 const showSoldConfirm = ref(false)
 const watchToMarkAsSold = ref(null)
 const activeTab = ref('available') // 'available', 'unavailable', 'sold', ou 'all'
+
+// Sorting state
+const sortColumn = ref(null) // 'price', 'date', 'brand', 'model'
+const sortDirection = ref('asc') // 'asc' or 'desc'
 
 // Computed
 const availableBrands = computed(() => {
@@ -57,6 +61,53 @@ const filteredWatches = computed(() => {
   // Filter by brand
   if (selectedBrand.value) {
     filtered = filtered.filter((watch) => watch.brand === selectedBrand.value)
+  }
+
+  // Apply sorting
+  if (sortColumn.value) {
+    filtered = [...filtered].sort((a, b) => {
+      let aValue, bValue
+
+      switch (sortColumn.value) {
+        case 'price':
+          aValue = parseFloat(a.price) || 0
+          bValue = parseFloat(b.price) || 0
+          break
+        case 'date':
+          // Use sale_date if available, otherwise use created_at
+          aValue = a.sale_date ? new Date(a.sale_date).getTime() : (a.created_at ? new Date(a.created_at).getTime() : 0)
+          bValue = b.sale_date ? new Date(b.sale_date).getTime() : (b.created_at ? new Date(b.created_at).getTime() : 0)
+          break
+        case 'brand':
+          aValue = (a.brand || '').toLowerCase()
+          bValue = (b.brand || '').toLowerCase()
+          break
+        case 'model':
+          aValue = (a.model || '').toLowerCase()
+          bValue = (b.model || '').toLowerCase()
+          break
+        default:
+          return 0
+      }
+
+      // Compare values
+      if (sortColumn.value === 'price' || sortColumn.value === 'date') {
+        // Numeric comparison
+        return sortDirection.value === 'asc' ? aValue - bValue : bValue - aValue
+      } else {
+        // String comparison
+        if (aValue < bValue) return sortDirection.value === 'asc' ? -1 : 1
+        if (aValue > bValue) return sortDirection.value === 'asc' ? 1 : -1
+        return 0
+      }
+    })
+  } else {
+    // Default sort by display_order descending (highest first)
+    filtered = [...filtered].sort((a, b) => {
+      const orderA = a.display_order || 0
+      const orderB = b.display_order || 0
+      return orderB - orderA
+    })
   }
 
   return filtered
@@ -204,6 +255,187 @@ const formatDate = (dateString) => {
     month: 'short',
     day: 'numeric',
   })
+}
+
+// Sorting functions
+const handleSort = (column) => {
+  if (sortColumn.value === column) {
+    // Toggle direction if same column
+    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc'
+  } else {
+    // New column, default to ascending
+    sortColumn.value = column
+    sortDirection.value = 'asc'
+  }
+}
+
+const isColumnSorted = (column) => {
+  return sortColumn.value === column
+}
+
+const getSortDirection = (column) => {
+  if (sortColumn.value !== column) return null
+  return sortDirection.value
+}
+
+// Drag & Drop state
+const draggedWatch = ref(null)
+const draggedOverIndex = ref(null)
+
+// Functions for reordering watches
+const moveWatchUp = async (watchId) => {
+  try {
+    const currentIndex = filteredWatches.value.findIndex((w) => w.id === watchId)
+    if (currentIndex <= 0) return // Already at the top
+
+    const currentWatch = filteredWatches.value[currentIndex]
+    const previousWatch = filteredWatches.value[currentIndex - 1]
+
+    // Swap display_order values
+    const tempOrder = currentWatch.display_order
+    currentWatch.display_order = previousWatch.display_order
+    previousWatch.display_order = tempOrder
+
+    // Update both watches in the database
+    const result = await reorderWatches([
+      { id: currentWatch.id, display_order: currentWatch.display_order },
+      { id: previousWatch.id, display_order: previousWatch.display_order },
+    ])
+
+    if (result.success) {
+      await loadWatches() // Reload to get updated order
+      success.value = 'Ordre mis à jour avec succès'
+      setTimeout(() => {
+        success.value = null
+      }, 3000)
+    } else {
+      error.value = result.error || 'Erreur lors de la mise à jour de l\'ordre'
+    }
+  } catch (err) {
+    error.value = 'Une erreur est survenue lors de la mise à jour de l\'ordre'
+    console.error(err)
+  }
+}
+
+const moveWatchDown = async (watchId) => {
+  try {
+    const currentIndex = filteredWatches.value.findIndex((w) => w.id === watchId)
+    if (currentIndex >= filteredWatches.value.length - 1) return // Already at the bottom
+
+    const currentWatch = filteredWatches.value[currentIndex]
+    const nextWatch = filteredWatches.value[currentIndex + 1]
+
+    // Swap display_order values
+    const tempOrder = currentWatch.display_order
+    currentWatch.display_order = nextWatch.display_order
+    nextWatch.display_order = tempOrder
+
+    // Update both watches in the database
+    const result = await reorderWatches([
+      { id: currentWatch.id, display_order: currentWatch.display_order },
+      { id: nextWatch.id, display_order: nextWatch.display_order },
+    ])
+
+    if (result.success) {
+      await loadWatches() // Reload to get updated order
+      success.value = 'Ordre mis à jour avec succès'
+      setTimeout(() => {
+        success.value = null
+      }, 3000)
+    } else {
+      error.value = result.error || 'Erreur lors de la mise à jour de l\'ordre'
+    }
+  } catch (err) {
+    error.value = 'Une erreur est survenue lors de la mise à jour de l\'ordre'
+    console.error(err)
+  }
+}
+
+// Drag & Drop handlers
+const handleDragStart = (event, watch) => {
+  draggedWatch.value = watch
+  event.dataTransfer.effectAllowed = 'move'
+  event.dataTransfer.setData('text/html', event.target)
+  if (event.target && event.target.style) {
+    event.target.style.opacity = '0.5'
+  }
+}
+
+const handleDragOver = (event, index) => {
+  event.preventDefault()
+  event.dataTransfer.dropEffect = 'move'
+  draggedOverIndex.value = index
+}
+
+const handleDragLeave = () => {
+  draggedOverIndex.value = null
+}
+
+const handleDrop = async (event, dropIndex) => {
+  event.preventDefault()
+  draggedOverIndex.value = null
+
+  if (!draggedWatch.value) return
+
+  const draggedIndex = filteredWatches.value.findIndex((w) => w.id === draggedWatch.value.id)
+  if (draggedIndex === -1 || draggedIndex === dropIndex) {
+    draggedWatch.value = null
+    return
+  }
+
+  try {
+    // Calculate new display_order values for all affected watches
+    const watchesToUpdate = []
+    const sortedWatches = [...filteredWatches.value]
+
+    // Remove dragged watch from its current position
+    const [draggedItem] = sortedWatches.splice(draggedIndex, 1)
+    // Insert it at the new position
+    sortedWatches.splice(dropIndex, 0, draggedItem)
+
+    // Assign new display_order values (highest to lowest)
+    const maxOrder = Math.max(...sortedWatches.map((w) => w.display_order || 0))
+    sortedWatches.forEach((watch, index) => {
+      const newOrder = maxOrder - index
+      if (watch.display_order !== newOrder) {
+        watchesToUpdate.push({ id: watch.id, display_order: newOrder })
+      }
+    })
+
+    if (watchesToUpdate.length > 0) {
+      const result = await reorderWatches(watchesToUpdate)
+      if (result.success) {
+        await loadWatches()
+        success.value = 'Ordre mis à jour avec succès'
+        setTimeout(() => {
+          success.value = null
+        }, 3000)
+      } else {
+        error.value = result.error || 'Erreur lors de la mise à jour de l\'ordre'
+      }
+    }
+  } catch (err) {
+    error.value = 'Une erreur est survenue lors de la mise à jour de l\'ordre'
+    console.error(err)
+  }
+
+  draggedWatch.value = null
+  event.target.style.opacity = '1'
+}
+
+const handleDragEnd = (event) => {
+  if (event.target && event.target.style) {
+    event.target.style.opacity = '1'
+  }
+  // Reset opacity for all rows
+  const rows = document.querySelectorAll('tbody tr')
+  rows.forEach((row) => {
+    if (row.style) {
+      row.style.opacity = '1'
+    }
+  })
+  draggedWatch.value = null
+  draggedOverIndex.value = null
 }
 
 onMounted(async () => {
@@ -369,22 +601,125 @@ onMounted(async () => {
             <thead class="bg-gray-50">
               <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Ordre
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Image
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Nom
                 </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Marque
+                <th 
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                  @click="handleSort('brand')"
+                >
+                  <div class="flex items-center gap-2">
+                    <span>Marque</span>
+                    <div class="flex flex-col">
+                      <svg 
+                        v-if="!isColumnSorted('brand') || getSortDirection('brand') === 'desc'"
+                        class="w-3 h-3 -mb-1"
+                        :class="isColumnSorted('brand') ? 'text-primary' : 'text-gray-300'"
+                        fill="currentColor" 
+                        viewBox="0 0 20 20"
+                      >
+                        <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" />
+                      </svg>
+                      <svg 
+                        v-if="!isColumnSorted('brand') || getSortDirection('brand') === 'asc'"
+                        class="w-3 h-3"
+                        :class="isColumnSorted('brand') ? 'text-primary' : 'text-gray-300'"
+                        fill="currentColor" 
+                        viewBox="0 0 20 20"
+                      >
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                      </svg>
+                    </div>
+                  </div>
                 </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Modèle
+                <th 
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                  @click="handleSort('model')"
+                >
+                  <div class="flex items-center gap-2">
+                    <span>Modèle</span>
+                    <div class="flex flex-col">
+                      <svg 
+                        v-if="!isColumnSorted('model') || getSortDirection('model') === 'desc'"
+                        class="w-3 h-3 -mb-1"
+                        :class="isColumnSorted('model') ? 'text-primary' : 'text-gray-300'"
+                        fill="currentColor" 
+                        viewBox="0 0 20 20"
+                      >
+                        <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" />
+                      </svg>
+                      <svg 
+                        v-if="!isColumnSorted('model') || getSortDirection('model') === 'asc'"
+                        class="w-3 h-3"
+                        :class="isColumnSorted('model') ? 'text-primary' : 'text-gray-300'"
+                        fill="currentColor" 
+                        viewBox="0 0 20 20"
+                      >
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                      </svg>
+                    </div>
+                  </div>
                 </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Prix
+                <th 
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                  @click="handleSort('price')"
+                >
+                  <div class="flex items-center gap-2">
+                    <span>Prix</span>
+                    <div class="flex flex-col">
+                      <svg 
+                        v-if="!isColumnSorted('price') || getSortDirection('price') === 'desc'"
+                        class="w-3 h-3 -mb-1"
+                        :class="isColumnSorted('price') ? 'text-primary' : 'text-gray-300'"
+                        fill="currentColor" 
+                        viewBox="0 0 20 20"
+                      >
+                        <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" />
+                      </svg>
+                      <svg 
+                        v-if="!isColumnSorted('price') || getSortDirection('price') === 'asc'"
+                        class="w-3 h-3"
+                        :class="isColumnSorted('price') ? 'text-primary' : 'text-gray-300'"
+                        fill="currentColor" 
+                        viewBox="0 0 20 20"
+                      >
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                      </svg>
+                    </div>
+                  </div>
                 </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
+                <th 
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                  @click="handleSort('date')"
+                >
+                  <div class="flex items-center gap-2">
+                    <span>Date</span>
+                    <div class="flex flex-col">
+                      <svg 
+                        v-if="!isColumnSorted('date') || getSortDirection('date') === 'desc'"
+                        class="w-3 h-3 -mb-1"
+                        :class="isColumnSorted('date') ? 'text-primary' : 'text-gray-300'"
+                        fill="currentColor" 
+                        viewBox="0 0 20 20"
+                      >
+                        <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" />
+                      </svg>
+                      <svg 
+                        v-if="!isColumnSorted('date') || getSortDirection('date') === 'asc'"
+                        class="w-3 h-3"
+                        :class="isColumnSorted('date') ? 'text-primary' : 'text-gray-300'"
+                        fill="currentColor" 
+                        viewBox="0 0 20 20"
+                      >
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                      </svg>
+                    </div>
+                  </div>
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Statut
@@ -401,7 +736,55 @@ onMounted(async () => {
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-              <tr v-for="watch in filteredWatches" :key="watch.id" class="hover:bg-gray-50">
+              <tr
+                v-for="(watch, index) in filteredWatches"
+                :key="watch.id"
+                :class="[
+                  'hover:bg-gray-50 transition-colors cursor-move',
+                  draggedOverIndex === index ? 'bg-blue-50 border-2 border-blue-300' : '',
+                ]"
+                draggable="true"
+                @dragstart="handleDragStart($event, watch)"
+                @dragover.prevent="handleDragOver($event, index)"
+                @dragleave="handleDragLeave"
+                @drop="handleDrop($event, index)"
+                @dragend="handleDragEnd"
+              >
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex flex-col items-center gap-1">
+                    <div class="text-xs text-gray-500 font-semibold mb-1">
+                      #{{ watch.display_order || 0 }}
+                    </div>
+                    <div class="flex flex-col gap-1">
+                      <button
+                        @click.stop="moveWatchUp(watch.id)"
+                        :disabled="index === 0"
+                        :class="[
+                          'p-1 rounded hover:bg-gray-200 transition-colors',
+                          index === 0 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer',
+                        ]"
+                        title="Déplacer vers le haut"
+                      >
+                        <svg class="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                        </svg>
+                      </button>
+                      <button
+                        @click.stop="moveWatchDown(watch.id)"
+                        :disabled="index === filteredWatches.length - 1"
+                        :class="[
+                          'p-1 rounded hover:bg-gray-200 transition-colors',
+                          index === filteredWatches.length - 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer',
+                        ]"
+                        title="Déplacer vers le bas"
+                      >
+                        <svg class="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <div class="h-16 w-16 bg-gray-200 rounded overflow-hidden">
                     <img

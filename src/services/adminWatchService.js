@@ -52,8 +52,21 @@ function transformDetailsToDB(watchId, details) {
  */
 export async function createWatch(watchData) {
   try {
-    // 1. Créer la montre principale
+    // 1. Récupérer le display_order maximum et ajouter 1 pour positionner la nouvelle montre en dernière
+    const { data: maxOrderData, error: maxOrderError } = await supabase
+      .from('watches')
+      .select('display_order')
+      .order('display_order', { ascending: false })
+      .limit(1)
+      .single()
+
+    const maxDisplayOrder = maxOrderData?.display_order || 0
+    const newDisplayOrder = maxDisplayOrder + 1
+
+    // 2. Créer la montre principale avec display_order
     const watchDB = transformWatchToDB(watchData)
+    watchDB.display_order = newDisplayOrder
+
     const { data: watch, error: watchError } = await supabase
       .from('watches')
       .insert(watchDB)
@@ -66,7 +79,7 @@ export async function createWatch(watchData) {
 
     const watchId = watch.id
 
-    // 2. Créer les détails techniques
+    // 3. Créer les détails techniques
     if (watchData.details) {
       const detailsDB = transformDetailsToDB(watchId, watchData.details)
       const { error: detailsError } = await supabase.from('watch_details').insert(detailsDB)
@@ -77,7 +90,7 @@ export async function createWatch(watchData) {
       }
     }
 
-    // 3. Créer les accessoires
+    // 4. Créer les accessoires
     if (watchData.details?.accessories && watchData.details.accessories.length > 0) {
       const accessoriesDB = watchData.details.accessories.map((acc) => ({
         watch_id: watchId,
@@ -94,7 +107,7 @@ export async function createWatch(watchData) {
       }
     }
 
-    // 4. Les images seront uploadées séparément via uploadWatchImage
+    // 5. Les images seront uploadées séparément via uploadWatchImage
 
     return {
       success: true,
@@ -604,6 +617,7 @@ export async function getWatchByIdForAdmin(watchId) {
       isAvailable: watch.is_available !== undefined ? watch.is_available : true,
       isSold: watch.is_sold !== undefined ? watch.is_sold : false,
       saleDate: watch.sale_date || null,
+      displayOrder: watch.display_order || 0,
       details: {
         content: details?.content || '',
         movement: details?.movement || '',
@@ -730,7 +744,7 @@ export async function getAllWatchesForAdmin() {
     const { data: watches, error } = await supabase
       .from('watches')
       .select('*')
-      .order('created_at', { ascending: false })
+      .order('display_order', { ascending: false })
 
     if (error) {
       throw new Error(`Erreur lors de la récupération des montres: ${error.message}`)
@@ -772,6 +786,70 @@ export async function getAllWatchesForAdmin() {
   } catch (error) {
     console.error('Erreur dans getAllWatchesForAdmin:', error)
     throw error
+  }
+}
+
+/**
+ * Met à jour le display_order d'une montre
+ * @param {string} watchId - ID de la montre
+ * @param {number} newOrder - Nouvel ordre d'affichage
+ * @returns {Promise<{success: boolean, error?: string}>}
+ */
+export async function updateWatchDisplayOrder(watchId, newOrder) {
+  try {
+    const { error } = await supabase
+      .from('watches')
+      .update({ display_order: newOrder })
+      .eq('id', watchId)
+
+    if (error) {
+      throw new Error(`Erreur lors de la mise à jour de l'ordre: ${error.message}`)
+    }
+
+    return {
+      success: true,
+    }
+  } catch (error) {
+    console.error('Erreur dans updateWatchDisplayOrder:', error)
+    return {
+      success: false,
+      error: error.message || 'Erreur lors de la mise à jour de l\'ordre',
+    }
+  }
+}
+
+/**
+ * Réorganise plusieurs montres en une seule transaction
+ * @param {Array<{id: string, display_order: number}>} watchOrders - Tableau d'objets avec id et display_order
+ * @returns {Promise<{success: boolean, error?: string}>}
+ */
+export async function reorderWatches(watchOrders) {
+  try {
+    // Mettre à jour toutes les montres en parallèle
+    const updates = watchOrders.map(({ id, display_order }) =>
+      supabase
+        .from('watches')
+        .update({ display_order })
+        .eq('id', id)
+    )
+
+    const results = await Promise.all(updates)
+    
+    // Vérifier s'il y a des erreurs
+    const errors = results.filter((result) => result.error)
+    if (errors.length > 0) {
+      throw new Error(`Erreur lors de la réorganisation: ${errors[0].error.message}`)
+    }
+
+    return {
+      success: true,
+    }
+  } catch (error) {
+    console.error('Erreur dans reorderWatches:', error)
+    return {
+      success: false,
+      error: error.message || 'Erreur lors de la réorganisation des montres',
+    }
   }
 }
 

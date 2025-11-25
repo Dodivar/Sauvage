@@ -18,6 +18,7 @@ function transformWatchData(watchData, details, accessories, images) {
     isAvailable: watchData.is_available !== undefined ? watchData.is_available : true,
     isSold: watchData.is_sold !== undefined ? watchData.is_sold : false,
     saleDate: watchData.sale_date || null,
+    displayOrder: watchData.display_order || 0,
     contenu: details?.content || '', // Pour compatibilité avec WatchCard
     images: images.map((img) => img.image_url).filter(Boolean),
     details: {
@@ -56,7 +57,7 @@ export async function getAllWatches() {
       .from('watches')
       .select('*')
       .eq('is_available', true)
-      .order('created_at', { ascending: false })
+      .order('display_order', { ascending: false })
 
     if (watchesError) {
       throw new Error(`Erreur lors de la récupération des montres: ${watchesError.message}`)
@@ -235,13 +236,13 @@ export async function getSoldWatches(limit = 7) {
  */
 export async function getLatestAvailableWatches(limit = 7) {
   try {
-    // Récupérer les montres disponibles (non vendues), triées par date de création (plus récentes en premier)
+    // Récupérer les montres disponibles (non vendues), triées par display_order (plus grand = premier)
     const { data: watches, error: watchesError } = await supabase
       .from('watches')
       .select('*')
       .eq('is_available', true)
       .eq('is_sold', false)
-      .order('created_at', { ascending: false })
+      .order('display_order', { ascending: false })
       .limit(limit)
 
     if (watchesError) {

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { Chart } from 'vue-chartjs'
 import {
   Chart as ChartJS,
@@ -25,6 +25,21 @@ const stats = ref([])
 const articleStats = ref([])
 const isLoading = ref(true)
 const error = ref(null)
+const isMobile = ref(false)
+
+// Détection de la taille d'écran
+const checkMobile = () => {
+  isMobile.value = window.innerWidth < 768
+}
+
+onMounted(() => {
+  checkMobile()
+  window.addEventListener('resize', checkMobile)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkMobile)
+})
 
 // Computed
 const chartData = computed(() => {
@@ -37,8 +52,14 @@ const chartData = computed(() => {
 
   return {
     labels: stats.value.map((item) => {
-      // Formater la date pour l'affichage (DD/MM/YYYY)
+      // Formater la date pour l'affichage (format plus court sur mobile)
       const date = new Date(item.date)
+      if (isMobile.value) {
+        return date.toLocaleDateString('fr-FR', {
+          day: '2-digit',
+          month: '2-digit',
+        })
+      }
       return date.toLocaleDateString('fr-FR', {
         day: '2-digit',
         month: '2-digit',
@@ -95,14 +116,31 @@ const chartOptions = computed(() => {
   return {
     responsive: true,
     maintainAspectRatio: false,
+    layout: {
+      padding: isMobile.value ? 10 : 20,
+    },
     plugins: {
       legend: {
         display: true,
         position: 'top',
+        labels: {
+          boxWidth: isMobile.value ? 10 : 12,
+          padding: isMobile.value ? 8 : 15,
+          font: {
+            size: isMobile.value ? 10 : 12,
+          },
+        },
       },
       tooltip: {
         mode: 'index',
         intersect: false,
+        padding: isMobile.value ? 8 : 12,
+        titleFont: {
+          size: isMobile.value ? 11 : 13,
+        },
+        bodyFont: {
+          size: isMobile.value ? 10 : 12,
+        },
         callbacks: {
           label: function (context) {
             let label = context.dataset.label || ''
@@ -126,6 +164,19 @@ const chartOptions = computed(() => {
       },
     },
     scales: {
+      x: {
+        ticks: {
+          maxRotation: isMobile.value ? 45 : 0,
+          minRotation: isMobile.value ? 45 : 0,
+          font: {
+            size: isMobile.value ? 9 : 11,
+          },
+          padding: isMobile.value ? 5 : 10,
+        },
+        grid: {
+          display: !isMobile.value,
+        },
+      },
       y: {
         type: 'linear',
         position: 'left',
@@ -133,10 +184,17 @@ const chartOptions = computed(() => {
         ticks: {
           stepSize: 1,
           precision: 0,
+          font: {
+            size: isMobile.value ? 9 : 11,
+          },
+          padding: isMobile.value ? 5 : 10,
         },
         title: {
-          display: true,
+          display: !isMobile.value,
           text: 'Nombre de montres',
+          font: {
+            size: isMobile.value ? 10 : 12,
+          },
         },
       },
       y1: {
@@ -147,7 +205,14 @@ const chartOptions = computed(() => {
           drawOnChartArea: false,
         },
         ticks: {
+          font: {
+            size: isMobile.value ? 9 : 11,
+          },
+          padding: isMobile.value ? 5 : 10,
           callback: function (value) {
+            if (isMobile.value && value >= 1000) {
+              return (value / 1000).toFixed(1) + 'k€'
+            }
             return new Intl.NumberFormat('fr-FR', {
               style: 'currency',
               currency: 'EUR',
@@ -157,8 +222,11 @@ const chartOptions = computed(() => {
           },
         },
         title: {
-          display: true,
+          display: !isMobile.value,
           text: 'Valeur (€)',
+          font: {
+            size: isMobile.value ? 10 : 12,
+          },
         },
       },
     },
@@ -243,8 +311,14 @@ const articleChartData = computed(() => {
 
   return {
     labels: articleStats.value.map((item) => {
-      // Formater la date pour l'affichage (DD/MM/YYYY)
+      // Formater la date pour l'affichage (format plus court sur mobile)
       const date = new Date(item.date)
+      if (isMobile.value) {
+        return date.toLocaleDateString('fr-FR', {
+          day: '2-digit',
+          month: '2-digit',
+        })
+      }
       return date.toLocaleDateString('fr-FR', {
         day: '2-digit',
         month: '2-digit',
@@ -285,14 +359,31 @@ const articleChartOptions = computed(() => {
   return {
     responsive: true,
     maintainAspectRatio: false,
+    layout: {
+      padding: isMobile.value ? 10 : 20,
+    },
     plugins: {
       legend: {
         display: true,
         position: 'top',
+        labels: {
+          boxWidth: isMobile.value ? 10 : 12,
+          padding: isMobile.value ? 8 : 15,
+          font: {
+            size: isMobile.value ? 10 : 12,
+          },
+        },
       },
       tooltip: {
         mode: 'index',
         intersect: false,
+        padding: isMobile.value ? 8 : 12,
+        titleFont: {
+          size: isMobile.value ? 11 : 13,
+        },
+        bodyFont: {
+          size: isMobile.value ? 10 : 12,
+        },
         callbacks: {
           label: function (context) {
             let label = context.dataset.label || ''
@@ -306,6 +397,19 @@ const articleChartOptions = computed(() => {
       },
     },
     scales: {
+      x: {
+        ticks: {
+          maxRotation: isMobile.value ? 45 : 0,
+          minRotation: isMobile.value ? 45 : 0,
+          font: {
+            size: isMobile.value ? 9 : 11,
+          },
+          padding: isMobile.value ? 5 : 10,
+        },
+        grid: {
+          display: !isMobile.value,
+        },
+      },
       y: {
         type: 'linear',
         position: 'left',
@@ -313,10 +417,17 @@ const articleChartOptions = computed(() => {
         ticks: {
           stepSize: 1,
           precision: 0,
+          font: {
+            size: isMobile.value ? 9 : 11,
+          },
+          padding: isMobile.value ? 5 : 10,
         },
         title: {
-          display: true,
+          display: !isMobile.value,
           text: 'Nombre',
+          font: {
+            size: isMobile.value ? 10 : 12,
+          },
         },
       },
     },
@@ -439,7 +550,7 @@ onMounted(async () => {
             <h3 class="text-xl text-gray-600 mb-2">Aucune donnée disponible</h3>
             <p class="text-gray-500">Aucune montre n'a encore été créée.</p>
           </div>
-          <div v-else class="h-96">
+          <div v-else class="h-64 sm:h-80 md:h-96">
             <Chart :data="chartData" :options="chartOptions" />
           </div>
         </div>
@@ -461,7 +572,7 @@ onMounted(async () => {
             <h3 class="text-xl text-gray-600 mb-2">Aucune donnée disponible</h3>
             <p class="text-gray-500">Aucun article n'a encore été créé.</p>
           </div>
-          <div v-else class="h-96">
+          <div v-else class="h-64 sm:h-80 md:h-96">
             <Chart :data="articleChartData" :options="articleChartOptions" />
           </div>
         </div>
