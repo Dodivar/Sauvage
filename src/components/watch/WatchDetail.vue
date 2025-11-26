@@ -122,15 +122,15 @@
               </div>
 
               <!-- Action buttons (top right) -->
-              <div class="absolute top-4 right-4 flex flex-col gap-2 z-10">
+              <div class="absolute top-2 right-2 lg:top-4 lg:right-4 flex flex-col gap-1.5 lg:gap-2 z-10">
                 <!-- Zoom button -->
                 <button
                   @click.stop="openLightbox"
-                  class="bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-3 transition-all duration-200"
+                  class="bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-1.5 lg:p-3 transition-all duration-200"
                   title="Agrandir l'image"
                   aria-label="Agrandir l'image"
                 >
-                  <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg class="w-4 h-4 lg:w-6 lg:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
@@ -142,11 +142,11 @@
                 <!-- Share button -->
                 <button
                   @click.stop="openShareLightbox"
-                  class="bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-3 transition-all duration-200"
+                  class="bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-1.5 lg:p-3 transition-all duration-200"
                   title="Partager"
                   aria-label="Partager cette montre"
                 >
-                  <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg class="w-4 h-4 lg:w-6 lg:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
@@ -161,9 +161,9 @@
               <button
                 v-if="watchItem && watchItem.images && watchItem.images.length > 1"
                 @click="previousImage"
-                class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-3 transition-all duration-200"
+                class="absolute left-2 lg:left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-1.5 lg:p-3 transition-all duration-200"
               >
-                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="w-4 h-4 lg:w-6 lg:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
@@ -176,9 +176,9 @@
               <button
                 v-if="watchItem && watchItem.images && watchItem.images.length > 1"
                 @click="nextImage"
-                class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-3 transition-all duration-200"
+                class="absolute right-2 lg:right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-1.5 lg:p-3 transition-all duration-200"
               >
-                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="w-4 h-4 lg:w-6 lg:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
