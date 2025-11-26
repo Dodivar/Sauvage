@@ -54,10 +54,11 @@ export default async function handler(req, res) {
       console.error('Erreur lors de la récupération des montres:', watchesError)
     }
 
-    // Récupérer tous les articles
+    // Récupérer uniquement les articles visibles
     const { data: articles, error: articlesError } = await supabase
       .from('articles')
       .select('id, updated_at')
+      .eq('is_visible', true)
       .order('created_at', { ascending: false })
 
     if (articlesError) {

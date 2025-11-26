@@ -1028,7 +1028,7 @@ const structuredData = computed(() => {
       '@type': 'Offer',
       price: watchItem.value.price,
       priceCurrency: 'EUR',
-      availability: watchItem.value.is_available && !watchItem.value.is_sold
+      availability: watchItem.value.isAvailable && !watchItem.value.isSold
         ? 'https://schema.org/InStock'
         : 'https://schema.org/OutOfStock',
       url: canonicalUrl.value,

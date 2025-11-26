@@ -245,6 +245,11 @@ const modifiedDate = computed(() => {
   return new Date(article.value.updated_at).toISOString()
 })
 
+const ogImage = computed(() => {
+  // Utiliser le logo par défaut pour les articles
+  return 'https://sauvage-watches.fr/logo500x500.png'
+})
+
 // Structured Data (JSON-LD) for Article
 const structuredData = computed(() => {
   if (!article.value) return null
@@ -274,11 +279,15 @@ const structuredData = computed(() => {
       '@type': 'WebPage',
       '@id': canonicalUrl.value,
     },
+    image: ogImage.value,
+    ...(article.value.categories && article.value.categories.length > 0
+      ? { keywords: article.value.categories.join(', ') }
+      : {}),
   }
 })
 
 // Update head when article data changes
-watch([article, pageTitle, pageDescription, canonicalUrl], () => {
+watch([article, pageTitle, pageDescription, canonicalUrl, ogImage], () => {
   if (!article.value) return
 
   useHead({
@@ -297,6 +306,10 @@ watch([article, pageTitle, pageDescription, canonicalUrl], () => {
         content: pageDescription.value,
       },
       {
+        property: 'og:image',
+        content: ogImage.value,
+      },
+      {
         property: 'og:url',
         content: canonicalUrl.value,
       },
@@ -312,9 +325,15 @@ watch([article, pageTitle, pageDescription, canonicalUrl], () => {
         property: 'article:modified_time',
         content: modifiedDate.value || publishedDate.value,
       },
+      ...(article.value.categories && article.value.categories.length > 0
+        ? article.value.categories.map((cat) => ({
+            property: 'article:tag',
+            content: cat,
+          }))
+        : []),
       {
         name: 'twitter:card',
-        content: 'summary',
+        content: 'summary_large_image',
       },
       {
         name: 'twitter:title',
@@ -323,6 +342,10 @@ watch([article, pageTitle, pageDescription, canonicalUrl], () => {
       {
         name: 'twitter:description',
         content: pageDescription.value,
+      },
+      {
+        name: 'twitter:image',
+        content: ogImage.value,
       },
     ],
     link: [
