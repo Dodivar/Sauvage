@@ -8,20 +8,20 @@
         <p class="text-xl text-gray-600">Découvrez nos dernières montres mises en stock</p>
       </div>
       <div 
-        class="overflow-x-auto custom-scrollbar-carrousel scroll-smooth p-8 relative"
+        class="overflow-x-auto custom-scrollbar-carrousel scroll-smooth p-4 sm:p-8 relative"
       >
-        <div class="flex space-x-4 sm:space-x-5 md:space-x-6 min-w-full">
+        <div class="flex items-stretch space-x-4 sm:space-x-6 min-w-full">
           <template v-for="(watch, i) in latestWatches" :key="`${i}-${watch.id || watch.name}`">
             <div
-              class="flex-shrink-0 w-56 sm:w-64 md:w-72 lg:w-80 bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden"
+              class="flex flex-col flex-shrink-0 w-56 sm:w-64 md:w-80 bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden"
             >
               <!-- Image Slider -->
-              <div class="relative h-48 sm:h-56 md:h-60 lg:h-64 bg-gray-100">
+              <div class="relative h-40 sm:h-48 md:h-64 bg-gray-100 flex-shrink-0">
                 <div
                   class="absolute inset-0 flex items-center justify-center"
                   v-if="!watch.images || watch.images.length === 0"
                 >
-                  <div class="text-gray-400 text-lg">Image non disponible</div>
+                  <div class="text-gray-400 text-sm sm:text-base md:text-lg">Image non disponible</div>
                 </div>
 
                 <div 
@@ -40,9 +40,9 @@
                   <button
                     v-if="watch.images && watch.images.length > 1"
                     @click="previousImage(i)"
-                    class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-2 transition-all duration-200 z-10"
+                    class="absolute left-1 sm:left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-1.5 sm:p-2 transition-all duration-200 z-10"
                   >
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path
                         stroke-linecap="round"
                         stroke-linejoin="round"
@@ -55,9 +55,9 @@
                   <button
                     v-if="watch.images && watch.images.length > 1"
                     @click="nextImage(i)"
-                    class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-2 transition-all duration-200 z-10"
+                    class="absolute right-1 sm:right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-1.5 sm:p-2 transition-all duration-200 z-10"
                   >
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path
                         stroke-linecap="round"
                         stroke-linejoin="round"
@@ -70,14 +70,14 @@
                   <!-- Image indicators -->
                   <div
                     v-if="watch.images && watch.images.length > 1"
-                    class="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex space-x-1"
+                    class="absolute bottom-2 sm:bottom-3 left-1/2 transform -translate-x-1/2 flex space-x-1"
                   >
                     <button
                       v-for="(_, index) in watch.images"
                       :key="index"
                       @click="currentImageIndices[i] = index"
                       :class="[
-                        'w-2 h-2 rounded-full transition-all duration-200',
+                        'w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all duration-200',
                         currentImageIndices[i] === index ? 'bg-white' : 'bg-white bg-opacity-50',
                       ]"
                     ></button>
@@ -86,14 +86,14 @@
               </div>
 
               <!-- Watch Info -->
-              <div class="p-4 sm:p-5 md:p-6 cursor-pointer" @click="handleViewDetails(watch.id)">
+              <div class="flex flex-col flex-1 p-4 sm:p-6 cursor-pointer" @click="handleViewDetails(watch.id)">
                 <div class="flex items-start justify-between mb-2">
-                  <h3 class="text-base sm:text-lg md:text-xl font-semibold text-gray-900 leading-tight flex-1">
+                  <h3 class="text-base sm:text-lg md:text-xl font-semibold text-gray-900 leading-tight flex-1 min-h-[2.5rem] sm:min-h-[2.75rem] md:min-h-[3rem]">
                     {{ watch.name }}
                   </h3>
                   <span
                     v-if="watch.isSold"
-                    class="ml-2 px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 whitespace-nowrap"
+                    class="ml-2 px-1.5 sm:px-2 py-0.5 sm:py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 whitespace-nowrap flex-shrink-0"
                   >
                     Vendue
                   </span>
@@ -102,7 +102,7 @@
                 <p class="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 font-light">Réf. {{ watch.reference }}</p>
 
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 mb-3 sm:mb-4">
-                  <div class="text-xl sm:text-2xl font-normal text-primary">
+                  <div class="text-lg sm:text-xl md:text-2xl font-normal text-primary">
                     {{ formatPrice(watch.price) }}
                   </div>
                   <button
@@ -113,9 +113,9 @@
                 </div>
 
                 <!-- Optional: Watch content or year -->
-                <div class="mb-2 sm:mb-4 flex items-center justify-between text-xs sm:text-sm text-gray-500">
+                <div class="mb-3 sm:mb-4 flex items-center justify-between text-xs sm:text-sm text-gray-500">
                   <span v-if="watch.year">{{ watch.year }}</span>
-                  <span v-if="watch.contenu || watch.details?.content" class="bg-gray-100 px-2 py-1 rounded text-xs">
+                  <span v-if="watch.contenu || watch.details?.content" class="bg-gray-100 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-xs">
                     {{ watch.contenu || watch.details?.content }}
                   </span>
                 </div>
