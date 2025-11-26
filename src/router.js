@@ -19,6 +19,7 @@ import AdminArticleForm from './components/admin/AdminArticleForm.vue'
 import AdminArticleGenerator from './components/admin/AdminArticleGenerator.vue'
 import BlogList from './components/BlogList.vue'
 import BlogDetail from './components/BlogDetail.vue'
+import EstimationProcess from './components/EstimationProcess.vue'
 
 const routes = [
   { path: '/maintenance', component: Maintenance },
@@ -26,6 +27,7 @@ const routes = [
   { path: '/merci', component: Merci },
   { path: '/recherche', component: Recherche },
   { path: '/estimation', component: EstimationPage },
+  { path: '/estimation/processus', component: EstimationProcess },
   // { path: '/depot-vente', component: DepotVente },
    { path: '/collection', component: WatchesCollection },
    { path: '/watch/:id', component: WatchDetail },

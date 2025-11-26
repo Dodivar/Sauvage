@@ -6,9 +6,23 @@
           <h1 class="text-3xl lg:text-4xl font-bold text-text-main mb-4">
             Estimation gratuite de votre montre
           </h1>
-          <p class="text-xl text-gray-600">
+          <p class="text-xl text-gray-600 mb-4">
             Remplissez ce formulaire pour recevoir une estimation personnalisée
           </p>
+          <RouterLink
+            to="/estimation/processus"
+            class="inline-flex items-center text-primary hover:text-green-700 transition-colors text-sm font-medium underline"
+          >
+            <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            Comment estimons-nous votre montre ?
+          </RouterLink>
         </div>
         <div class="bg-white rounded-2xl shadow-2xl p-8">
           <form class="space-y-6" id="form-estimation" @submit="submitEstimationForm">

@@ -1,31 +1,19 @@
 Montres :
-- sur desktop ajouter une loop au survol de l'image principale à fix !
 - Ajouter vidéo 360° sur les bestsellers
 
-Blog:
 
 Article :
 - Ajouter des images pour les articles
     - Nouvelles méthode et storage, à voir pour la limite si toujours ok voir payer 25€ par mois
 
-Statistiques :
-
-Montres :
-- sur desktop ajouter une loop au survol de l'image principale à fix !
-
+Admin :
+Blog:
+Accueil :
 Statistiques :
 SEO :
 FAQ :
 - Améliorer les questions avec Antoine
 
-Accueil :
-- Slider des carrousels pour que ce soit plus voyant ou défilement tout seul => non
-
-Recherche :
-- Ajouter un table permettant d'enregistrer toutes les demandes de recherche de montre pour avoir un tableau recensant toutes les demandes et voir des tendances
 
 Estimation :
-- Préciser sur une page type article comment l'estimation d'une montre est faite
 - Ajouter un article de blog "Anatomie d'une arnaque" / "Comment repérer une arnaque"
-
-Admin :

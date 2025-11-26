@@ -373,6 +373,7 @@ watch(() => route.hash, async () => {
     
     <SuivezNous />
     
+    <!-- Services -->
     <section id="services" class="py-20 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
@@ -382,12 +383,62 @@ watch(() => route.hash, async () => {
           </p>
         </div>
 
-        <!-- md:grid-cols-2 lg:grid-cols-4 -->
         <div class="grid md:grid-cols-3 gap-8">
+
+          <!-- Recherche personnalisée -->
+          <div class="bg-gray-50 rounded-2xl p-6 text-center hover:shadow-lg transition-all">
+            <div class="text-primary text-4xl mb-4 flex justify-center">
+              <!-- SVG search icon -->
+              <svg class="h-10 w-10 text-primary mx-auto" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Recherche personnalisée</h3>
+            <p class="text-gray-600 mb-4">
+              Dites-nous ce que vous cherchez, nous le trouvons pour vous. Rareté, budget, état : on
+              s'occupe de tout.
+            </p>
+
+            <RouterLink to="/recherche" class="text-primary font-semibold hover:underline">
+              Demander une recherche</RouterLink
+            >
+          </div>
+         
+          <!-- Vente de montre -->
+          <div class="bg-gray-50 rounded-2xl p-6 text-center hover:shadow-lg transition-all">
+            <div class="text-primary text-4xl mb-4 flex justify-center">
+              <!-- SVG montre (watch) icon -->
+              <svg class="h-10 w-10 text-primary mx-auto" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="7" stroke="currentColor" stroke-width="2" fill="none"/>
+                <rect x="9.5" y="1.5" width="5" height="3" rx="1" stroke="currentColor" stroke-width="2" fill="none"/>
+                <rect x="9.5" y="19.5" width="5" height="3" rx="1" stroke="currentColor" stroke-width="2" fill="none"/>
+                <path d="M12 8v4l2.5 2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Vente de montre</h3>
+            <p class="text-gray-600 mb-4">
+              Découvrez notre offre de montre à saisir dès maitenant.
+            </p>
+            <a href="/collection" class="text-primary font-semibold hover:underline">
+              Voir nos montres en stock
+            </a>
+          </div>
+
           <!-- Estimation gratuite -->
           <div class="bg-gray-50 rounded-2xl p-6 text-center hover:shadow-lg transition-all">
-            <div class="text-primary text-4xl mb-4">
-              <i class="fas fa-calculator"></i>
+            <div class="text-primary text-4xl mb-4 flex justify-center">
+              <!-- SVG calculator icon -->
+              <svg class="h-10 w-10 text-primary mx-auto" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+                <rect x="8" y="7" width="8" height="2" rx="1" fill="currentColor" class="opacity-30"/>
+                <circle cx="8" cy="13" r="1" fill="currentColor"/>
+                <circle cx="12" cy="13" r="1" fill="currentColor"/>
+                <circle cx="16" cy="13" r="1" fill="currentColor"/>
+                <circle cx="8" cy="17" r="1" fill="currentColor"/>
+                <circle cx="12" cy="17" r="1" fill="currentColor"/>
+                <circle cx="16" cy="17" r="1" fill="currentColor"/>
+              </svg>
             </div>
             <h3 class="text-xl font-semibold mb-3">Estimation gratuite</h3>
             <p class="text-gray-600 mb-4">
@@ -397,21 +448,6 @@ watch(() => route.hash, async () => {
               Faire estimer ma montre
             </RouterLink>
           </div>
-
-          <!-- Vente de montre -->
-          <div class="bg-gray-50 rounded-2xl p-6 text-center hover:shadow-lg transition-all">
-            <div class="text-primary text-4xl mb-4">
-              <i class="fas fa-hand-holding-usd"></i>
-            </div>
-            <h3 class="text-xl font-semibold mb-3">Vente de montre</h3>
-            <p class="text-gray-600 mb-4">
-              Découvrez notre offre de montre à saisir dès maitenant.
-            </p>
-            <a href="/collection" class="text-primary font-semibold hover:underline">
-              Voir nos offres
-            </a>
-          </div>
-
           <!-- Dépôt-vente -->
           <!-- <div class="bg-gray-50 rounded-2xl p-6 text-center hover:shadow-lg transition-all">
             <div class="text-primary text-4xl mb-4">
@@ -426,22 +462,6 @@ watch(() => route.hash, async () => {
               En savoir plus
             </RouterLink>
           </div> -->
-
-          <!-- Recherche personnalisée -->
-          <div class="bg-gray-50 rounded-2xl p-6 text-center hover:shadow-lg transition-all">
-            <div class="text-primary text-4xl mb-4">
-              <i class="fas fa-search"></i>
-            </div>
-            <h3 class="text-xl font-semibold mb-3">Recherche personnalisée</h3>
-            <p class="text-gray-600 mb-4">
-              Dites-nous ce que vous cherchez, nous le trouvons pour vous. Rareté, budget, état : on
-              s'occupe de tout.
-            </p>
-
-            <RouterLink to="/recherche" class="text-primary font-semibold hover:underline">
-              Demander une recherche</RouterLink
-            >
-          </div>
         </div>
       </div>
     </section>
