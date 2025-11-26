@@ -5,14 +5,20 @@ import { supabase } from './supabase'
  * @param {number} page - Numéro de page (défaut: 1)
  * @param {number} limit - Nombre d'articles par page (défaut: 10)
  * @param {string} category - Catégorie pour filtrer (optionnel)
+ * @param {boolean|null} isVisible - Filtrer par visibilité (true = visible, false = masqué, null = tous) (optionnel)
  * @returns {Promise<Object>} { articles, total, totalPages }
  */
-export async function getAllArticles(page = 1, limit = 10, category = null) {
+export async function getAllArticles(page = 1, limit = 10, category = null, isVisible = true) {
   try {
     const offset = (page - 1) * limit
 
-    // Construire la requête de base - filtrer uniquement les articles visibles
-    let query = supabase.from('articles').select('*', { count: 'exact' }).eq('is_visible', true)
+    // Construire la requête de base
+    let query = supabase.from('articles').select('*', { count: 'exact' })
+
+    // Appliquer le filtre de visibilité si fourni
+    if (isVisible !== null) {
+      query = query.eq('is_visible', isVisible)
+    }
 
     // Appliquer le filtre de catégorie si fourni (categories est un array)
     if (category) {

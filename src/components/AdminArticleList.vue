@@ -17,6 +17,10 @@ const showDeleteConfirm = ref(false)
 const articleToDelete = ref(null)
 const togglingVisibility = ref(null)
 
+// Sorting state
+const sortColumn = ref(null) // 'date', 'views'
+const sortDirection = ref('desc') // 'asc' or 'desc'
+
 // Computed
 const filteredArticles = computed(() => {
   let filtered = articles.value
@@ -38,6 +42,40 @@ const filteredArticles = computed(() => {
     filtered = filtered.filter((article) => article.is_visible === true)
   } else if (visibilityFilter.value === 'hidden') {
     filtered = filtered.filter((article) => article.is_visible === false)
+  }
+
+  // Apply sorting
+  if (sortColumn.value) {
+    filtered = [...filtered].sort((a, b) => {
+      let aValue, bValue
+
+      switch (sortColumn.value) {
+        case 'date':
+          aValue = a.created_at ? new Date(a.created_at).getTime() : 0
+          bValue = b.created_at ? new Date(b.created_at).getTime() : 0
+          break
+        case 'views':
+          aValue = a.view_count || 0
+          bValue = b.view_count || 0
+          break
+        default:
+          return 0
+      }
+
+      // Numeric comparison
+      if (sortDirection.value === 'asc') {
+        return aValue - bValue
+      } else {
+        return bValue - aValue
+      }
+    })
+  } else {
+    // Default sort by date descending
+    filtered = [...filtered].sort((a, b) => {
+      const aDate = a.created_at ? new Date(a.created_at).getTime() : 0
+      const bDate = b.created_at ? new Date(b.created_at).getTime() : 0
+      return bDate - aDate
+    })
   }
 
   return filtered
@@ -136,6 +174,27 @@ const handleToggleVisibility = async (article) => {
   } finally {
     togglingVisibility.value = null
   }
+}
+
+// Sorting functions
+const handleSort = (column) => {
+  if (sortColumn.value === column) {
+    // Toggle direction if same column
+    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc'
+  } else {
+    // New column, default to descending
+    sortColumn.value = column
+    sortDirection.value = 'desc'
+  }
+}
+
+const isColumnSorted = (column) => {
+  return sortColumn.value === column
+}
+
+const getSortDirection = (column) => {
+  if (sortColumn.value !== column) return null
+  return sortDirection.value
 }
 
 onMounted(async () => {
@@ -254,11 +313,61 @@ onMounted(async () => {
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Statut
                 </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Vues
+                <th 
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                  @click="handleSort('views')"
+                >
+                  <div class="flex items-center gap-2">
+                    <span>Vues</span>
+                    <div class="flex flex-col">
+                      <svg 
+                        v-if="!isColumnSorted('views') || getSortDirection('views') === 'desc'"
+                        class="w-3 h-3 -mb-1"
+                        :class="isColumnSorted('views') ? 'text-primary' : 'text-gray-300'"
+                        fill="currentColor" 
+                        viewBox="0 0 20 20"
+                      >
+                        <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" />
+                      </svg>
+                      <svg 
+                        v-if="!isColumnSorted('views') || getSortDirection('views') === 'asc'"
+                        class="w-3 h-3"
+                        :class="isColumnSorted('views') ? 'text-primary' : 'text-gray-300'"
+                        fill="currentColor" 
+                        viewBox="0 0 20 20"
+                      >
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                      </svg>
+                    </div>
+                  </div>
                 </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date de création
+                <th 
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                  @click="handleSort('date')"
+                >
+                  <div class="flex items-center gap-2">
+                    <span>Date de création</span>
+                    <div class="flex flex-col">
+                      <svg 
+                        v-if="!isColumnSorted('date') || getSortDirection('date') === 'desc'"
+                        class="w-3 h-3 -mb-1"
+                        :class="isColumnSorted('date') ? 'text-primary' : 'text-gray-300'"
+                        fill="currentColor" 
+                        viewBox="0 0 20 20"
+                      >
+                        <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" />
+                      </svg>
+                      <svg 
+                        v-if="!isColumnSorted('date') || getSortDirection('date') === 'asc'"
+                        class="w-3 h-3"
+                        :class="isColumnSorted('date') ? 'text-primary' : 'text-gray-300'"
+                        fill="currentColor" 
+                        viewBox="0 0 20 20"
+                      >
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                      </svg>
+                    </div>
+                  </div>
                 </th>
                 <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions

@@ -3,12 +3,21 @@ Montres :
 - sur desktop ajouter une loop au survol de l'image principale à fix !
 - Ajouter vidéo 360° sur les bestsellers
 
-Blog
-- Les derniers posts des réseaux sociaux
+Blog:
 
 Article :
 - Ajouter des images pour les articles
     - Nouvelles méthode et storage, à voir pour la limite si toujours ok voir payer 25€ par mois
+
+Statistiques :
+
+Montres :
+- sur desktop ajouter une loop au survol de l'image principale à fix !
+
+Statistiques :
+SEO :
+FAQ :
+- Améliorer les questions avec Antoine
 
 Accueil :
 - Slider des carrousels pour que ce soit plus voyant ou défilement tout seul
@@ -23,9 +32,3 @@ Estimation :
 - Ajouter un article de blog "Anatomie d'une arnaque" / "Comment repérer une arnaque"
 
 Admin :
-- ajouter un filtre sur les colonnes des dashboard montre & article
-
-Statistiques :
-SEO :
-FAQ :
-- Améliorer les questions avec Antoine

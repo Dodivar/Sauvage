@@ -15,8 +15,6 @@ const searchQuery = ref('')
 const selectedBrand = ref('')
 const showDeleteConfirm = ref(false)
 const watchToDelete = ref(null)
-const showSoldConfirm = ref(false)
-const watchToMarkAsSold = ref(null)
 const activeTab = ref('available') // 'available', 'unavailable', 'sold', ou 'all'
 
 // Sorting state
@@ -69,14 +67,18 @@ const filteredWatches = computed(() => {
       let aValue, bValue
 
       switch (sortColumn.value) {
+        case 'order':
+          aValue = a.display_order || 0
+          bValue = b.display_order || 0
+          break
         case 'price':
           aValue = parseFloat(a.price) || 0
           bValue = parseFloat(b.price) || 0
           break
         case 'date':
-          // Use sale_date if available, otherwise use created_at
-          aValue = a.sale_date ? new Date(a.sale_date).getTime() : (a.created_at ? new Date(a.created_at).getTime() : 0)
-          bValue = b.sale_date ? new Date(b.sale_date).getTime() : (b.created_at ? new Date(b.created_at).getTime() : 0)
+          // Use created_at only
+          aValue = a.created_at ? new Date(a.created_at).getTime() : 0
+          bValue = b.created_at ? new Date(b.created_at).getTime() : 0
           break
         case 'brand':
           aValue = (a.brand || '').toLowerCase()
@@ -91,7 +93,7 @@ const filteredWatches = computed(() => {
       }
 
       // Compare values
-      if (sortColumn.value === 'price' || sortColumn.value === 'date') {
+      if (sortColumn.value === 'order' || sortColumn.value === 'price' || sortColumn.value === 'date') {
         // Numeric comparison
         return sortDirection.value === 'asc' ? aValue - bValue : bValue - aValue
       } else {
@@ -212,21 +214,12 @@ const handleToggleAvailability = async (watch) => {
   }
 }
 
-const handleMarkAsSold = (watch) => {
-  watchToMarkAsSold.value = watch
-  showSoldConfirm.value = true
-}
-
-const confirmMarkAsSold = async () => {
-  if (!watchToMarkAsSold.value) return
-
+const handleMarkAsSold = async (watch) => {
   try {
-    const result = await markWatchAsSold(watchToMarkAsSold.value.id)
+    const result = await markWatchAsSold(watch.id)
     if (result.success) {
       // Recharger les montres pour afficher la date de mise en vente
       await loadWatches()
-      showSoldConfirm.value = false
-      watchToMarkAsSold.value = null
     } else {
       error.value = result.error || 'Erreur lors du marquage comme vendue'
     }
@@ -234,11 +227,6 @@ const confirmMarkAsSold = async () => {
     error.value = 'Une erreur est survenue lors du marquage comme vendue'
     console.error(err)
   }
-}
-
-const cancelMarkAsSold = () => {
-  showSoldConfirm.value = false
-  watchToMarkAsSold.value = null
 }
 
 const formatPrice = (price) => {
@@ -289,7 +277,21 @@ const moveWatchUp = async (watchId) => {
     if (currentIndex <= 0) return // Already at the top
 
     const currentWatch = filteredWatches.value[currentIndex]
-    const previousWatch = filteredWatches.value[currentIndex - 1]
+    
+    // Don't move sold watches
+    if (currentWatch.is_sold === true) return
+
+    // Find the previous non-sold watch
+    let previousIndex = currentIndex - 1
+    while (previousIndex >= 0 && filteredWatches.value[previousIndex].is_sold === true) {
+      previousIndex--
+    }
+    if (previousIndex < 0) return // No previous non-sold watch
+
+    const previousWatch = filteredWatches.value[previousIndex]
+    
+    // Don't swap with sold watches
+    if (previousWatch.is_sold === true) return
 
     // Swap display_order values
     const tempOrder = currentWatch.display_order
@@ -323,7 +325,21 @@ const moveWatchDown = async (watchId) => {
     if (currentIndex >= filteredWatches.value.length - 1) return // Already at the bottom
 
     const currentWatch = filteredWatches.value[currentIndex]
-    const nextWatch = filteredWatches.value[currentIndex + 1]
+    
+    // Don't move sold watches
+    if (currentWatch.is_sold === true) return
+
+    // Find the next non-sold watch
+    let nextIndex = currentIndex + 1
+    while (nextIndex < filteredWatches.value.length && filteredWatches.value[nextIndex].is_sold === true) {
+      nextIndex++
+    }
+    if (nextIndex >= filteredWatches.value.length) return // No next non-sold watch
+
+    const nextWatch = filteredWatches.value[nextIndex]
+    
+    // Don't swap with sold watches
+    if (nextWatch.is_sold === true) return
 
     // Swap display_order values
     const tempOrder = currentWatch.display_order
@@ -353,6 +369,7 @@ const moveWatchDown = async (watchId) => {
 
 // Drag & Drop handlers
 const handleDragStart = (event, watch) => {
+  if (activeTab.value === 'sold') return
   draggedWatch.value = watch
   event.dataTransfer.effectAllowed = 'move'
   event.dataTransfer.setData('text/html', event.target)
@@ -362,16 +379,19 @@ const handleDragStart = (event, watch) => {
 }
 
 const handleDragOver = (event, index) => {
+  if (activeTab.value === 'sold') return
   event.preventDefault()
   event.dataTransfer.dropEffect = 'move'
   draggedOverIndex.value = index
 }
 
 const handleDragLeave = () => {
+  if (activeTab.value === 'sold') return
   draggedOverIndex.value = null
 }
 
 const handleDrop = async (event, dropIndex) => {
+  if (activeTab.value === 'sold') return
   event.preventDefault()
   draggedOverIndex.value = null
 
@@ -384,17 +404,42 @@ const handleDrop = async (event, dropIndex) => {
   }
 
   try {
+    // Don't allow reordering sold watches
+    if (draggedWatch.value.is_sold === true) {
+      draggedWatch.value = null
+      return
+    }
+
     // Calculate new display_order values for all affected watches
+    // Exclude sold watches from reordering - they keep display_order = null
     const watchesToUpdate = []
-    const sortedWatches = [...filteredWatches.value]
+    
+    // Get all non-sold watches from the filtered list
+    const nonSoldWatches = filteredWatches.value.filter((w) => w.is_sold !== true)
+    
+    // Find indices in the non-sold list
+    const draggedIndexInNonSold = nonSoldWatches.findIndex((w) => w.id === draggedWatch.value.id)
+    if (draggedIndexInNonSold === -1) {
+      draggedWatch.value = null
+      return
+    }
 
+    // Calculate the drop index in the non-sold list
+    // Count how many non-sold watches are before the drop position
+    const nonSoldWatchesBeforeDrop = filteredWatches.value.slice(0, dropIndex).filter((w) => w.is_sold !== true)
+    const dropIndexInNonSold = nonSoldWatchesBeforeDrop.length
+
+    // Create a copy of non-sold watches for reordering
+    const sortedWatches = [...nonSoldWatches]
+    
     // Remove dragged watch from its current position
-    const [draggedItem] = sortedWatches.splice(draggedIndex, 1)
+    const [draggedItem] = sortedWatches.splice(draggedIndexInNonSold, 1)
+    
     // Insert it at the new position
-    sortedWatches.splice(dropIndex, 0, draggedItem)
+    sortedWatches.splice(dropIndexInNonSold, 0, draggedItem)
 
-    // Assign new display_order values (highest to lowest)
-    const maxOrder = Math.max(...sortedWatches.map((w) => w.display_order || 0))
+    // Assign new display_order values (highest to lowest) - only for non-sold watches
+    const maxOrder = Math.max(...sortedWatches.map((w) => w.display_order || 0), 0)
     sortedWatches.forEach((watch, index) => {
       const newOrder = maxOrder - index
       if (watch.display_order !== newOrder) {
@@ -600,8 +645,34 @@ onMounted(async () => {
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Ordre
+                <th 
+                  v-if="activeTab !== 'sold'"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                  @click="handleSort('order')"
+                >
+                  <div class="flex items-center gap-2">
+                    <span>Ordre</span>
+                    <div class="flex flex-col">
+                      <svg 
+                        v-if="!isColumnSorted('order') || getSortDirection('order') === 'desc'"
+                        class="w-3 h-3 -mb-1"
+                        :class="isColumnSorted('order') ? 'text-primary' : 'text-gray-300'"
+                        fill="currentColor" 
+                        viewBox="0 0 20 20"
+                      >
+                        <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" />
+                      </svg>
+                      <svg 
+                        v-if="!isColumnSorted('order') || getSortDirection('order') === 'asc'"
+                        class="w-3 h-3"
+                        :class="isColumnSorted('order') ? 'text-primary' : 'text-gray-300'"
+                        fill="currentColor" 
+                        viewBox="0 0 20 20"
+                      >
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                      </svg>
+                    </div>
+                  </div>
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Image
@@ -740,17 +811,18 @@ onMounted(async () => {
                 v-for="(watch, index) in filteredWatches"
                 :key="watch.id"
                 :class="[
-                  'hover:bg-gray-50 transition-colors cursor-move',
+                  'hover:bg-gray-50 transition-colors',
+                  activeTab !== 'sold' ? 'cursor-move' : 'cursor-default',
                   draggedOverIndex === index ? 'bg-blue-50 border-2 border-blue-300' : '',
                 ]"
-                draggable="true"
+                :draggable="activeTab !== 'sold'"
                 @dragstart="handleDragStart($event, watch)"
                 @dragover.prevent="handleDragOver($event, index)"
                 @dragleave="handleDragLeave"
                 @drop="handleDrop($event, index)"
                 @dragend="handleDragEnd"
               >
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td v-if="activeTab !== 'sold'" class="px-6 py-4 whitespace-nowrap">
                   <div class="flex flex-col items-center gap-1">
                     <div class="text-xs text-gray-500 font-semibold mb-1">
                       #{{ watch.display_order || 0 }}
@@ -817,11 +889,8 @@ onMounted(async () => {
                   {{ formatPrice(watch.price) }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  <div v-if="watch.sale_date" class="text-purple-600 font-medium">
-                    Vendue: {{ formatDate(watch.sale_date) }}
-                  </div>
-                  <div v-else class="text-gray-500">
-                    Créée: {{ formatDate(watch.created_at) }}
+                  <div class="text-gray-500">
+                    {{ formatDate(watch.created_at) }}
                   </div>
                 </td>
                <!--  <td class="px-6 py-4 whitespace-nowrap">
@@ -885,6 +954,7 @@ onMounted(async () => {
                       </svg>
                     </button>
                     <button
+                      v-if="watch.is_sold !== true"
                       @click="handleToggleAvailability(watch)"
                       :class="[
                         watch.is_available !== false
@@ -1027,36 +1097,7 @@ onMounted(async () => {
       </div>
     </div>
 
-    <!-- Mark as Sold Confirmation Modal -->
-    <div
-      v-if="showSoldConfirm"
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-      @click="cancelMarkAsSold"
-    >
-      <div
-        class="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4"
-        @click.stop
-      >
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Confirmer la vente</h3>
-        <p class="text-gray-600 mb-6">
-          Êtes-vous sûr de vouloir marquer la montre <strong>{{ watchToMarkAsSold?.name }}</strong> comme vendue ? Cette action est <strong class="text-red-600">irréversible</strong>.
-        </p>
-        <div class="flex justify-end space-x-4">
-          <button
-            @click="cancelMarkAsSold"
-            class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-          >
-            Annuler
-          </button>
-          <button
-            @click="confirmMarkAsSold"
-            class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-          >
-            Confirmer la vente
-          </button>
-        </div>
-      </div>
-    </div>
+
   </div>
 </template>
 

@@ -81,29 +81,38 @@
           class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow animate-fade-in cursor-pointer"
           @click="handleViewArticle(article.id)"
         >
-          <div class="p-6">
-            <h2 class="text-xl font-bold text-text-main mb-3 line-clamp-2">{{ article.title }}</h2>
-            <p class="text-gray-600 text-sm mb-4 line-clamp-3">
-              {{ getExcerpt(article.text) }}
-            </p>
-            <div v-if="article.categories && article.categories.length > 0" class="mb-3 flex flex-wrap gap-2">
-              <span
-                v-for="cat in article.categories"
-                :key="cat"
-                class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-primary/10 text-primary"
-              >
-                {{ cat }}
-              </span>
+            <div class="p-6">
+              <h2 class="text-xl font-bold text-text-main mb-3 line-clamp-2">{{ article.title }}</h2>
+              <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+                {{ getExcerpt(article.text) }}
+              </p>
+              <div v-if="article.categories && article.categories.length > 0" class="mb-3 flex flex-wrap gap-2">
+                <span
+                  v-for="cat in article.categories"
+                  :key="cat"
+                  class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-primary/10 text-primary"
+                >
+                  {{ cat }}
+                </span>
+              </div>
+              <div class="flex items-center justify-between text-sm text-gray-500">
+                <div class="flex items-center gap-4">
+                  <span v-if="article.created_at">
+                    {{ formatDate(article.created_at) }}
+                  </span>
+                  <span v-if="article.view_count !== undefined" class="flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    {{ article.view_count || 0 }}
+                  </span>
+                </div>
+                <span class="text-primary font-medium">Lire la suite →</span>
+              </div>
             </div>
-            <div class="flex items-center justify-between text-sm text-gray-500">
-              <span v-if="article.created_at">
-                {{ formatDate(article.created_at) }}
-              </span>
-              <span class="text-primary font-medium">Lire la suite →</span>
-            </div>
-          </div>
-        </article>
-      </div>
+          </article>
+        </div>
 
       <!-- Empty State -->
       <div v-if="!isLoading && !error && articles.length === 0" class="text-center py-16">
@@ -174,6 +183,8 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useHead } from '@vueuse/head'
 import { getAllArticles, getAllCategories } from '@/services/articleService'
+import { getAllArticlesForAdmin } from '@/services/adminArticleService'
+import { isAdminAuthenticated } from '@/services/adminAuthService'
 import { scrollAnimation } from '@/animation'
 
 // SEO Meta Tags
@@ -252,6 +263,7 @@ const visiblePages = computed(() => {
 
   return pages
 })
+
 
 // Methods
 const getExcerpt = (text) => {

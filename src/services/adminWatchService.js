@@ -133,7 +133,7 @@ export async function updateWatch(watchId, watchData) {
     // Vérifier le statut actuel de la montre avant la mise à jour
     const { data: currentWatch, error: fetchError } = await supabase
       .from('watches')
-      .select('is_sold, sale_date')
+      .select('is_sold, is_available, sale_date')
       .eq('id', watchId)
       .single()
 
@@ -141,21 +141,39 @@ export async function updateWatch(watchId, watchData) {
       throw new Error(`Erreur lors de la récupération de la montre: ${fetchError.message}`)
     }
 
-    // Empêcher de décocher "vendue" si la montre était initialement vendue
-    if (currentWatch && currentWatch.is_sold === true && watchData.isSold === false) {
-      throw new Error('Impossible de décocher "vendue" pour une montre qui a été vendue. Vous pouvez cependant la remettre en stock en cochant "En vente / Disponible".')
-    }
-
     // 1. Mettre à jour la montre principale
     const watchDB = transformWatchToDB(watchData)
     watchDB.updated_at = new Date().toISOString()
 
+    // Si on remet en vente une montre vendue (is_sold passe de true à false)
+    if (currentWatch && currentWatch.is_sold === true && watchData.isSold === false) {
+      // Récupérer le display_order maximum pour positionner la montre remise en vente en dernière
+      const { data: maxOrderData } = await supabase
+        .from('watches')
+        .select('display_order')
+        .not('display_order', 'is', null)
+        .order('display_order', { ascending: false })
+        .limit(1)
+        .single()
+
+      const maxDisplayOrder = maxOrderData?.display_order || 0
+      const newDisplayOrder = maxDisplayOrder + 1
+
+      // Remettre en vente : is_sold = false, is_available = true
+      watchDB.is_sold = false
+      watchDB.display_order = newDisplayOrder // Réassigner un ordre d'affichage (en dernière position)
+      // Conserver la sale_date pour l'historique (ne pas la supprimer)
+    }
+
     // Si is_sold passe de false à true, définir sale_date à la date actuelle (seulement si elle n'existe pas déjà)
+    // et s'assurer que is_available est false
     if (currentWatch && currentWatch.is_sold === false && watchData.isSold === true) {
       // Ne définir la date que si elle n'existe pas déjà
       if (!currentWatch.sale_date) {
         watchDB.sale_date = new Date().toISOString()
       }
+      // Une montre vendue ne peut pas être disponible
+      watchDB.is_available = false
     }
 
     const { error: watchError } = await supabase
@@ -458,15 +476,20 @@ export async function reorderWatchImages(imageOrders) {
  */
 export async function toggleWatchAvailability(watchId) {
   try {
-    // Récupérer le statut actuel
+    // Récupérer le statut actuel (is_available et is_sold)
     const { data: watch, error: fetchError } = await supabase
       .from('watches')
-      .select('is_available')
+      .select('is_available, is_sold')
       .eq('id', watchId)
       .single()
 
     if (fetchError) {
       throw new Error(`Erreur lors de la récupération de la montre: ${fetchError.message}`)
+    }
+
+    // Empêcher de modifier le statut d'une montre vendue
+    if (watch.is_sold === true) {
+      throw new Error('Une montre vendue ne peut pas être remise en stock')
     }
 
     // Bascule le statut
@@ -497,6 +520,53 @@ export async function toggleWatchAvailability(watchId) {
 }
 
 /**
+ * Remet en vente une montre vendue
+ * @param {string} watchId - ID de la montre
+ * @returns {Promise<{success: boolean, data?: Object, error?: string}>}
+ */
+export async function restockSoldWatch(watchId) {
+  try {
+    // Récupérer le display_order maximum pour positionner la montre remise en vente en dernière
+    const { data: maxOrderData } = await supabase
+      .from('watches')
+      .select('display_order')
+      .not('display_order', 'is', null)
+      .order('display_order', { ascending: false })
+      .limit(1)
+      .single()
+
+    const maxDisplayOrder = maxOrderData?.display_order || 0
+    const newDisplayOrder = maxDisplayOrder + 1
+
+    const { data: updatedWatch, error: updateError } = await supabase
+      .from('watches')
+      .update({ 
+        is_sold: false, 
+        is_available: true,
+        display_order: newDisplayOrder // Réassigner un ordre d'affichage (en dernière position)
+      })
+      .eq('id', watchId)
+      .select()
+      .single()
+
+    if (updateError) {
+      throw new Error(`Erreur lors de la remise en vente: ${updateError.message}`)
+    }
+
+    return {
+      success: true,
+      data: updatedWatch,
+    }
+  } catch (error) {
+    console.error('Erreur dans restockSoldWatch:', error)
+    return {
+      success: false,
+      error: error.message || 'Erreur lors de la remise en vente',
+    }
+  }
+}
+
+/**
  * Marque une montre comme vendue
  * @param {string} watchId - ID de la montre
  * @returns {Promise<{success: boolean, data?: Object, error?: string}>}
@@ -515,7 +585,10 @@ export async function markWatchAsSold(watchId) {
     }
 
     // Préparer les données à mettre à jour
-    const updateData = { is_sold: true }
+    const updateData = { 
+      is_sold: true,
+      display_order: null // Réinitialiser l'ordre d'affichage pour les montres vendues
+    }
     
     // Ne définir sale_date que si elle n'existe pas déjà
     if (!currentWatch.sale_date) {
@@ -912,6 +985,187 @@ export async function getWatchStatsByDay() {
     return stats
   } catch (error) {
     console.error('Erreur dans getWatchStatsByDay:', error)
+    throw error
+  }
+}
+
+/**
+ * Récupère les statistiques d'utilisation du stockage Supabase
+ * @returns {Promise<{totalSize: number, totalSizeMB: number, totalSizeGB: number, fileCount: number, limitGB: number, usagePercent: number}>}
+ */
+export async function getStorageStats() {
+  try {
+    // Lister tous les fichiers du bucket watch-images
+    // Note: Supabase Storage list() peut nécessiter plusieurs appels si beaucoup de fichiers
+    let allFiles = []
+    let hasMore = true
+    let path = ''
+    const limit = 1000 // Limite par page
+    
+    while (hasMore) {
+      const { data: files, error } = await supabase.storage
+        .from('watch-images')
+        .list(path, {
+          limit: limit,
+          sortBy: { column: 'created_at', order: 'desc' }
+        })
+      
+      if (error) {
+        throw new Error(`Erreur lors de la récupération des fichiers: ${error.message}`)
+      }
+      
+      if (files && files.length > 0) {
+        allFiles = allFiles.concat(files)
+        // Si on a moins de fichiers que la limite, on a tout récupéré
+        hasMore = files.length === limit
+      } else {
+        hasMore = false
+      }
+    }
+    
+    // Calculer la taille totale
+    const totalSize = allFiles.reduce((sum, file) => {
+      // La taille est dans metadata.size (en bytes)
+      return sum + (file.metadata?.size || 0)
+    }, 0)
+    
+    const totalSizeMB = totalSize / (1024 * 1024)
+    const totalSizeGB = totalSizeMB / 1024
+    
+    // Limite selon le plan (à ajuster selon votre plan Supabase)
+    // Free: 1GB, Pro: 100GB, Team: 200GB
+    const limitGB = 100 // Plan Pro par défaut, ajustez selon votre plan
+    
+    const usagePercent = (totalSizeGB / limitGB) * 100
+    
+    return {
+      totalSize,
+      totalSizeMB,
+      totalSizeGB,
+      fileCount: allFiles.length,
+      limitGB,
+      usagePercent: Math.min(usagePercent, 100) // Cap à 100%
+    }
+  } catch (error) {
+    console.error('Erreur dans getStorageStats:', error)
+    throw error
+  }
+}
+
+/**
+ * Récupère l'évolution de l'utilisation du stockage par jour
+ * @returns {Promise<Array<{date: string, sizeMB: number, cumulativeSizeMB: number, fileCount: number}>>}
+ */
+export async function getStorageStatsByDay() {
+  try {
+    // Récupérer toutes les images depuis la table watch_images avec leurs dates
+    const { data: images, error } = await supabase
+      .from('watch_images')
+      .select('created_at, image_path')
+      .order('created_at', { ascending: true })
+    
+    if (error) {
+      throw new Error(`Erreur lors de la récupération des images: ${error.message}`)
+    }
+    
+    if (!images || images.length === 0) {
+      return []
+    }
+    
+    // Récupérer tous les fichiers du storage pour avoir leurs tailles
+    // On va créer un map pour accéder rapidement aux tailles
+    const fileSizeMap = new Map()
+    
+    // Lister tous les fichiers du bucket
+    let allFiles = []
+    let hasMore = true
+    let path = ''
+    const limit = 1000
+    
+    while (hasMore) {
+      const { data: files, error: listError } = await supabase.storage
+        .from('watch-images')
+        .list(path, {
+          limit: limit,
+        })
+      
+      if (listError) {
+        console.warn('Erreur lors de la récupération des fichiers pour les stats:', listError)
+        break
+      }
+      
+      if (files && files.length > 0) {
+        allFiles = allFiles.concat(files)
+        hasMore = files.length === limit
+      } else {
+        hasMore = false
+      }
+    }
+    
+    // Créer un map des tailles de fichiers (chemin complet -> taille)
+    allFiles.forEach(file => {
+      if (file.metadata?.size) {
+        // Le chemin peut être relatif ou absolu, on normalise
+        const filePath = file.name
+        fileSizeMap.set(filePath, file.metadata.size)
+      }
+    })
+    
+    // Grouper par jour et calculer la taille cumulée
+    const statsMap = new Map()
+    
+    for (const image of images) {
+      if (!image.image_path) continue
+      
+      const date = new Date(image.created_at)
+      const dateKey = date.toISOString().split('T')[0] // Format YYYY-MM-DD
+      
+      // Extraire le nom du fichier du chemin
+      const pathParts = image.image_path.split('/')
+      const fileName = pathParts[pathParts.length - 1]
+      
+      // Chercher la taille dans le map
+      // Essayer avec le chemin complet d'abord
+      let fileSize = fileSizeMap.get(image.image_path)
+      
+      // Si pas trouvé, essayer avec juste le nom du fichier
+      if (!fileSize) {
+        for (const [path, size] of fileSizeMap.entries()) {
+          if (path.endsWith(fileName)) {
+            fileSize = size
+            break
+          }
+        }
+      }
+      
+      const fileSizeMB = (fileSize || 0) / (1024 * 1024)
+      
+      if (!statsMap.has(dateKey)) {
+        statsMap.set(dateKey, { date: dateKey, sizeMB: 0, fileCount: 0 })
+      }
+      
+      const dayStats = statsMap.get(dateKey)
+      dayStats.sizeMB += fileSizeMB
+      dayStats.fileCount += 1
+    }
+    
+    // Convertir en tableau et calculer les valeurs cumulées
+    const statsArray = Array.from(statsMap.values())
+      .sort((a, b) => a.date.localeCompare(b.date))
+    
+    // Calculer les valeurs cumulées
+    let cumulativeSize = 0
+    return statsArray.map(stat => {
+      cumulativeSize += stat.sizeMB
+      return {
+        date: stat.date,
+        sizeMB: stat.sizeMB,
+        cumulativeSizeMB: cumulativeSize,
+        fileCount: stat.fileCount
+      }
+    })
+  } catch (error) {
+    console.error('Erreur dans getStorageStatsByDay:', error)
     throw error
   }
 }
