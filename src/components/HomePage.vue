@@ -279,7 +279,7 @@ watch(() => route.hash, async () => {
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center relative z-10">
           <h1 class="text-4xl lg:text-6xl font-bold text-text-main mb-6 leading-tight">
-            Découvrez nos <span class="text-primary">montres disponibles</span> dès maintenant
+            Découvrez nos <span class="text-primary">montres disponibles</span> dès maintenant test
             <svg class="inline-block w-10 h-10 text-primary align-middle" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <circle cx="12" cy="12" r="7" stroke="currentColor" stroke-width="2" fill="none"/>
               <rect x="9.5" y="1.5" width="5" height="3" rx="1" stroke="currentColor" stroke-width="2" fill="none"/>
