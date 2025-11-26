@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { BASE_URL } from '../src/config.js'
 
 export default async function handler(req, res) {
   // Gérer les requêtes OPTIONS pour CORS
@@ -20,9 +21,9 @@ export default async function handler(req, res) {
     const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY
     
     // Déterminer l'URL de base : utiliser le domaine de production en production, sinon VERCEL_URL pour les previews
-    let baseUrl = 'https://sauvage-watches.fr'
+    let baseUrl = BASE_URL
     if (process.env.VERCEL_ENV === 'production') {
-      baseUrl = 'https://sauvage-watches.fr'
+      baseUrl = BASE_URL
     } else if (process.env.VERCEL_URL) {
       baseUrl = `https://${process.env.VERCEL_URL}`
     } else if (process.env.BASE_URL) {

@@ -596,10 +596,10 @@ onMounted(async () => {
               </option>
             </select>
           </div>
-          <div class="flex gap-3">
+          <div class="flex flex-col w-full gap-3 sm:w-auto sm:flex-row">
             <button
               @click="router.push('/admin/watches/stats')"
-              class="px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors whitespace-nowrap flex items-center gap-2"
+              class="w-full px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors whitespace-nowrap flex items-center justify-center gap-2 sm:w-auto"
             >
               <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
@@ -613,7 +613,7 @@ onMounted(async () => {
             </button>
             <button
               @click="router.push('/admin/watches/new')"
-              class="px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-green-700 transition-colors whitespace-nowrap"
+              class="w-full px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-green-700 transition-colors whitespace-nowrap sm:w-auto"
             >
               + Ajouter une montre
             </button>

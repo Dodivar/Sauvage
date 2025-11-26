@@ -58,6 +58,10 @@ const filteredArticles = computed(() => {
           aValue = a.view_count || 0
           bValue = b.view_count || 0
           break
+        case 'watches':
+          aValue = a.watch_count || 0
+          bValue = b.watch_count || 0
+          break
         default:
           return 0
       }
@@ -315,6 +319,34 @@ onMounted(async () => {
                 </th>
                 <th 
                   class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                  @click="handleSort('watches')"
+                >
+                  <div class="flex items-center gap-2">
+                    <span>Montres liées</span>
+                    <div class="flex flex-col">
+                      <svg 
+                        v-if="!isColumnSorted('watches') || getSortDirection('watches') === 'desc'"
+                        class="w-3 h-3 -mb-1"
+                        :class="isColumnSorted('watches') ? 'text-primary' : 'text-gray-300'"
+                        fill="currentColor" 
+                        viewBox="0 0 20 20"
+                      >
+                        <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" />
+                      </svg>
+                      <svg 
+                        v-if="!isColumnSorted('watches') || getSortDirection('watches') === 'asc'"
+                        class="w-3 h-3"
+                        :class="isColumnSorted('watches') ? 'text-primary' : 'text-gray-300'"
+                        fill="currentColor" 
+                        viewBox="0 0 20 20"
+                      >
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                      </svg>
+                    </div>
+                  </div>
+                </th>
+                <th 
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
                   @click="handleSort('views')"
                 >
                   <div class="flex items-center gap-2">
@@ -346,7 +378,7 @@ onMounted(async () => {
                   @click="handleSort('date')"
                 >
                   <div class="flex items-center gap-2">
-                    <span>Date de création</span>
+                    <span>Date</span>
                     <div class="flex flex-col">
                       <svg 
                         v-if="!isColumnSorted('date') || getSortDirection('date') === 'desc'"
@@ -376,7 +408,7 @@ onMounted(async () => {
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
               <tr v-for="article in filteredArticles" :key="article.id" class="hover:bg-gray-50">
-                <td class="px-6 py-4 text-sm text-gray-900 max-w-md">
+                <td class="px-6 py-4 text-sm text-gray-900 max-w-sm">
                   <div class="truncate font-medium" :title="article.title">
                     {{ article.title }}
                   </div>
@@ -391,7 +423,7 @@ onMounted(async () => {
                       {{ cat }}
                     </span>
                   </div>
-                  <span v-else class="text-sm text-gray-400">Aucune catégorie</span>
+                  <span v-else class="text-sm text-gray-400">Aucune</span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <span
@@ -404,6 +436,9 @@ onMounted(async () => {
                   >
                     {{ article.is_visible ? 'Visible' : 'Masqué' }}
                   </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {{ article.watch_count || 0 }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {{ article.view_count || 0 }}

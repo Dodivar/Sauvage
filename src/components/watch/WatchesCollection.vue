@@ -148,7 +148,7 @@ const router = useRouter()
 
 import WatchCard from './WatchCard.vue'
 import { scrollAnimation } from '@/animation'
-import { WHATSAPP_NUMBER, EMAIL_CONTACT } from '@/config'
+import { WHATSAPP_NUMBER, EMAIL_CONTACT, BASE_URL } from '@/config'
 import { getAllWatches } from '@/services/watchService'
 
 // SEO Meta Tags
@@ -169,7 +169,7 @@ useHead({
     },
     {
       property: 'og:url',
-      content: 'https://sauvage-watches.fr/collection',
+        content: `${BASE_URL}/collection`,
     },
     {
       property: 'og:type',
@@ -191,7 +191,7 @@ useHead({
   link: [
     {
       rel: 'canonical',
-      href: 'https://sauvage-watches.fr/collection',
+        href: `${BASE_URL}/collection`,
     },
   ],
 })

@@ -2,7 +2,7 @@ import { supabase } from '../supabase'
 
 /**
  * Récupère tous les articles pour l'administration (sans pagination)
- * @returns {Promise<Array>} Liste de tous les articles
+ * @returns {Promise<Array>} Liste de tous les articles avec le nombre de montres liées
  */
 export async function getAllArticlesForAdmin() {
   try {
@@ -15,7 +15,42 @@ export async function getAllArticlesForAdmin() {
       throw new Error(`Erreur lors de la récupération des articles: ${error.message}`)
     }
 
-    return articles || []
+    if (!articles || articles.length === 0) {
+      return []
+    }
+
+    // Récupérer le nombre de montres liées pour chaque article
+    const articleIds = articles.map((article) => article.id)
+    
+    // Récupérer tous les liens watch_articles pour ces articles
+    const { data: watchArticlesLinks, error: linksError } = await supabase
+      .from('watch_articles')
+      .select('article_id')
+      .in('article_id', articleIds)
+
+    if (linksError) {
+      console.warn('Erreur lors de la récupération des liens watch_articles:', linksError)
+      // Si erreur, on continue quand même mais sans le count
+      return articles.map((article) => ({
+        ...article,
+        watch_count: 0,
+      }))
+    }
+
+    // Compter le nombre de montres par article
+    const watchCountMap = new Map()
+    if (watchArticlesLinks) {
+      watchArticlesLinks.forEach((link) => {
+        const count = watchCountMap.get(link.article_id) || 0
+        watchCountMap.set(link.article_id, count + 1)
+      })
+    }
+
+    // Ajouter le count à chaque article
+    return articles.map((article) => ({
+      ...article,
+      watch_count: watchCountMap.get(article.id) || 0,
+    }))
   } catch (error) {
     console.error('Erreur dans getAllArticlesForAdmin:', error)
     throw error

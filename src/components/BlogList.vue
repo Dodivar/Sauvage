@@ -186,6 +186,7 @@ import { getAllArticles, getAllCategories } from '@/services/articleService'
 import { getAllArticlesForAdmin } from '@/services/admin/adminArticleService'
 import { isAdminAuthenticated } from '@/services/admin/adminAuthService'
 import { scrollAnimation } from '@/animation'
+import { BASE_URL } from '@/config'
 
 // SEO Meta Tags
 useHead({
@@ -205,7 +206,7 @@ useHead({
     },
     {
       property: 'og:url',
-      content: 'https://sauvage-watches.fr/blog',
+        content: `${BASE_URL}/blog`,
     },
     {
       property: 'og:type',
@@ -227,7 +228,7 @@ useHead({
   link: [
     {
       rel: 'canonical',
-      href: 'https://sauvage-watches.fr/blog',
+        href: `${BASE_URL}/blog`,
     },
   ],
 })

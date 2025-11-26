@@ -20,6 +20,7 @@ import AdminArticleGenerator from './components/admin/AdminArticleGenerator.vue'
 import BlogList from './components/BlogList.vue'
 import BlogDetail from './components/BlogDetail.vue'
 import EstimationProcess from './components/EstimationProcess.vue'
+import NotFound from './components/NotFound.vue'
 
 const routes = [
   { path: '/maintenance', component: Maintenance },
@@ -43,6 +44,7 @@ const routes = [
   { path: '/admin/articles/new', component: AdminArticleForm },
   { path: '/admin/articles/generate', component: AdminArticleGenerator },
   { path: '/admin/articles/:id/edit', component: AdminArticleForm },
+  { path: '/:pathMatch(.*)*', component: NotFound },
 ]
 
 const router = createRouter({

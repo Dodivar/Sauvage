@@ -3,6 +3,7 @@ import { onMounted, nextTick, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useHead } from '@vueuse/head'
 import { scrollAnimation } from '@/animation'
+import { BASE_URL } from '@/config'
 import navitimerImg from '@/assets/hero section img/navitimer-b01-chronograph-43.png'
 import parallaxImg1 from '@/assets/hero section img/montre-tag-heuer-monaco-calibre-11.png'
 import parallaxImg2 from '@/assets/hero section img/Rolex.png'
@@ -34,7 +35,7 @@ useHead({
     },
     {
       property: 'og:url',
-      content: 'https://sauvage-watches.fr',
+        content: BASE_URL,
     },
     {
       property: 'og:type',
@@ -56,7 +57,7 @@ useHead({
   link: [
     {
       rel: 'canonical',
-      href: 'https://sauvage-watches.fr',
+        href: BASE_URL,
     },
   ],
 })
@@ -304,9 +305,12 @@ watch(() => route.hash, async () => {
             <div
               class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4"
             >
-              <!-- user/collaborateur -->
+              <!-- icône personne/user -->
               <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 14c2.21 0 4 1.79 4 4v1a1 1 0 01-1 1H5a1 1 0 01-1-1v-1c0-2.21 1.79-4 4-4h8zm0 0V9a4 4 0 10-8 0v5" />
+                <!-- Tête -->
+                <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2" />
+                <!-- Epaules et buste -->
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 20c0-2.209 3.134-4 8-4s8 1.791 8 4"/>
               </svg>
             </div>
             <h3 class="text-lg font-semibold mb-2">Accompagnement personnalisé</h3>

@@ -138,6 +138,7 @@ import { getArticleById, incrementArticleViewCount } from '@/services/articleSer
 import { getArticleByIdForAdmin } from '@/services/admin/adminArticleService'
 import { isAdminAuthenticated } from '@/services/admin/adminAuthService'
 import { scrollAnimation } from '@/animation'
+import { BASE_URL } from '@/config'
 
 const route = useRoute()
 
@@ -232,7 +233,7 @@ const pageDescription = computed(() => {
 })
 
 const canonicalUrl = computed(() => {
-  return `https://sauvage-watches.fr/blog/${route.params.id}`
+  return `${BASE_URL}/blog/${route.params.id}`
 })
 
 const publishedDate = computed(() => {
@@ -247,7 +248,7 @@ const modifiedDate = computed(() => {
 
 const ogImage = computed(() => {
   // Utiliser le logo par défaut pour les articles
-  return 'https://sauvage-watches.fr/logo500x500.png'
+  return `${BASE_URL}/logo500x500.png`
 })
 
 // Structured Data (JSON-LD) for Article
@@ -264,15 +265,15 @@ const structuredData = computed(() => {
     author: {
       '@type': 'Organization',
       name: 'Sauvage',
-      url: 'https://sauvage-watches.fr',
+      url: BASE_URL,
     },
     publisher: {
       '@type': 'Organization',
       name: 'Sauvage',
-      url: 'https://sauvage-watches.fr',
+      url: BASE_URL,
       logo: {
         '@type': 'ImageObject',
-        url: 'https://sauvage-watches.fr/logo500x500.png',
+        url: `${BASE_URL}/logo500x500.png`,
       },
     },
     mainEntityOfPage: {

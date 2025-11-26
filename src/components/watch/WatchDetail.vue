@@ -487,7 +487,27 @@
       <div v-if="hasValue(watchItem.description)" class="bg-white rounded-xl shadow-lg p-8 mb-12">
         <h2 class="text-2xl font-semibold text-gray-900 mb-6">Description</h2>
         <div class="prose max-w-none text-gray-700 leading-relaxed">
-          <p>{{ watchItem.description }}</p>
+          <p>{{ isDescriptionExpanded ? watchItem.description : truncatedDescription }}</p>
+          <button
+            v-if="shouldShowToggleButton"
+            @click="isDescriptionExpanded = !isDescriptionExpanded"
+            class="mt-4 text-primary hover:text-green-700 font-semibold transition-colors duration-200 inline-flex items-center"
+          >
+            <span>{{ isDescriptionExpanded ? 'Voir moins' : 'Voir plus' }}</span>
+            <svg
+              :class="['w-5 h-5 ml-2 transition-transform duration-200', isDescriptionExpanded ? 'rotate-180' : '']"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </button>
         </div>
       </div>
 
@@ -673,7 +693,7 @@ import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useHead } from '@vueuse/head'
 import { scrollAnimation } from '@/animation'
-import { WHATSAPP_NUMBER, EMAIL_CONTACT } from '@/config'
+import { WHATSAPP_NUMBER, EMAIL_CONTACT, BASE_URL } from '@/config'
 import { getWatchById } from '@/services/watchService'
 import { isAdminAuthenticated } from '@/services/admin/adminAuthService'
 
@@ -699,6 +719,21 @@ const isLoading = ref(true)
 const error = ref(null)
 const isUnavailable = ref(false)
 const isAdmin = ref(false)
+const isDescriptionExpanded = ref(false)
+
+// Description truncation
+const MAX_DESCRIPTION_LENGTH = 300
+
+const truncatedDescription = computed(() => {
+  if (!watchItem.value?.description) return ''
+  const description = watchItem.value.description
+  if (description.length <= MAX_DESCRIPTION_LENGTH) return description
+  return description.substring(0, MAX_DESCRIPTION_LENGTH) + '...'
+})
+
+const shouldShowToggleButton = computed(() => {
+  return watchItem.value?.description && watchItem.value.description.length > MAX_DESCRIPTION_LENGTH
+})
 
 // Load watch from Supabase
 const loadWatch = async () => {
@@ -720,6 +755,8 @@ const loadWatch = async () => {
     watchItem.value = data
     // Reset image index when watch changes
     currentImageIndex.value = 0
+    // Reset description expansion state
+    isDescriptionExpanded.value = false
     // Load image dimensions
     if (data && data.images && data.images.length > 0) {
       await loadImageDimensions(data.images[0])
@@ -1000,13 +1037,13 @@ const pageDescription = computed(() => {
 
 const ogImage = computed(() => {
   if (!watchItem.value || !watchItem.value.images || watchItem.value.images.length === 0) {
-    return 'https://sauvage-watches.fr/logo500x500.png'
+    return `${BASE_URL}/logo500x500.png`
   }
   return watchItem.value.images[0]
 })
 
 const canonicalUrl = computed(() => {
-  return `https://sauvage-watches.fr/watch/${route.params.id}`
+  return `${BASE_URL}/watch/${route.params.id}`
 })
 
 // Structured Data (JSON-LD)
@@ -1035,7 +1072,7 @@ const structuredData = computed(() => {
       seller: {
         '@type': 'Organization',
         name: 'Sauvage',
-        url: 'https://sauvage-watches.fr',
+        url: BASE_URL,
       },
     },
   }
