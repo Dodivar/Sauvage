@@ -5,7 +5,9 @@ Montres :
 Article :
 - Ajouter des images pour les articles
     - Nouvelles méthode et storage, à voir pour la limite si toujours ok voir payer 25€ par mois
-- ajouter des boutons de partage vers les réseaux, fb, x, mail, url à partager
+- Indiquer si l'article doit pouvoir être liés à une montre
+    - ne pas proposer ceux non liables aux montres 
+- modifier n8n pour accepter de faire des articles sur d'autres sujets que juste des montres, par exemple article de montres à moins de 2k€ 
 
 Admin :
 Blog:
@@ -20,4 +22,4 @@ Estimation :
 - Ajouter un article de blog "Anatomie d'une arnaque" / "Comment repérer une arnaque"
 
 
-ajouter dans la documentation commerciale la nouvelle fonctionanlité de partag edes articles & montres
+format smartphone toujorus afficher 2 montres

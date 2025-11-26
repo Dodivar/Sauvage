@@ -121,21 +121,41 @@
                 </div>
               </div>
 
-              <!-- Zoom button -->
-              <button
-                @click="openLightbox"
-                class="absolute top-4 right-4 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-3 transition-all duration-200 z-10"
-                title="Agrandir l'image"
-              >
-                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
-                  />
-                </svg>
-              </button>
+              <!-- Action buttons (top right) -->
+              <div class="absolute top-4 right-4 flex flex-col gap-2 z-10">
+                <!-- Zoom button -->
+                <button
+                  @click.stop="openLightbox"
+                  class="bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-3 transition-all duration-200"
+                  title="Agrandir l'image"
+                  aria-label="Agrandir l'image"
+                >
+                  <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
+                    />
+                  </svg>
+                </button>
+                <!-- Share button -->
+                <button
+                  @click.stop="openShareLightbox"
+                  class="bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-3 transition-all duration-200"
+                  title="Partager"
+                  aria-label="Partager cette montre"
+                >
+                  <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+                    />
+                  </svg>
+                </button>
+              </div>
 
               <!-- Navigation arrows -->
               <button
@@ -699,6 +719,93 @@
         </div>
       </div>
     </Teleport>
+
+    <!-- Share Lightbox Modal -->
+    <Teleport to="body">
+      <div
+        v-if="isShareLightboxOpen"
+        class="lightbox-overlay fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-90 p-4"
+        @click="closeShareLightbox"
+        @keydown.esc="closeShareLightbox"
+        tabindex="-1"
+      >
+        <!-- Share Modal Content -->
+        <div
+          @click.stop
+          class="relative bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4"
+        >
+          <!-- Close button -->
+          <button
+            @click="closeShareLightbox"
+            class="absolute top-4 right-4 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full p-2 transition-all duration-200"
+            title="Fermer"
+            aria-label="Fermer"
+          >
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+
+          <!-- Title -->
+          <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Partager cette montre</h2>
+
+          <!-- Share buttons -->
+          <div class="flex flex-col gap-4">
+            <!-- Facebook -->
+            <button
+              @click="shareOnFacebook"
+              class="flex items-center justify-center gap-3 px-6 py-4 rounded-lg bg-[#1877F2] text-white hover:bg-[#166FE5] transition-colors font-medium"
+            >
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+              </svg>
+              <span>Partager sur Facebook</span>
+            </button>
+
+            <!-- X (Twitter) -->
+            <button
+              @click="shareOnTwitter"
+              class="flex items-center justify-center gap-3 px-6 py-4 rounded-lg bg-black text-white hover:bg-gray-800 transition-colors font-medium"
+            >
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+              <span>Partager sur X</span>
+            </button>
+
+            <!-- Email -->
+            <button
+              @click="shareByEmail"
+              class="flex items-center justify-center gap-3 px-6 py-4 rounded-lg bg-gray-600 text-white hover:bg-gray-700 transition-colors font-medium"
+            >
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              <span>Partager par email</span>
+            </button>
+
+            <!-- Copy URL -->
+            <button
+              @click="copyUrl"
+              class="flex items-center justify-center gap-3 px-6 py-4 rounded-lg bg-primary text-white hover:bg-green-700 transition-colors font-medium relative"
+            >
+              <svg v-if="!urlCopied" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              <svg v-else class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>{{ urlCopied ? 'URL copiée !' : 'Copier l\'URL' }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </Teleport>
   </section>
 </template>
 
@@ -719,6 +826,10 @@ const currentImageIndex = ref(0)
 
 // Lightbox state
 const isLightboxOpen = ref(false)
+
+// Share lightbox state
+const isShareLightboxOpen = ref(false)
+const urlCopied = ref(false)
 
 // Zoom on hover state
 const isHovering = ref(false)
@@ -1296,10 +1407,102 @@ const closeLightbox = () => {
   }
 }
 
+// Share lightbox methods
+const openShareLightbox = () => {
+  isShareLightboxOpen.value = true
+  // Prevent body and html scroll when lightbox is open
+  document.body.style.overflow = 'hidden'
+  document.documentElement.style.overflow = 'hidden'
+  // Prevent scroll on touch devices
+  document.body.style.position = 'fixed'
+  document.body.style.width = '100%'
+  document.body.style.top = `-${window.scrollY}px`
+}
+
+const closeShareLightbox = () => {
+  isShareLightboxOpen.value = false
+  // Restore body and html scroll
+  const scrollY = document.body.style.top
+  document.body.style.overflow = ''
+  document.documentElement.style.overflow = ''
+  document.body.style.position = ''
+  document.body.style.width = ''
+  document.body.style.top = ''
+  if (scrollY) {
+    const scrollPosition = parseInt(scrollY.replace('px', '') || '0', 10)
+    window.scrollTo(0, Math.abs(scrollPosition))
+  }
+}
+
+// Share methods
+const shareOnFacebook = () => {
+  if (!watchItem.value) return
+  const url = encodeURIComponent(canonicalUrl.value)
+  const quote = watchItem.value.name ? encodeURIComponent(`${watchItem.value.name} - ${formatPrice(watchItem.value.price)}`) : ''
+  const shareUrl = quote 
+    ? `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${quote}`
+    : `https://www.facebook.com/sharer/sharer.php?u=${url}`
+  window.open(shareUrl, '_blank', 'width=600,height=400')
+  closeShareLightbox()
+}
+
+const shareOnTwitter = () => {
+  if (!watchItem.value) return
+  const url = encodeURIComponent(canonicalUrl.value)
+  const text = encodeURIComponent(`${watchItem.value.name} - ${formatPrice(watchItem.value.price)}`)
+  window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'width=600,height=400')
+  closeShareLightbox()
+}
+
+const shareByEmail = () => {
+  if (!watchItem.value) return
+  const subject = encodeURIComponent(`Découvrez cette montre : ${watchItem.value.name}`)
+  const body = encodeURIComponent(`Je vous partage cette montre : ${watchItem.value.name} (Réf. ${watchItem.value.reference})\n\nPrix : ${formatPrice(watchItem.value.price)}\n\n${canonicalUrl.value}`)
+  window.location.href = `mailto:?subject=${subject}&body=${body}`
+  closeShareLightbox()
+}
+
+const copyUrl = async () => {
+  if (!watchItem.value) return
+  try {
+    await navigator.clipboard.writeText(canonicalUrl.value)
+    urlCopied.value = true
+    setTimeout(() => {
+      urlCopied.value = false
+      closeShareLightbox()
+    }, 1500)
+  } catch (err) {
+    console.error('Erreur lors de la copie de l\'URL:', err)
+    // Fallback pour les navigateurs qui ne supportent pas l'API Clipboard
+    const textArea = document.createElement('textarea')
+    textArea.value = canonicalUrl.value
+    textArea.style.position = 'fixed'
+    textArea.style.opacity = '0'
+    document.body.appendChild(textArea)
+    textArea.select()
+    try {
+      document.execCommand('copy')
+      urlCopied.value = true
+      setTimeout(() => {
+        urlCopied.value = false
+        closeShareLightbox()
+      }, 1500)
+    } catch (fallbackErr) {
+      console.error('Erreur lors de la copie (fallback):', fallbackErr)
+    }
+    document.body.removeChild(textArea)
+  }
+}
+
 // Handle ESC key press
 const handleKeyDown = (event) => {
-  if (event.key === 'Escape' && isLightboxOpen.value) {
-    closeLightbox()
+  if (event.key === 'Escape') {
+    if (isLightboxOpen.value) {
+      closeLightbox()
+    }
+    if (isShareLightboxOpen.value) {
+      closeShareLightbox()
+    }
   }
 }
 
@@ -1315,8 +1518,29 @@ watch(isLightboxOpen, async (isOpen) => {
       overlay.focus()
     }
   } else {
-    // Remove keyboard event listener
-    document.removeEventListener('keydown', handleKeyDown)
+    // Remove keyboard event listener only if share lightbox is also closed
+    if (!isShareLightboxOpen.value) {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }
+})
+
+// Watch for share lightbox state changes
+watch(isShareLightboxOpen, async (isOpen) => {
+  if (isOpen) {
+    await nextTick()
+    // Add keyboard event listener
+    document.addEventListener('keydown', handleKeyDown)
+    // Focus the lightbox overlay for keyboard navigation
+    const overlay = document.querySelector('.lightbox-overlay')
+    if (overlay) {
+      overlay.focus()
+    }
+  } else {
+    // Remove keyboard event listener only if image lightbox is also closed
+    if (!isLightboxOpen.value) {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
   }
 })
 

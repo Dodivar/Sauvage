@@ -3,7 +3,7 @@
     class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
   >
     <!-- Image Slider -->
-    <div class="relative h-80 bg-gray-100">
+    <div class="relative h-48 md:h-64 lg:h-80 bg-gray-100">
       <div
         class="absolute inset-0 flex items-center justify-center"
         v-if="!watch.images || watch.images.length === 0"
@@ -26,10 +26,10 @@
         <!-- Navigation arrows -->
         <button
           v-if="watch.images && watch.images.length > 1"
-          @click="previousImage"
-          class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-2 transition-all duration-200"
+          @click.stop="previousImage"
+          class="absolute left-1 md:left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-1 md:p-2 transition-all duration-200"
         >
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -41,10 +41,10 @@
 
         <button
           v-if="watch.images && watch.images.length > 1"
-          @click="nextImage"
-          class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-2 transition-all duration-200"
+          @click.stop="nextImage"
+          class="absolute right-1 md:right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-1 md:p-2 transition-all duration-200"
         >
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -73,38 +73,38 @@
     </div>
 
     <!-- Watch Info -->
-    <div class="p-6 cursor-pointer" @click="$emit('viewDetails', watch.id)">
-      <div class="flex items-start justify-between mb-2">
-        <h3 class="text-xl font-semibold text-gray-900 leading-tight flex-1">
+    <div class="p-3 md:p-4 lg:p-6 cursor-pointer" @click="$emit('viewDetails', watch.id)">
+      <div class="flex items-start justify-between mb-1 md:mb-2">
+        <h3 class="text-sm md:text-base lg:text-xl font-semibold text-gray-900 leading-tight flex-1 pr-1">
           {{ watch.name }}
         </h3>
         <span
           v-if="watch.isSold"
-          class="ml-2 px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 whitespace-nowrap"
+          class="ml-1 md:ml-2 px-1.5 md:px-2 py-0.5 md:py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 whitespace-nowrap flex-shrink-0"
         >
           Vendue
         </span>
       </div>
 
-      <p class="text-sm text-gray-600 mb-4 font-light">Réf. {{ watch.reference }}</p>
+      <p class="text-xs md:text-sm text-gray-600 mb-2 md:mb-4 font-light">Réf. {{ watch.reference }}</p>
 
-      <div class="flex items-center justify-between">
-        <div class="text-2xl font-normal text-primary">
+      <div class="flex items-center justify-between gap-2">
+        <div class="text-base md:text-xl lg:text-2xl font-normal text-primary">
           {{ formatPrice(watch.price) }}
         </div>
 
         <button
-          @click="$emit('viewDetails', watch.id)"
-          class="bg-primary hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200"
+          @click.stop="$emit('viewDetails', watch.id)"
+          class="bg-primary hover:bg-green-700 text-white px-2 md:px-3 lg:px-4 py-1 md:py-1.5 lg:py-2 rounded-lg text-xs md:text-sm lg:text-base font-medium transition-colors duration-200 whitespace-nowrap flex-shrink-0"
         >
           Voir le détail
         </button>
       </div>
 
       <!-- Optional: Watch content or year -->
-      <div class="mt-4 flex items-center justify-between text-sm text-gray-500">
+      <div class="mt-2 md:mt-4 flex items-center justify-between text-xs md:text-sm text-gray-500">
         <span v-if="watch.year">{{ watch.year }}</span>
-        <span v-if="watch.contenu || watch.details?.content" class="bg-gray-100 px-2 py-1 rounded text-xs">
+        <span v-if="watch.contenu || watch.details?.content" class="bg-gray-100 px-1.5 md:px-2 py-0.5 md:py-1 rounded text-xs">
           {{ watch.contenu || watch.details?.content }}
         </span>
       </div>
