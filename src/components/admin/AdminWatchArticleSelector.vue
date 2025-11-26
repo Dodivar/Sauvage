@@ -102,41 +102,97 @@
 
           <!-- Articles List -->
           <div v-else-if="filteredAndSortedArticles.length > 0" class="space-y-3">
-            <div
-              v-for="article in filteredAndSortedArticles"
-              :key="article.id"
-              class="flex items-start space-x-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              <input
-                type="checkbox"
-                :id="`article-${article.id}`"
-                :checked="selectedArticleIds.includes(article.id)"
-                @change="toggleArticle(article.id)"
-                class="mt-1 w-5 h-5 text-primary border-gray-300 rounded focus:ring-primary focus:ring-2"
-              />
-              <label
-                :for="`article-${article.id}`"
-                class="flex-1 cursor-pointer"
-              >
-                <h3 class="text-lg font-semibold text-gray-900 mb-1">
-                  {{ article.title }}
-                </h3>
-                <p class="text-sm text-gray-600 mb-2 line-clamp-2">
-                  {{ getExcerpt(article.text) }}
-                </p>
-                <div v-if="article.categories && article.categories.length > 0" class="flex flex-wrap gap-2 mb-2">
-                  <span
-                    v-for="cat in article.categories"
-                    :key="cat"
-                    class="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-primary/10 text-primary"
+            <!-- Section: Articles suggérés (matching watch name) -->
+            <div v-if="filteredAndSortedArticles.some(article => articleMatchesWatchName(article))" class="mb-6">
+              <h3 class="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+                Articles suggérés
+              </h3>
+              <div class="space-y-3">
+                <div
+                  v-for="article in filteredAndSortedArticles.filter(a => articleMatchesWatchName(a))"
+                  :key="article.id"
+                  class="flex items-start space-x-3 p-4 border-2 border-primary/30 rounded-lg hover:bg-primary/5 transition-colors bg-primary/5"
+                >
+                  <input
+                    type="checkbox"
+                    :id="`article-${article.id}`"
+                    :checked="selectedArticleIds.includes(article.id)"
+                    @change="toggleArticle(article.id)"
+                    class="mt-1 w-5 h-5 text-primary border-gray-300 rounded focus:ring-primary focus:ring-2"
+                  />
+                  <label
+                    :for="`article-${article.id}`"
+                    class="flex-1 cursor-pointer"
                   >
-                    {{ cat }}
-                  </span>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-1">
+                      {{ article.title }}
+                    </h3>
+                    <p class="text-sm text-gray-600 mb-2 line-clamp-2">
+                      {{ getExcerpt(article.text) }}
+                    </p>
+                    <div v-if="article.categories && article.categories.length > 0" class="flex flex-wrap gap-2 mb-2">
+                      <span
+                        v-for="cat in article.categories"
+                        :key="cat"
+                        class="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-primary/10 text-primary"
+                      >
+                        {{ cat }}
+                      </span>
+                    </div>
+                    <span class="text-xs text-gray-500">
+                      {{ formatDate(article.created_at) }}
+                    </span>
+                  </label>
                 </div>
-                <span class="text-xs text-gray-500">
-                  {{ formatDate(article.created_at) }}
-                </span>
-              </label>
+              </div>
+            </div>
+
+            <!-- Section: Tous les articles -->
+            <div v-if="filteredAndSortedArticles.some(article => !articleMatchesWatchName(article))" :class="{ 'mt-6': filteredAndSortedArticles.some(article => articleMatchesWatchName(article)) }">
+              <h3 v-if="filteredAndSortedArticles.some(article => articleMatchesWatchName(article))" class="text-lg font-semibold text-gray-900 mb-3">
+                Tous les articles
+              </h3>
+              <div class="space-y-3">
+                <div
+                  v-for="article in filteredAndSortedArticles.filter(a => !articleMatchesWatchName(a))"
+                  :key="article.id"
+                  class="flex items-start space-x-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  <input
+                    type="checkbox"
+                    :id="`article-${article.id}`"
+                    :checked="selectedArticleIds.includes(article.id)"
+                    @change="toggleArticle(article.id)"
+                    class="mt-1 w-5 h-5 text-primary border-gray-300 rounded focus:ring-primary focus:ring-2"
+                  />
+                  <label
+                    :for="`article-${article.id}`"
+                    class="flex-1 cursor-pointer"
+                  >
+                    <h3 class="text-lg font-semibold text-gray-900 mb-1">
+                      {{ article.title }}
+                    </h3>
+                    <p class="text-sm text-gray-600 mb-2 line-clamp-2">
+                      {{ getExcerpt(article.text) }}
+                    </p>
+                    <div v-if="article.categories && article.categories.length > 0" class="flex flex-wrap gap-2 mb-2">
+                      <span
+                        v-for="cat in article.categories"
+                        :key="cat"
+                        class="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-primary/10 text-primary"
+                      >
+                        {{ cat }}
+                      </span>
+                    </div>
+                    <span class="text-xs text-gray-500">
+                      {{ formatDate(article.created_at) }}
+                    </span>
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -180,6 +236,7 @@ import { ref, watch, onMounted, computed } from 'vue'
 import { getAllVisibleArticles } from '@/services/watchArticleService'
 import { getWatchArticlesForAdmin } from '@/services/watchArticleService'
 import { updateWatchArticles } from '@/services/watchArticleService'
+import { getWatchByIdForAdmin } from '@/services/admin/adminWatchService'
 
 const props = defineProps({
   isOpen: {
@@ -201,6 +258,28 @@ const isLoading = ref(false)
 const isSaving = ref(false)
 const error = ref(null)
 const searchQuery = ref('')
+const watchName = ref('')
+
+// Helper: Extract words from watch name
+const extractWatchNameWords = (name) => {
+  if (!name) return []
+  // Split by spaces, hyphens, and other separators, then filter out empty strings and short words
+  return name
+    .toLowerCase()
+    .split(/[\s\-_]+/)
+    .map((word) => word.trim())
+    .filter((word) => word.length > 2) // Filter out words shorter than 3 characters
+}
+
+// Helper: Check if article title contains any watch name word
+const articleMatchesWatchName = (article) => {
+  if (!watchName.value || !article.title) return false
+  const watchWords = extractWatchNameWords(watchName.value)
+  if (watchWords.length === 0) return false
+  
+  const articleTitleLower = article.title.toLowerCase()
+  return watchWords.some((word) => articleTitleLower.includes(word))
+}
 
 // Computed: Filter and sort articles
 const filteredAndSortedArticles = computed(() => {
@@ -225,14 +304,30 @@ const filteredAndSortedArticles = computed(() => {
     })
   }
 
-  // Sort by creation date (most recent first)
-  filtered.sort((a, b) => {
+  // Separate articles that match watch name and those that don't
+  const matchingArticles = []
+  const nonMatchingArticles = []
+  
+  filtered.forEach((article) => {
+    if (articleMatchesWatchName(article)) {
+      matchingArticles.push(article)
+    } else {
+      nonMatchingArticles.push(article)
+    }
+  })
+
+  // Sort each group by creation date (most recent first)
+  const sortByDate = (a, b) => {
     const dateA = a.created_at ? new Date(a.created_at).getTime() : 0
     const dateB = b.created_at ? new Date(b.created_at).getTime() : 0
     return dateB - dateA // Descending order (newest first)
-  })
+  }
+  
+  matchingArticles.sort(sortByDate)
+  nonMatchingArticles.sort(sortByDate)
 
-  return filtered
+  // Return matching articles first, then non-matching articles
+  return [...matchingArticles, ...nonMatchingArticles]
 })
 
 // Methods
@@ -240,6 +335,15 @@ const loadArticles = async () => {
   try {
     isLoading.value = true
     error.value = null
+
+    // Charger le nom de la montre
+    try {
+      const watch = await getWatchByIdForAdmin(props.watchId)
+      watchName.value = watch.name || ''
+    } catch (err) {
+      console.warn('Erreur lors du chargement du nom de la montre:', err)
+      watchName.value = ''
+    }
 
     // Charger tous les articles visibles
     const result = await getAllVisibleArticles(1, 1000) // Charger beaucoup d'articles
@@ -315,6 +419,7 @@ watch(() => props.isOpen, (newValue) => {
     selectedArticleIds.value = []
     error.value = null
     searchQuery.value = ''
+    watchName.value = ''
   }
 })
 
