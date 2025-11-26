@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-white rounded-md shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+    class="bg-white rounded-md shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300"
   >
     <!-- Image Slider -->
     <div class="relative h-48 md:h-64 lg:h-80 bg-gray-100">
@@ -57,14 +57,14 @@
         <!-- Image indicators -->
         <div
           v-if="watch.images && watch.images.length > 1"
-          class="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex space-x-1"
+          class="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1"
         >
           <button
             v-for="(_, index) in watch.images"
             :key="index"
             @click="currentImageIndex = index"
             :class="[
-              'w-2 h-2 rounded-full transition-all duration-200',
+              'w-1 h-1 md:w-2 md:h-2 rounded-full transition-all duration-200',
               currentImageIndex === index ? 'bg-white' : 'bg-white bg-opacity-50',
             ]"
           ></button>
@@ -75,36 +75,27 @@
     <!-- Watch Info -->
     <div class="p-3 md:p-4 lg:p-6 cursor-pointer" @click="$emit('viewDetails', watch.id)">
       <div class="flex items-start justify-between mb-1 md:mb-2">
-        <h3 class="text-sm md:text-base lg:text-xl font-semibold text-gray-900 leading-tight flex-1 pr-1">
+        <h3 class="text-xs md:text-base lg:text-xl font-semibold text-gray-900 leading-tight flex-1 pr-1">
           {{ watch.name }}
         </h3>
         <span
           v-if="watch.isSold"
-          class="ml-1 md:ml-2 px-1.5 md:px-2 py-0.5 md:py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 whitespace-nowrap flex-shrink-0"
+          class="ml-1 md:ml-2 px-1.5 md:px-2 py-0.5 md:py-1 text-[10px] md:text-xs font-semibold rounded-full bg-red-100 text-red-800 whitespace-nowrap flex-shrink-0"
         >
           Vendue
         </span>
       </div>
 
-      <p class="text-xs md:text-sm text-gray-600 mb-2 md:mb-4 font-light">Réf. {{ watch.reference }}</p>
+      <p class="text-[10px] md:text-sm text-gray-600 mb-2 md:mb-3 font-light">Réf. {{ watch.reference }}</p>
 
-      <div class="flex items-center justify-between gap-2">
-        <div class="text-base md:text-xl lg:text-2xl font-normal text-primary">
-          {{ formatPrice(watch.price) }}
-        </div>
-
-        <button
-          @click.stop="$emit('viewDetails', watch.id)"
-          class="bg-primary hover:bg-green-700 text-white px-2 md:px-3 lg:px-4 py-1 md:py-1.5 lg:py-2 rounded-lg text-xs md:text-sm lg:text-base font-medium transition-colors duration-200 whitespace-nowrap flex-shrink-0"
-        >
-          Voir le détail
-        </button>
+      <div class="text-base md:text-xl lg:text-2xl font-normal text-primary mb-2 md:mb-3">
+        {{ formatPrice(watch.price) }}
       </div>
 
       <!-- Optional: Watch content or year -->
-      <div class="mt-2 md:mt-4 flex items-center justify-between text-xs md:text-sm text-gray-500">
-        <span v-if="watch.year">{{ watch.year }}</span>
-        <span v-if="watch.contenu || watch.details?.content" class="bg-gray-100 px-1.5 md:px-2 py-0.5 md:py-1 rounded text-xs">
+      <div class="flex items-center gap-2 text-[10px] md:text-sm text-gray-500">
+        <span v-if="watch.year" class="font-medium">{{ watch.year }}</span>
+        <span v-if="watch.contenu || watch.details?.content" class="bg-gray-100 px-1.5 md:px-2 py-0.5 md:py-1 rounded text-[10px] md:text-xs">
           {{ watch.contenu || watch.details?.content }}
         </span>
       </div>
