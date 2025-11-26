@@ -1,11 +1,10 @@
-import { createWebHashHistory, createWebHistory, createRouter } from 'vue-router'
+import { createWebHistory, createRouter } from 'vue-router'
 import { isAuthenticated } from './services/maintenanceService'
 import { isAdminAuthenticated } from './services/admin/adminAuthService'
 
 import HomeView from './components/HomePage.vue'
 import Merci from './components/Merci.vue'
 import Recherche from './components/Recherche.vue'
-import DepotVente from './components/DepotVente.vue'
 import WatchesCollection from './components/watch/WatchesCollection.vue'
 import WatchDetail from './components/watch/WatchDetail.vue'
 import Maintenance from './components/Maintenance.vue'
