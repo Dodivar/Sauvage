@@ -3,6 +3,7 @@ import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { createWatch, updateWatch, uploadWatchImage, deleteWatchImage, reorderWatchImages, getWatchByIdForAdmin, duplicateWatch } from '@/services/admin/adminWatchService'
 import AdminHeader from './AdminHeader.vue'
+import AdminWatchArticleSelector from './AdminWatchArticleSelector.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -60,6 +61,10 @@ const isUploadingImage = ref(false)
 const newAccessoryName = ref('')
 const newAccessoryIncluded = ref(false)
 
+// Article selector modal
+const showArticleSelector = ref(false)
+const linkedArticles = ref([])
+
 // Methods
 const loadWatch = async () => {
   if (!isEditMode.value) return
@@ -111,6 +116,9 @@ const loadWatch = async () => {
       url: img.url,
       order: img.order,
     })).sort((a, b) => a.order - b.order)
+
+    // Load linked articles
+    linkedArticles.value = watch.articles || []
   } catch (err) {
     console.error('Erreur lors du chargement de la montre:', err)
     error.value = err.message || 'Erreur lors du chargement de la montre'
@@ -348,6 +356,17 @@ watch(() => formData.value.isSold, (newValue) => {
     formData.value.isAvailable = true
   }
 })
+
+const handleArticlesSaved = () => {
+  // Recharger la montre pour mettre à jour les articles liés
+  if (isEditMode.value) {
+    loadWatch()
+  }
+  success.value = 'Articles liés mis à jour avec succès'
+  setTimeout(() => {
+    success.value = null
+  }, 3000)
+}
 
 onMounted(() => {
   if (isEditMode.value) {
@@ -718,6 +737,28 @@ onMounted(() => {
           </div>
         </div>
 
+        <!-- Linked Articles -->
+        <div v-if="isEditMode" class="bg-white rounded-lg shadow p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="text-xl font-semibold text-gray-900">Articles liés</h2>
+              <p v-if="linkedArticles.length > 0" class="text-sm text-gray-600 mt-1">
+                {{ linkedArticles.length }} article{{ linkedArticles.length > 1 ? 's' : '' }} lié{{ linkedArticles.length > 1 ? 's' : '' }}
+              </p>
+            </div>
+            <button
+              type="button"
+              @click="showArticleSelector = true"
+              class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Gérer les articles liés
+            </button>
+          </div>
+          <p class="text-sm text-gray-600">
+            Sélectionnez les articles de blog à afficher sur la page de cette montre.
+          </p>
+        </div>
+
         <!-- Images -->
         <div class="bg-white rounded-lg shadow p-6">
           <h2 class="text-xl font-semibold text-gray-900 mb-4">Images</h2>
@@ -828,6 +869,14 @@ onMounted(() => {
       </form>
     </div>
 
+    <!-- Article Selector Modal -->
+    <AdminWatchArticleSelector
+      v-if="isEditMode"
+      :is-open="showArticleSelector"
+      :watch-id="watchId"
+      @close="showArticleSelector = false"
+      @saved="handleArticlesSaved"
+    />
   </div>
 </template>
 

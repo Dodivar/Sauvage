@@ -12,7 +12,7 @@ const isLoading = ref(true)
 const error = ref(null)
 const success = ref(null)
 const searchQuery = ref('')
-const visibilityFilter = ref('all') // 'all', 'visible', 'hidden'
+const visibilityFilter = ref('visible') // 'all', 'visible', 'hidden'
 const showDeleteConfirm = ref(false)
 const articleToDelete = ref(null)
 const togglingVisibility = ref(null)
@@ -223,17 +223,6 @@ onMounted(async () => {
             <!-- Filtre de visibilité -->
             <div class="flex items-center gap-2 bg-gray-100 rounded-lg p-1">
               <button
-                @click="visibilityFilter = 'all'"
-                :class="[
-                  'px-3 py-1 text-sm font-medium rounded transition-colors',
-                  visibilityFilter === 'all'
-                    ? 'bg-white text-gray-900 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
-                ]"
-              >
-                Tous
-              </button>
-              <button
                 @click="visibilityFilter = 'visible'"
                 :class="[
                   'px-3 py-1 text-sm font-medium rounded transition-colors',
@@ -254,6 +243,17 @@ onMounted(async () => {
                 ]"
               >
                 Masqués
+              </button>
+              <button
+                @click="visibilityFilter = 'all'"
+                :class="[
+                  'px-3 py-1 text-sm font-medium rounded transition-colors',
+                  visibilityFilter === 'all'
+                    ? 'bg-white text-gray-900 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                ]"
+              >
+                Tous
               </button>
             </div>
             <button

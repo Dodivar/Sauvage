@@ -1,5 +1,4 @@
 Montres :
-- Ajouter des articles liés à la montres
 - sur desktop ajouter une loop au survol de l'image principale à fix !
 - Ajouter vidéo 360° sur les bestsellers
 
@@ -20,9 +19,7 @@ FAQ :
 - Améliorer les questions avec Antoine
 
 Accueil :
-- Slider des carrousels pour que ce soit plus voyant ou défilement tout seul
-- Enlever au survol la taille qui augmente
-- réduire la taille des cartes pour en voir plus du premier coup d'oeil
+- Slider des carrousels pour que ce soit plus voyant ou défilement tout seul => non
 
 Recherche :
 - Ajouter un table permettant d'enregistrer toutes les demandes de recherche de montre pour avoir un tableau recensant toutes les demandes et voir des tendances

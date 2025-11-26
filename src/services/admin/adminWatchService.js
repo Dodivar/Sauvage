@@ -1,4 +1,5 @@
 import { supabase } from '../supabase'
+import { getWatchArticlesForAdmin } from '../watchArticleService'
 
 /**
  * Transforme les données du formulaire en format base de données
@@ -662,6 +663,9 @@ export async function getWatchByIdForAdmin(watchId) {
       .eq('watch_id', watchId)
       .order('image_order', { ascending: true })
 
+    // Récupérer les articles liés (pour l'admin, inclut même les masqués)
+    const articles = await getWatchArticlesForAdmin(watchId).catch(() => [])
+
     // Transformer les images avec leurs URLs et IDs
     const imagesWithUrls = (images || []).map((img) => {
       let imageUrl = img.image_url
@@ -691,6 +695,7 @@ export async function getWatchByIdForAdmin(watchId) {
       isSold: watch.is_sold !== undefined ? watch.is_sold : false,
       saleDate: watch.sale_date || null,
       displayOrder: watch.display_order || 0,
+      articles: articles || [],
       details: {
         content: details?.content || '',
         movement: details?.movement || '',

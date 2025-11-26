@@ -180,6 +180,9 @@ export async function updateArticle(id, articleData) {
  * Supprime un article
  * @param {string|number} id - ID de l'article
  * @returns {Promise<{success: boolean, error?: string}>}
+ * 
+ * Note: La suppression d'un article supprime automatiquement tous ses liens avec les montres
+ * grâce à la contrainte ON DELETE CASCADE définie dans la table watch_articles.
  */
 export async function deleteArticle(id) {
   try {

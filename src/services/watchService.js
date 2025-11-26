@@ -1,9 +1,10 @@
 import { supabase } from './supabase'
+import { getWatchArticles } from './watchArticleService'
 
 /**
  * Transforme les données de la base de données en format attendu par les composants
  */
-function transformWatchData(watchData, details, accessories, images) {
+function transformWatchData(watchData, details, accessories, images, articles = []) {
   return {
     id: watchData.id,
     adCode: watchData.ad_code,
@@ -21,6 +22,7 @@ function transformWatchData(watchData, details, accessories, images) {
     displayOrder: watchData.display_order || 0,
     contenu: details?.content || '', // Pour compatibilité avec WatchCard
     images: images.map((img) => img.image_url).filter(Boolean),
+    articles: articles || [],
     details: {
       content: details?.content || '',
       movement: details?.movement || '',
@@ -118,14 +120,15 @@ export async function getWatchById(id, allowUnavailable = false) {
       throw new Error('UNAVAILABLE')
     }
 
-    // Récupérer les détails, accessoires et images
-    const [details, accessories, images] = await Promise.all([
+    // Récupérer les détails, accessoires, images et articles liés
+    const [details, accessories, images, articles] = await Promise.all([
       getWatchDetails(id),
       getWatchAccessories(id),
       getWatchImages(id),
+      getWatchArticles(id).catch(() => []), // En cas d'erreur, retourner un tableau vide
     ])
 
-    return transformWatchData(watch, details, accessories, images)
+    return transformWatchData(watch, details, accessories, images, articles)
   } catch (error) {
     console.error('Erreur dans getWatchById:', error)
     throw error

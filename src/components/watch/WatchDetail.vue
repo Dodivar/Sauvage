@@ -491,6 +491,43 @@
         </div>
       </div>
 
+      <!-- Related Articles Section -->
+      <div v-if="watchItem && watchItem.articles && watchItem.articles.length > 0" class="bg-white rounded-xl shadow-lg p-8 mb-12">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-6">Articles liés</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <article
+            v-for="article in watchItem.articles"
+            :key="article.id"
+            class="bg-gray-50 rounded-lg p-6 hover:shadow-md transition-shadow cursor-pointer"
+            @click="goToArticle(article.id)"
+          >
+            <h3 class="text-lg font-semibold text-gray-900 mb-3 line-clamp-2">
+              {{ article.title }}
+            </h3>
+            <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+              {{ getArticleExcerpt(article.text) }}
+            </p>
+            <div v-if="article.categories && article.categories.length > 0" class="mb-4 flex flex-wrap gap-2">
+              <span
+                v-for="cat in article.categories"
+                :key="cat"
+                class="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-primary/10 text-primary"
+              >
+                {{ cat }}
+              </span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-gray-500">
+                {{ formatArticleDate(article.created_at) }}
+              </span>
+              <span class="text-primary text-sm font-medium hover:underline">
+                Lire l'article →
+              </span>
+            </div>
+          </article>
+        </div>
+      </div>
+
       <!-- Contact Reminder Section -->
       <div class="bg-white rounded-xl shadow-lg p-8">
         <div class="text-center mb-6">
@@ -633,7 +670,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useHead } from '@vueuse/head'
 import { scrollAnimation } from '@/animation'
 import { WHATSAPP_NUMBER, EMAIL_CONTACT } from '@/config'
@@ -641,6 +678,7 @@ import { getWatchById } from '@/services/watchService'
 import { isAdminAuthenticated } from '@/services/admin/adminAuthService'
 
 const route = useRoute()
+const router = useRouter()
 
 // Current image index for slider
 const currentImageIndex = ref(0)
@@ -915,6 +953,35 @@ const formatPrice = (price) => {
 // Helper function to check if a value exists and is not empty
 const hasValue = (value) => {
   return value !== null && value !== undefined && value !== '' && String(value).trim() !== ''
+}
+
+// Helper function to get article excerpt
+const getArticleExcerpt = (text) => {
+  if (!text) return ''
+  // Remove markdown headers and formatting
+  const cleanText = text.replace(/[#*`]/g, '').replace(/\n+/g, ' ').trim()
+  // Return first 150 characters
+  return cleanText.length > 150 ? cleanText.substring(0, 150) + '...' : cleanText
+}
+
+// Helper function to format article date
+const formatArticleDate = (dateString) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  return date.toLocaleDateString('fr-FR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+}
+
+// Navigate to article
+const goToArticle = (articleId) => {
+  const watchId = route.params.id
+  router.push({
+    path: `/blog/${articleId}`,
+    query: { fromWatch: watchId }
+  })
 }
 
 // SEO Meta Tags and Structured Data

@@ -29,10 +29,10 @@
             Réessayer
           </button>
           <router-link
-            to="/blog"
+            :to="backLink"
             class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors inline-flex items-center justify-center"
           >
-            Retour au blog
+            {{ backText }}
           </router-link>
         </div>
       </div>
@@ -43,7 +43,7 @@
         <div class="p-8 border-b border-gray-200">
           <div class="mb-4">
             <router-link
-              to="/blog"
+              :to="backLink"
               class="inline-flex items-center text-primary hover:text-green-700 transition-colors mb-6"
             >
               <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -54,7 +54,7 @@
                   d="M10 19l-7-7m0 0l7-7m-7 7h18"
                 />
               </svg>
-              Retour au blog
+              {{ backText }}
             </router-link>
           </div>
 
@@ -98,7 +98,7 @@
         <div class="p-8 border-t border-gray-200 bg-gray-50">
           <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
             <router-link
-              to="/blog"
+              :to="backLink"
               class="inline-flex items-center text-primary hover:text-green-700 transition-colors"
             >
               <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -109,7 +109,7 @@
                   d="M10 19l-7-7m0 0l7-7m-7 7h18"
                 />
               </svg>
-              Retour au blog
+              {{ backText }}
             </router-link>
 
             <div v-if="article.categories && article.categories.length > 0" class="flex items-center gap-2 flex-wrap">
@@ -150,6 +150,23 @@ const error = ref(null)
 const htmlContent = computed(() => {
   if (!article.value || !article.value.text) return ''
   return marked.parse(article.value.text)
+})
+
+// Computed pour le lien de retour (vers la montre si on vient d'une montre, sinon vers le blog)
+const backLink = computed(() => {
+  const fromWatch = route.query.fromWatch
+  if (fromWatch) {
+    return `/watch/${fromWatch}`
+  }
+  return '/blog'
+})
+
+const backText = computed(() => {
+  const fromWatch = route.query.fromWatch
+  if (fromWatch) {
+    return 'Retour à la montre'
+  }
+  return 'Retour au blog'
 })
 
 // Methods
