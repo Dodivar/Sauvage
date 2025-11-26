@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { getAllArticlesForAdmin, deleteArticle, toggleArticleVisibility } from '@/services/adminArticleService'
+import { getAllArticlesForAdmin, deleteArticle, toggleArticleVisibility } from '@/services/admin/adminArticleService'
 import AdminHeader from './AdminHeader.vue'
 
 const router = useRouter()

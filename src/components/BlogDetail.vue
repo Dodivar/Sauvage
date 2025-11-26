@@ -135,8 +135,8 @@ import { useRoute } from 'vue-router'
 import { useHead } from '@vueuse/head'
 import { marked } from 'marked'
 import { getArticleById, incrementArticleViewCount } from '@/services/articleService'
-import { getArticleByIdForAdmin } from '@/services/adminArticleService'
-import { isAdminAuthenticated } from '@/services/adminAuthService'
+import { getArticleByIdForAdmin } from '@/services/admin/adminArticleService'
+import { isAdminAuthenticated } from '@/services/admin/adminAuthService'
 import { scrollAnimation } from '@/animation'
 
 const route = useRoute()

@@ -638,7 +638,7 @@ import { useHead } from '@vueuse/head'
 import { scrollAnimation } from '@/animation'
 import { WHATSAPP_NUMBER, EMAIL_CONTACT } from '@/config'
 import { getWatchById } from '@/services/watchService'
-import { isAdminAuthenticated } from '@/services/adminAuthService'
+import { isAdminAuthenticated } from '@/services/admin/adminAuthService'
 
 const route = useRoute()
 

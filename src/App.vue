@@ -3,7 +3,7 @@ import { ref, useTemplateRef, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { Head } from '@vueuse/head'
 import { WHATSAPP_NUMBER, EMAIL_CONTACT } from '@/config'
-import { isAdminAuthenticated } from '@/services/adminAuthService'
+import { isAdminAuthenticated } from '@/services/admin/adminAuthService'
 
 //const displayMobileMenu = ref(false)
 const overlay = useTemplateRef('mobile-menu-overlay')

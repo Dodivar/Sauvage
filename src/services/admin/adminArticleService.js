@@ -1,4 +1,4 @@
-import { supabase } from './supabase'
+import { supabase } from '../supabase'
 
 /**
  * Récupère tous les articles pour l'administration (sans pagination)

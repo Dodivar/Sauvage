@@ -13,8 +13,8 @@ import {
   Legend,
   Filler,
 } from 'chart.js'
-import { getWatchStatsByDay, getStorageStats, getTableSizes } from '@/services/adminWatchService'
-import { getArticleStatsByDay } from '@/services/adminArticleService'
+import { getWatchStatsByDay, getStorageStats, getTableSizes } from '@/services/admin/adminWatchService'
+import { getArticleStatsByDay } from '@/services/admin/adminArticleService'
 import AdminHeader from './AdminHeader.vue'
 
 // Enregistrer les composants Chart.js

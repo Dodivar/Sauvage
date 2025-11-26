@@ -183,8 +183,8 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useHead } from '@vueuse/head'
 import { getAllArticles, getAllCategories } from '@/services/articleService'
-import { getAllArticlesForAdmin } from '@/services/adminArticleService'
-import { isAdminAuthenticated } from '@/services/adminAuthService'
+import { getAllArticlesForAdmin } from '@/services/admin/adminArticleService'
+import { isAdminAuthenticated } from '@/services/admin/adminAuthService'
 import { scrollAnimation } from '@/animation'
 
 // SEO Meta Tags

@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { logoutAdmin, getCurrentAdmin } from '@/services/adminAuthService'
+import { logoutAdmin, getCurrentAdmin } from '@/services/admin/adminAuthService'
 import logoNoir from '@/assets/logo noir.png'
 
 const router = useRouter()

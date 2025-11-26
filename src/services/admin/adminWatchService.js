@@ -1,4 +1,4 @@
-import { supabase } from './supabase'
+import { supabase } from '../supabase'
 
 /**
  * Transforme les données du formulaire en format base de données

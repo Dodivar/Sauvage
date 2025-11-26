@@ -1,4 +1,4 @@
-import { supabase } from './supabase'
+import { supabase } from '../supabase'
 
 const STORAGE_KEY = 'admin_authenticated'
 

@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { marked } from 'marked'
-import { createArticle, updateArticle, getArticleByIdForAdmin } from '@/services/adminArticleService'
+import { createArticle, updateArticle, getArticleByIdForAdmin } from '@/services/admin/adminArticleService'
 import AdminHeader from './AdminHeader.vue'
 
 const router = useRouter()
