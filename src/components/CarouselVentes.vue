@@ -7,25 +7,25 @@
         </h2>
         <p class="text-xl text-gray-600">Voici quelques montres récemment vendues</p>
       </div>
-      <div class="overflow-x-auto custom-scrollbar-carrousel scroll-smooth p-8 relative">
-        <div class="flex space-x-6 min-w-full">
+      <div class="overflow-x-auto custom-scrollbar-carrousel scroll-smooth p-4 sm:p-8 relative">
+        <div class="flex space-x-4 sm:space-x-6 min-w-full">
           <template v-for="(watch, i) in salesWatches" :key="`${i}-${watch.id || watch.name}`">
             <div
-              class="flex-shrink-0 w-60 bg-white rounded-xl shadow-md hover:shadow-lg p-4 text-center transition-all duration-300 hover:scale-105"
+              class="flex-shrink-0 w-40 sm:w-48 md:w-60 bg-white rounded-xl shadow-md hover:shadow-lg p-3 sm:p-4 text-center transition-all duration-300"
             >
               <img
                 v-if="watch.imageUrl"
                 :src="watch.imageUrl"
                 :alt="watch.name"
-                class="rounded-lg mb-4 mx-auto h-64 w-full object-cover"
+                class="rounded-lg mb-3 sm:mb-4 mx-auto h-40 sm:h-48 md:h-64 w-full object-cover"
               />
               <div
                 v-else
-                class="rounded-lg mb-4 mx-auto h-64 w-full bg-gray-200 flex items-center justify-center"
+                class="rounded-lg mb-3 sm:mb-4 mx-auto h-40 sm:h-48 md:h-64 w-full bg-gray-200 flex items-center justify-center"
               >
-                <span class="text-gray-400 text-sm">Pas d'image</span>
+                <span class="text-gray-400 text-xs sm:text-sm">Pas d'image</span>
               </div>
-              <h4 class="text-lg font-semibold text-text-main">{{ watch.name }}</h4>
+              <h4 class="text-sm sm:text-base md:text-lg font-semibold text-text-main">{{ watch.name }}</h4>
             </div>
           </template>
         </div>

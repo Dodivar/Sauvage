@@ -7,14 +7,16 @@
         </h2>
         <p class="text-xl text-gray-600">Découvrez nos dernières montres mises en stock</p>
       </div>
-      <div class="overflow-x-auto custom-scrollbar-carrousel scroll-smooth p-8 relative">
-        <div class="flex space-x-6 min-w-full">
+      <div 
+        class="overflow-x-auto custom-scrollbar-carrousel scroll-smooth p-8 relative"
+      >
+        <div class="flex space-x-4 sm:space-x-5 md:space-x-6 min-w-full">
           <template v-for="(watch, i) in latestWatches" :key="`${i}-${watch.id || watch.name}`">
             <div
-              class="flex-shrink-0 w-80 bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 overflow-hidden"
+              class="flex-shrink-0 w-56 sm:w-64 md:w-72 lg:w-80 bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden"
             >
               <!-- Image Slider -->
-              <div class="relative h-64 bg-gray-100">
+              <div class="relative h-48 sm:h-56 md:h-60 lg:h-64 bg-gray-100">
                 <div
                   class="absolute inset-0 flex items-center justify-center"
                   v-if="!watch.images || watch.images.length === 0"
@@ -84,9 +86,9 @@
               </div>
 
               <!-- Watch Info -->
-              <div class="p-6 cursor-pointer" @click="handleViewDetails(watch.id)">
+              <div class="p-4 sm:p-5 md:p-6 cursor-pointer" @click="handleViewDetails(watch.id)">
                 <div class="flex items-start justify-between mb-2">
-                  <h3 class="text-xl font-semibold text-gray-900 leading-tight flex-1">
+                  <h3 class="text-base sm:text-lg md:text-xl font-semibold text-gray-900 leading-tight flex-1">
                     {{ watch.name }}
                   </h3>
                   <span
@@ -97,21 +99,21 @@
                   </span>
                 </div>
 
-                <p class="text-sm text-gray-600 mb-4 font-light">Réf. {{ watch.reference }}</p>
+                <p class="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 font-light">Réf. {{ watch.reference }}</p>
 
-                <div class="flex items-center justify-between mb-4">
-                  <div class="text-2xl font-normal text-primary">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 mb-3 sm:mb-4">
+                  <div class="text-xl sm:text-2xl font-normal text-primary">
                     {{ formatPrice(watch.price) }}
                   </div>
                   <button
-                    class="bg-primary hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200"
+                    class="bg-primary hover:bg-green-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-sm sm:text-base font-medium transition-colors duration-200"
                   >
                     Voir le détail
                   </button>
                 </div>
 
                 <!-- Optional: Watch content or year -->
-                <div class="mb-4 flex items-center justify-between text-sm text-gray-500">
+                <div class="mb-2 sm:mb-4 flex items-center justify-between text-xs sm:text-sm text-gray-500">
                   <span v-if="watch.year">{{ watch.year }}</span>
                   <span v-if="watch.contenu || watch.details?.content" class="bg-gray-100 px-2 py-1 rounded text-xs">
                     {{ watch.contenu || watch.details?.content }}

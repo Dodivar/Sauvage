@@ -990,43 +990,66 @@ export async function getWatchStatsByDay() {
 }
 
 /**
+ * Fonction récursive pour lister tous les fichiers dans un dossier et ses sous-dossiers
+ * @param {string} folderPath - Chemin du dossier à lister
+ * @returns {Promise<Array>} Liste de tous les fichiers
+ */
+async function listAllFilesRecursively(folderPath = '') {
+  const allFiles = []
+  const limit = 1000
+  
+  // Fonction récursive interne
+  const listFolder = async (path) => {
+    const { data: items, error } = await supabase.storage
+      .from('watch-images')
+      .list(path, {
+        limit: limit,
+      })
+    
+    if (error) {
+      console.error(`Erreur lors de la liste de ${path}:`, error)
+      return
+    }
+    
+    if (!items || items.length === 0) {
+      return
+    }
+    
+    // Séparer les dossiers et les fichiers
+    // Dans Supabase Storage, les dossiers n'ont pas de metadata.id
+    const folders = items.filter(item => !item.id && item.name) // Les dossiers n'ont pas d'id
+    const files = items.filter(item => item.id) // Les fichiers ont un id
+    
+    // Ajouter les fichiers à la liste
+    allFiles.push(...files)
+    
+    // Parcourir récursivement les sous-dossiers
+    for (const folder of folders) {
+      const subPath = path ? `${path}/${folder.name}` : folder.name
+      await listFolder(subPath)
+    }
+  }
+  
+  await listFolder(folderPath)
+  return allFiles
+}
+
+/**
  * Récupère les statistiques d'utilisation du stockage Supabase
  * @returns {Promise<{totalSize: number, totalSizeMB: number, totalSizeGB: number, fileCount: number, limitGB: number, usagePercent: number}>}
  */
 export async function getStorageStats() {
   try {
-    // Lister tous les fichiers du bucket watch-images
-    // Note: Supabase Storage list() peut nécessiter plusieurs appels si beaucoup de fichiers
-    let allFiles = []
-    let hasMore = true
-    let path = ''
-    const limit = 1000 // Limite par page
+    // Lister récursivement tous les fichiers du bucket watch-images
+    const allFiles = await listAllFilesRecursively('')
     
-    while (hasMore) {
-      const { data: files, error } = await supabase.storage
-        .from('watch-images')
-        .list(path, {
-          limit: limit,
-          sortBy: { column: 'created_at', order: 'desc' }
-        })
-      
-      if (error) {
-        throw new Error(`Erreur lors de la récupération des fichiers: ${error.message}`)
-      }
-      
-      if (files && files.length > 0) {
-        allFiles = allFiles.concat(files)
-        // Si on a moins de fichiers que la limite, on a tout récupéré
-        hasMore = files.length === limit
-      } else {
-        hasMore = false
-      }
-    }
+    console.log(`Nombre total de fichiers trouvés: ${allFiles.length}`)
     
     // Calculer la taille totale
     const totalSize = allFiles.reduce((sum, file) => {
       // La taille est dans metadata.size (en bytes)
-      return sum + (file.metadata?.size || 0)
+      const fileSize = file.metadata?.size || 0
+      return sum + fileSize
     }, 0)
     
     const totalSizeMB = totalSize / (1024 * 1024)
@@ -1034,7 +1057,7 @@ export async function getStorageStats() {
     
     // Limite selon le plan (à ajuster selon votre plan Supabase)
     // Free: 1GB, Pro: 100GB, Team: 200GB
-    const limitGB = 100 // Plan Pro par défaut, ajustez selon votre plan
+    const limitGB = 1 // Plan Free (1GB)
     
     const usagePercent = (totalSizeGB / limitGB) * 100
     
@@ -1166,6 +1189,26 @@ export async function getStorageStatsByDay() {
     })
   } catch (error) {
     console.error('Erreur dans getStorageStatsByDay:', error)
+    throw error
+  }
+}
+
+/**
+ * Récupère la taille de toutes les tables de la base de données en Mo
+ * @returns {Promise<Array<{table_name: string, size_bytes: number, size_mb: number, row_count: number}>>}
+ */
+export async function getTableSizes() {
+  try {
+    // Appeler la fonction SQL RPC
+    const { data, error } = await supabase.rpc('get_table_sizes')
+    
+    if (error) {
+      throw new Error(`Erreur lors de la récupération des tailles des tables: ${error.message}`)
+    }
+    
+    return data || []
+  } catch (error) {
+    console.error('Erreur dans getTableSizes:', error)
     throw error
   }
 }
