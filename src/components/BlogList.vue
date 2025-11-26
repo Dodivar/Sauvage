@@ -1,16 +1,16 @@
 <template>
-  <section class="py-16 gradient-bg min-h-screen">
+  <section class="py-10 gradient-bg min-h-screen">
     <div class="max-w-7xl mx-auto px-4">
       <!-- Header -->
-      <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-text-main mb-4">Blog</h1>
+      <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold text-text-main mb-3">Blog</h1>
         <p class="text-xl text-gray-600 font-light max-w-3xl mx-auto">
           Découvrez nos articles sur les montres et l'horlogerie
         </p>
       </div>
 
       <!-- Filters Bar -->
-      <div class="bg-white rounded-md shadow-lg p-6 mb-12">
+      <div class="bg-white rounded-md shadow-lg p-6 mb-8">
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div class="flex flex-wrap gap-4">
             <button
@@ -46,15 +46,15 @@
       </div>
 
       <!-- Loading State -->
-      <div v-if="isLoading" class="text-center py-16">
-        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+      <div v-if="isLoading" class="text-center py-10">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-3"></div>
         <p class="text-gray-600">Chargement des articles...</p>
       </div>
 
       <!-- Error State -->
-      <div v-else-if="error" class="text-center py-16">
-        <div class="text-red-500 mb-4">
-          <svg class="w-16 h-16 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div v-else-if="error" class="text-center py-10">
+        <div class="text-red-500 mb-3">
+          <svg class="w-16 h-16 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -64,7 +64,7 @@
           </svg>
         </div>
         <h3 class="text-xl text-gray-900 mb-2">Erreur de chargement</h3>
-        <p class="text-gray-600 mb-4">{{ error }}</p>
+        <p class="text-gray-600 mb-3">{{ error }}</p>
         <button
           @click="loadArticles"
           class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-green-700 transition-colors"
@@ -74,7 +74,7 @@
       </div>
 
       <!-- Articles Grid -->
-      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <article
           v-for="article in articles"
           :key="article.id"
@@ -82,8 +82,8 @@
           @click="handleViewArticle(article.id)"
         >
             <div class="p-6">
-              <h2 class="text-xl font-bold text-text-main mb-3 line-clamp-2">{{ article.title }}</h2>
-              <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+              <h2 class="text-xl font-bold text-text-main mb-2 line-clamp-2">{{ article.title }}</h2>
+              <p class="text-gray-600 text-sm mb-3 line-clamp-3">
                 {{ getExcerpt(article.text) }}
               </p>
               <div v-if="article.categories && article.categories.length > 0" class="mb-3 flex flex-wrap gap-2">
@@ -115,9 +115,9 @@
         </div>
 
       <!-- Empty State -->
-      <div v-if="!isLoading && !error && articles.length === 0" class="text-center py-16">
-        <div class="text-gray-400 mb-4">
-          <svg class="w-16 h-16 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div v-if="!isLoading && !error && articles.length === 0" class="text-center py-10">
+        <div class="text-gray-400 mb-3">
+          <svg class="w-16 h-16 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -131,7 +131,7 @@
       </div>
 
       <!-- Pagination -->
-      <div v-if="!isLoading && !error && totalPages > 1" class="flex justify-center items-center gap-2 mb-12">
+      <div v-if="!isLoading && !error && totalPages > 1" class="flex justify-center items-center gap-2 mb-8">
         <button
           @click="goToPage(currentPage - 1)"
           :disabled="currentPage === 1"

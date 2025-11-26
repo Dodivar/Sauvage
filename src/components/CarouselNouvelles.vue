@@ -1,8 +1,8 @@
 <template>
-  <section v-if="latestWatches.length > 0" class="py-20 bg-white">
+  <section v-if="latestWatches.length > 0" class="py-12 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center">
-        <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-4">
+        <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-3">
           Nouvelles arrivées
         </h2>
         <p class="text-xl text-gray-600">Découvrez nos dernières montres mises en stock</p>

@@ -1,12 +1,12 @@
 <template>
   <div class="min-h-screen">
-    <section class="py-20 gradient-bg">
+    <section class="py-12 gradient-bg">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-          <h1 class="text-3xl lg:text-4xl font-bold text-text-main mb-4">
+        <div class="text-center mb-8">
+          <h1 class="text-3xl lg:text-4xl font-bold text-text-main mb-3">
             Estimation gratuite de votre montre
           </h1>
-          <p class="text-xl text-gray-600 mb-4">
+          <p class="text-xl text-gray-600 mb-3">
             Remplissez ce formulaire pour recevoir une estimation personnalisée
           </p>
           <RouterLink
@@ -25,8 +25,8 @@
           </RouterLink>
         </div>
         <div class="bg-white rounded-md shadow-2xl p-8">
-          <form class="space-y-6" id="form-estimation" @submit="submitEstimationForm">
-            <div class="grid md:grid-cols-2 gap-6">
+          <form class="space-y-4" id="form-estimation" @submit="submitEstimationForm">
+            <div class="grid md:grid-cols-2 gap-4">
               <div>
                 <label class="block text-sm font-medium text-text-main mb-2" for="nickname"
                   >Prénom *</label
@@ -48,7 +48,7 @@
                 />
               </div>
             </div>
-            <div class="grid md:grid-cols-2 gap-6">
+            <div class="grid md:grid-cols-2 gap-4">
               <div>
                 <label class="block text-sm font-medium text-text-main mb-2" for="email"
                   >Email *</label
@@ -114,7 +114,7 @@
                 </label>
               </div>
             </div>
-            <div class="grid md:grid-cols-3 gap-6">
+            <div class="grid md:grid-cols-3 gap-4">
               <div>
                 <label class="block text-sm font-medium text-text-main mb-2" for="brand"
                   >Marque *</label
@@ -221,7 +221,7 @@
                 />
                 <label for="attachments" class="cursor-pointer">
                   <svg
-                    class="mx-auto h-12 w-12 text-gray-400 mb-4"
+                    class="mx-auto h-12 w-12 text-gray-400 mb-3"
                     stroke="currentColor"
                     fill="none"
                     viewBox="0 0 48 48"
@@ -256,10 +256,10 @@
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
               ></textarea>
             </div>
-            <p class="text-sm text-gray-600 mb-4 italic">
+            <p class="text-sm text-gray-600 mb-3 italic">
               * Les champs marqués d'un astérisque sont obligatoires
             </p>
-            <div v-if="errorMessage" class="text-red-500 text-sm mb-4">
+            <div v-if="errorMessage" class="text-red-500 text-sm mb-3">
               {{ errorMessage }}
             </div>
             <button
@@ -276,21 +276,21 @@
     
 
   <!-- Section liens vers nos services -->
-  <section class="py-16 bg-gray-50">
+  <section class="py-10 bg-gray-50">
     <div class="max-w-6xl mx-auto px-4">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold text-text-main mb-4">Nos autres services</h2>
+      <div class="text-center mb-8">
+        <h2 class="text-3xl font-bold text-text-main mb-3">Nos autres services</h2>
         <p class="text-lg text-gray-600">
           Découvrez nos autres services spécialisés dans l'univers des montres
         </p>
       </div>
 
-      <div class="grid md:grid-cols-2 gap-8">
+      <div class="grid md:grid-cols-2 gap-6">
         
         <!-- Lien vers la collection de montres -->
         <div class="bg-white rounded-md shadow-lg p-8 hover:shadow-xl transition-all transform hover:scale-105">
           <div class="text-center">
-            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
+            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-3">
               <svg class="inline-block w-8 h-8 text-white align-middle" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <circle cx="12" cy="12" r="7" stroke="currentColor" stroke-width="2" fill="none"/>
               <rect x="9.5" y="1.5" width="5" height="3" rx="1" stroke="currentColor" stroke-width="2" fill="none"/>
@@ -298,8 +298,8 @@
               <path d="M12 8v4l2.5 2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             </div>
-            <h3 class="text-2xl font-bold text-text-main mb-4">Notre collection de montres</h3>
-            <p class="text-gray-600 mb-6">
+            <h3 class="text-2xl font-bold text-text-main mb-3">Notre collection de montres</h3>
+            <p class="text-gray-600 mb-4">
               Parcourez notre sélection de montres de prestige actuellement disponibles à la vente.
             </p>
             <RouterLink
@@ -317,13 +317,13 @@
         <!-- Recherche personnalisée de montre -->
         <div class="bg-white rounded-md shadow-lg p-8 hover:shadow-xl transition-all transform hover:scale-105">
           <div class="text-center">
-            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
+            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-3">
               <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
-            <h3 class="text-2xl font-bold text-text-main mb-4">Recherche personnalisée de montre</h3>
-            <p class="text-gray-600 mb-6">
+            <h3 class="text-2xl font-bold text-text-main mb-3">Recherche personnalisée de montre</h3>
+            <p class="text-gray-600 mb-4">
               Trouvez la montre de vos rêves grâce à notre service de recherche personnalisée. Notre équipe spécialisée vous aidera à trouver votre montre de rêve.
             </p>
             <RouterLink
@@ -340,10 +340,10 @@
       </div>
 
       <!-- Call-to-action supplémentaire -->
-      <div class="mt-12 text-center">
+      <div class="mt-8 text-center">
         <div class="bg-primary rounded-md p-8 text-white">
-          <h3 class="text-2xl font-bold mb-4">Besoin d'aide ?</h3>
-          <p class="text-lg mb-6">
+          <h3 class="text-2xl font-bold mb-3">Besoin d'aide ?</h3>
+          <p class="text-lg mb-4">
             Notre équipe est là pour vous accompagner dans tous vos projets de montres.
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">

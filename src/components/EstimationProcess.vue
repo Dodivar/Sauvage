@@ -1,9 +1,9 @@
 <template>
   <div class="min-h-screen">
-    <section class="py-20 gradient-bg">
+    <section class="py-12 gradient-bg">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Header -->
-        <div class="text-center mb-12">
+        <div class="text-center mb-8">
           <h1 class="text-3xl lg:text-4xl font-bold text-text-main mb-4">
             Comment estimons-nous votre montre ?
           </h1>
@@ -13,7 +13,7 @@
         </div>
 
         <!-- Navigation -->
-        <div class="mb-8">
+        <div class="mb-6">
           <button
             @click="goBack"
             class="inline-flex items-center text-primary hover:text-green-700 transition-colors cursor-pointer"
@@ -31,7 +31,7 @@
         </div>
 
         <!-- Main Content -->
-        <div class="bg-white rounded-md shadow-2xl p-8 md:p-12 space-y-12">
+        <div class="bg-white rounded-md shadow-2xl p-8 md:p-12 space-y-8">
           <!-- Introduction -->
           <div class="prose prose-lg max-w-none">
             <p class="text-lg text-gray-700 leading-relaxed">
@@ -42,7 +42,7 @@
           </div>
 
           <!-- Process Steps -->
-          <div class="space-y-8">
+          <div class="space-y-6">
             <h2 class="text-2xl font-bold text-text-main mb-6">Notre processus en 5 étapes</h2>
 
             <!-- Step 1 -->

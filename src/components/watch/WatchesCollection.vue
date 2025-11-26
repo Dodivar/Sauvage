@@ -1,9 +1,9 @@
 <template>
-  <section class="py-16 gradient-bg min-h-screen">
+  <section class="py-10 gradient-bg min-h-screen">
     <div class="max-w-7xl mx-auto px-4">
       <!-- Header -->
-      <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-text-main mb-4">Notre collection de montres</h1>
+      <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold text-text-main mb-3">Notre collection de montres</h1>
 <!--         <p class="text-xl text-gray-600 font-light max-w-3xl mx-auto">
           Découvrez notre sélection exclusive de montres de prestige en dépôt-vente, authentifiées
           et garanties par nos experts horlogers
@@ -11,7 +11,7 @@
       </div>
 
       <!-- Filters Bar -->
-      <div class="bg-white rounded-md shadow-lg p-6 mb-12">
+      <div class="bg-white rounded-md shadow-lg p-6 mb-8">
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div class="flex flex-wrap gap-4">
             <select
@@ -46,15 +46,15 @@
       </div>
 
       <!-- Loading State -->
-      <div v-if="isLoading" class="text-center py-16">
-        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+      <div v-if="isLoading" class="text-center py-10">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-3"></div>
         <p class="text-gray-600">Chargement des montres...</p>
       </div>
 
       <!-- Error State -->
-      <div v-else-if="error" class="text-center py-16">
-        <div class="text-red-500 mb-4">
-          <svg class="w-16 h-16 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div v-else-if="error" class="text-center py-10">
+        <div class="text-red-500 mb-3">
+          <svg class="w-16 h-16 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -64,7 +64,7 @@
           </svg>
         </div>
         <h3 class="text-xl text-gray-900 mb-2">Erreur de chargement</h3>
-        <p class="text-gray-600 mb-4">{{ error }}</p>
+        <p class="text-gray-600 mb-3">{{ error }}</p>
         <button
           @click="loadWatches"
           class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-green-700 transition-colors"
@@ -74,7 +74,7 @@
       </div>
 
       <!-- Watches Grid -->
-      <div v-else class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 lg:gap-8 mb-12">
+      <div v-else class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-6 mb-8">
         <WatchCard
           v-for="watch in filteredWatches"
           :key="watch.id"
@@ -85,9 +85,9 @@
       </div>
 
       <!-- Empty State -->
-      <div v-if="!isLoading && !error && filteredWatches.length === 0" class="text-center py-16">
-        <div class="text-gray-400 mb-4">
-          <svg class="w-16 h-16 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div v-if="!isLoading && !error && filteredWatches.length === 0" class="text-center py-10">
+        <div class="text-gray-400 mb-3">
+          <svg class="w-16 h-16 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"

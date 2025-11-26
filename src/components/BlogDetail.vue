@@ -1,14 +1,14 @@
 <template>
-  <section class="py-16 gradient-bg min-h-screen">
+  <section class="py-10 gradient-bg min-h-screen">
     <div class="max-w-4xl mx-auto px-4">
       <!-- Loading State -->
-      <div v-if="isLoading" class="text-center py-16">
+      <div v-if="isLoading" class="text-center py-10">
         <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
         <p class="text-gray-600">Chargement de l'article...</p>
       </div>
 
       <!-- Error State -->
-      <div v-else-if="error" class="text-center py-16">
+      <div v-else-if="error" class="text-center py-10">
         <div class="text-red-500 mb-4">
           <svg class="w-16 h-16 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path

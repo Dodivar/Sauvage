@@ -59,9 +59,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <section class="py-16 gradient-bg" name="RechercheMontre">
+  <section class="py-10 gradient-bg" name="RechercheMontre">
     <div class="max-w-4xl mx-auto px-4">
-      <div class="mb-12 text-center">
+      <div class="mb-8 text-center">
         <h1 class="text-3xl font-bold text-text-main">Recherche personnalisée de montre</h1>
         <h2 class="text-2xl font-bold text-text-main mb-4">Trouvez la montre de vos rêves</h2>
         <p class="text-lg text-gray-600">
@@ -262,21 +262,21 @@ onMounted(() => {
   </section>
 
   <!-- Section liens vers nos services -->
-  <section class="py-16 bg-gray-50">
+  <section class="py-10 bg-gray-50">
     <div class="max-w-6xl mx-auto px-4">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold text-text-main mb-4">Nos autres services</h2>
+      <div class="text-center mb-8">
+        <h2 class="text-3xl font-bold text-text-main mb-3">Nos autres services</h2>
         <p class="text-lg text-gray-600">
           Découvrez nos autres services spécialisés dans l'univers des montres
         </p>
       </div>
 
-      <div class="grid md:grid-cols-2 gap-8">
+      <div class="grid md:grid-cols-2 gap-6">
         
         <!-- Lien vers la collection de montres -->
         <div class="bg-white rounded-md shadow-lg p-8 hover:shadow-xl transition-all transform hover:scale-105">
           <div class="text-center">
-            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
+            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
               <svg class="inline-block w-8 h-8 text-white align-middle" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <circle cx="12" cy="12" r="7" stroke="currentColor" stroke-width="2" fill="none"/>
               <rect x="9.5" y="1.5" width="5" height="3" rx="1" stroke="currentColor" stroke-width="2" fill="none"/>
@@ -284,8 +284,8 @@ onMounted(() => {
               <path d="M12 8v4l2.5 2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             </div>
-            <h3 class="text-2xl font-bold text-text-main mb-4">Notre collection de montres</h3>
-            <p class="text-gray-600 mb-6">
+            <h3 class="text-2xl font-bold text-text-main mb-3">Notre collection de montres</h3>
+            <p class="text-gray-600 mb-4">
               Parcourez notre sélection de montres de prestige actuellement disponibles à la vente.
             </p>
             <RouterLink
@@ -303,13 +303,13 @@ onMounted(() => {
         <!-- Estimation de montre -->
         <div class="bg-white rounded-md shadow-lg p-8 hover:shadow-xl transition-all transform hover:scale-105">
           <div class="text-center">
-            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
+            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
               <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
               </svg>
             </div>
-            <h3 class="text-2xl font-bold text-text-main mb-4">Estimation de montre</h3>
-            <p class="text-gray-600 mb-6">
+            <h3 class="text-2xl font-bold text-text-main mb-3">Estimation de montre</h3>
+            <p class="text-gray-600 mb-4">
               Obtenez une estimation précise et gratuite de votre montre. Notre expertise vous garantit une évaluation juste de la valeur de votre pièce.
             </p>
             <RouterLink
@@ -326,10 +326,10 @@ onMounted(() => {
       </div>
 
       <!-- Call-to-action supplémentaire -->
-      <div class="mt-12 text-center">
+      <div class="mt-8 text-center">
         <div class="bg-primary rounded-md p-8 text-white">
-          <h3 class="text-2xl font-bold mb-4">Besoin d'aide ?</h3>
-          <p class="text-lg mb-6">
+          <h3 class="text-2xl font-bold mb-3">Besoin d'aide ?</h3>
+          <p class="text-lg mb-4">
             Notre équipe est là pour vous accompagner dans tous vos projets de montres.
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">

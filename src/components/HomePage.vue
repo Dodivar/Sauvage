@@ -275,10 +275,10 @@ watch(() => route.hash, async () => {
 <template>
   <div>
     <!-- Hero Section -->
-    <section id="accueil" class="gradient-bg py-20 lg:py-32 h-screen">
+    <section id="accueil" class="gradient-bg py-12 lg:py-20 h-screen">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center relative z-10">
-          <h1 class="text-4xl lg:text-6xl font-bold text-text-main mb-6 leading-tight">
+          <h1 class="text-4xl lg:text-6xl font-bold text-text-main mb-4 leading-tight">
             Découvrez nos <span class="text-primary">montres disponibles</span> dès maintenant test
             <svg class="inline-block w-10 h-10 text-primary align-middle" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <circle cx="12" cy="12" r="7" stroke="currentColor" stroke-width="2" fill="none"/>
@@ -287,7 +287,7 @@ watch(() => route.hash, async () => {
               <path d="M12 8v4l2.5 2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </h1>
-          <p class="text-xl text-gray-600 mb-8 leading-relaxed">
+          <p class="text-xl text-gray-600 mb-6 leading-relaxed">
             Consultez notre sélection de montres en stock garanties 1 an.
           </p>
           <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -400,21 +400,21 @@ watch(() => route.hash, async () => {
     <CarouselNouvelles />
 
     <!-- Sécurité et avantages pour ACHETER ou rechercher une montre -->
-    <section class="py-20 bg-gray-50">
+    <section class="py-12 bg-gray-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-          <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-4">
+        <div class="text-center mb-10">
+          <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-3">
             Achetez ou recherchez votre montre en toute confiance
           </h2>
           <p class="text-xl text-gray-600">
             Profitez d'un accompagnement personnalisé, d'une sécurité totale et de tous les avantages de mon réseau d'expert pour un achat serein ou la quête du modèle qui vous fait rêver.
           </p>
         </div>
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           <!-- Service personnalisé -->
           <div class="text-center p-6 rounded-md bg-white shadow-lg transition-colors">
             <div
-              class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4"
+              class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-3"
             >
               <!-- icône personne/user -->
               <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -432,7 +432,7 @@ watch(() => route.hash, async () => {
           <!-- Authenticité et sécurité des transactions -->
           <div class="text-center p-6 rounded-md bg-white shadow-lg transition-colors">
             <div
-              class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4"
+              class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-3"
             >
               <!-- shield sécurité -->
               <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -448,7 +448,7 @@ watch(() => route.hash, async () => {
           <!-- Accès à un large réseau et sourcing -->
           <div class="text-center p-6 rounded-md bg-white shadow-lg transition-colors">
             <div
-              class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4"
+              class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-3"
             >
               <!-- globe icône FontAwesome style (remplacement) -->
               <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -465,7 +465,7 @@ watch(() => route.hash, async () => {
           <!-- Transparence et sérénité -->
           <div class="text-center p-6 rounded-md bg-white shadow-lg transition-colors">
             <div
-              class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4"
+              class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-3"
             >
               <!-- file-check (document validé/sérénité) -->
               <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -489,28 +489,28 @@ watch(() => route.hash, async () => {
     <SuivezNous />
     
     <!-- Services -->
-    <section id="services" class="py-20 bg-white">
+    <section id="services" class="py-12 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-          <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-4">Nos services exclusifs</h2>
+        <div class="text-center mb-10">
+          <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-3">Nos services exclusifs</h2>
           <p class="text-xl text-gray-600">
             Une expertise complète pour répondre à tous vos besoins horlogers
           </p>
         </div>
 
-        <div class="grid md:grid-cols-3 gap-8">
+        <div class="grid md:grid-cols-3 gap-6">
 
           <!-- Recherche personnalisée -->
           <div class="bg-gray-50 rounded-md p-6 text-center hover:shadow-lg transition-all">
-            <div class="text-primary text-4xl mb-4 flex justify-center">
+            <div class="text-primary text-4xl mb-3 flex justify-center">
               <!-- SVG search icon -->
               <svg class="h-10 w-10 text-primary mx-auto" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
                 <line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
               </svg>
             </div>
-            <h3 class="text-xl font-semibold mb-3">Recherche personnalisée</h3>
-            <p class="text-gray-600 mb-4">
+            <h3 class="text-xl font-semibold mb-2">Recherche personnalisée</h3>
+            <p class="text-gray-600 mb-3">
               Dites-nous ce que vous cherchez, nous le trouvons pour vous. Rareté, budget, état : on
               s'occupe de tout.
             </p>
@@ -522,7 +522,7 @@ watch(() => route.hash, async () => {
          
           <!-- Vente de montre -->
           <div class="bg-gray-50 rounded-md p-6 text-center hover:shadow-lg transition-all">
-            <div class="text-primary text-4xl mb-4 flex justify-center">
+            <div class="text-primary text-4xl mb-3 flex justify-center">
               <!-- SVG montre (watch) icon -->
               <svg class="h-10 w-10 text-primary mx-auto" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="7" stroke="currentColor" stroke-width="2" fill="none"/>
@@ -531,8 +531,8 @@ watch(() => route.hash, async () => {
                 <path d="M12 8v4l2.5 2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </div>
-            <h3 class="text-xl font-semibold mb-3">Vente de montre</h3>
-            <p class="text-gray-600 mb-4">
+            <h3 class="text-xl font-semibold mb-2">Vente de montre</h3>
+            <p class="text-gray-600 mb-3">
               Découvrez notre offre de montre à saisir dès maitenant.
             </p>
             <a href="/collection" class="text-primary font-semibold hover:underline">
@@ -542,7 +542,7 @@ watch(() => route.hash, async () => {
 
           <!-- Estimation gratuite -->
           <div class="bg-gray-50 rounded-md p-6 text-center hover:shadow-lg transition-all">
-            <div class="text-primary text-4xl mb-4 flex justify-center">
+            <div class="text-primary text-4xl mb-3 flex justify-center">
               <!-- SVG calculator icon -->
               <svg class="h-10 w-10 text-primary mx-auto" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
@@ -555,8 +555,8 @@ watch(() => route.hash, async () => {
                 <circle cx="16" cy="17" r="1" fill="currentColor"/>
               </svg>
             </div>
-            <h3 class="text-xl font-semibold mb-3">Estimation gratuite</h3>
-            <p class="text-gray-600 mb-4">
+            <h3 class="text-xl font-semibold mb-2">Estimation gratuite</h3>
+            <p class="text-gray-600 mb-3">
               Obtenez une évaluation fiable de votre montre en moins de 24h, sans engagement.
             </p>
             <RouterLink to="/estimation" class="text-primary font-semibold hover:underline">

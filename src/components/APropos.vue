@@ -1,13 +1,13 @@
 <template>
   <div class="min-h-screen">
     <!-- Hero Section -->
-    <section class="py-20 gradient-bg">
+    <section class="py-12 gradient-bg">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-          <h1 class="text-3xl lg:text-4xl font-bold text-text-main mb-4">
+        <div class="text-center mb-8">
+          <h1 class="text-3xl lg:text-4xl font-bold text-text-main mb-3">
             À propos de Sauvage
           </h1>
-          <p class="text-xl text-gray-600 mb-4">
+          <p class="text-xl text-gray-600 mb-3">
             Votre partenaire de confiance pour l'achat et la vente de montres de prestige
           </p>
         </div>
@@ -15,24 +15,24 @@
     </section>
 
     <!-- Qui sommes-nous -->
-    <section class="py-16 bg-white">
+    <section class="py-10 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-4">Qui sommes-nous ?</h2>
+        <div class="text-center mb-8">
+          <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-3">Qui sommes-nous ?</h2>
           <p class="text-xl text-gray-600 max-w-3xl mx-auto">
             Sauvage est une entreprise spécialisée dans le rachat et la vente de montres de luxe. 
             Contrairement aux plateformes tierces qui mettent simplement en relation acheteurs et vendeurs, 
             nous possédons directement notre propre stock de montres authentifiées et vérifiées.
           </p>
         </div>
-        <div class="grid md:grid-cols-2 gap-8 mt-12">
+        <div class="grid md:grid-cols-2 gap-6 mt-8">
           <div class="bg-gray-50 rounded-md p-8">
-            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-6">
+            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-3">
               <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h3 class="text-xl font-semibold mb-4">Notre mission</h3>
+            <h3 class="text-xl font-semibold mb-3">Notre mission</h3>
             <p class="text-gray-600">
               Offrir à nos clients une expérience d'achat et de vente de montres de prestige 
               transparente, sécurisée et personnalisée. Nous nous engageons à garantir 
@@ -40,12 +40,12 @@
             </p>
           </div>
           <div class="bg-gray-50 rounded-md p-8">
-            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-6">
+            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-4">
               <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <h3 class="text-xl font-semibold mb-4">Notre engagement</h3>
+            <h3 class="text-xl font-semibold mb-3">Notre engagement</h3>
             <p class="text-gray-600">
               Chaque montre que nous proposons est en notre possession, soigneusement sélectionnée 
               et vérifiée par nos experts. Cette approche directe nous permet de garantir 
@@ -57,19 +57,19 @@
     </section>
 
     <!-- Notre différence -->
-    <section class="py-16 bg-gray-50">
+    <section class="py-10 bg-gray-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-4">Notre différence</h2>
+        <div class="text-center mb-8">
+          <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-3">Notre différence</h2>
           <p class="text-xl text-gray-600 max-w-3xl mx-auto">
             Contrairement aux plateformes tierces qui agissent comme intermédiaires, 
             nous possédons directement notre stock. Cette différence fondamentale se traduit 
             par de nombreux avantages pour vous.
           </p>
         </div>
-        <div class="grid md:grid-cols-3 gap-8 mt-12">
+        <div class="grid md:grid-cols-3 gap-6 mt-8">
           <div class="bg-white rounded-md p-6 shadow-lg text-center">
-            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-3">
               <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
@@ -81,7 +81,7 @@
             </p>
           </div>
           <div class="bg-white rounded-md p-6 shadow-lg text-center">
-            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-3">
               <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -93,7 +93,7 @@
             </p>
           </div>
           <div class="bg-white rounded-md p-6 shadow-lg text-center">
-            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-3">
               <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
@@ -109,14 +109,14 @@
     </section>
 
     <!-- Nos valeurs -->
-    <section class="py-16 bg-white">
+    <section class="py-10 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-4">Nos valeurs</h2>
+        <div class="text-center mb-8">
+          <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-3">Nos valeurs</h2>
         </div>
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div class="text-center">
-            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-3">
               <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
@@ -127,7 +127,7 @@
             </p>
           </div>
           <div class="text-center">
-            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-3">
               <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -139,7 +139,7 @@
             </p>
           </div>
           <div class="text-center">
-            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-3">
               <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
               </svg>
@@ -150,7 +150,7 @@
             </p>
           </div>
           <div class="text-center">
-            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-3">
               <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -165,23 +165,23 @@
     </section>
 
     <!-- Garanties et sécurité -->
-    <section class="py-16 bg-gray-50">
+    <section class="py-10 bg-gray-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-4">Garanties et sécurité</h2>
+        <div class="text-center mb-8">
+          <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-3">Garanties et sécurité</h2>
           <p class="text-xl text-gray-600 max-w-3xl mx-auto">
             Nous mettons tout en œuvre pour garantir la sécurité de vos transactions et la qualité de nos montres.
           </p>
         </div>
         <div class="grid md:grid-cols-2 gap-8 mt-12">
           <div class="bg-white rounded-md p-8 shadow-lg">
-            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-6">
+            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-4">
               <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
             </div>
-            <h3 class="text-xl font-semibold mb-4">Authentification garantie</h3>
-            <p class="text-gray-600 mb-4">
+            <h3 class="text-xl font-semibold mb-3">Authentification garantie</h3>
+            <p class="text-gray-600 mb-3">
               Toutes nos montres sont minutieusement vérifiées par nos experts avant d'être mises en vente. 
               Nous vérifions l'authenticité, l'état, et l'historique de chaque pièce.
             </p>
@@ -213,13 +213,13 @@
             </ul>
           </div>
           <div class="bg-white rounded-md p-8 shadow-lg">
-            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-6">
+            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-4">
               <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
             </div>
-            <h3 class="text-xl font-semibold mb-4">Paiement sécurisé</h3>
-            <p class="text-gray-600 mb-4">
+            <h3 class="text-xl font-semibold mb-3">Paiement sécurisé</h3>
+            <p class="text-gray-600 mb-3">
               Toutes nos transactions sont sécurisées. Nous utilisons des moyens de paiement 
               fiables et protégés pour garantir la sécurité de vos achats.
             </p>
@@ -249,7 +249,7 @@
     </section>
 
     <!-- Livraison sécurisée -->
-    <section class="py-16 bg-white">
+    <section class="py-10 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-primary/10 rounded-md p-8 md:p-12">
           <div class="text-center mb-8">
@@ -311,18 +311,18 @@
     </section>
 
     <!-- Notre expertise -->
-    <section class="py-16 bg-gray-50">
+    <section class="py-10 bg-gray-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-4">Notre expertise</h2>
+        <div class="text-center mb-8">
+          <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-3">Notre expertise</h2>
           <p class="text-xl text-gray-600 max-w-3xl mx-auto">
             Une équipe passionnée et un réseau solide pour vous offrir le meilleur service
           </p>
         </div>
         <div class="grid md:grid-cols-2 gap-8 mt-12">
           <div class="bg-white rounded-md p-8 shadow-lg">
-            <h3 class="text-xl font-semibold mb-4">Équipe spécialisée</h3>
-            <p class="text-gray-600 mb-4">
+            <h3 class="text-xl font-semibold mb-3">Équipe spécialisée</h3>
+            <p class="text-gray-600 mb-3">
               Notre équipe est composée d'experts passionnés par l'horlogerie. 
               Chaque membre possède une connaissance approfondie des montres de prestige 
               et est formé pour vous conseiller et vous accompagner dans vos projets.
@@ -349,8 +349,8 @@
             </ul>
           </div>
           <div class="bg-white rounded-md p-8 shadow-lg">
-            <h3 class="text-xl font-semibold mb-4">Réseau et sourcing</h3>
-            <p class="text-gray-600 mb-4">
+            <h3 class="text-xl font-semibold mb-3">Réseau et sourcing</h3>
+            <p class="text-gray-600 mb-3">
               Grâce à notre réseau français et européen, nous avons accès à des montres rares, 
               exclusives ou au meilleur rapport qualité/prix. Que ce soit pour notre stock 
               ou pour votre recherche personnalisée, nous savons où chercher.
@@ -381,17 +381,17 @@
     </section>
 
     <!-- Pourquoi nous choisir -->
-    <section class="py-16 bg-white">
+    <section class="py-10 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-4">Pourquoi nous choisir ?</h2>
+        <div class="text-center mb-8">
+          <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-3">Pourquoi nous choisir ?</h2>
           <p class="text-xl text-gray-600 max-w-3xl mx-auto">
             Les avantages de notre modèle direct pour une expérience d'achat optimale
           </p>
         </div>
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
           <div class="bg-gray-50 rounded-md p-6">
-            <div class="text-primary text-3xl mb-4">⚡</div>
+            <div class="text-primary text-3xl mb-3">⚡</div>
             <h3 class="text-lg font-semibold mb-3">Délais réduits</h3>
             <p class="text-gray-600">
               Pas d'attente liée à un intermédiaire. Les montres sont disponibles immédiatement 
@@ -399,7 +399,7 @@
             </p>
           </div>
           <div class="bg-gray-50 rounded-md p-6">
-            <div class="text-primary text-3xl mb-4">🎯</div>
+            <div class="text-primary text-3xl mb-3">🎯</div>
             <h3 class="text-lg font-semibold mb-3">Prix transparents</h3>
             <p class="text-gray-600">
               Pas de commission cachée, pas de frais supplémentaires. Le prix affiché est le prix final, 
@@ -407,7 +407,7 @@
             </p>
           </div>
           <div class="bg-gray-50 rounded-md p-6">
-            <div class="text-primary text-3xl mb-4">🤝</div>
+            <div class="text-primary text-3xl mb-3">🤝</div>
             <h3 class="text-lg font-semibold mb-3">Relation directe</h3>
             <p class="text-gray-600">
               Vous communiquez directement avec notre équipe. Réponses rapides, conseils personnalisés 
@@ -415,7 +415,7 @@
             </p>
           </div>
           <div class="bg-gray-50 rounded-md p-6">
-            <div class="text-primary text-3xl mb-4">✅</div>
+            <div class="text-primary text-3xl mb-3">✅</div>
             <h3 class="text-lg font-semibold mb-3">Qualité garantie</h3>
             <p class="text-gray-600">
               Chaque montre est vérifiée par nos experts avant d'entrer dans notre stock. 
@@ -423,7 +423,7 @@
             </p>
           </div>
           <div class="bg-gray-50 rounded-md p-6">
-            <div class="text-primary text-3xl mb-4">📦</div>
+            <div class="text-primary text-3xl mb-3">📦</div>
             <h3 class="text-lg font-semibold mb-3">Livraison sécurisée</h3>
             <p class="text-gray-600">
               Colis sécurisé avec assurance à valeur déclarée. Votre montre est protégée 
@@ -431,7 +431,7 @@
             </p>
           </div>
           <div class="bg-gray-50 rounded-md p-6">
-            <div class="text-primary text-3xl mb-4">🛡️</div>
+            <div class="text-primary text-3xl mb-3">🛡️</div>
             <h3 class="text-lg font-semibold mb-3">Garantie et SAV</h3>
             <p class="text-gray-600">
               Garantie sur nos ventes et service après-vente réactif. Nous sommes là pour vous 
@@ -443,10 +443,10 @@
     </section>
 
     <!-- Call to action -->
-    <section class="py-16 bg-primary text-white">
+    <section class="py-10 bg-primary text-white">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 class="text-3xl lg:text-4xl font-bold mb-4">Prêt à découvrir notre collection ?</h2>
-        <p class="text-xl mb-8 opacity-90">
+        <h2 class="text-3xl lg:text-4xl font-bold mb-3">Prêt à découvrir notre collection ?</h2>
+        <p class="text-xl mb-6 opacity-90">
           Parcourez nos montres en stock ou contactez-nous pour une recherche personnalisée
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">

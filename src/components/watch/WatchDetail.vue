@@ -1,17 +1,17 @@
 <template>
-  <section class="py-16 gradient-bg min-h-screen">
+  <section class="py-10 gradient-bg min-h-screen">
     <div class="max-w-7xl mx-auto px-4">
       <!-- Loading State -->
-      <div v-if="isLoading" class="text-center py-16">
-        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+      <div v-if="isLoading" class="text-center py-10">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-3"></div>
         <p class="text-gray-600">Chargement de la montre...</p>
       </div>
 
       <!-- Error State -->
-      <div v-else-if="error" class="text-center py-16">
+      <div v-else-if="error" class="text-center py-10">
         <div v-if="isUnavailable" class="max-w-2xl mx-auto">
-          <div class="text-gray-400 mb-4">
-            <svg class="w-24 h-24 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div class="text-gray-400 mb-3">
+            <svg class="w-24 h-24 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -20,8 +20,8 @@
               />
             </svg>
           </div>
-          <h3 class="text-3xl font-bold text-gray-900 mb-4">Montre non disponible</h3>
-          <p class="text-lg text-gray-600 mb-8">
+          <h3 class="text-3xl font-bold text-gray-900 mb-3">Montre non disponible</h3>
+          <p class="text-lg text-gray-600 mb-6">
             Cette montre n'est plus en stock ou n'est plus disponible à la vente.
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
@@ -48,8 +48,8 @@
           </div>
         </div>
         <div v-else>
-          <div class="text-red-500 mb-4">
-            <svg class="w-16 h-16 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div class="text-red-500 mb-3">
+            <svg class="w-16 h-16 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -59,7 +59,7 @@
             </svg>
           </div>
           <h3 class="text-xl text-gray-900 mb-2">Erreur de chargement</h3>
-          <p class="text-gray-600 mb-4">{{ error }}</p>
+          <p class="text-gray-600 mb-3">{{ error }}</p>
           <button
             @click="loadWatch"
             class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-green-700 transition-colors"
@@ -82,7 +82,7 @@
         </ol>
       </nav> -->
 
-      <div class="grid lg:grid-cols-2 gap-12 mb-12">
+      <div class="grid lg:grid-cols-2 gap-8 mb-8">
         <!-- Images Section -->
         <div class="space-y-4 lg:space-y-4 -mx-4 lg:mx-0">
           <!-- Main Image -->
@@ -221,7 +221,7 @@
         </div>
 
         <!-- watchItem Info Section -->
-        <div class="space-y-8 px-4 lg:px-0">
+        <div class="space-y-6 px-4 lg:px-0">
           <!-- Header -->
           <div>
             <div class="flex items-start justify-between mb-2">
@@ -243,16 +243,16 @@
                 </span>
               </div>
             </div>
-            <p class="text-lg text-gray-600 mb-4">Réf. {{ watchItem.reference }}</p>
-            <div class="text-3xl font-normal text-primary mb-6">
+            <p class="text-lg text-gray-600 mb-3">Réf. {{ watchItem.reference }}</p>
+            <div class="text-3xl font-normal text-primary mb-4">
               {{ formatPrice(watchItem.price) }}
             </div>
           </div>
 
           <!-- Key Features -->
           <div class="bg-white rounded-md shadow-lg p-6">
-            <h3 class="text-xl font-semibold text-gray-900 mb-4">Caractéristiques principales</h3>
-            <div class="grid grid-cols-2 gap-4">
+            <h3 class="text-xl font-semibold text-gray-900 mb-3">Caractéristiques principales</h3>
+            <div class="grid grid-cols-2 gap-3">
               <div v-if="hasValue(watchItem.year)" class="flex items-center space-x-2">
                 <svg
                   class="w-5 h-5 text-primary"
@@ -319,7 +319,7 @@
 
           <!-- Contact Buttons -->
           <div class="bg-white rounded-md shadow-lg p-6">
-            <h3 class="text-xl font-semibold text-gray-900 mb-4">Intéressé par cette montre ?</h3>
+            <h3 class="text-xl font-semibold text-gray-900 mb-3">Intéressé par cette montre ?</h3>
             <div class="flex flex-col sm:flex-row gap-4">
               <a
                 :href="
@@ -373,13 +373,13 @@
       </div>
 
       <!-- Detailed Specifications -->
-      <div class="bg-white rounded-md shadow-lg p-8 mb-12">
-        <h2 class="text-2xl font-semibold text-gray-900 mb-8">Caractéristiques détaillées</h2>
+      <div class="bg-white rounded-md shadow-lg p-8 mb-8">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-6">Caractéristiques détaillées</h2>
 
-        <div class="grid lg:grid-cols-2 gap-8">
+        <div class="grid lg:grid-cols-2 gap-6">
           <!-- Basic Data -->
           <div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-4 border-b border-gray-200 pb-2">
+            <h3 class="text-lg font-semibold text-gray-900 mb-3 border-b border-gray-200 pb-2">
               Données de base
             </h3>
             <div class="space-y-3">
@@ -420,7 +420,7 @@
 
           <!-- Technical Specifications -->
           <div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-4 border-b border-gray-200 pb-2">
+            <h3 class="text-lg font-semibold text-gray-900 mb-3 border-b border-gray-200 pb-2">
               Spécifications techniques
             </h3>
             <div class="space-y-3">
