@@ -41,10 +41,10 @@
       <article v-else-if="article" class="bg-white rounded-2xl shadow-lg overflow-hidden">
         <!-- Header -->
         <div class="p-8 border-b border-gray-200">
-          <div class="mb-4">
+          <div class="mb-6 flex items-center justify-between">
             <router-link
               :to="backLink"
-              class="inline-flex items-center text-primary hover:text-green-700 transition-colors mb-6"
+              class="inline-flex items-center text-primary hover:text-green-700 transition-colors"
             >
               <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
@@ -56,6 +56,53 @@
               </svg>
               {{ backText }}
             </router-link>
+            
+            <!-- Share buttons (discrete in header) -->
+            <div class="flex items-center gap-2">
+              <button
+                @click="shareOnFacebook"
+                class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 text-gray-600 hover:bg-[#1877F2] hover:text-white transition-colors"
+                title="Partager sur Facebook"
+                aria-label="Partager sur Facebook"
+              >
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+              </button>
+              <button
+                @click="shareOnTwitter"
+                class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 text-gray-600 hover:bg-black hover:text-white transition-colors"
+                title="Partager sur X"
+                aria-label="Partager sur X"
+              >
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+              </button>
+              <button
+                @click="shareByEmail"
+                class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-600 hover:text-white transition-colors"
+                title="Partager par email"
+                aria-label="Partager par email"
+              >
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </button>
+              <button
+                @click="copyUrl"
+                class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 text-gray-600 hover:bg-primary hover:text-white transition-colors relative"
+                :title="urlCopied ? 'URL copiée !' : 'Copier l\'URL'"
+                :aria-label="urlCopied ? 'URL copiée' : 'Copier l\'URL'"
+              >
+                <svg v-if="!urlCopied" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                <svg v-else class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </button>
+            </div>
           </div>
 
           <h1 class="text-4xl font-bold text-text-main mb-4">{{ article.title }}</h1>
@@ -112,15 +159,64 @@
               {{ backText }}
             </router-link>
 
-            <div v-if="article.categories && article.categories.length > 0" class="flex items-center gap-2 flex-wrap">
-              <span class="text-sm text-gray-600">Catégories :</span>
-              <span
-                v-for="cat in article.categories"
-                :key="cat"
-                class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-primary/10 text-primary"
-              >
-                {{ cat }}
-              </span>
+            <div class="flex flex-col items-end gap-4">
+              <!-- Share buttons (in footer) -->
+              <div class="flex items-center gap-2">
+                <button
+                  @click="shareOnFacebook"
+                  class="flex items-center justify-center w-9 h-9 rounded-full bg-[#1877F2] text-white hover:bg-[#166FE5] transition-colors"
+                  title="Partager sur Facebook"
+                  aria-label="Partager sur Facebook"
+                >
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                  </svg>
+                </button>
+                <button
+                  @click="shareOnTwitter"
+                  class="flex items-center justify-center w-9 h-9 rounded-full bg-black text-white hover:bg-gray-800 transition-colors"
+                  title="Partager sur X"
+                  aria-label="Partager sur X"
+                >
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                  </svg>
+                </button>
+                <button
+                  @click="shareByEmail"
+                  class="flex items-center justify-center w-9 h-9 rounded-full bg-gray-600 text-white hover:bg-gray-700 transition-colors"
+                  title="Partager par email"
+                  aria-label="Partager par email"
+                >
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </button>
+                <button
+                  @click="copyUrl"
+                  class="flex items-center justify-center w-9 h-9 rounded-full bg-primary text-white hover:bg-green-700 transition-colors relative"
+                  :title="urlCopied ? 'URL copiée !' : 'Copier l\'URL'"
+                  :aria-label="urlCopied ? 'URL copiée' : 'Copier l\'URL'"
+                >
+                  <svg v-if="!urlCopied" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                  <svg v-else class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                </button>
+              </div>
+
+              <div v-if="article.categories && article.categories.length > 0" class="flex items-center gap-2 flex-wrap justify-end">
+                <span class="text-sm text-gray-600">Catégories :</span>
+                <span
+                  v-for="cat in article.categories"
+                  :key="cat"
+                  class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-primary/10 text-primary"
+                >
+                  {{ cat }}
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -146,6 +242,7 @@ const route = useRoute()
 const article = ref(null)
 const isLoading = ref(true)
 const error = ref(null)
+const urlCopied = ref(false)
 
 // Computed
 const htmlContent = computed(() => {
@@ -179,6 +276,58 @@ const formatDate = (dateString) => {
     month: 'long',
     day: 'numeric',
   })
+}
+
+// Share methods
+const shareOnFacebook = () => {
+  const url = encodeURIComponent(canonicalUrl.value)
+  const quote = article.value?.title ? encodeURIComponent(article.value.title) : ''
+  // Utiliser quote pour ajouter le titre au partage
+  const shareUrl = quote 
+    ? `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${quote}`
+    : `https://www.facebook.com/sharer/sharer.php?u=${url}`
+  window.open(shareUrl, '_blank', 'width=600,height=400')
+}
+
+const shareOnTwitter = () => {
+  const url = encodeURIComponent(canonicalUrl.value)
+  const text = encodeURIComponent(article.value?.title || '')
+  window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'width=600,height=400')
+}
+
+const shareByEmail = () => {
+  const subject = encodeURIComponent(article.value?.title || 'Article intéressant')
+  const body = encodeURIComponent(`Je vous partage cet article : ${article.value?.title || ''}\n\n${canonicalUrl.value}`)
+  window.location.href = `mailto:?subject=${subject}&body=${body}`
+}
+
+const copyUrl = async () => {
+  try {
+    await navigator.clipboard.writeText(canonicalUrl.value)
+    urlCopied.value = true
+    setTimeout(() => {
+      urlCopied.value = false
+    }, 2000)
+  } catch (err) {
+    console.error('Erreur lors de la copie de l\'URL:', err)
+    // Fallback pour les navigateurs qui ne supportent pas l'API Clipboard
+    const textArea = document.createElement('textarea')
+    textArea.value = canonicalUrl.value
+    textArea.style.position = 'fixed'
+    textArea.style.opacity = '0'
+    document.body.appendChild(textArea)
+    textArea.select()
+    try {
+      document.execCommand('copy')
+      urlCopied.value = true
+      setTimeout(() => {
+        urlCopied.value = false
+      }, 2000)
+    } catch (fallbackErr) {
+      console.error('Erreur lors de la copie (fallback):', fallbackErr)
+    }
+    document.body.removeChild(textArea)
+  }
 }
 
 const loadArticle = async () => {
@@ -317,6 +466,10 @@ watch([article, pageTitle, pageDescription, canonicalUrl, ogImage], () => {
       {
         property: 'og:type',
         content: 'article',
+      },
+      {
+        property: 'og:site_name',
+        content: 'Sauvage',
       },
       {
         property: 'article:published_time',

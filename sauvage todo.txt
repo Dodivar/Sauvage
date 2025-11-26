@@ -18,3 +18,6 @@ FAQ :
 
 Estimation :
 - Ajouter un article de blog "Anatomie d'une arnaque" / "Comment repérer une arnaque"
+
+
+ajouter dans la documentation commerciale la nouvelle fonctionanlité de partag edes articles & montres
