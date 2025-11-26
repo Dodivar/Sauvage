@@ -135,6 +135,11 @@ function waitForImages() {
 
 // Guard de maintenance - bloque toutes les routes sauf /maintenance si non authentifié
 router.beforeEach(async (to, from, next) => {
+  // Stocker la route précédente pour EstimationProcess
+  if (to.path === '/estimation/processus' && from.path) {
+    sessionStorage.setItem('estimationProcessPreviousRoute', from.path)
+  }
+
   // Routes admin - vérifier l'authentification admin
   if (to.path.startsWith('/admin')) {
     // Si on va vers la page de login admin, autoriser l'accès

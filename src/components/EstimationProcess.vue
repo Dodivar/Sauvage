@@ -14,9 +14,9 @@
 
         <!-- Navigation -->
         <div class="mb-8">
-          <RouterLink
-            to="/estimation"
-            class="inline-flex items-center text-primary hover:text-green-700 transition-colors"
+          <button
+            @click="goBack"
+            class="inline-flex items-center text-primary hover:text-green-700 transition-colors cursor-pointer"
           >
             <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
@@ -26,8 +26,8 @@
                 d="M10 19l-7-7m0 0l7-7m-7 7h18"
               />
             </svg>
-            Retour au formulaire d'estimation
-          </RouterLink>
+            Retour
+          </button>
         </div>
 
         <!-- Main Content -->
@@ -269,7 +269,31 @@
 </template>
 
 <script setup>
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
+import { onMounted, ref } from 'vue'
+
+const router = useRouter()
+const previousRoute = ref(null)
+
+onMounted(() => {
+  // Récupérer la route précédente stockée
+  const storedRoute = sessionStorage.getItem('estimationProcessPreviousRoute')
+  if (storedRoute) {
+    previousRoute.value = storedRoute
+    // Nettoyer après récupération
+    sessionStorage.removeItem('estimationProcessPreviousRoute')
+  }
+})
+
+const goBack = () => {
+  // Si on vient de la page d'estimation, rediriger explicitement vers /estimation
+  if (previousRoute.value === '/estimation') {
+    router.push('/estimation')
+  } else {
+    // Sinon, utiliser l'historique du navigateur
+    router.back()
+  }
+}
 </script>
 
 

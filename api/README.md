@@ -24,3 +24,5 @@ compatible avec l’environnement Edge/Serverless pour alimenter le front.
   navigateur.
 - Éviter les appels coûteux côté DB en filtrant dès la requête Supabase.
 
+
+

@@ -100,13 +100,13 @@
                   <span v-if="article.created_at">
                     {{ formatDate(article.created_at) }}
                   </span>
-                  <span v-if="article.view_count !== undefined" class="flex items-center gap-1">
+                  <!-- <span v-if="article.view_count !== undefined" class="flex items-center gap-1">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
                     {{ article.view_count || 0 }}
-                  </span>
+                  </span> -->
                 </div>
                 <span class="text-primary font-medium">Lire la suite →</span>
               </div>
@@ -183,8 +183,6 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useHead } from '@vueuse/head'
 import { getAllArticles, getAllCategories } from '@/services/articleService'
-import { getAllArticlesForAdmin } from '@/services/admin/adminArticleService'
-import { isAdminAuthenticated } from '@/services/admin/adminAuthService'
 import { scrollAnimation } from '@/animation'
 import { BASE_URL } from '@/config'
 

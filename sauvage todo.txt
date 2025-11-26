@@ -5,6 +5,7 @@ Montres :
 Article :
 - Ajouter des images pour les articles
     - Nouvelles méthode et storage, à voir pour la limite si toujours ok voir payer 25€ par mois
+- ajouter des boutons de partage vers les réseaux, fb, x, mail, url à partager
 
 Admin :
 Blog:

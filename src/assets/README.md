@@ -14,3 +14,5 @@
 - Si un asset doit être chargé depuis le backend (upload utilisateur), placer un
   placeholder léger ici mais laisser la source réelle côté base de données.
 
+
+

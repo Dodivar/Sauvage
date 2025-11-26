@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, nextTick, watch } from 'vue'
+import { onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useHead } from '@vueuse/head'
 import { scrollAnimation } from '@/animation'
@@ -62,11 +62,35 @@ useHead({
   ],
 })
 
+// Fonction pour vérifier si toutes les images sont déjà chargées
+const areAllImagesLoaded = () => {
+  const images = document.querySelectorAll('img')
+  if (images.length === 0) {
+    return true
+  }
+  
+  return Array.from(images).every((img) => img.complete)
+}
+
 // Fonction pour scroller vers une ancre après le chargement complet
 const scrollToHash = async () => {
   if (route.hash) {
-    // Attendre plusieurs ticks pour que tous les composants soient montés
+    // Attendre que le DOM soit mis à jour
     await nextTick()
+    
+    // Vérifier si toutes les images sont déjà chargées
+    if (areAllImagesLoaded()) {
+      // Si les images sont déjà chargées, scroller immédiatement
+      const element = document.querySelector(route.hash)
+      if (element) {
+        const yOffset = -20
+        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset
+        window.scrollTo({ top: y, behavior: 'instant' })
+      }
+      return
+    }
+    
+    // Si les images ne sont pas encore chargées, attendre qu'elles se chargent
     await new Promise((resolve) => setTimeout(resolve, 300))
     
     // Attendre que toutes les images soient chargées (avec plusieurs tentatives)
@@ -138,6 +162,47 @@ const waitForAllImages = () => {
   })
 }
 
+// Fonction pour forcer le scroll vers une ancre même si elle est déjà dans l'URL
+const forceScrollToHash = async (hash) => {
+  if (!hash) return
+  
+  // Attendre que le DOM soit mis à jour
+  await nextTick()
+  
+  // Vérifier si toutes les images sont déjà chargées
+  if (areAllImagesLoaded()) {
+    const element = document.querySelector(hash)
+    if (element) {
+      const yOffset = -20
+      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset
+      window.scrollTo({ top: y, behavior: 'smooth' })
+    }
+    return
+  }
+  
+  // Si les images ne sont pas encore chargées, attendre qu'elles se chargent
+  await new Promise((resolve) => setTimeout(resolve, 300))
+  
+  // Attendre que toutes les images soient chargées
+  for (let i = 0; i < 3; i++) {
+    await waitForAllImages()
+    await new Promise((resolve) => setTimeout(resolve, 300))
+  }
+  
+  // Attendre encore un peu pour que le layout soit stabilisé
+  await new Promise((resolve) => setTimeout(resolve, 200))
+  
+  const element = document.querySelector(hash)
+  if (element) {
+    const yOffset = -20
+    const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset
+    window.scrollTo({ top: y, behavior: 'smooth' })
+  }
+}
+
+// Gestionnaire de clic pour les liens d'ancres
+let handleAnchorClick = null
+
 onMounted(async () => {
   scrollAnimation()
 
@@ -153,6 +218,52 @@ onMounted(async () => {
   
   // Scroller vers l'ancre après le chargement complet
   await scrollToHash()
+  
+  // Écouter les clics sur tous les liens d'ancres pour forcer le scroll
+  handleAnchorClick = (e) => {
+    // Chercher le lien parent (peut être un <a> ou un RouterLink)
+    const target = e.target.closest('a')
+    if (!target) return
+    
+    // Récupérer l'attribut href ou le to (pour RouterLink)
+    const href = target.getAttribute('href') || target.getAttribute('to')
+    if (!href) return
+    
+    // Vérifier si c'est un lien d'ancre (commence par # ou /#)
+    if (!href.includes('#')) return
+    
+    // Extraire le hash de l'URL
+    let hash = null
+    if (href.startsWith('#')) {
+      hash = href
+    } else if (href.startsWith('/#')) {
+      hash = '#' + href.substring(2)
+    } else if (href.includes('#')) {
+      hash = '#' + href.split('#')[1]
+    }
+    
+    if (!hash) return
+    
+    // Vérifier si on est sur la page d'accueil
+    if (route.path === '/') {
+      // Si le hash est déjà dans l'URL, forcer le scroll
+      if (route.hash === hash) {
+        e.preventDefault()
+        e.stopPropagation()
+        forceScrollToHash(hash)
+      }
+    }
+  }
+  
+  // Ajouter l'écouteur d'événements
+  document.addEventListener('click', handleAnchorClick)
+})
+
+onUnmounted(() => {
+  // Nettoyer l'écouteur lors du démontage
+  if (handleAnchorClick) {
+    document.removeEventListener('click', handleAnchorClick)
+  }
 })
 
 // Surveiller les changements de hash dans l'URL

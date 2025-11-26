@@ -93,6 +93,9 @@
               @mouseenter="handleMouseEnter"
               @mouseleave="handleMouseLeave"
               @mousemove="handleMouseMove"
+              @touchstart="handleTouchStart"
+              @touchmove="handleTouchMove"
+              @touchend="handleTouchEnd"
             >
               <img
                 v-if="watchItem && watchItem.images && watchItem.images.length > 0"
@@ -164,11 +167,19 @@
                   />
                 </svg>
               </button>
+
+              <!-- Image Counter (Mobile only) -->
+              <div
+                v-if="watchItem && watchItem.images && watchItem.images.length > 1"
+                class="lg:hidden absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-4 py-2 rounded-full text-sm pointer-events-none"
+              >
+                {{ currentImageIndex + 1 }} / {{ watchItem.images.length }}
+              </div>
             </div>
           </div>
 
-          <!-- Thumbnail Gallery -->
-          <div v-if="watchItem && watchItem.images && watchItem.images.length > 1" class="grid grid-cols-4 gap-2">
+          <!-- Thumbnail Gallery (Desktop only) -->
+          <div v-if="watchItem && watchItem.images && watchItem.images.length > 1" class="hidden lg:grid grid-cols-4 gap-2">
             <button
               v-for="(image, index) in watchItem.images"
               :key="index"
@@ -615,6 +626,9 @@
         class="lightbox-overlay fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-90 p-4"
         @click="closeLightbox"
         @keydown.esc="closeLightbox"
+        @touchstart="handleLightboxTouchStart"
+        @touchmove="handleLightboxTouchMove"
+        @touchend="handleLightboxTouchEnd"
         tabindex="-1"
       >
         <!-- Close button -->
@@ -712,6 +726,13 @@ const mousePosition = ref({ x: 0, y: 0 })
 const imageContainerRef = ref(null)
 const imageNaturalSize = ref({ width: 0, height: 0 })
 const zoomLevel = 1 // Niveau de zoom (3x pour garantir que l'image couvre toujours l'encart)
+
+// Swipe state for mobile/tablet
+const touchStartX = ref(0)
+const touchStartY = ref(0)
+const touchEndX = ref(0)
+const touchEndY = ref(0)
+const minSwipeDistance = 50 // Distance minimale en pixels pour déclencher un swipe
 
 // State
 const watchItem = ref(null)
@@ -838,6 +859,104 @@ const handleMouseMove = (event) => {
     x: Math.max(0, Math.min(x, rect.width)),
     y: Math.max(0, Math.min(y, rect.height))
   }
+}
+
+// Swipe handlers for mobile/tablet
+const handleTouchStart = (event) => {
+  if (!watchItem.value || !watchItem.value.images || watchItem.value.images.length <= 1) return
+  
+  const touch = event.touches[0]
+  touchStartX.value = touch.clientX
+  touchStartY.value = touch.clientY
+}
+
+const handleTouchMove = (event) => {
+  if (event.touches.length === 1) {
+    const touch = event.touches[0]
+    touchEndX.value = touch.clientX
+    touchEndY.value = touch.clientY
+    
+    // Si le mouvement est principalement horizontal, empêcher le scroll
+    const deltaX = Math.abs(touch.clientX - touchStartX.value)
+    const deltaY = Math.abs(touch.clientY - touchStartY.value)
+    
+    if (deltaX > deltaY && deltaX > 10) {
+      event.preventDefault()
+    }
+  }
+}
+
+const handleTouchEnd = () => {
+  if (!watchItem.value || !watchItem.value.images || watchItem.value.images.length <= 1) return
+  
+  const deltaX = touchEndX.value - touchStartX.value
+  const deltaY = touchEndY.value - touchStartY.value
+  
+  // Vérifier que le swipe est principalement horizontal (plus horizontal que vertical)
+  if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > minSwipeDistance) {
+    if (deltaX > 0) {
+      // Swipe vers la droite = image précédente
+      previousImage()
+    } else {
+      // Swipe vers la gauche = image suivante
+      nextImage()
+    }
+  }
+  
+  // Reset touch positions
+  touchStartX.value = 0
+  touchStartY.value = 0
+  touchEndX.value = 0
+  touchEndY.value = 0
+}
+
+// Swipe handlers for lightbox
+const handleLightboxTouchStart = (event) => {
+  if (!watchItem.value || !watchItem.value.images || watchItem.value.images.length <= 1) return
+  
+  const touch = event.touches[0]
+  touchStartX.value = touch.clientX
+  touchStartY.value = touch.clientY
+}
+
+const handleLightboxTouchMove = (event) => {
+  if (event.touches.length === 1) {
+    const touch = event.touches[0]
+    touchEndX.value = touch.clientX
+    touchEndY.value = touch.clientY
+    
+    // Si le mouvement est principalement horizontal, empêcher le scroll
+    const deltaX = Math.abs(touch.clientX - touchStartX.value)
+    const deltaY = Math.abs(touch.clientY - touchStartY.value)
+    
+    if (deltaX > deltaY && deltaX > 10) {
+      event.preventDefault()
+    }
+  }
+}
+
+const handleLightboxTouchEnd = () => {
+  if (!watchItem.value || !watchItem.value.images || watchItem.value.images.length <= 1) return
+  
+  const deltaX = touchEndX.value - touchStartX.value
+  const deltaY = touchEndY.value - touchStartY.value
+  
+  // Vérifier que le swipe est principalement horizontal (plus horizontal que vertical)
+  if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > minSwipeDistance) {
+    if (deltaX > 0) {
+      // Swipe vers la droite = image précédente
+      previousImage()
+    } else {
+      // Swipe vers la gauche = image suivante
+      nextImage()
+    }
+  }
+  
+  // Reset touch positions
+  touchStartX.value = 0
+  touchStartY.value = 0
+  touchEndX.value = 0
+  touchEndY.value = 0
 }
 
 // Computed styles for zoom preview
@@ -1273,6 +1392,11 @@ onUnmounted(() => {
 /* Zoom on hover styles - Desktop only */
 .image-zoom-container {
   position: relative;
+  /* Improve touch experience on mobile */
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .zoom-preview {
