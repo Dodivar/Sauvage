@@ -11,7 +11,7 @@
         <div class="flex space-x-4 sm:space-x-6 min-w-full">
           <template v-for="(watch, i) in salesWatches" :key="`${i}-${watch.id || watch.name}`">
             <div
-              class="flex-shrink-0 w-40 sm:w-48 md:w-60 bg-white rounded-xl shadow-md hover:shadow-lg p-3 sm:p-4 text-center transition-all duration-300"
+              class="flex-shrink-0 w-40 sm:w-48 md:w-60 bg-white rounded-md shadow-md hover:shadow-lg p-3 sm:p-4 text-center transition-all duration-300"
             >
               <img
                 v-if="watch.imageUrl"

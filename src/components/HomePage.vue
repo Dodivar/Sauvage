@@ -412,7 +412,7 @@ watch(() => route.hash, async () => {
         </div>
         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           <!-- Service personnalisé -->
-          <div class="text-center p-6 rounded-2xl bg-white shadow-lg transition-colors">
+          <div class="text-center p-6 rounded-md bg-white shadow-lg transition-colors">
             <div
               class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4"
             >
@@ -430,7 +430,7 @@ watch(() => route.hash, async () => {
             </p>
           </div>
           <!-- Authenticité et sécurité des transactions -->
-          <div class="text-center p-6 rounded-2xl bg-white shadow-lg transition-colors">
+          <div class="text-center p-6 rounded-md bg-white shadow-lg transition-colors">
             <div
               class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4"
             >
@@ -446,7 +446,7 @@ watch(() => route.hash, async () => {
             </p>
           </div>
           <!-- Accès à un large réseau et sourcing -->
-          <div class="text-center p-6 rounded-2xl bg-white shadow-lg transition-colors">
+          <div class="text-center p-6 rounded-md bg-white shadow-lg transition-colors">
             <div
               class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4"
             >
@@ -463,7 +463,7 @@ watch(() => route.hash, async () => {
             </p>
           </div>
           <!-- Transparence et sérénité -->
-          <div class="text-center p-6 rounded-2xl bg-white shadow-lg transition-colors">
+          <div class="text-center p-6 rounded-md bg-white shadow-lg transition-colors">
             <div
               class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4"
             >
@@ -501,7 +501,7 @@ watch(() => route.hash, async () => {
         <div class="grid md:grid-cols-3 gap-8">
 
           <!-- Recherche personnalisée -->
-          <div class="bg-gray-50 rounded-2xl p-6 text-center hover:shadow-lg transition-all">
+          <div class="bg-gray-50 rounded-md p-6 text-center hover:shadow-lg transition-all">
             <div class="text-primary text-4xl mb-4 flex justify-center">
               <!-- SVG search icon -->
               <svg class="h-10 w-10 text-primary mx-auto" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -521,7 +521,7 @@ watch(() => route.hash, async () => {
           </div>
          
           <!-- Vente de montre -->
-          <div class="bg-gray-50 rounded-2xl p-6 text-center hover:shadow-lg transition-all">
+          <div class="bg-gray-50 rounded-md p-6 text-center hover:shadow-lg transition-all">
             <div class="text-primary text-4xl mb-4 flex justify-center">
               <!-- SVG montre (watch) icon -->
               <svg class="h-10 w-10 text-primary mx-auto" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -541,7 +541,7 @@ watch(() => route.hash, async () => {
           </div>
 
           <!-- Estimation gratuite -->
-          <div class="bg-gray-50 rounded-2xl p-6 text-center hover:shadow-lg transition-all">
+          <div class="bg-gray-50 rounded-md p-6 text-center hover:shadow-lg transition-all">
             <div class="text-primary text-4xl mb-4 flex justify-center">
               <!-- SVG calculator icon -->
               <svg class="h-10 w-10 text-primary mx-auto" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -564,7 +564,7 @@ watch(() => route.hash, async () => {
             </RouterLink>
           </div>
           <!-- Dépôt-vente -->
-          <!-- <div class="bg-gray-50 rounded-2xl p-6 text-center hover:shadow-lg transition-all">
+          <!-- <div class="bg-gray-50 rounded-md p-6 text-center hover:shadow-lg transition-all">
             <div class="text-primary text-4xl mb-4">
               <i class="fas fa-store"></i>
             </div>

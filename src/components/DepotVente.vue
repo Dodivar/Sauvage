@@ -18,7 +18,7 @@ onMounted(() => {
           Confiez-nous votre montre et bénéficiez de notre expertise pour une vente optimale
         </p>
 
-        <div class="bg-white rounded-xl shadow-lg p-8 mb-12">
+        <div class="bg-white rounded-md shadow-lg p-8 mb-12">
           <h2 class="text-2xl font-semibold text-text-main mb-6 text-center">
             Notre service de dépôt-vente
           </h2>

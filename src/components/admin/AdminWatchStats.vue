@@ -8,6 +8,8 @@ import {
   PointElement,
   LineElement,
   BarElement,
+  LineController,
+  BarController,
   Title,
   Tooltip,
   Legend,
@@ -18,7 +20,19 @@ import { getArticleStatsByDay } from '@/services/admin/adminArticleService'
 import AdminHeader from './AdminHeader.vue'
 
 // Enregistrer les composants Chart.js
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend, Filler)
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  LineController,
+  BarController,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+)
 
 // State
 const stats = ref([])
@@ -63,7 +77,7 @@ const chartData = computed(() => {
   if (!stats.value || stats.value.length === 0) {
     return {
       labels: [],
-      datasets: [],
+      datasets: [], 
     }
   }
 

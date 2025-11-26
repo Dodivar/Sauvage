@@ -6,7 +6,7 @@
         <p class="text-xl text-gray-600">Vos questions les plus fréquentes</p>
       </div>
       <div class="space-y-2">
-        <div v-for="item in faqItems" :key="item.id" class="bg-white rounded-2xl shadow-sm">
+        <div v-for="item in faqItems" :key="item.id" class="bg-white rounded-md shadow-sm">
           <button
             class="w-full text-left p-6 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-inset faq-button"
             @click="toggleFaq(item.id)"
@@ -73,25 +73,13 @@ const faqItems = [
     id: 4,
     question: 'Quelles montres proposez-vous dans votre collection en stock ?',
     answer:
-      'Nous proposons une <strong>sélection de montres de collection et de prestige en stock</strong> : Rolex, Omega, Cartier, Breitling, Audemars Piguet, Patek Philippe, Tag Heuer, Tudor, et bien d\'autres marques prestigieuses. Toutes nos montres sont authentifiées, vérifiées par nos experts et accompagnées de leur historique. Nous mettons régulièrement à jour notre collection avec de nouveaux modèles. Vous pouvez consulter notre collection complète directement sur notre site. <strong>Important : nous vendons uniquement en main propre en Alsace et ses environs</strong> pour garantir la sécurité et la transparence de chaque transaction.',
-  },
-  {
-    id: 5,
-    question: 'Puis-je voir les montres avant d\'acheter ?',
-    answer:
-      'Absolument ! <strong>Nous organisons des rendez-vous en main propre en Alsace et ses environs</strong> pour que vous puissiez examiner la montre en détail, la porter et poser toutes vos questions. Nous croyons en la transparence et voulons que vous soyez entièrement satisfait de votre achat. Avant le rendez-vous, nous pouvons vous envoyer des photos détaillées et des vidéos de la montre qui vous intéresse. <strong>Nous ne vendons pas par correspondance</strong> : toutes nos ventes se font en main propre pour votre sécurité et la nôtre.',
+      'Nous proposons une <strong>sélection de montres de collection et de prestige en stock</strong> : Rolex, Omega, Cartier, Breitling, Audemars Piguet, Patek Philippe, Tag Heuer, Tudor, et bien d\'autres marques prestigieuses. Toutes nos montres sont authentifiées, vérifiées par nos experts et accompagnées de leur historique. Nous mettons régulièrement à jour notre collection avec de nouveaux modèles. Vous pouvez consulter notre collection complète directement sur notre site.',
   },
   {
     id: 6,
     question: 'Les montres que vous vendez sont-elles authentiques et garanties ?',
     answer:
       'Oui, <strong>toutes nos montres sont authentifiées</strong> par nos experts avant d\'être mises en vente, qu\'il s\'agisse de notre collection en stock ou de montres trouvées via notre service de recherche personnalisée. Nous vérifions l\'authenticité, l\'état, et l\'historique de chaque pièce. Nous proposons également une garantie sur nos ventes et nous engageons sur la qualité et l\'authenticité de chaque montre que nous vendons.',
-  },
-  {
-    id: 7,
-    question: 'Pourquoi vendez-vous uniquement en main propre en Alsace ?',
-    answer:
-      'Nous vendons <strong>uniquement en main propre en Alsace et ses environs</strong> pour plusieurs raisons : garantir la sécurité de chaque transaction, vous permettre d\'examiner la montre en détail avant l\'achat, établir une relation de confiance directe, et éviter tout risque lié à l\'expédition de pièces de valeur. Cette approche nous permet de vous offrir un service personnalisé et de répondre à toutes vos questions sur place.',
   },
   {
     id: 8,
@@ -117,8 +105,8 @@ const faqItems = [
     answer: `<ul class="list-decimal space-y-2 ml-4">
       <li>Vous remplissez notre <a href="/estimation" class="text-primary hover:text-green-700 underline font-medium">formulaire d'estimation gratuite</a> en ligne ou nous contactez directement.</li>
       <li>Nous analysons votre demande et vous envoyons une estimation détaillée sous 24h. <a href="/estimation/processus" class="text-primary hover:text-green-700 underline font-medium">Découvrez notre méthode d'estimation</a>.</li>
-      <li>Si vous acceptez notre proposition, nous organisons un rendez-vous en main propre en Alsace ou ses environs.</li>
-      <li>Lors du rendez-vous, nous vérifions la montre ensemble et vous recevez le paiement immédiatement.</li>
+      <li>Si vous acceptez notre proposition, nous organisons le transport de la montre pour qu'elle nous parvienne.</li>
+      <li>Après réception de la montre, nous la vérifions et vous envoyons le paiement.</li>
     </ul>`,
   },
   {
@@ -137,7 +125,7 @@ const faqItems = [
     id: 14,
     question: 'Comment puis-je être sûr(e) que vous êtes un professionnel sérieux ?',
     answer:
-      'Notre activité est déclarée (SIRET visible sur le site), et nous avons déjà accompagné de nombreux clients satisfaits en Alsace et ses environs. Nous vous invitons à consulter nos avis Google, à vérifier notre profil professionnel et à nous contacter pour toute question. Nous sommes transparents sur nos méthodes, comme en témoigne notre <a href="/estimation/processus" class="text-primary hover:text-green-700 underline font-medium">page détaillée expliquant notre processus d\'estimation</a>.',
+      'Notre activité est déclarée (SIRET visible sur le site), et nous avons déjà accompagné de nombreux clients satisfaits. Nous vous invitons à consulter nos avis Google, à vérifier notre profil professionnel et à nous contacter pour toute question. Nous sommes transparents sur nos méthodes, comme en témoigne notre <a href="/estimation/processus" class="text-primary hover:text-green-700 underline font-medium">page détaillée expliquant notre processus d\'estimation</a>.',
   },
 ]
 

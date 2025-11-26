@@ -31,7 +31,7 @@
         </div>
 
         <!-- Main Content -->
-        <div class="bg-white rounded-2xl shadow-2xl p-8 md:p-12 space-y-12">
+        <div class="bg-white rounded-md shadow-2xl p-8 md:p-12 space-y-12">
           <!-- Introduction -->
           <div class="prose prose-lg max-w-none">
             <p class="text-lg text-gray-700 leading-relaxed">
@@ -145,7 +145,7 @@
           </div>
 
           <!-- Factors Section -->
-          <div class="bg-gray-50 rounded-xl p-8">
+          <div class="bg-gray-50 rounded-md p-8">
             <h2 class="text-2xl font-bold text-text-main mb-6">
               Les facteurs qui influencent l'estimation
             </h2>
@@ -247,7 +247,7 @@
           </div>
 
           <!-- CTA Section -->
-          <div class="bg-primary rounded-xl p-8 text-white text-center">
+          <div class="bg-primary rounded-md p-8 text-white text-center">
             <h2 class="text-2xl font-bold mb-4">Prêt à faire estimer votre montre ?</h2>
             <p class="text-lg mb-6 opacity-90">
               Remplissez notre formulaire gratuit et recevez une estimation détaillée sous 24-48h.

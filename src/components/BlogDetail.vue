@@ -38,7 +38,7 @@
       </div>
 
       <!-- Article Content -->
-      <article v-else-if="article" class="bg-white rounded-2xl shadow-lg overflow-hidden">
+      <article v-else-if="article" class="bg-white rounded-md shadow-lg overflow-hidden">
         <!-- Header -->
         <div class="p-8 border-b border-gray-200">
           <div class="mb-6 flex items-center justify-between">

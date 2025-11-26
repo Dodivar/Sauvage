@@ -42,7 +42,7 @@ const handleSubmit = async () => {
 <template>
   <div class="min-h-screen gradient-bg flex items-center justify-center px-4">
     <div class="max-w-md w-full">
-      <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12">
+      <div class="bg-white rounded-md shadow-xl p-8 md:p-12">
         <!-- Logo -->
         <div class="mb-8 text-center">
           <img

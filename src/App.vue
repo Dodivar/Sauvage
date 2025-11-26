@@ -123,6 +123,12 @@ function closeMobileMenu() {
           class="hover:text-primary transition-colors"
           >Blog</RouterLink
         >
+        <RouterLink
+          to="/a-propos"
+          @click="closeMobileMenu"
+          class="hover:text-primary transition-colors"
+          >À propos</RouterLink
+        >
         <RouterLink to="/#faq" @click="closeMobileMenu" class="hover:text-primary transition-colors"
           >FAQ</RouterLink
         >
@@ -208,6 +214,9 @@ function closeMobileMenu() {
               </div>
               <RouterLink to="/blog" class="text-text-main hover:text-primary transition-colors"
                 >Blog</RouterLink
+              >
+              <RouterLink to="/a-propos" class="text-text-main hover:text-primary transition-colors"
+                >À propos</RouterLink
               >
               <RouterLink to="/#faq" class="text-text-main hover:text-primary transition-colors"
                 >FAQ</RouterLink
@@ -308,6 +317,13 @@ function closeMobileMenu() {
                 to="/blog"
                 class="text-gray-300 hover:text-primary transition-colors"
                 >Blog</RouterLink
+              >
+            </li>
+            <li>
+              <RouterLink
+                to="/a-propos"
+                class="text-gray-300 hover:text-primary transition-colors"
+                >À propos</RouterLink
               >
             </li>
             <!-- <li>

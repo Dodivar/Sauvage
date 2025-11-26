@@ -24,7 +24,7 @@
             Comment estimons-nous votre montre ?
           </RouterLink>
         </div>
-        <div class="bg-white rounded-2xl shadow-2xl p-8">
+        <div class="bg-white rounded-md shadow-2xl p-8">
           <form class="space-y-6" id="form-estimation" @submit="submitEstimationForm">
             <div class="grid md:grid-cols-2 gap-6">
               <div>
@@ -288,7 +288,7 @@
       <div class="grid md:grid-cols-2 gap-8">
         
         <!-- Lien vers la collection de montres -->
-        <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all transform hover:scale-105">
+        <div class="bg-white rounded-md shadow-lg p-8 hover:shadow-xl transition-all transform hover:scale-105">
           <div class="text-center">
             <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
               <svg class="inline-block w-8 h-8 text-white align-middle" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -315,7 +315,7 @@
         </div>
         
         <!-- Recherche personnalisée de montre -->
-        <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all transform hover:scale-105">
+        <div class="bg-white rounded-md shadow-lg p-8 hover:shadow-xl transition-all transform hover:scale-105">
           <div class="text-center">
             <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
               <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -341,7 +341,7 @@
 
       <!-- Call-to-action supplémentaire -->
       <div class="mt-12 text-center">
-        <div class="bg-primary rounded-2xl p-8 text-white">
+        <div class="bg-primary rounded-md p-8 text-white">
           <h3 class="text-2xl font-bold mb-4">Besoin d'aide ?</h3>
           <p class="text-lg mb-6">
             Notre équipe est là pour vous accompagner dans tous vos projets de montres.

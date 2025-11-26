@@ -5,24 +5,57 @@
       class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
       @click.self="handleCancel"
     >
-      <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col">
+      <div class="bg-white rounded-md shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col">
         <!-- Header -->
-        <div class="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 class="text-2xl font-bold text-gray-900">Sélectionner les articles à lier</h2>
-          <button
-            @click="handleCancel"
-            class="text-gray-400 hover:text-gray-600 transition-colors"
-            aria-label="Fermer"
-          >
-            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
+        <div class="border-b border-gray-200">
+          <div class="flex items-center justify-between p-6 pb-4">
+            <h2 class="text-2xl font-bold text-gray-900">Sélectionner les articles à lier</h2>
+            <button
+              @click="handleCancel"
+              class="text-gray-400 hover:text-gray-600 transition-colors"
+              aria-label="Fermer"
+            >
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+          <!-- Tabs -->
+          <div class="flex border-b border-gray-200 px-6">
+            <button
+              @click="activeTab = 'all'"
+              :class="[
+                'px-4 py-3 font-medium text-sm transition-colors border-b-2',
+                activeTab === 'all'
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              ]"
+            >
+              Tous les articles
+              <span v-if="filteredAndSortedArticles.length > 0" class="ml-2 text-xs">
+                ({{ filteredAndSortedArticles.length }})
+              </span>
+            </button>
+            <button
+              @click="activeTab = 'linked'"
+              :class="[
+                'px-4 py-3 font-medium text-sm transition-colors border-b-2',
+                activeTab === 'linked'
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              ]"
+            >
+              Articles liés
+              <span v-if="linkedArticles.length > 0" class="ml-2 text-xs">
+                ({{ linkedArticles.length }})
+              </span>
+            </button>
+          </div>
         </div>
 
         <!-- Content -->
@@ -66,9 +99,15 @@
               </button>
             </div>
             <div v-if="articles.length > 0" class="mt-2 text-sm text-gray-500">
-              {{ filteredAndSortedArticles.length }} article{{ filteredAndSortedArticles.length > 1 ? 's' : '' }} 
-              {{ searchQuery ? 'trouvé' + (filteredAndSortedArticles.length > 1 ? 's' : '') : 'disponible' + (filteredAndSortedArticles.length > 1 ? 's' : '') }}
-              {{ searchQuery ? `sur ${articles.length}` : '' }}
+              <template v-if="activeTab === 'all'">
+                {{ filteredAndSortedArticles.length }} article{{ filteredAndSortedArticles.length > 1 ? 's' : '' }} 
+                {{ searchQuery ? 'trouvé' + (filteredAndSortedArticles.length > 1 ? 's' : '') : 'disponible' + (filteredAndSortedArticles.length > 1 ? 's' : '') }}
+                {{ searchQuery ? `sur ${articles.length}` : '' }}
+              </template>
+              <template v-else>
+                {{ linkedArticles.length }} article{{ linkedArticles.length > 1 ? 's' : '' }} 
+                {{ searchQuery ? 'trouvé' + (linkedArticles.length > 1 ? 's' : '') : 'lié' + (linkedArticles.length > 1 ? 's' : '') }}
+              </template>
             </div>
           </div>
 
@@ -100,107 +139,163 @@
             </button>
           </div>
 
-          <!-- Articles List -->
-          <div v-else-if="filteredAndSortedArticles.length > 0" class="space-y-3">
-            <!-- Section: Articles suggérés (matching watch name) -->
-            <div v-if="filteredAndSortedArticles.some(article => articleMatchesWatchName(article))" class="mb-6">
-              <h3 class="text-lg font-semibold text-gray-900 mb-3 flex items-center">
-                <svg class="w-5 h-5 mr-2 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                </svg>
-                Articles suggérés
-              </h3>
-              <div class="space-y-3">
-                <div
-                  v-for="article in filteredAndSortedArticles.filter(a => articleMatchesWatchName(a))"
-                  :key="article.id"
-                  class="flex items-start space-x-3 p-4 border-2 border-primary/30 rounded-lg hover:bg-primary/5 transition-colors bg-primary/5"
-                >
-                  <input
-                    type="checkbox"
-                    :id="`article-${article.id}`"
-                    :checked="selectedArticleIds.includes(article.id)"
-                    @change="toggleArticle(article.id)"
-                    class="mt-1 w-5 h-5 text-primary border-gray-300 rounded focus:ring-primary focus:ring-2"
-                  />
-                  <label
-                    :for="`article-${article.id}`"
-                    class="flex-1 cursor-pointer"
+          <!-- Tab Content: Tous les articles -->
+          <div v-if="activeTab === 'all'">
+            <div v-if="filteredAndSortedArticles.length > 0" class="space-y-3">
+              <!-- Section: Articles suggérés (matching watch name) -->
+              <div v-if="filteredAndSortedArticles.some(article => articleMatchesWatchName(article))" class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+                  <svg class="w-5 h-5 mr-2 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                  Articles suggérés
+                </h3>
+                <div class="space-y-3">
+                  <div
+                    v-for="article in filteredAndSortedArticles.filter(a => articleMatchesWatchName(a))"
+                    :key="article.id"
+                    class="flex items-start space-x-3 p-4 border-2 border-primary/30 rounded-lg hover:bg-primary/5 transition-colors bg-primary/5"
                   >
-                    <h3 class="text-lg font-semibold text-gray-900 mb-1">
-                      {{ article.title }}
-                    </h3>
-                    <p class="text-sm text-gray-600 mb-2 line-clamp-2">
-                      {{ getExcerpt(article.text) }}
-                    </p>
-                    <div v-if="article.categories && article.categories.length > 0" class="flex flex-wrap gap-2 mb-2">
-                      <span
-                        v-for="cat in article.categories"
-                        :key="cat"
-                        class="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-primary/10 text-primary"
-                      >
-                        {{ cat }}
+                    <input
+                      type="checkbox"
+                      :id="`article-all-${article.id}`"
+                      :checked="selectedArticleIds.includes(article.id)"
+                      @change="toggleArticle(article.id)"
+                      class="mt-1 w-5 h-5 text-primary border-gray-300 rounded focus:ring-primary focus:ring-2"
+                    />
+                    <label
+                      :for="`article-all-${article.id}`"
+                      class="flex-1 cursor-pointer"
+                    >
+                      <h3 class="text-lg font-semibold text-gray-900 mb-1">
+                        {{ article.title }}
+                      </h3>
+                      <p class="text-sm text-gray-600 mb-2 line-clamp-2">
+                        {{ getExcerpt(article.text) }}
+                      </p>
+                      <div v-if="article.categories && article.categories.length > 0" class="flex flex-wrap gap-2 mb-2">
+                        <span
+                          v-for="cat in article.categories"
+                          :key="cat"
+                          class="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-primary/10 text-primary"
+                        >
+                          {{ cat }}
+                        </span>
+                      </div>
+                      <span class="text-xs text-gray-500">
+                        {{ formatDate(article.created_at) }}
                       </span>
-                    </div>
-                    <span class="text-xs text-gray-500">
-                      {{ formatDate(article.created_at) }}
-                    </span>
-                  </label>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Section: Tous les articles -->
+              <div v-if="filteredAndSortedArticles.some(article => !articleMatchesWatchName(article))" :class="{ 'mt-6': filteredAndSortedArticles.some(article => articleMatchesWatchName(article)) }">
+                <h3 v-if="filteredAndSortedArticles.some(article => articleMatchesWatchName(article))" class="text-lg font-semibold text-gray-900 mb-3">
+                  Tous les articles
+                </h3>
+                <div class="space-y-3">
+                  <div
+                    v-for="article in filteredAndSortedArticles.filter(a => !articleMatchesWatchName(a))"
+                    :key="article.id"
+                    class="flex items-start space-x-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    <input
+                      type="checkbox"
+                      :id="`article-all-${article.id}`"
+                      :checked="selectedArticleIds.includes(article.id)"
+                      @change="toggleArticle(article.id)"
+                      class="mt-1 w-5 h-5 text-primary border-gray-300 rounded focus:ring-primary focus:ring-2"
+                    />
+                    <label
+                      :for="`article-all-${article.id}`"
+                      class="flex-1 cursor-pointer"
+                    >
+                      <h3 class="text-lg font-semibold text-gray-900 mb-1">
+                        {{ article.title }}
+                      </h3>
+                      <p class="text-sm text-gray-600 mb-2 line-clamp-2">
+                        {{ getExcerpt(article.text) }}
+                      </p>
+                      <div v-if="article.categories && article.categories.length > 0" class="flex flex-wrap gap-2 mb-2">
+                        <span
+                          v-for="cat in article.categories"
+                          :key="cat"
+                          class="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-primary/10 text-primary"
+                        >
+                          {{ cat }}
+                        </span>
+                      </div>
+                      <span class="text-xs text-gray-500">
+                        {{ formatDate(article.created_at) }}
+                      </span>
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <!-- Section: Tous les articles -->
-            <div v-if="filteredAndSortedArticles.some(article => !articleMatchesWatchName(article))" :class="{ 'mt-6': filteredAndSortedArticles.some(article => articleMatchesWatchName(article)) }">
-              <h3 v-if="filteredAndSortedArticles.some(article => articleMatchesWatchName(article))" class="text-lg font-semibold text-gray-900 mb-3">
-                Tous les articles
-              </h3>
-              <div class="space-y-3">
-                <div
-                  v-for="article in filteredAndSortedArticles.filter(a => !articleMatchesWatchName(a))"
-                  :key="article.id"
-                  class="flex items-start space-x-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  <input
-                    type="checkbox"
-                    :id="`article-${article.id}`"
-                    :checked="selectedArticleIds.includes(article.id)"
-                    @change="toggleArticle(article.id)"
-                    class="mt-1 w-5 h-5 text-primary border-gray-300 rounded focus:ring-primary focus:ring-2"
-                  />
-                  <label
-                    :for="`article-${article.id}`"
-                    class="flex-1 cursor-pointer"
-                  >
-                    <h3 class="text-lg font-semibold text-gray-900 mb-1">
-                      {{ article.title }}
-                    </h3>
-                    <p class="text-sm text-gray-600 mb-2 line-clamp-2">
-                      {{ getExcerpt(article.text) }}
-                    </p>
-                    <div v-if="article.categories && article.categories.length > 0" class="flex flex-wrap gap-2 mb-2">
-                      <span
-                        v-for="cat in article.categories"
-                        :key="cat"
-                        class="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-primary/10 text-primary"
-                      >
-                        {{ cat }}
-                      </span>
-                    </div>
-                    <span class="text-xs text-gray-500">
-                      {{ formatDate(article.created_at) }}
-                    </span>
-                  </label>
-                </div>
-              </div>
+            <!-- Empty State: Tous les articles -->
+            <div v-else class="text-center py-16">
+              <p class="text-gray-600">
+                {{ searchQuery ? 'Aucun article ne correspond à votre recherche' : 'Aucun article visible disponible' }}
+              </p>
             </div>
           </div>
 
-          <!-- Empty State -->
-          <div v-else class="text-center py-16">
-            <p class="text-gray-600">
-              {{ searchQuery ? 'Aucun article ne correspond à votre recherche' : 'Aucun article visible disponible' }}
-            </p>
+          <!-- Tab Content: Articles liés -->
+          <div v-else-if="activeTab === 'linked'">
+            <div v-if="linkedArticles.length > 0" class="space-y-3">
+              <div
+                v-for="article in linkedArticles"
+                :key="article.id"
+                class="flex items-start space-x-3 p-4 border-2 border-primary/50 rounded-lg hover:bg-primary/5 transition-colors bg-primary/10"
+              >
+                <input
+                  type="checkbox"
+                  :id="`article-linked-${article.id}`"
+                  :checked="selectedArticleIds.includes(article.id)"
+                  @change="toggleArticle(article.id)"
+                  class="mt-1 w-5 h-5 text-primary border-gray-300 rounded focus:ring-primary focus:ring-2"
+                />
+                <label
+                  :for="`article-linked-${article.id}`"
+                  class="flex-1 cursor-pointer"
+                >
+                  <div class="flex items-center gap-2 mb-1">
+                    <h3 class="text-lg font-semibold text-gray-900">
+                      {{ article.title }}
+                    </h3>
+                    <span class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full bg-primary text-white">
+                      Lié
+                    </span>
+                  </div>
+                  <p class="text-sm text-gray-600 mb-2 line-clamp-2">
+                    {{ getExcerpt(article.text) }}
+                  </p>
+                  <div v-if="article.categories && article.categories.length > 0" class="flex flex-wrap gap-2 mb-2">
+                    <span
+                      v-for="cat in article.categories"
+                      :key="cat"
+                      class="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-primary/10 text-primary"
+                    >
+                      {{ cat }}
+                    </span>
+                  </div>
+                  <span class="text-xs text-gray-500">
+                    {{ formatDate(article.created_at) }}
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Empty State: Articles liés -->
+            <div v-else class="text-center py-16">
+              <p class="text-gray-600">
+                {{ searchQuery ? 'Aucun article lié ne correspond à votre recherche' : 'Aucun article n\'est actuellement lié à cette montre' }}
+              </p>
+            </div>
           </div>
         </div>
 
@@ -259,6 +354,7 @@ const isSaving = ref(false)
 const error = ref(null)
 const searchQuery = ref('')
 const watchName = ref('')
+const activeTab = ref('all') // 'all' or 'linked'
 
 // Helper: Extract words from watch name
 const extractWatchNameWords = (name) => {
@@ -328,6 +424,41 @@ const filteredAndSortedArticles = computed(() => {
 
   // Return matching articles first, then non-matching articles
   return [...matchingArticles, ...nonMatchingArticles]
+})
+
+// Computed: Filter linked articles
+const linkedArticles = computed(() => {
+  if (!articles.value || articles.value.length === 0) {
+    return []
+  }
+
+  // Filter to only articles that are currently linked
+  let linked = articles.value.filter((article) =>
+    selectedArticleIds.value.includes(article.id)
+  )
+
+  // Apply search query if present
+  const query = searchQuery.value?.trim()
+  if (query) {
+    const lowerQuery = query.toLowerCase()
+    linked = linked.filter((article) => {
+      const titleMatch = article.title?.toLowerCase().includes(lowerQuery) || false
+      const textMatch = article.text?.toLowerCase().includes(lowerQuery) || false
+      const categoriesMatch = Array.isArray(article.categories)
+        ? article.categories.some((cat) => cat?.toLowerCase().includes(lowerQuery))
+        : false
+      return titleMatch || textMatch || categoriesMatch
+    })
+  }
+
+  // Sort by creation date (most recent first)
+  linked.sort((a, b) => {
+    const dateA = a.created_at ? new Date(a.created_at).getTime() : 0
+    const dateB = b.created_at ? new Date(b.created_at).getTime() : 0
+    return dateB - dateA // Descending order (newest first)
+  })
+
+  return linked
 })
 
 // Methods
@@ -420,6 +551,7 @@ watch(() => props.isOpen, (newValue) => {
     error.value = null
     searchQuery.value = ''
     watchName.value = ''
+    activeTab.value = 'all'
   }
 })
 

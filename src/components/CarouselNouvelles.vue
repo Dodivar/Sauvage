@@ -13,7 +13,7 @@
         <div class="flex items-stretch space-x-4 sm:space-x-6 min-w-full">
           <template v-for="(watch, i) in latestWatches" :key="`${i}-${watch.id || watch.name}`">
             <div
-              class="flex flex-col flex-shrink-0 w-56 sm:w-64 md:w-80 bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden"
+              class="flex flex-col flex-shrink-0 w-56 sm:w-64 md:w-80 bg-white rounded-md shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden"
             >
               <!-- Image Slider -->
               <div class="relative h-40 sm:h-48 md:h-64 bg-gray-100 flex-shrink-0">

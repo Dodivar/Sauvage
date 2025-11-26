@@ -11,7 +11,7 @@
       </div>
 
       <!-- Filters Bar -->
-      <div class="bg-white rounded-xl shadow-lg p-6 mb-12">
+      <div class="bg-white rounded-md shadow-lg p-6 mb-12">
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div class="flex flex-wrap gap-4">
             <select
@@ -101,7 +101,7 @@
       </div>
 
       <!-- Contact Section -->
-      <div class="bg-white rounded-xl shadow-lg p-8 text-center">
+      <div class="bg-white rounded-md shadow-lg p-8 text-center">
         <h2 class="text-2xl font-semibold text-text-main mb-4">Une montre vous intéresse ?</h2>
         <p class="text-lg text-gray-600 mb-6 font-light">
           Contactez-nous pour plus d'informations ou pour organiser une visite

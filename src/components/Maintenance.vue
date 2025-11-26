@@ -36,7 +36,7 @@ const handleSubmit = async () => {
 <template>
   <div class="min-h-screen gradient-bg flex items-center justify-center px-4">
     <div class="max-w-2xl w-full">
-      <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12 text-center">
+      <div class="bg-white rounded-md shadow-xl p-8 md:p-12 text-center">
         <!-- Logo -->
         <div class="mb-8">
           <img
@@ -57,7 +57,7 @@ const handleSubmit = async () => {
         </p>
 
         <!-- Formulaire de mot de passe -->
-        <div class="bg-gray-50 rounded-xl p-6 mb-6">
+        <div class="bg-gray-50 rounded-md p-6 mb-6">
           <h2 class="text-lg font-semibold text-text-main mb-4">
             Accès réservé
           </h2>

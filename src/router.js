@@ -19,6 +19,7 @@ import AdminArticleGenerator from './components/admin/AdminArticleGenerator.vue'
 import BlogList from './components/BlogList.vue'
 import BlogDetail from './components/BlogDetail.vue'
 import EstimationProcess from './components/EstimationProcess.vue'
+import APropos from './components/APropos.vue'
 import NotFound from './components/NotFound.vue'
 
 const routes = [
@@ -33,6 +34,7 @@ const routes = [
    { path: '/watch/:id', component: WatchDetail },
    { path: '/blog', component: BlogList },
    { path: '/blog/:id', component: BlogDetail },
+   { path: '/a-propos', component: APropos },
   // Admin routes
   { path: '/admin/login', component: AdminLogin },
   { path: '/admin', component: AdminDashboard },

@@ -10,7 +10,7 @@
       </div>
 
       <!-- Filters Bar -->
-      <div class="bg-white rounded-xl shadow-lg p-6 mb-12">
+      <div class="bg-white rounded-md shadow-lg p-6 mb-12">
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div class="flex flex-wrap gap-4">
             <button
@@ -78,7 +78,7 @@
         <article
           v-for="article in articles"
           :key="article.id"
-          class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow animate-fade-in cursor-pointer"
+          class="bg-white rounded-md shadow-lg overflow-hidden hover:shadow-xl transition-shadow animate-fade-in cursor-pointer"
           @click="handleViewArticle(article.id)"
         >
             <div class="p-6">

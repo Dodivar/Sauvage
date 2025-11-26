@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+    class="bg-white rounded-md shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
   >
     <!-- Image Slider -->
     <div class="relative h-48 md:h-64 lg:h-80 bg-gray-100">
