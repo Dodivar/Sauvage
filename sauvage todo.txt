@@ -28,4 +28,3 @@ mentions légale
 montre garantie => le mécanisme 
 bandeau cookie ?
 
-Avoir le menu comme une barre d'appli mobile, Accueil, En stock, recherche, estimation, faq
