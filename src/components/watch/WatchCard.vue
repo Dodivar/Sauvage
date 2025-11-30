@@ -75,7 +75,11 @@
     <!-- Watch Info -->
     <div class="p-3 md:p-4 lg:p-6 cursor-pointer" @click="$emit('viewDetails', watch.id)">
       <div class="flex items-start justify-between mb-1 md:mb-2">
-        <h3 class="text-xs md:text-base lg:text-xl font-semibold text-gray-900 leading-tight flex-1 pr-1">
+        <h3
+          class="text-xs md:text-base lg:text-xl font-semibold text-gray-900 leading-tight flex-1 pr-1 truncate"
+          style="max-width: 100%;"
+          title="{{ watch.name }}"
+        >
           {{ watch.name }}
         </h3>
         <span
@@ -88,15 +92,23 @@
 
       <p class="text-[10px] md:text-sm text-gray-600 mb-2 md:mb-3 font-light">Réf. {{ watch.reference }}</p>
 
-      <div class="text-base md:text-xl lg:text-2xl font-normal text-primary mb-2 md:mb-3">
-        {{ formatPrice(watch.price) }}
-      </div>
 
       <!-- Optional: Watch content or year -->
       <div class="flex items-center gap-2 text-[10px] md:text-sm text-gray-500">
-        <span v-if="watch.year" class="font-medium">{{ watch.year }}</span>
-        <span v-if="watch.contenu || watch.details?.content" class="bg-gray-100 px-1.5 md:px-2 py-0.5 md:py-1 rounded text-[10px] md:text-xs">
+        <span class="text-base md:text-xl lg:text-2xl font-normal text-primary">
+          {{ formatPrice(watch.price) }}
+        </span>
+        <span 
+          v-if="watch.contenu || watch.details?.content" 
+          class="hidden md:inline bg-gray-100 px-1.5 md:px-2 py-0.5 md:py-1 rounded text-[10px] md:text-xs"
+        >
           {{ watch.contenu || watch.details?.content }}
+        </span>
+        <span 
+          v-if="watch.year" 
+          class="font-medium ml-auto"
+        >
+          {{ watch.year }}
         </span>
       </div>
     </div>
