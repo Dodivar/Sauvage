@@ -1,6 +1,8 @@
 Montres :
 - Ajouter vidéo 360° sur les bestsellers
-
+- Sur la collection, modifier les filtres pour qu'ils soient sélectionnables et supprimables comme des tags
+- Ajouter un bouton de tri croissant décroissant sur le prix
+- supprimer bouton voir détail
 
 Article :
 - Ajouter des images pour les articles
@@ -26,3 +28,4 @@ droit de rétractation ?
 mentions légale 
 montre garantie => le mécanisme 
 bandeau cookie ?
+
