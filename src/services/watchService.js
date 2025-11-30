@@ -20,6 +20,7 @@ function transformWatchData(watchData, details, accessories, images, articles = 
     isSold: watchData.is_sold !== undefined ? watchData.is_sold : false,
     saleDate: watchData.sale_date || null,
     displayOrder: watchData.display_order || 0,
+    createdAt: watchData.created_at || null,
     contenu: details?.content || '', // Pour compatibilité avec WatchCard
     images: images.map((img) => img.image_url).filter(Boolean),
     articles: articles || [],

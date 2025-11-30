@@ -39,6 +39,26 @@
                 ({{ priceMin !== null ? priceMin.toLocaleString() + ' €' : '0 €' }} - {{ priceMax !== null ? priceMax.toLocaleString() + ' €' : '∞' }})
               </span>
             </button>
+
+            <!-- Sort Dropdown -->
+            <div class="relative">
+              <select
+                v-model="sortOrder"
+                class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors appearance-none bg-white pr-8 cursor-pointer"
+              >
+                <option value="recent">Ajout récent</option>
+                <option value="price-asc">Prix croissant</option>
+                <option value="price-desc">Prix décroissant</option>
+              </select>
+              <svg
+                class="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
           </div>
 
           <div class="text-sm text-gray-600 font-light">
@@ -396,6 +416,7 @@ useHead({
 const selectedBrands = ref([])
 const priceMin = ref(null)
 const priceMax = ref(null)
+const sortOrder = ref('recent') // Par défaut: ajout récent
 
 // Modal states
 const isPriceModalOpen = ref(false)
@@ -650,7 +671,40 @@ const filteredWatches = computed(() => {
     })
   }
 
-  return filtered
+  // Apply sorting
+  const sorted = [...filtered]
+  switch (sortOrder.value) {
+    case 'price-asc':
+      sorted.sort((a, b) => a.price - b.price)
+      break
+    case 'price-desc':
+      sorted.sort((a, b) => b.price - a.price)
+      break
+    case 'recent':
+      // Tri par date de création décroissante (plus récentes en premier)
+      sorted.sort((a, b) => {
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0
+        // Si pas de date, utiliser displayOrder comme fallback
+        if (dateA === 0 && dateB === 0) {
+          return (b.displayOrder || 0) - (a.displayOrder || 0)
+        }
+        return dateB - dateA
+      })
+      break
+    default:
+      // Par défaut, tri par ajout récent
+      sorted.sort((a, b) => {
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0
+        if (dateA === 0 && dateB === 0) {
+          return (b.displayOrder || 0) - (a.displayOrder || 0)
+        }
+        return dateB - dateA
+      })
+  }
+
+  return sorted
 })
 
 // Load watches from Supabase
