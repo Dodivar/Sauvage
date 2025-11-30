@@ -1,5 +1,5 @@
 <template>
-  <section class="py-10 gradient-bg min-h-screen">
+  <section class="lg:py-10 pb-10 gradient-bg min-h-screen">
     <div class="max-w-7xl mx-auto px-4">
       <!-- Loading State -->
       <div v-if="isLoading" class="text-center py-10">
