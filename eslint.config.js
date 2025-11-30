@@ -7,6 +7,9 @@ import skipFormatting from '@vue/eslint-config-prettier/skip-formatting'
 export default defineConfig([
   globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/coverage/**']),
 
+  // Configuration JavaScript recommandée (appliquée globalement)
+  js.configs.recommended,
+
   // Configuration pour les fichiers serverless dans api/
   {
     files: ['api/**/*.js'],
@@ -15,7 +18,6 @@ export default defineConfig([
         ...globals.node,
       },
     },
-    ...js.configs.recommended,
   },
 
   // Configuration par défaut pour le reste du projet
@@ -26,8 +28,11 @@ export default defineConfig([
         ...globals.browser,
       },
     },
-    ...js.configs.recommended,
-    ...pluginVue.configs['flat/essential'],
-    ...skipFormatting,
   },
+
+  // Configuration Vue.js
+  ...pluginVue.configs['flat/essential'],
+  
+  // Configuration Prettier
+  skipFormatting,
 ])

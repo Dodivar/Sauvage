@@ -60,14 +60,6 @@ const router = createRouter({
     
     // Pour les autres pages avec ancre, attendre que le contenu soit chargé
     if (to.hash) {
-      // Attendre que le DOM soit mis à jour
-      await new Promise((resolve) => setTimeout(resolve, 100))
-      
-      // Attendre que toutes les images soient chargées
-      await waitForImages()
-      
-      // Attendre encore un peu pour que le layout soit stabilisé
-      await new Promise((resolve) => setTimeout(resolve, 200))
       
       const element = document.querySelector(to.hash)
       if (element) {
@@ -84,55 +76,6 @@ const router = createRouter({
     }
   },
 })
-
-// Fonction pour attendre que toutes les images soient chargées
-function waitForImages() {
-  return new Promise((resolve) => {
-    const images = document.querySelectorAll('img')
-    if (images.length === 0) {
-      resolve()
-      return
-    }
-    
-    let loadedCount = 0
-    const totalImages = images.length
-    const timeout = setTimeout(() => {
-      // Timeout après 3 secondes pour ne pas bloquer indéfiniment
-      resolve()
-    }, 3000)
-    
-    images.forEach((img) => {
-      if (img.complete) {
-        loadedCount++
-        if (loadedCount === totalImages) {
-          clearTimeout(timeout)
-          resolve()
-        }
-      } else {
-        img.addEventListener('load', () => {
-          loadedCount++
-          if (loadedCount === totalImages) {
-            clearTimeout(timeout)
-            resolve()
-          }
-        })
-        img.addEventListener('error', () => {
-          loadedCount++
-          if (loadedCount === totalImages) {
-            clearTimeout(timeout)
-            resolve()
-          }
-        })
-      }
-    })
-    
-    // Si toutes les images sont déjà chargées
-    if (loadedCount === totalImages) {
-      clearTimeout(timeout)
-      resolve()
-    }
-  })
-}
 
 // Guard de maintenance - bloque toutes les routes sauf /maintenance si non authentifié
 router.beforeEach(async (to, from, next) => {

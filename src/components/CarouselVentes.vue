@@ -1,5 +1,5 @@
 <template>
-  <section v-if="salesWatches.length > 0" class="py-12 bg-white">
+  <section v-if="isLoading || salesWatches.length > 0" class="py-12 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-3">
         <h2 class="text-3xl lg:text-4xl font-bold text-text-main">
@@ -9,7 +9,23 @@
       </div>
       <div class="overflow-x-auto custom-scrollbar-carrousel scroll-smooth p-4 sm:p-8 relative">
         <div class="flex space-x-4 sm:space-x-6 min-w-full">
+          <!-- Loading State with Skeletons -->
+          <template v-if="isLoading">
+            <div
+              v-for="n in 5"
+              :key="`skeleton-${n}`"
+              class="flex-shrink-0 w-40 sm:w-48 md:w-60"
+            >
+              <WatchCardSkeleton
+                :show-reference="false"
+                :show-sold-badge="false"
+                :show-price="false"
+              />
+            </div>
+          </template>
+          <!-- Loaded Watches -->
           <div
+            v-else
             v-for="(watch, i) in transformedWatches"
             :key="`${i}-${watch.id || watch.name}`"
             class="flex-shrink-0 w-40 sm:w-48 md:w-60"
@@ -33,9 +49,11 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getSoldWatches } from '@/services/watchService'
 import WatchCard from '@/components/watch/WatchCard.vue'
+import WatchCardSkeleton from '@/components/watch/WatchCardSkeleton.vue'
 
 const router = useRouter()
 const salesWatches = ref([])
+const isLoading = ref(true)
 
 // Transformer les données pour correspondre au format attendu par WatchCard
 const transformedWatches = computed(() => {
@@ -61,11 +79,14 @@ const handleViewDetails = (watchId) => {
 
 onMounted(async () => {
   try {
+    isLoading.value = true
     const watches = await getSoldWatches()
     salesWatches.value = watches
   } catch (error) {
     console.error('Erreur lors du chargement des montres vendues:', error)
     salesWatches.value = []
+  } finally {
+    isLoading.value = false
   }
 })
 </script>

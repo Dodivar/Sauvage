@@ -62,104 +62,19 @@ useHead({
   ],
 })
 
-// Fonction pour vérifier si toutes les images sont déjà chargées
-const areAllImagesLoaded = () => {
-  const images = document.querySelectorAll('img')
-  if (images.length === 0) {
-    return true
-  }
-  
-  return Array.from(images).every((img) => img.complete)
-}
-
-// Fonction pour scroller vers une ancre après le chargement complet
+// Fonction pour scroller vers une ancre
 const scrollToHash = async () => {
   if (route.hash) {
     // Attendre que le DOM soit mis à jour
     await nextTick()
     
-    // Vérifier si toutes les images sont déjà chargées
-    if (areAllImagesLoaded()) {
-      // Si les images sont déjà chargées, scroller immédiatement
-      const element = document.querySelector(route.hash)
-      if (element) {
-        const yOffset = -20
-        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset
-        window.scrollTo({ top: y, behavior: 'instant' })
-      }
-      return
-    }
-    
-    // Si les images ne sont pas encore chargées, attendre qu'elles se chargent
-    await new Promise((resolve) => setTimeout(resolve, 300))
-    
-    // Attendre que toutes les images soient chargées (avec plusieurs tentatives)
-    // car les images des carrousels peuvent se charger progressivement
-    for (let i = 0; i < 3; i++) {
-      await waitForAllImages()
-      await new Promise((resolve) => setTimeout(resolve, 300))
-    }
-    
-    // Attendre encore un peu pour que le layout soit stabilisé
-    await new Promise((resolve) => setTimeout(resolve, 200))
-    
     const element = document.querySelector(route.hash)
     if (element) {
-      // Utiliser scrollIntoView avec un offset pour éviter que l'élément soit caché par un header fixe si nécessaire
-      const yOffset = -20 // Ajustez selon vos besoins
+      const yOffset = -20
       const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset
       window.scrollTo({ top: y, behavior: 'instant' })
     }
   }
-}
-
-// Fonction pour attendre que toutes les images soient chargées
-const waitForAllImages = () => {
-  return new Promise((resolve) => {
-    const images = document.querySelectorAll('img')
-    if (images.length === 0) {
-      resolve()
-      return
-    }
-    
-    let loadedCount = 0
-    const totalImages = images.length
-    const timeout = setTimeout(() => {
-      // Timeout après 2 secondes pour ne pas bloquer indéfiniment
-      resolve()
-    }, 2000)
-    
-    images.forEach((img) => {
-      if (img.complete) {
-        loadedCount++
-        if (loadedCount === totalImages) {
-          clearTimeout(timeout)
-          resolve()
-        }
-      } else {
-        img.addEventListener('load', () => {
-          loadedCount++
-          if (loadedCount === totalImages) {
-            clearTimeout(timeout)
-            resolve()
-          }
-        }, { once: true })
-        img.addEventListener('error', () => {
-          loadedCount++
-          if (loadedCount === totalImages) {
-            clearTimeout(timeout)
-            resolve()
-          }
-        }, { once: true })
-      }
-    })
-    
-    // Si toutes les images sont déjà chargées
-    if (loadedCount === totalImages) {
-      clearTimeout(timeout)
-      resolve()
-    }
-  })
 }
 
 // Fonction pour forcer le scroll vers une ancre même si elle est déjà dans l'URL
@@ -168,29 +83,6 @@ const forceScrollToHash = async (hash) => {
   
   // Attendre que le DOM soit mis à jour
   await nextTick()
-  
-  // Vérifier si toutes les images sont déjà chargées
-  if (areAllImagesLoaded()) {
-    const element = document.querySelector(hash)
-    if (element) {
-      const yOffset = -20
-      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset
-      window.scrollTo({ top: y, behavior: 'smooth' })
-    }
-    return
-  }
-  
-  // Si les images ne sont pas encore chargées, attendre qu'elles se chargent
-  await new Promise((resolve) => setTimeout(resolve, 300))
-  
-  // Attendre que toutes les images soient chargées
-  for (let i = 0; i < 3; i++) {
-    await waitForAllImages()
-    await new Promise((resolve) => setTimeout(resolve, 300))
-  }
-  
-  // Attendre encore un peu pour que le layout soit stabilisé
-  await new Promise((resolve) => setTimeout(resolve, 200))
   
   const element = document.querySelector(hash)
   if (element) {
@@ -216,7 +108,7 @@ onMounted(async () => {
     })
   })
   
-  // Scroller vers l'ancre après le chargement complet
+  // Scroller vers l'ancre si présente dans l'URL
   await scrollToHash()
   
   // Écouter les clics sur tous les liens d'ancres pour forcer le scroll
@@ -279,7 +171,7 @@ watch(() => route.hash, async () => {
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center relative z-10">
           <h1 class="text-4xl lg:text-6xl font-bold text-text-main mb-4 leading-tight">
-            Découvrez nos <span class="text-primary">montres disponibles</span> dès maintenant test
+            Découvrez nos <span class="text-primary">montres disponibles</span> dès maintenant
             <svg class="inline-block w-10 h-10 text-primary align-middle" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <circle cx="12" cy="12" r="7" stroke="currentColor" stroke-width="2" fill="none"/>
               <rect x="9.5" y="1.5" width="5" height="3" rx="1" stroke="currentColor" stroke-width="2" fill="none"/>

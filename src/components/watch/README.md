@@ -6,9 +6,18 @@ Vue dédiée à la collection publique.
 
 - `WatchesCollection.vue` : page listant l’ensemble des montres disponibles,
   filtre et tri compris.
-- `WatchCard.vue` : carte réutilisable (visuel, prix, CTA) utilisée partout où
+- `WatchCard.vue` : carte réutilisable (visuel, prix, CTA) utilisée partout où
   une montre est affichée.
-- `WatchDetail.vue` : fiche détaillée (galerie, spécifications, articles liés).
+- `WatchDetail.vue` : fiche détaillée (galerie, spécifications, articles liés).
+
+## Composants Skeleton
+
+Des composants skeleton sont présents pour afficher un état de chargement pendant que les données sont récupérées :
+
+- `WatchCardSkeleton.vue` : skeleton correspondant à `WatchCard.vue`
+- `WatchDetailSkeleton.vue` : skeleton correspondant à `WatchDetail.vue`
+
+**⚠️ Important** : Si la structure de `WatchCard.vue` ou `WatchDetail.vue` est modifiée (layout, espacements, sections), il est **essentiel** de mettre à jour leurs composants skeleton respectifs pour éviter un désalignement visuel entre l'état de chargement et le contenu réel.
 
 ## Sources de données
 

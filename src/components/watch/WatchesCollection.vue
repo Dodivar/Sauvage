@@ -14,26 +14,31 @@
       <div class="bg-white rounded-md shadow-lg p-6 mb-8">
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div class="flex flex-wrap gap-4">
-            <select
-              v-model="selectedBrand"
-              class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            <button
+              @click="openBrandModal"
+              class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors flex items-center gap-2"
             >
-              <option value="">Toutes les marques</option>
-              <option v-for="brand in availableBrands" :key="brand" :value="brand">
-                {{ brand }}
-              </option>
-            </select>
+              <span>Marque</span>
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+              <span v-if="selectedBrands.length > 0" class="text-primary font-semibold">
+                ({{ selectedBrands.length === 1 ? selectedBrands[0] : selectedBrands.length + ' marques' }})
+              </span>
+            </button>
 
-            <select
-              v-model="priceRange"
-              class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            <button
+              @click="openPriceModal"
+              class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors flex items-center gap-2"
             >
-              <option value="">Tous les prix</option>
-              <option value="0-500">Moins de 500 €</option>
-              <option value="500-2000">500 € - 2 000 €</option>
-              <option value="2000-5000">2 000 € - 5 000 €</option>
-              <option value="5000+">Plus de 5 000 €</option>
-            </select>
+              <span>Prix</span>
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+              <span v-if="priceMin !== null || priceMax !== null" class="text-primary font-semibold">
+                ({{ priceMin !== null ? priceMin.toLocaleString() + ' €' : '0 €' }} - {{ priceMax !== null ? priceMax.toLocaleString() + ' €' : '∞' }})
+              </span>
+            </button>
           </div>
 
           <div class="text-sm text-gray-600 font-light">
@@ -45,10 +50,15 @@
         </div>
       </div>
 
-      <!-- Loading State -->
-      <div v-if="isLoading" class="text-center py-10">
-        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-3"></div>
-        <p class="text-gray-600">Chargement des montres...</p>
+      <!-- Loading State with Skeletons -->
+      <div v-if="isLoading" class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 lg:gap-6 mb-8">
+        <WatchCardSkeleton
+          v-for="n in 8"
+          :key="`skeleton-${n}`"
+          :show-reference="true"
+          :show-sold-badge="true"
+          :show-price="true"
+        />
       </div>
 
       <!-- Error State -->
@@ -137,16 +147,202 @@
         </div>
       </div>
     </div>
+
+    <!-- Price Filter Modal -->
+    <Teleport to="body">
+      <div
+        v-if="isPriceModalOpen"
+        class="modal-overlay fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-50 p-4"
+        @click="closePriceModal"
+        @keydown.esc="closePriceModal"
+        tabindex="-1"
+      >
+        <div
+          @click.stop
+          class="modal-container bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        >
+          <!-- Header -->
+          <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10">
+            <h2 class="text-2xl font-bold text-text-main">Prix</h2>
+            <button
+              @click="closePriceModal"
+              class="text-gray-400 hover:text-gray-600 transition-colors"
+              aria-label="Fermer"
+            >
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Content -->
+          <div class="p-6">
+            <!-- Quick Price Buttons -->
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-3">Prix les plus recherchés</label>
+              <div class="flex flex-wrap gap-3">
+                <button
+                  v-for="quickPrice in quickPriceRanges"
+                  :key="quickPrice.id"
+                  @click="applyQuickPrice(quickPrice)"
+                  :class="[
+                    'px-4 py-2 rounded-lg border transition-colors',
+                    isQuickPriceSelected(quickPrice)
+                      ? 'bg-primary text-white border-primary'
+                      : 'bg-white text-gray-700 border-gray-300 hover:border-primary hover:text-primary'
+                  ]"
+                >
+                  {{ quickPrice.label }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Price Slider -->
+            <div class="mt-12 mb-2 mx-4">
+              <div class="mb-4">
+                <Slider
+                  v-model="tempPriceRange"
+                  :min="priceMinLimit"
+                  :max="priceMaxLimit"
+                  :step="100"
+                  :tooltips="true"
+                  :format="{ suffix: ' €', decimals: 0, thousand: ' ' }"
+                  class="w-full"
+                />
+              </div>
+              <div class="flex justify-between text-xs text-gray-500">
+                <span>{{ priceMinLimit.toLocaleString() }} €</span>
+                <span>{{ priceMaxLimit.toLocaleString() }} €</span>
+              </div>
+            </div>
+
+            <!-- Manual Input Fields -->
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Prix minimum</label>
+                <div class="relative">
+                  <input
+                    v-model.number="tempPriceRange[0]"
+                    type="number"
+                    :min="priceMinLimit"
+                    :max="priceMaxLimit"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    @input="updatePriceFromInput"
+                  />
+                  <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">€</span>
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Prix maximum</label>
+                <div class="relative">
+                  <input
+                    v-model.number="tempPriceRange[1]"
+                    type="number"
+                    :min="priceMinLimit"
+                    :max="priceMaxLimit"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    @input="updatePriceFromInput"
+                  />
+                  <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">€</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="sticky bottom-0 bg-gray-50 border-t border-gray-200 px-6 py-4 flex items-center justify-between">
+            <div class="text-sm text-gray-600">
+              {{ getFilteredCountWithPrice() }} résultat{{ getFilteredCountWithPrice() > 1 ? 's' : '' }}
+            </div>
+            <button
+              @click="applyPriceFilter"
+              class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+            >
+              Appliquer les filtres
+            </button>
+          </div>
+        </div>
+      </div>
+    </Teleport>
+
+    <!-- Brand Filter Modal -->
+    <Teleport to="body">
+      <div
+        v-if="isBrandModalOpen"
+        class="modal-overlay fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-50 p-4"
+        @click="closeBrandModal"
+        @keydown.esc="closeBrandModal"
+        tabindex="-1"
+      >
+        <div
+          @click.stop
+          class="modal-container bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        >
+          <!-- Header -->
+          <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10">
+            <h2 class="text-2xl font-bold text-text-main">Marque</h2>
+            <button
+              @click="closeBrandModal"
+              class="text-gray-400 hover:text-gray-600 transition-colors"
+              aria-label="Fermer"
+            >
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Content -->
+          <div class="p-6">
+            <!-- All Brands -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-3">Toutes les marques</label>
+              <div class="flex flex-wrap gap-3">
+                <button
+                  v-for="brand in availableBrands"
+                  :key="brand"
+                  @click="toggleBrand(brand)"
+                  :class="[
+                    'px-4 py-2 rounded-lg border transition-colors',
+                    tempSelectedBrands.includes(brand)
+                      ? 'bg-primary text-white border-primary'
+                      : 'bg-white text-gray-700 border-gray-300 hover:border-primary hover:text-primary'
+                  ]"
+                >
+                  {{ brand }}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="sticky bottom-0 bg-gray-50 border-t border-gray-200 px-6 py-4 flex items-center justify-between">
+            <div class="text-sm text-gray-600">
+              {{ getFilteredCountWithBrand() }} résultat{{ getFilteredCountWithBrand() > 1 ? 's' : '' }}
+            </div>
+            <button
+              @click="applyBrandFilter"
+              class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+            >
+              Appliquer les filtres
+            </button>
+          </div>
+        </div>
+      </div>
+    </Teleport>
   </section>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useHead } from '@vueuse/head'
+import Slider from '@vueform/slider'
+import '@vueform/slider/themes/default.css'
 const router = useRouter()
 
 import WatchCard from './WatchCard.vue'
+import WatchCardSkeleton from './WatchCardSkeleton.vue'
 import { scrollAnimation } from '@/animation'
 import { WHATSAPP_NUMBER, EMAIL_CONTACT, BASE_URL } from '@/config'
 import { getAllWatches } from '@/services/watchService'
@@ -197,13 +393,234 @@ useHead({
 })
 
 // Filters
-const selectedBrand = ref('')
-const priceRange = ref('')
+const selectedBrands = ref([])
+const priceMin = ref(null)
+const priceMax = ref(null)
+
+// Modal states
+const isPriceModalOpen = ref(false)
+const isBrandModalOpen = ref(false)
+
+// Temporary filter values (before applying)
+const tempPriceRange = ref([0, 150000])
+const tempSelectedBrands = ref([])
 
 // State
 const watches = ref([])
 const isLoading = ref(true)
 const error = ref(null)
+
+// Price limits computed from watches
+const priceMinLimit = computed(() => {
+  if (watches.value.length === 0) return 0
+  return Math.min(...watches.value.map(w => w.price))
+})
+
+const priceMaxLimit = computed(() => {
+  if (watches.value.length === 0) return 150000
+  return Math.max(...watches.value.map(w => w.price))
+})
+
+// Helper function to round to nearest hundred
+const roundToHundred = (value) => {
+  return Math.round(value / 100) * 100
+}
+
+// Quick price ranges computed dynamically based on actual watch prices
+const quickPriceRanges = computed(() => {
+  if (watches.value.length === 0) {
+    return []
+  }
+
+  const min = priceMinLimit.value
+  const max = priceMaxLimit.value
+
+  // Calculate the ranges
+  const oneThirdMax = roundToHundred(max / 3)
+  const halfMax = roundToHundred(max / 2)
+  const quarterMax = roundToHundred(max / 4)
+  const threeQuarterMax = roundToHundred((max * 3) / 4)
+
+  return [
+    {
+      id: 'min-to-third',
+      label: `jusqu'à ${oneThirdMax.toLocaleString()} €`,
+      min: min,
+      max: oneThirdMax,
+    },
+    {
+      id: 'min-to-half',
+      label: `jusqu'à ${halfMax.toLocaleString()} €`,
+      min: min,
+      max: halfMax,
+    },
+    {
+      id: 'quarter-to-three-quarter',
+      label: `${quarterMax.toLocaleString()} € - ${threeQuarterMax.toLocaleString()} €`,
+      min: quarterMax,
+      max: threeQuarterMax,
+    },
+    {
+      id: 'half-to-max',
+      label: `à partir de ${halfMax.toLocaleString()} €`,
+      min: halfMax,
+      max: max,
+    },
+  ]
+})
+
+
+// Modal functions
+const openPriceModal = () => {
+  tempPriceRange.value = [
+    roundToHundred(priceMin.value !== null ? priceMin.value : priceMinLimit.value),
+    roundToHundred(priceMax.value !== null ? priceMax.value : priceMaxLimit.value)
+  ]
+  isPriceModalOpen.value = true
+  document.body.style.overflow = 'hidden'
+}
+
+const closePriceModal = () => {
+  isPriceModalOpen.value = false
+  document.body.style.overflow = ''
+}
+
+const openBrandModal = () => {
+  tempSelectedBrands.value = [...selectedBrands.value]
+  isBrandModalOpen.value = true
+  document.body.style.overflow = 'hidden'
+}
+
+const closeBrandModal = () => {
+  isBrandModalOpen.value = false
+  document.body.style.overflow = ''
+}
+
+// Price filter functions
+const applyQuickPrice = (quickPrice) => {
+  const maxValue = quickPrice.max !== null 
+    ? Math.min(quickPrice.max, priceMaxLimit.value)
+    : priceMaxLimit.value
+  // Values are already rounded in quickPriceRanges, but ensure they're still rounded
+  tempPriceRange.value = [
+    roundToHundred(Math.max(quickPrice.min, priceMinLimit.value)),
+    roundToHundred(maxValue)
+  ]
+}
+
+const isQuickPriceSelected = (quickPrice) => {
+  const expectedMax = quickPrice.max !== null 
+    ? Math.min(quickPrice.max, priceMaxLimit.value)
+    : priceMaxLimit.value
+  const expectedMin = Math.max(quickPrice.min, priceMinLimit.value)
+  return Math.abs(tempPriceRange.value[0] - expectedMin) < 10 &&
+    Math.abs(tempPriceRange.value[1] - expectedMax) < 10
+}
+
+const updatePriceFromInput = () => {
+  // Round to nearest hundred
+  tempPriceRange.value[0] = roundToHundred(tempPriceRange.value[0])
+  tempPriceRange.value[1] = roundToHundred(tempPriceRange.value[1])
+  
+  // Ensure min <= max
+  if (tempPriceRange.value[0] > tempPriceRange.value[1]) {
+    tempPriceRange.value[0] = tempPriceRange.value[1]
+  }
+  // Clamp values
+  tempPriceRange.value[0] = Math.max(priceMinLimit.value, Math.min(priceMaxLimit.value, tempPriceRange.value[0]))
+  tempPriceRange.value[1] = Math.max(priceMinLimit.value, Math.min(priceMaxLimit.value, tempPriceRange.value[1]))
+}
+
+const applyPriceFilter = () => {
+  // Only set filters if they differ from the full range
+  if (tempPriceRange.value[0] <= priceMinLimit.value && tempPriceRange.value[1] >= priceMaxLimit.value) {
+    // Full range selected, clear filters
+    priceMin.value = null
+    priceMax.value = null
+  } else {
+    priceMin.value = tempPriceRange.value[0] === priceMinLimit.value ? null : tempPriceRange.value[0]
+    priceMax.value = tempPriceRange.value[1] === priceMaxLimit.value ? null : tempPriceRange.value[1]
+  }
+  closePriceModal()
+}
+
+const getFilteredCountWithPrice = () => {
+  let filtered = watches.value
+  if (tempPriceRange.value[0] !== priceMinLimit.value || tempPriceRange.value[1] !== priceMaxLimit.value) {
+    filtered = filtered.filter(watch => {
+      return watch.price >= tempPriceRange.value[0] && watch.price <= tempPriceRange.value[1]
+    })
+  }
+  if (selectedBrands.value.length > 0) {
+    filtered = filtered.filter(watch => selectedBrands.value.includes(watch.brand))
+  }
+  return filtered.length
+}
+
+// Brand filter functions
+const toggleBrand = (brand) => {
+  const index = tempSelectedBrands.value.indexOf(brand)
+  if (index > -1) {
+    // Remove brand if already selected
+    tempSelectedBrands.value.splice(index, 1)
+  } else {
+    // Add brand if not selected
+    tempSelectedBrands.value.push(brand)
+  }
+}
+
+const applyBrandFilter = () => {
+  selectedBrands.value = [...tempSelectedBrands.value]
+  closeBrandModal()
+}
+
+const getFilteredCountWithBrand = () => {
+  let filtered = watches.value
+  if (tempSelectedBrands.value.length > 0) {
+    filtered = filtered.filter(watch => tempSelectedBrands.value.includes(watch.brand))
+  }
+  if (priceMin.value !== null || priceMax.value !== null) {
+    filtered = filtered.filter(watch => {
+      const matchesMin = priceMin.value === null || watch.price >= priceMin.value
+      const matchesMax = priceMax.value === null || watch.price <= priceMax.value
+      return matchesMin && matchesMax
+    })
+  }
+  return filtered.length
+}
+
+// Round slider values to nearest hundred when they change
+watch(tempPriceRange, (newValue, oldValue) => {
+  // Skip if this is the initial value or if values haven't actually changed
+  if (!oldValue || (newValue[0] === oldValue[0] && newValue[1] === oldValue[1])) {
+    return
+  }
+  
+  const roundedMin = roundToHundred(newValue[0])
+  const roundedMax = roundToHundred(newValue[1])
+  
+  // Only update if values need rounding to avoid infinite loop
+  if (roundedMin !== newValue[0] || roundedMax !== newValue[1]) {
+    // Use nextTick to avoid triggering watcher during update
+    const clampedMin = Math.max(priceMinLimit.value, Math.min(priceMaxLimit.value, roundedMin))
+    const clampedMax = Math.max(priceMinLimit.value, Math.min(priceMaxLimit.value, roundedMax))
+    
+    // Only update if the rounded values are different from current
+    if (clampedMin !== newValue[0] || clampedMax !== newValue[1]) {
+      tempPriceRange.value = [clampedMin, clampedMax]
+    }
+  }
+}, { deep: true })
+
+// Update temp price range when limits change
+watch([priceMinLimit, priceMaxLimit], () => {
+  if (tempPriceRange.value[0] < priceMinLimit.value) {
+    tempPriceRange.value[0] = roundToHundred(priceMinLimit.value)
+  }
+  if (tempPriceRange.value[1] > priceMaxLimit.value) {
+    tempPriceRange.value[1] = roundToHundred(priceMaxLimit.value)
+  }
+})
 
 // Navigation method
 const handleViewDetails = (watchId) => {
@@ -219,20 +636,17 @@ const availableBrands = computed(() => {
 const filteredWatches = computed(() => {
   let filtered = watches.value
 
-  // Filter by brand
-  if (selectedBrand.value) {
-    filtered = filtered.filter((watch) => watch.brand === selectedBrand.value)
+  // Filter by brand (multiple selection)
+  if (selectedBrands.value.length > 0) {
+    filtered = filtered.filter((watch) => selectedBrands.value.includes(watch.brand))
   }
 
   // Filter by price range
-  if (priceRange.value) {
-    const [min, max] = priceRange.value.split('-').map((x) => x.replace('+', ''))
+  if (priceMin.value !== null || priceMax.value !== null) {
     filtered = filtered.filter((watch) => {
-      if (max) {
-        return watch.price >= parseInt(min) && watch.price <= parseInt(max)
-      } else {
-        return watch.price >= parseInt(min)
-      }
+      const matchesMin = priceMin.value === null || watch.price >= priceMin.value
+      const matchesMax = priceMax.value === null || watch.price <= priceMax.value
+      return matchesMin && matchesMax
     })
   }
 
@@ -246,6 +660,12 @@ const loadWatches = async () => {
     error.value = null
     const data = await getAllWatches()
     watches.value = data
+    // Initialize temp price range with actual limits after loading (rounded to hundred)
+    if (data.length > 0) {
+      const minPrice = Math.min(...data.map(w => w.price))
+      const maxPrice = Math.max(...data.map(w => w.price))
+      tempPriceRange.value = [roundToHundred(minPrice), roundToHundred(maxPrice)]
+    }
   } catch (err) {
     console.error('Erreur lors du chargement des montres:', err)
     error.value = err.message || 'Une erreur est survenue lors du chargement des montres'
@@ -272,11 +692,64 @@ onMounted(async () => {
   }
 }
 
+@keyframes modal-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 .animate-fade-in {
   animation: fade-in 0.6s ease-out;
 }
 
 .gradient-bg {
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+.modal-overlay {
+  animation: modal-fade-in 0.2s ease-out;
+}
+
+.modal-container {
+  animation: modal-slide-up 0.3s ease-out;
+}
+
+/* Custom slider styles */
+:deep(.slider-connect) {
+  background: #00c172;
+}
+
+:deep(.slider-handle) {
+  background: #00c172;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+:deep(.slider-handle:hover) {
+  background: #00a85f;
+}
+
+:deep(.slider-tooltip) {
+  background: #00c172;
+  border: none;
+  color: white;
+}
+
+:deep(.slider-tooltip::before) {
+  border-top-color: #00c172;
 }
 </style>

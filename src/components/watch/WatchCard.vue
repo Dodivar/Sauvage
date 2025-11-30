@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Image Slider -->
-    <div class="relative w-full aspect-square bg-gray-100 rounded-md overflow-hidden mb-3 md:mb-4 lg:mb-6">
+    <div class="relative w-full aspect-square bg-gray-100 rounded-md overflow-hidden mb-2">
       <div
         class="absolute inset-0 flex items-center justify-center"
         v-if="!watch.images || watch.images.length === 0"
@@ -88,7 +88,7 @@
         </span>
       </div>
 
-      <p v-if="showReference" class="text-[10px] md:text-sm text-gray-600 mb-2 md:mb-3 font-light">Réf. {{ watch.reference }}</p>
+      <p v-if="showReference" class="text-[10px] md:text-sm text-gray-600 md:mb-2 font-light">Réf. {{ watch.reference }}</p>
 
 
       <!-- Optional: Watch content or year -->
@@ -101,7 +101,7 @@
         </span>
         <span 
           v-if="watch.contenu || watch.details?.content" 
-          class="hidden md:inline bg-gray-100 px-1.5 md:px-2 py-0.5 md:py-1 rounded text-[10px] md:text-xs"
+          class="hidden md:inline bg-gray-200 px-1.5 md:px-2 py-0.5 md:py-1 rounded text-[10px] md:text-xs"
         >
           {{ watch.contenu || watch.details?.content }}
         </span>

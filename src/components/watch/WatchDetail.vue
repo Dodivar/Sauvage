@@ -2,10 +2,7 @@
   <section class="lg:py-10 pb-10 gradient-bg min-h-screen">
     <div class="max-w-7xl mx-auto px-4">
       <!-- Loading State -->
-      <div v-if="isLoading" class="text-center py-10">
-        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-3"></div>
-        <p class="text-gray-600">Chargement de la montre...</p>
-      </div>
+      <WatchDetailSkeleton v-if="isLoading" />
 
       <!-- Error State -->
       <div v-else-if="error" class="text-center py-10">
@@ -250,69 +247,24 @@
           </div>
 
           <!-- Key Features -->
-          <div class="bg-white rounded-md shadow-lg p-6">
+          <div>
             <h3 class="text-xl font-semibold text-gray-900 mb-3">Caractéristiques principales</h3>
-            <div class="grid grid-cols-2 gap-3">
-              <div v-if="hasValue(watchItem.year)" class="flex items-center space-x-2">
-                <svg
-                  class="w-5 h-5 text-primary"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                <span class="text-md text-gray-600">{{ watchItem.year }}</span>
+            <div class="space-y-3">
+              <div v-if="hasValue(watchItem.year)" class="flex gap-4 py-2 border-b border-gray-100">
+                <span class="text-gray-600 w-[140px] flex-shrink-0 whitespace-normal">Année</span>
+                <span class="font-medium text-left flex-1">{{ watchItem.year }}</span>
               </div>
-              <div v-if="hasValue(watchItem.condition)" class="flex items-center space-x-2">
-                <svg
-                  class="w-5 h-5 text-primary"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                                      stroke-width="2"
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                <span class="text-md text-gray-600">{{ watchItem.condition }}</span>
+              <div v-if="hasValue(watchItem.condition)" class="flex gap-4 py-2 border-b border-gray-100">
+                <span class="text-gray-600 w-[140px] flex-shrink-0 whitespace-normal">État</span>
+                <span class="font-medium text-left flex-1">{{ watchItem.condition }}</span>
               </div>
-              <div v-if="hasValue(watchItem.details?.content)" class="flex items-center space-x-2">
-                <svg
-                  class="w-5 h-5 text-primary"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <!-- Dessin du cube (style boîte simple) -->
-                  <polygon points="3,7 12,3 21,7 21,17 12,21 3,17" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
-                  <polyline points="3,7 12,12 21,7" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
-                </svg>
-                <span class="text-md text-gray-600">{{ watchItem.details.content }}</span>
+              <div v-if="hasValue(watchItem.details?.content)" class="flex gap-4 py-2 border-b border-gray-100">
+                <span class="text-gray-600 w-[140px] flex-shrink-0 whitespace-normal">Contenu</span>
+                <span class="font-medium text-left flex-1">{{ watchItem.details.content }}</span>
               </div>
-              <div v-if="hasValue(watchItem.details?.guarantee)" class="flex items-center space-x-2">
-                <svg
-                  class="w-5 h-5 text-primary"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 3l7 4v5c0 5-3.5 9-7 9s-7-4-7-9V7l7-4z"
-                  />
-                </svg>
-                <span class="text-md  text-gray-600">{{ watchItem.details.guarantee }}</span>
+              <div v-if="hasValue(watchItem.details?.guarantee)" class="flex gap-4 py-2 border-b border-gray-100">
+                <span class="text-gray-600 w-[140px] flex-shrink-0 whitespace-normal">Garantie</span>
+                <span class="font-medium text-left flex-1">{{ watchItem.details.guarantee }}</span>
               </div>
             </div>
           </div>
@@ -817,6 +769,7 @@ import { scrollAnimation } from '@/animation'
 import { WHATSAPP_NUMBER, EMAIL_CONTACT, BASE_URL } from '@/config'
 import { getWatchById } from '@/services/watchService'
 import { isAdminAuthenticated } from '@/services/admin/adminAuthService'
+import WatchDetailSkeleton from '@/components/watch/WatchDetailSkeleton.vue'
 
 const route = useRoute()
 const router = useRouter()
