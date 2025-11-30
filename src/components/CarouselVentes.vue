@@ -9,25 +9,19 @@
       </div>
       <div class="overflow-x-auto custom-scrollbar-carrousel scroll-smooth p-4 sm:p-8 relative">
         <div class="flex space-x-4 sm:space-x-6 min-w-full">
-          <template v-for="(watch, i) in salesWatches" :key="`${i}-${watch.id || watch.name}`">
-            <div
-              class="flex-shrink-0 w-40 sm:w-48 md:w-60 bg-white rounded-md shadow-md hover:shadow-lg p-3 sm:p-4 text-center transition-all duration-300"
-            >
-              <img
-                v-if="watch.imageUrl"
-                :src="watch.imageUrl"
-                :alt="watch.name"
-                class="rounded-lg mb-3 sm:mb-4 mx-auto h-40 sm:h-48 md:h-64 w-full object-cover"
-              />
-              <div
-                v-else
-                class="rounded-lg mb-3 sm:mb-4 mx-auto h-40 sm:h-48 md:h-64 w-full bg-gray-200 flex items-center justify-center"
-              >
-                <span class="text-gray-400 text-xs sm:text-sm">Pas d'image</span>
-              </div>
-              <h4 class="text-sm sm:text-base md:text-lg font-semibold text-text-main">{{ watch.name }}</h4>
-            </div>
-          </template>
+          <div
+            v-for="(watch, i) in transformedWatches"
+            :key="`${i}-${watch.id || watch.name}`"
+            class="flex-shrink-0 w-40 sm:w-48 md:w-60"
+          >
+            <WatchCard
+              :watch="watch"
+              :show-reference="false"
+              :show-sold-badge="false"
+              :show-price="false"
+              @viewDetails="handleViewDetails"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -35,10 +29,35 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { getSoldWatches } from '@/services/watchService'
+import WatchCard from '@/components/watch/WatchCard.vue'
 
+const router = useRouter()
 const salesWatches = ref([])
+
+// Transformer les données pour correspondre au format attendu par WatchCard
+const transformedWatches = computed(() => {
+  return salesWatches.value.map((watch) => ({
+    id: watch.id,
+    name: watch.name,
+    reference: watch.reference || '',
+    price: watch.price || 0,
+    isSold: true, // Toutes les montres dans ce carrousel sont vendues
+    images: watch.imageUrl ? [watch.imageUrl] : [],
+    contenu: watch.contenu || '',
+    year: watch.year || null,
+    details: {
+      content: watch.details?.content || '',
+    },
+  }))
+})
+
+// Gérer la navigation vers la page de détail
+const handleViewDetails = (watchId) => {
+  router.push(`/watch/${watchId}`)
+}
 
 onMounted(async () => {
   try {

@@ -1,9 +1,7 @@
 <template>
-  <div
-    class="bg-white rounded-md shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300"
-  >
+  <div>
     <!-- Image Slider -->
-    <div class="relative h-48 md:h-64 lg:h-80 bg-gray-100">
+    <div class="relative w-full aspect-square bg-gray-100 rounded-md overflow-hidden mb-3 md:mb-4 lg:mb-6">
       <div
         class="absolute inset-0 flex items-center justify-center"
         v-if="!watch.images || watch.images.length === 0"
@@ -73,7 +71,7 @@
     </div>
 
     <!-- Watch Info -->
-    <div class="p-3 md:p-4 lg:p-6 cursor-pointer" @click="$emit('viewDetails', watch.id)">
+    <div class="cursor-pointer" @click="$emit('viewDetails', watch.id)">
       <div class="flex items-start justify-between mb-1 md:mb-2">
         <h3
           class="text-xs md:text-base lg:text-xl font-semibold text-gray-900 leading-tight flex-1 pr-1 truncate"
@@ -83,19 +81,22 @@
           {{ watch.name }}
         </h3>
         <span
-          v-if="watch.isSold"
+          v-if="watch.isSold && showSoldBadge"
           class="ml-1 md:ml-2 px-1.5 md:px-2 py-0.5 md:py-1 text-[10px] md:text-xs font-semibold rounded-full bg-red-100 text-red-800 whitespace-nowrap flex-shrink-0"
         >
           Vendue
         </span>
       </div>
 
-      <p class="text-[10px] md:text-sm text-gray-600 mb-2 md:mb-3 font-light">Réf. {{ watch.reference }}</p>
+      <p v-if="showReference" class="text-[10px] md:text-sm text-gray-600 mb-2 md:mb-3 font-light">Réf. {{ watch.reference }}</p>
 
 
       <!-- Optional: Watch content or year -->
-      <div class="flex items-center gap-2 text-[10px] md:text-sm text-gray-500">
-        <span class="text-base md:text-xl lg:text-2xl font-normal text-primary">
+      <div 
+        v-if="showPrice || watch.contenu || watch.details?.content || watch.year"
+        class="flex items-center gap-2 text-[10px] md:text-sm text-gray-500"
+      >
+        <span v-if="showPrice" class="text-base md:text-xl lg:text-2xl font-medium text-primary">
           {{ formatPrice(watch.price) }}
         </span>
         <span 
@@ -122,6 +123,18 @@ const props = defineProps({
   watch: {
     type: Object,
     required: true,
+  },
+  showReference: {
+    type: Boolean,
+    default: true,
+  },
+  showSoldBadge: {
+    type: Boolean,
+    default: true,
+  },
+  showPrice: {
+    type: Boolean,
+    default: true,
   },
 })
 

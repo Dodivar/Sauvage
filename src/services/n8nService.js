@@ -3,7 +3,7 @@
  */
 
 // URL du workflow n8n pour la génération d'articles
-const N8N_WORKFLOW_URL = 'https://sauvage-watches.app.n8n.cloud/webhook/0adc09a6-a55c-4cd6-be94-f99c3036d441' //'https://sauvage-watches.app.n8n.cloud/webhook-test/0adc09a6-a55c-4cd6-be94-f99c3036d441'
+const N8N_WORKFLOW_URL = 'https://n8n.srv1166238.hstgr.cloud/webhook-test/0adc09a6-a55c-4cd6-be94-f99c3036d441'
 
 /**
  * Génère un article depuis le nom d'une montre ou d'une marque via n8n

@@ -244,7 +244,7 @@
               </div>
             </div>
             <p class="text-lg text-gray-600 mb-3">Réf. {{ watchItem.reference }}</p>
-            <div class="text-3xl font-normal text-primary mb-4">
+            <div class="text-3xl font-medium text-primary mb-4">
               {{ formatPrice(watchItem.price) }}
             </div>
           </div>
