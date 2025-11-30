@@ -4,7 +4,7 @@
 
 // Configuration de l'API URL
 const API_URL = import.meta.env.PROD
-  ? 'https://sauvage-watches-mail-server.onrender.com'
+  ? 'https://sauvage-watches-server.onrender.com'
   : 'http://localhost:3000'
 
 // Fonction pour envoyer un email avec retry

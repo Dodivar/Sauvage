@@ -1,11 +1,11 @@
 {
-    "name": "sauvage-watches-mail-server",
+    "name": "sauvage-watches-server",
     "version": "1.0.0",
     "description": "Mail server for Sauvage Watches",
-    "main": "mailServer.js",
+    "main": "server.js",
     "scripts": {
-        "start": "node mailServer.js",
-        "dev": "nodemon mailServer.js"
+        "start": "node server.js",
+        "dev": "nodemon server.js"
     },
     "dependencies": {
         "cors": "^2.8.5",

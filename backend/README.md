@@ -4,16 +4,15 @@ Petit serveur Express dédié aux formulaires « estimation » et « recherche
 personnalisée ». Il centralise :
 
 - l’upload de photos via `multer` vers le dossier local `uploads/`,
-- la mise en forme HTML et l’envoi des demandes via Mailjet (`mailServer.js`),
+- la mise en forme HTML et l’envoi des demandes via Mailjet (`server.js`),
 - la configuration CORS pour autoriser le front en préprod/prod,
-- la compatibilité legacy (`mailServer_old.js`) conservée à des fins d’archives.
 
 ## Démarrage local
 
 ```bash
 cd backend
 npm install
-npm run dev # ou node mailServer.js
+npm run dev # ou node server.js
 ```
 
 Créer un fichier `.env` (copier `env.example`) avec les clés suivantes :
@@ -28,5 +27,5 @@ Créer un fichier `.env` (copier `env.example`) avec les clés suivantes :
 - **Sécurité** : ne jamais commiter les vraies clés Mailjet. Utiliser un compte
   de test pour les environnements non prod.
 - **Logs** : en cas d’échec d’envoi, vérifier la console Mailjet et les traces
-  du serveur (erreurs détaillées dans `mailServer.js`).
+  du serveur (erreurs détaillées dans `server.js`).
 

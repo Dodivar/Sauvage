@@ -438,7 +438,11 @@ app.get('/api/test-mailjet', async (req, res) => {
 
 // Configuration n8n
 // Note: Utilisez /webhook/ pour la production (workflow activé) ou /webhook-test/ pour le mode test
-const N8N_WORKFLOW_URL = process.env.N8N_WORKFLOW_URL || 'https://n8n.srv1166238.hstgr.cloud/webhook/0adc09a6-a55c-4cd6-be94-f99c3036d441'
+const isProduction = process.env.NODE_ENV === 'production'
+const defaultN8nUrl = isProduction
+  ? 'https://n8n.srv1166238.hstgr.cloud/webhook/0adc09a6-a55c-4cd6-be94-f99c3036d441'
+  : 'https://n8n.srv1166238.hstgr.cloud/webhook-test/0adc09a6-a55c-4cd6-be94-f99c3036d441'
+const N8N_WORKFLOW_URL = process.env.N8N_WORKFLOW_URL || defaultN8nUrl
 
 // Route proxy pour n8n (évite les problèmes CORS)
 app.post('/api/n8n/generate-article', async (req, res) => {
@@ -453,6 +457,7 @@ app.post('/api/n8n/generate-article', async (req, res) => {
     }
 
     console.log(`Appel du workflow n8n pour générer un article: ${watchName}`)
+    console.log(`URL n8n utilisée: ${N8N_WORKFLOW_URL} (mode: ${isProduction ? 'production' : 'debug/test'})`)
 
     // Préparer les données en FormData pour n8n
     const formData = new FormData()
@@ -512,4 +517,5 @@ const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`)
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`)
+  console.log(`n8n Webhook URL: ${N8N_WORKFLOW_URL} (mode: ${isProduction ? 'production' : 'debug/test'})`)
 })
