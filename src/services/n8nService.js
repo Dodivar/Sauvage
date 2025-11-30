@@ -1,9 +1,13 @@
 /**
- * Service pour appeler les workflows n8n
+ * Service pour appeler les workflows n8n via le backend proxy
  */
 
-// URL du workflow n8n pour la génération d'articles
-const N8N_WORKFLOW_URL = 'https://n8n.srv1166238.hstgr.cloud/webhook-test/0adc09a6-a55c-4cd6-be94-f99c3036d441'
+// Configuration de l'API URL (même logique que emailService)
+const API_URL = import.meta.env.PROD
+  ? 'https://sauvage-watches-mail-server.onrender.com'
+  : 'http://localhost:3000'
+
+const N8N_PROXY_URL = `${API_URL}/api/n8n/generate-article`
 
 /**
  * Génère un article depuis le nom d'une montre ou d'une marque via n8n
@@ -17,68 +21,41 @@ export async function generateArticleFromWatch(watchName) {
   }
 
   try {
-    // Préparer les données en FormData
-    const formData = new FormData()
-    formData.append('watchName', watchName.trim())
-
     console.log(`Appel du workflow n8n pour générer un article: ${watchName}`)
 
-    // Appeler le webhook n8n
-    const response = await fetch(N8N_WORKFLOW_URL, {
+    // Appeler le backend qui fait le proxy vers n8n
+    const response = await fetch(N8N_PROXY_URL, {
       method: 'POST',
-      body: formData,
       headers: {
+        'Content-Type': 'application/json',
         Accept: 'application/json',
       },
+      credentials: 'include',
+      body: JSON.stringify({ watchName: watchName.trim() }),
     })
 
     if (!response.ok) {
-      const errorText = await response.text()
-      let errorMessage = 'Erreur lors de la génération de l\'article'
-      
-      try {
-        const errorJson = JSON.parse(errorText)
-        errorMessage = errorJson.message || errorJson.error || errorMessage
-      } catch {
-        errorMessage = errorText || `Erreur HTTP ${response.status}`
-      }
-
-      throw new Error(errorMessage)
+      const errorData = await response.json().catch(() => ({ 
+        error: `Erreur HTTP ${response.status}` 
+      }))
+      throw new Error(errorData.error || `Erreur HTTP ${response.status}`)
     }
 
-    // Essayer de parser la réponse en JSON
-    let result
-    const contentType = response.headers.get('content-type')
-    if (contentType && contentType.includes('application/json')) {
-      result = await response.json()
-      
-      // Normaliser la réponse n8n (n8n peut retourner les données dans un tableau)
-      // Si c'est un tableau, prendre le premier élément
-      if (Array.isArray(result) && result.length > 0) {
-        result = result[0]
-      }
-      
-      // Si n8n retourne les données dans un objet avec une structure spécifique
-      // (par exemple { body: {...}, headers: {...} }), extraire le body
-      if (result && typeof result === 'object' && result.body && !result.id && !result.articleId) {
-        result = result.body
-      }
-    } else {
-      const text = await response.text()
-      result = { success: true, message: text || 'Article généré avec succès' }
+    const result = await response.json()
+
+    if (!result.success) {
+      throw new Error(result.error || 'Erreur lors de la génération de l\'article')
     }
 
-    console.log('Workflow n8n exécuté avec succès:', result)
-    return result
+    console.log('Workflow n8n exécuté avec succès:', result.data)
+    return result.data || result
   } catch (error) {
     console.error('Erreur lors de l\'appel au workflow n8n:', error)
     
-    // Si c'est déjà une Error avec un message, la relancer
     if (error instanceof Error) {
       throw error
     }
     
-    // Sinon, créer une nouvelle erreur
     throw new Error(
       error.message || 
       'Une erreur est survenue lors de la génération de l\'article. Veuillez réessayer.'
