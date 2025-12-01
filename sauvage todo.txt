@@ -1,6 +1,7 @@
 Montres :
 - Ajouter vidéo 360° sur les bestsellers
-
+- filtre des prix depuis la collection, les champs input doivent être maj uniquement lorsqu'on perd le focus, car sur téléphone impossible d'être inférieur à la valeur min
+    si valeur non exacte mettre à la valeur la plus proche (min,max)
 
 Article :
 - Ajouter des images pour les articles
@@ -9,9 +10,11 @@ Article :
     - ne pas proposer ceux non liables aux montres 
 - modifier n8n pour accepter de faire des articles sur d'autres sujets que juste des montres, par exemple article de montres à moins de 2k€ 
 
+Accueil :
+- Mettre des bulles sur carrousel pour bien représenter qu'on peut défiler
+
 Admin :
 Blog:
-Accueil :
 Statistiques :
 SEO :
 FAQ :
