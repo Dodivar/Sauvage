@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="{ 'cursor-pointer': clickable }" @click="handleCardClick">
     <!-- Image Slider -->
     <div class="relative w-full aspect-square bg-gray-100 rounded-md overflow-hidden mb-2">
       <div
@@ -12,8 +12,8 @@
       <div 
         v-else 
         class="relative h-full"
-        @touchstart="handleTouchStart"
-        @touchend="handleTouchEnd"
+        @touchstart="handleTouchStartWrapper"
+        @touchend="handleTouchEndWrapper"
       >
         <img
           :src="watch.images[currentImageIndex]"
@@ -23,7 +23,7 @@
 
         <!-- Navigation arrows -->
         <button
-          v-if="watch.images && watch.images.length > 1"
+          v-if="showImageNavigation && watch.images && watch.images.length > 1"
           @click.stop="previousImage"
           class="absolute left-1 md:left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-1 md:p-2 transition-all duration-200"
         >
@@ -38,7 +38,7 @@
         </button>
 
         <button
-          v-if="watch.images && watch.images.length > 1"
+          v-if="showImageNavigation && watch.images && watch.images.length > 1"
           @click.stop="nextImage"
           class="absolute right-1 md:right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-1 md:p-2 transition-all duration-200"
         >
@@ -54,13 +54,13 @@
 
         <!-- Image indicators -->
         <div
-          v-if="watch.images && watch.images.length > 1"
+          v-if="showImageNavigation && watch.images && watch.images.length > 1"
           class="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1"
         >
           <button
             v-for="(_, index) in watch.images"
             :key="index"
-            @click="currentImageIndex = index"
+            @click.stop="currentImageIndex = index"
             :class="[
               'w-1 h-1 md:w-2 md:h-2 rounded-full transition-all duration-200',
               currentImageIndex === index ? 'bg-white' : 'bg-white bg-opacity-50',
@@ -71,7 +71,7 @@
     </div>
 
     <!-- Watch Info -->
-    <div class="cursor-pointer" @click="$emit('viewDetails', watch.id)">
+    <div>
       <div class="flex items-start justify-between mb-1 md:mb-2">
         <h3
           class="text-xs md:text-base lg:text-xl font-semibold text-gray-900 leading-tight flex-1 pr-1 truncate"
@@ -136,12 +136,26 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  showImageNavigation: {
+    type: Boolean,
+    default: true,
+  },
+  clickable: {
+    type: Boolean,
+    default: true,
+  },
 })
 
 // Define emits for parent component communication
 const emit = defineEmits(['viewDetails'])
 
 const currentImageIndex = ref(0)
+
+const handleCardClick = () => {
+  if (props.clickable) {
+    emit('viewDetails', props.watch.id)
+  }
+}
 
 const nextImage = () => {
   if (props.watch.images && props.watch.images.length > 1) {
@@ -167,6 +181,18 @@ const formatPrice = (price) => {
 // Touch/swipe support
 let touchStartX = 0
 let touchEndX = 0
+
+const handleTouchStartWrapper = (e) => {
+  if (props.showImageNavigation) {
+    handleTouchStart(e)
+  }
+}
+
+const handleTouchEndWrapper = (e) => {
+  if (props.showImageNavigation) {
+    handleTouchEnd(e)
+  }
+}
 
 const handleTouchStart = (e) => {
   touchStartX = e.changedTouches[0].screenX

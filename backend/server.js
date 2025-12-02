@@ -15,8 +15,7 @@ const app = express()
 // Détection de l'environnement de production (vérifie NODE_ENV ou si on est sur Render)
 const isProduction =
   process.env.NODE_ENV === 'production' ||
-  process.env.RENDER === 'true' ||
-  process.env.PORT // Render définit toujours PORT
+  process.env.RENDER === 'true'
 
 const corsOptions = {
   origin: isProduction
@@ -25,7 +24,7 @@ const corsOptions = {
         'https://www.sauvage-watches.fr',
         'https://recette.sauvage-watches.fr',
       ]
-    : 'http://localhost:5173',
+    : ['http://localhost:5173', 'http://localhost:3000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: [
     'Content-Type',

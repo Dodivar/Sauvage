@@ -224,7 +224,7 @@
                   v-model="tempPriceRange"
                   :min="priceMinLimit"
                   :max="priceMaxLimit"
-                  :step="100"
+                  :step="10"
                   :tooltips="true"
                   :format="{ suffix: ' €', decimals: 0, thousand: ' ' }"
                   class="w-full"
@@ -242,12 +242,12 @@
                 <label class="block text-sm font-medium text-gray-700 mb-2">Prix minimum</label>
                 <div class="relative">
                   <input
-                    v-model.number="tempPriceRange[0]"
+                    v-model.number="tempPriceMinInput"
                     type="number"
                     :min="priceMinLimit"
                     :max="priceMaxLimit"
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                    @input="updatePriceFromInput"
+                    @blur="updatePriceFromInput"
                   />
                   <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">€</span>
                 </div>
@@ -256,12 +256,12 @@
                 <label class="block text-sm font-medium text-gray-700 mb-2">Prix maximum</label>
                 <div class="relative">
                   <input
-                    v-model.number="tempPriceRange[1]"
+                    v-model.number="tempPriceMaxInput"
                     type="number"
                     :min="priceMinLimit"
                     :max="priceMaxLimit"
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                    @input="updatePriceFromInput"
+                    @blur="updatePriceFromInput"
                   />
                   <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">€</span>
                 </div>
@@ -425,6 +425,9 @@ const isBrandModalOpen = ref(false)
 // Temporary filter values (before applying)
 const tempPriceRange = ref([0, 150000])
 const tempSelectedBrands = ref([])
+// Temporary values for manual price input fields (to allow typing without updating slider immediately)
+const tempPriceMinInput = ref(0)
+const tempPriceMaxInput = ref(150000)
 
 // State
 const watches = ref([])
@@ -442,9 +445,9 @@ const priceMaxLimit = computed(() => {
   return Math.max(...watches.value.map(w => w.price))
 })
 
-// Helper function to round to nearest hundred
-const roundToHundred = (value) => {
-  return Math.round(value / 100) * 100
+// Helper function to round to nearest ten (dizaine supérieure)
+const roundToTen = (value) => {
+  return Math.ceil(value / 10) * 10
 }
 
 // Quick price ranges computed dynamically based on actual watch prices
@@ -457,10 +460,10 @@ const quickPriceRanges = computed(() => {
   const max = priceMaxLimit.value
 
   // Calculate the ranges
-  const oneThirdMax = roundToHundred(max / 3)
-  const halfMax = roundToHundred(max / 2)
-  const quarterMax = roundToHundred(max / 4)
-  const threeQuarterMax = roundToHundred((max * 3) / 4)
+  const oneThirdMax = roundToTen(max / 3)
+  const halfMax = roundToTen(max / 2)
+  const quarterMax = roundToTen(max / 4)
+  const threeQuarterMax = roundToTen((max * 3) / 4)
 
   return [
     {
@@ -493,10 +496,11 @@ const quickPriceRanges = computed(() => {
 
 // Modal functions
 const openPriceModal = () => {
-  tempPriceRange.value = [
-    roundToHundred(priceMin.value !== null ? priceMin.value : priceMinLimit.value),
-    roundToHundred(priceMax.value !== null ? priceMax.value : priceMaxLimit.value)
-  ]
+  const minValue = roundToTen(priceMin.value !== null ? priceMin.value : priceMinLimit.value)
+  const maxValue = roundToTen(priceMax.value !== null ? priceMax.value : priceMaxLimit.value)
+  tempPriceRange.value = [minValue, maxValue]
+  tempPriceMinInput.value = minValue
+  tempPriceMaxInput.value = maxValue
   isPriceModalOpen.value = true
   document.body.style.overflow = 'hidden'
 }
@@ -524,8 +528,8 @@ const applyQuickPrice = (quickPrice) => {
     : priceMaxLimit.value
   // Values are already rounded in quickPriceRanges, but ensure they're still rounded
   tempPriceRange.value = [
-    roundToHundred(Math.max(quickPrice.min, priceMinLimit.value)),
-    roundToHundred(maxValue)
+    roundToTen(Math.max(quickPrice.min, priceMinLimit.value)),
+    roundToTen(maxValue)
   ]
 }
 
@@ -539,17 +543,24 @@ const isQuickPriceSelected = (quickPrice) => {
 }
 
 const updatePriceFromInput = () => {
-  // Round to nearest hundred
-  tempPriceRange.value[0] = roundToHundred(tempPriceRange.value[0])
-  tempPriceRange.value[1] = roundToHundred(tempPriceRange.value[1])
+  // Round to nearest ten (dizaine supérieure)
+  let newMin = roundToTen(tempPriceMinInput.value)
+  let newMax = roundToTen(tempPriceMaxInput.value)
   
   // Ensure min <= max
-  if (tempPriceRange.value[0] > tempPriceRange.value[1]) {
-    tempPriceRange.value[0] = tempPriceRange.value[1]
+  if (newMin > newMax) {
+    newMin = newMax
+    tempPriceMinInput.value = newMin
   }
   // Clamp values
-  tempPriceRange.value[0] = Math.max(priceMinLimit.value, Math.min(priceMaxLimit.value, tempPriceRange.value[0]))
-  tempPriceRange.value[1] = Math.max(priceMinLimit.value, Math.min(priceMaxLimit.value, tempPriceRange.value[1]))
+  newMin = Math.max(priceMinLimit.value, Math.min(priceMaxLimit.value, newMin))
+  newMax = Math.max(priceMinLimit.value, Math.min(priceMaxLimit.value, newMax))
+  
+  // Update temp price range (which will trigger the watcher)
+  tempPriceRange.value = [newMin, newMax]
+  // Sync input values in case they were clamped
+  tempPriceMinInput.value = newMin
+  tempPriceMaxInput.value = newMax
 }
 
 const applyPriceFilter = () => {
@@ -610,15 +621,19 @@ const getFilteredCountWithBrand = () => {
   return filtered.length
 }
 
-// Round slider values to nearest hundred when they change
+// Round slider values to nearest ten (dizaine supérieure) when they change
 watch(tempPriceRange, (newValue, oldValue) => {
   // Skip if this is the initial value or if values haven't actually changed
   if (!oldValue || (newValue[0] === oldValue[0] && newValue[1] === oldValue[1])) {
     return
   }
   
-  const roundedMin = roundToHundred(newValue[0])
-  const roundedMax = roundToHundred(newValue[1])
+  const roundedMin = roundToTen(newValue[0])
+  const roundedMax = roundToTen(newValue[1])
+  
+  // Sync input values when slider changes
+  tempPriceMinInput.value = roundedMin
+  tempPriceMaxInput.value = roundedMax
   
   // Only update if values need rounding to avoid infinite loop
   if (roundedMin !== newValue[0] || roundedMax !== newValue[1]) {
@@ -636,10 +651,12 @@ watch(tempPriceRange, (newValue, oldValue) => {
 // Update temp price range when limits change
 watch([priceMinLimit, priceMaxLimit], () => {
   if (tempPriceRange.value[0] < priceMinLimit.value) {
-    tempPriceRange.value[0] = roundToHundred(priceMinLimit.value)
+    tempPriceRange.value[0] = roundToTen(priceMinLimit.value)
+    tempPriceMinInput.value = tempPriceRange.value[0]
   }
   if (tempPriceRange.value[1] > priceMaxLimit.value) {
-    tempPriceRange.value[1] = roundToHundred(priceMaxLimit.value)
+    tempPriceRange.value[1] = roundToTen(priceMaxLimit.value)
+    tempPriceMaxInput.value = tempPriceRange.value[1]
   }
 })
 
@@ -714,11 +731,15 @@ const loadWatches = async () => {
     error.value = null
     const data = await getAllWatches()
     watches.value = data
-    // Initialize temp price range with actual limits after loading (rounded to hundred)
+    // Initialize temp price range with actual limits after loading (rounded to ten)
     if (data.length > 0) {
       const minPrice = Math.min(...data.map(w => w.price))
       const maxPrice = Math.max(...data.map(w => w.price))
-      tempPriceRange.value = [roundToHundred(minPrice), roundToHundred(maxPrice)]
+      const roundedMin = roundToTen(minPrice)
+      const roundedMax = roundToTen(maxPrice)
+      tempPriceRange.value = [roundedMin, roundedMax]
+      tempPriceMinInput.value = roundedMin
+      tempPriceMaxInput.value = roundedMax
     }
   } catch (err) {
     console.error('Erreur lors du chargement des montres:', err)

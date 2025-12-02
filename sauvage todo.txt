@@ -1,7 +1,6 @@
 Montres :
 - Ajouter vidéo 360° sur les bestsellers
 
-
 Article :
 - Ajouter des images pour les articles
     - Nouvelles méthode et storage, à voir pour la limite si toujours ok voir payer 25€ par mois
@@ -9,9 +8,9 @@ Article :
     - ne pas proposer ceux non liables aux montres 
 - modifier n8n pour accepter de faire des articles sur d'autres sujets que juste des montres, par exemple article de montres à moins de 2k€ 
 
+Accueil :
 Admin :
 Blog:
-Accueil :
 Statistiques :
 SEO :
 FAQ :
@@ -26,4 +25,3 @@ droit de rétractation ?
 mentions légale 
 montre garantie => le mécanisme 
 bandeau cookie ?
-

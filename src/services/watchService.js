@@ -257,13 +257,13 @@ export async function getLatestAvailableWatches(limit = 7) {
       return []
     }
 
-    // Pour chaque montre, récupérer les détails, accessoires et images
+    // Pour chaque montre, récupérer les détails, accessoires et uniquement la première image
     const watchesWithDetails = await Promise.all(
       watches.map(async (watch) => {
         const [details, accessories, images] = await Promise.all([
           getWatchDetails(watch.id),
           getWatchAccessories(watch.id),
-          getWatchImages(watch.id),
+          getWatchImages(watch.id, 1), // Limiter à la première image uniquement
         ])
 
         return transformWatchData(watch, details, accessories, images)
@@ -280,16 +280,25 @@ export async function getLatestAvailableWatches(limit = 7) {
 /**
  * Récupère les images d'une montre depuis Supabase Storage
  * @param {string} watchId - ID de la montre
+ * @param {number|null} limit - Nombre maximum d'images à récupérer (null pour toutes les images)
  * @returns {Promise<Array>} Liste des images avec leurs URLs
  */
-export async function getWatchImages(watchId) {
+export async function getWatchImages(watchId, limit = null) {
   try {
-    // Récupérer les métadonnées des images depuis la table watch_images
-    const { data: imageRecords, error: imageRecordsError } = await supabase
+    // Construire la requête avec ou sans limite
+    let query = supabase
       .from('watch_images')
       .select('*')
       .eq('watch_id', watchId)
       .order('image_order', { ascending: true })
+
+    // Appliquer la limite si spécifiée
+    if (limit !== null && limit > 0) {
+      query = query.limit(limit)
+    }
+
+    // Récupérer les métadonnées des images depuis la table watch_images
+    const { data: imageRecords, error: imageRecordsError } = await query
 
     if (imageRecordsError) {
       console.error('Erreur lors de la récupération des métadonnées d\'images:', imageRecordsError)

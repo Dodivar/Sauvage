@@ -7,36 +7,76 @@
         </h2>
         <p class="text-xl text-gray-600">Voici quelques montres récemment vendues</p>
       </div>
-      <div class="overflow-x-auto custom-scrollbar-carrousel scroll-smooth p-4 sm:p-8 relative">
-        <div class="flex space-x-4 sm:space-x-6 min-w-full">
-          <!-- Loading State with Skeletons -->
-          <template v-if="isLoading">
+      <div class="relative group">
+        <!-- Flèche gauche -->
+        <button
+          v-if="canScrollLeft"
+          @click="scrollLeft"
+          class="carousel-arrow carousel-arrow-left absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-2 sm:p-3 hover:bg-gray-50 transition-all duration-200"
+          aria-label="Défiler vers la gauche"
+        >
+          <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </button>
+
+        <!-- Flèche droite -->
+        <button
+          v-if="canScrollRight"
+          @click="scrollRight"
+          class="carousel-arrow carousel-arrow-right absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-2 sm:p-3 hover:bg-gray-50 transition-all duration-200"
+          aria-label="Défiler vers la droite"
+        >
+          <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </button>
+
+        <div 
+          ref="carouselContainer"
+          class="overflow-x-auto custom-scrollbar-carrousel scroll-smooth p-4 sm:p-8"
+          @scroll="updateArrowVisibility"
+        >
+          <div ref="carouselContent" class="flex space-x-4 sm:space-x-6 min-w-full">
+            <!-- Loading State with Skeletons -->
+            <template v-if="isLoading">
+              <div
+                v-for="n in 5"
+                :key="`skeleton-${n}`"
+                class="flex-shrink-0 w-40 sm:w-48 md:w-60"
+              >
+                <WatchCardSkeleton
+                  :show-reference="false"
+                  :show-sold-badge="false"
+                  :show-price="false"
+                />
+              </div>
+            </template>
+            <!-- Loaded Watches -->
             <div
-              v-for="n in 5"
-              :key="`skeleton-${n}`"
+              v-else
+              v-for="(watch, i) in transformedWatches"
+              :key="`${i}-${watch.id || watch.name}`"
               class="flex-shrink-0 w-40 sm:w-48 md:w-60"
             >
-              <WatchCardSkeleton
+              <WatchCard
+                :watch="watch"
                 :show-reference="false"
                 :show-sold-badge="false"
                 :show-price="false"
+                :clickable="false"
               />
             </div>
-          </template>
-          <!-- Loaded Watches -->
-          <div
-            v-else
-            v-for="(watch, i) in transformedWatches"
-            :key="`${i}-${watch.id || watch.name}`"
-            class="flex-shrink-0 w-40 sm:w-48 md:w-60"
-          >
-            <WatchCard
-              :watch="watch"
-              :show-reference="false"
-              :show-sold-badge="false"
-              :show-price="false"
-              @viewDetails="handleViewDetails"
-            />
           </div>
         </div>
       </div>
@@ -45,15 +85,44 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { getSoldWatches } from '@/services/watchService'
 import WatchCard from '@/components/watch/WatchCard.vue'
 import WatchCardSkeleton from '@/components/watch/WatchCardSkeleton.vue'
-
-const router = useRouter()
 const salesWatches = ref([])
 const isLoading = ref(true)
+const carouselContainer = ref(null)
+const carouselContent = ref(null)
+const canScrollLeft = ref(false)
+const canScrollRight = ref(true)
+
+const scrollLeft = () => {
+  if (carouselContainer.value) {
+    const scrollAmount = carouselContainer.value.clientWidth * 0.8
+    carouselContainer.value.scrollBy({
+      left: -scrollAmount,
+      behavior: 'smooth'
+    })
+  }
+}
+
+const scrollRight = () => {
+  if (carouselContainer.value) {
+    const scrollAmount = carouselContainer.value.clientWidth * 0.8
+    carouselContainer.value.scrollBy({
+      left: scrollAmount,
+      behavior: 'smooth'
+    })
+  }
+}
+
+const updateArrowVisibility = () => {
+  if (carouselContainer.value) {
+    const { scrollLeft, scrollWidth, clientWidth } = carouselContainer.value
+    canScrollLeft.value = scrollLeft > 0
+    canScrollRight.value = scrollLeft < scrollWidth - clientWidth - 1
+  }
+}
 
 // Transformer les données pour correspondre au format attendu par WatchCard
 const transformedWatches = computed(() => {
@@ -72,21 +141,46 @@ const transformedWatches = computed(() => {
   }))
 })
 
-// Gérer la navigation vers la page de détail
-const handleViewDetails = (watchId) => {
-  router.push(`/watch/${watchId}`)
-}
-
 onMounted(async () => {
   try {
     isLoading.value = true
     const watches = await getSoldWatches()
     salesWatches.value = watches
+    await nextTick()
+    updateArrowVisibility()
+    window.addEventListener('resize', updateArrowVisibility)
   } catch (error) {
     console.error('Erreur lors du chargement des montres vendues:', error)
     salesWatches.value = []
   } finally {
     isLoading.value = false
+    await nextTick()
+    updateArrowVisibility()
   }
 })
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateArrowVisibility)
+})
 </script>
+
+<style scoped>
+/* Sur mobile: toujours afficher les flèches */
+.carousel-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Sur desktop: afficher uniquement au survol */
+@media (min-width: 768px) {
+  .carousel-arrow {
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+  }
+  
+  .group:hover .carousel-arrow {
+    opacity: 1;
+  }
+}
+</style>
