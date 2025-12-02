@@ -1,6 +1,7 @@
 Montres :
 - Ajouter vidéo 360° sur les bestsellers
 
+
 Article :
 - Ajouter des images pour les articles
     - Nouvelles méthode et storage, à voir pour la limite si toujours ok voir payer 25€ par mois
