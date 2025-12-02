@@ -92,6 +92,27 @@ router.post('/create-checkout-session', async (req, res) => {
       })
     }
 
+    // Récupérer la première image de la montre (image principale)
+    const { data: firstImage } = await supabase
+      .from('watch_images')
+      .select('image_url, image_path')
+      .eq('watch_id', watchId)
+      .order('image_order', { ascending: true })
+      .limit(1)
+      .single()
+
+    // Construire l'URL de l'image
+    let watchImageUrl = null
+    if (firstImage) {
+      if (firstImage.image_url) {
+        watchImageUrl = firstImage.image_url
+      } else if (firstImage.image_path) {
+        // Générer l'URL publique depuis Supabase Storage
+        const { data } = supabase.storage.from('watch-images').getPublicUrl(firstImage.image_path)
+        watchImageUrl = data.publicUrl
+      }
+    }
+
     const baseUrl = getBaseUrl()
     
     // Générer un token temporaire pour sécuriser l'accès à PaymentCancel
@@ -99,13 +120,25 @@ router.post('/create-checkout-session', async (req, res) => {
     const expiresAt = Date.now() + TOKEN_EXPIRATION_MS
     
     // Stocker le token avec le watch_id et la date d'expiration
+    // Normaliser watchId en string pour éviter les problèmes de comparaison de types
     paymentTokens.set(cancelToken, {
-      watchId,
+      watchId: String(watchId),
       expiresAt,
     })
     
     const successUrl = `${baseUrl}/paiement-succes?session_id={CHECKOUT_SESSION_ID}&watch_id=${watchId}`
     const cancelUrl = `${baseUrl}/paiement-annule?watch_id=${watchId}&token=${cancelToken}`
+
+    // Préparer les données du produit pour Stripe
+    const productData = {
+      name: watch.name,
+      description: `Réf. ${watch.reference}`,
+    }
+
+    // Ajouter l'image si elle existe
+    if (watchImageUrl) {
+      productData.images = [watchImageUrl]
+    }
 
     // Créer la session Stripe Checkout
     const session = await stripe.checkout.sessions.create({
@@ -114,10 +147,7 @@ router.post('/create-checkout-session', async (req, res) => {
         {
           price_data: {
             currency: 'eur',
-            product_data: {
-              name: watch.name,
-              description: `Réf. ${watch.reference}`,
-            },
+            product_data: productData,
             unit_amount: Math.round(watch.price * 100), // Convertir en centimes
           },
           quantity: 1,
@@ -135,6 +165,9 @@ router.post('/create-checkout-session', async (req, res) => {
     })
 
     console.log(`✅ Session Stripe créée pour la montre ${watch.name} (${watch.id}): ${session.id}`)
+    if (watchImageUrl) {
+      console.log(`📸 Image ajoutée à la session: ${watchImageUrl}`)
+    }
 
     res.json({
       success: true,
@@ -283,7 +316,8 @@ router.get('/verify-session', async (req, res) => {
         }
 
         // Vérifier que le watch_id correspond aux métadonnées de la session
-        if (session.metadata?.watch_id !== watch_id) {
+        // Normaliser les types avant comparaison (req.query retourne toujours des strings)
+        if (String(session.metadata?.watch_id) !== String(watch_id)) {
           console.warn(
             `⚠️  Tentative d'accès avec watch_id incorrect: session=${session_id}, watch_id=${watch_id}`,
           )
@@ -346,7 +380,8 @@ router.get('/verify-session', async (req, res) => {
       }
 
       // Vérifier que le watch_id correspond au token
-      if (tokenData.watchId !== watch_id) {
+      // Normaliser les types avant comparaison (req.query retourne toujours des strings)
+      if (String(tokenData.watchId) !== String(watch_id)) {
         console.warn(
           `⚠️  Tentative d'accès avec watch_id incorrect: token=${token}, watch_id=${watch_id}`,
         )

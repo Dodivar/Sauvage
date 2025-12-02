@@ -586,7 +586,7 @@
   <!-- Sticky Buy Button Mobile -->
   <div
     v-if="watchItem && watchItem.isAvailable && !watchItem.isSold"
-    class="fixed bottom-0 left-0 right-0 lg:hidden z-50 bg-white shadow-lg border-t border-gray-200 px-4 py-3"
+    class="fixed bottom-0 left-0 right-0 lg:hidden z-20 bg-white shadow-lg border-t border-gray-200 px-4 py-3"
   >
     <div class="flex items-center justify-between gap-4 max-w-7xl mx-auto">
       <!-- Watch Info and Price -->

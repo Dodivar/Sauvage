@@ -1,5 +1,5 @@
 <template>
-  <section class="lg:py-10 pb-10 gradient-bg min-h-screen">
+  <section class="lg:py-10 pb-20 lg:pb-10 gradient-bg min-h-screen">
     <div class="max-w-7xl mx-auto px-4">
       <!-- Main Section: Grid 2 columns -->
       <div class="grid lg:grid-cols-2 gap-8 mb-8">
@@ -157,6 +157,20 @@
       </div>
     </div>
   </section>
+
+  <!-- Sticky Buy Button Mobile Skeleton -->
+  <div class="fixed bottom-0 left-0 right-0 lg:hidden z-20 bg-white shadow-lg border-t border-gray-200 px-4 py-3">
+    <div class="flex items-center justify-between gap-4 max-w-7xl mx-auto">
+      <!-- Watch Info and Price Skeleton -->
+      <div class="flex-1 min-w-0">
+        <div class="h-4 bg-gray-300 rounded mb-0.5 w-3/4 shimmer-bg"></div>
+        <div class="h-3 bg-gray-200 rounded mb-1 w-1/2 shimmer-bg"></div>
+        <div class="h-7 bg-gray-300 rounded w-24 shimmer-bg"></div>
+      </div>
+      <!-- Buy Button Skeleton -->
+      <div class="flex-shrink-0 h-12 w-24 bg-gray-300 rounded-lg shimmer-bg"></div>
+    </div>
+  </div>
 </template>
 
 <script setup>
