@@ -110,13 +110,17 @@ router.post('/create-checkout-session', async (req, res) => {
 
 // Route pour gérer les webhooks Stripe
 // IMPORTANT: Cette route doit recevoir le body brut pour valider la signature
+// IMPORTANT: Les webhooks doivent TOUJOURS retourner 200 pour éviter les réessais Stripe
 router.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
   const sig = req.headers['stripe-signature']
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
 
+  // Toujours retourner 200 pour éviter les réessais Stripe, même en cas d'erreur
+  // Les erreurs sont loggées pour être tracées
+
   if (!webhookSecret) {
-    console.error('❌ STRIPE_WEBHOOK_SECRET non configuré')
-    return res.status(400).send('Webhook secret manquant')
+    console.error('❌ STRIPE_WEBHOOK_SECRET non configuré - Webhook ignoré')
+    return res.status(200).json({ received: true, error: 'Webhook secret manquant' })
   }
 
   let event
@@ -125,7 +129,9 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
     event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret)
   } catch (err) {
     console.error('❌ Erreur de validation du webhook Stripe:', err.message)
-    return res.status(400).send(`Webhook Error: ${err.message}`)
+    console.error('❌ Signature reçue:', sig)
+    // Retourner 200 pour éviter les réessais, mais logger l'erreur
+    return res.status(200).json({ received: true, error: `Webhook validation failed: ${err.message}` })
   }
 
   // Gérer l'événement checkout.session.completed
@@ -139,12 +145,20 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
 
     if (!watchId) {
       console.error('❌ watch_id manquant dans les métadonnées de la session')
-      return res.status(400).json({ error: 'watch_id manquant' })
+      console.error('❌ Session ID:', session.id)
+      console.error('❌ Métadonnées complètes:', JSON.stringify(session.metadata, null, 2))
+      // Retourner 200 pour éviter les réessais, mais logger l'erreur
+      return res.status(200).json({ received: true, error: 'watch_id manquant dans les métadonnées' })
     }
 
     if (!supabase) {
-      console.error('❌ Supabase non configuré')
-      return res.status(500).json({ error: 'Configuration Supabase manquante' })
+      console.error('❌ Supabase non configuré - Impossible de mettre à jour le stock')
+      console.error('❌ Session ID:', session.id)
+      console.error('❌ Watch ID:', watchId)
+      // Retourner 200 pour éviter les réessais, mais logger l'erreur critique
+      // NOTE: Dans ce cas, la montre ne sera pas marquée comme vendue automatiquement
+      // Il faudra le faire manuellement depuis le dashboard Stripe
+      return res.status(200).json({ received: true, error: 'Configuration Supabase manquante' })
     }
 
     try {
@@ -161,7 +175,13 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
 
       if (updateError) {
         console.error('❌ Erreur lors de la mise à jour de la montre:', updateError)
-        return res.status(500).json({ error: 'Erreur lors de la mise à jour du stock' })
+        console.error('❌ Session ID:', session.id)
+        console.error('❌ Watch ID:', watchId)
+        console.error('❌ Détails de l\'erreur Supabase:', JSON.stringify(updateError, null, 2))
+        // Retourner 200 pour éviter les réessais, mais logger l'erreur critique
+        // NOTE: Dans ce cas, la montre ne sera pas marquée comme vendue automatiquement
+        // Il faudra le faire manuellement depuis le dashboard Supabase
+        return res.status(200).json({ received: true, error: 'Erreur lors de la mise à jour du stock', details: updateError.message })
       }
 
       console.log(`✅ Montre ${watchId} marquée comme vendue`)
@@ -169,15 +189,19 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
       console.log(`📧 Email client: ${session.customer_details?.email || 'Non fourni'}`)
 
       // Retourner une réponse 200 pour confirmer la réception du webhook
-      res.json({ received: true })
+      res.status(200).json({ received: true, success: true })
     } catch (error) {
       console.error('❌ Erreur lors du traitement du webhook:', error)
-      res.status(500).json({ error: error.message })
+      console.error('❌ Stack trace:', error.stack)
+      console.error('❌ Session ID:', session.id)
+      console.error('❌ Watch ID:', watchId)
+      // Retourner 200 pour éviter les réessais, mais logger l'erreur critique
+      res.status(200).json({ received: true, error: error.message })
     }
   } else {
     // Pour les autres événements, on retourne juste une confirmation
     console.log(`ℹ️  Événement Stripe reçu (non traité): ${event.type}`)
-    res.json({ received: true })
+    res.status(200).json({ received: true })
   }
 })
 

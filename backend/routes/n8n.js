@@ -6,8 +6,7 @@ const FormData = require('form-data')
 // Note: Utilisez /webhook/ pour la production (workflow activé) ou /webhook-test/ pour le mode test
 const isProduction =
   process.env.NODE_ENV === 'production' ||
-  process.env.RENDER === 'true' ||
-  process.env.PORT // Render définit toujours PORT
+  process.env.RENDER === 'true'
 
 const defaultN8nUrl = isProduction
   ? 'https://n8n.srv1166238.hstgr.cloud/webhook/0adc09a6-a55c-4cd6-be94-f99c3036d441'

@@ -2,8 +2,8 @@
 function getBaseUrl() {
   const isProduction =
     process.env.NODE_ENV === 'production' ||
-    process.env.RENDER === 'true' ||
-    process.env.PORT // Render définit toujours PORT
+    process.env.RENDER === 'true' /* ||
+    process.env.PORT // Render définit toujours PORT */
 
   if (process.env.BASE_URL) {
     return process.env.BASE_URL

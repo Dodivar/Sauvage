@@ -4,7 +4,7 @@
 
 // Configuration de l'API URL
 const API_URL = import.meta.env.PROD
-  ? 'https://sauvage-watches-server.onrender.com'
+  ? import.meta.env.VITE_BACKEND_URL
   : 'http://localhost:3000'
 
 // Fonction pour envoyer un email avec retry

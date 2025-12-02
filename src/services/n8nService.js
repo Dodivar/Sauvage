@@ -4,7 +4,7 @@
 
 // Configuration de l'API URL (même logique que emailService)
 const API_URL = import.meta.env.PROD
-  ? 'https://sauvage-watches-server.onrender.com'
+  ? import.meta.env.VITE_BACKEND_URL
   : 'http://localhost:3000'
 
 const N8N_PROXY_URL = `${API_URL}/api/n8n/generate-article`

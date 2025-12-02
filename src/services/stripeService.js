@@ -1,6 +1,6 @@
-import { BASE_URL } from '@/config'
-
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000'
+const BACKEND_URL = import.meta.env.PROD
+  ? import.meta.env.VITE_BACKEND_URL
+  : 'http://localhost:3000'
 
 /**
  * Crée une session Stripe Checkout et redirige l'utilisateur vers la page de paiement
