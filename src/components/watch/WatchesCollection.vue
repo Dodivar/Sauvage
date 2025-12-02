@@ -1,17 +1,13 @@
 <template>
-  <section class="py-10 gradient-bg min-h-screen">
+  <section class="py-3 lg:py-10 gradient-bg min-h-screen">
     <div class="max-w-7xl mx-auto px-4">
       <!-- Header -->
-      <div class="text-center mb-8">
-        <h1 class="text-2xl font-bold text-text-main mb-3">Notre collection de montres</h1>
-<!--         <p class="text-xl text-gray-600 font-light max-w-3xl mx-auto">
-          Découvrez notre sélection exclusive de montres de prestige en dépôt-vente, authentifiées
-          et garanties par nos experts horlogers
-        </p> -->
+      <div class="text-center mb-3 lg:mb-8">
+        <h1 class="text-2xl font-bold text-text-main">Notre collection de montres</h1>
       </div>
 
       <!-- Filters Bar -->
-      <div class="bg-white rounded-md shadow-lg p-6 mb-8">
+      <div class="bg-white rounded-md shadow-lg p-6 mb-3 lg:mb-8">
         <div class="flex flex-wrap items-center justify-between gap-4">
           <!-- Main Filters -->
           <div class="flex flex-wrap gap-4">

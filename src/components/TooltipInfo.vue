@@ -102,10 +102,22 @@ onUnmounted(() => {
 
 <template>
   <div class="relative">
-    <i
+    <svg
       ref="triggerRef"
-      class="fas fa-question-circle tooltip-trigger text-gray-400 hover:text-gray-600 cursor-help text-lg font-bold"
-    ></i>
+      class="tooltip-trigger text-gray-400 hover:text-gray-600 cursor-help w-5 h-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <circle cx="12" cy="12" r="10" stroke-width="2" />
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M12 16v-4"
+      />
+      <circle cx="12" cy="8" r="1" fill="currentColor" />
+    </svg>
     <!-- Tooltip -->
     <div ref="tooltipRef" class="tooltip absolute bottom-full mb-2 z-10">
       <div

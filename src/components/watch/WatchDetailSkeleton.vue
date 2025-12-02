@@ -164,7 +164,6 @@
       <!-- Watch Info and Price Skeleton -->
       <div class="flex-1 min-w-0">
         <div class="h-4 bg-gray-300 rounded mb-0.5 w-3/4 shimmer-bg"></div>
-        <div class="h-3 bg-gray-200 rounded mb-1 w-1/2 shimmer-bg"></div>
         <div class="h-7 bg-gray-300 rounded w-24 shimmer-bg"></div>
       </div>
       <!-- Buy Button Skeleton -->

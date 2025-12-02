@@ -594,9 +594,6 @@
         <div class="text-sm font-semibold text-gray-900 truncate mb-0.5">
           {{ watchItem.name }}
         </div>
-        <div class="text-xs text-gray-600 mb-1">
-          Réf. {{ watchItem.reference }}
-        </div>
         <div class="text-2xl font-medium text-primary">
           {{ formatPrice(watchItem.price) }}
         </div>

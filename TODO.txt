@@ -23,9 +23,6 @@ Paiement :
 - gérer la page de paiement stripe pour afficher les infos de la montre
 
 
-GERER LES DERNIERS ICONES QUI NE S'AFFICHENT PAS BIEN
-ENLEVER Réf sur btn acheter en mobile
-
 
 Estimation :
 - Ajouter un article de blog "Anatomie d'une arnaque" / "Comment repérer une arnaque"

@@ -56,9 +56,17 @@ function closeMobileMenu() {
       <button
         @click="closeMobileMenu"
         ref="close-mobile-menu"
-        class="text-3xl text-text-main focus:outline-none"
+        class="text-text-main focus:outline-none p-2"
+        aria-label="Fermer le menu"
       >
-        <i class="fas fa-times"></i>
+        <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
       </button>
     </div>
     <nav
