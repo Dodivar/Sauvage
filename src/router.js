@@ -21,6 +21,8 @@ import BlogDetail from './components/BlogDetail.vue'
 import EstimationProcess from './components/EstimationProcess.vue'
 import APropos from './components/APropos.vue'
 import NotFound from './components/NotFound.vue'
+import PaymentSuccess from './components/PaymentSuccess.vue'
+import PaymentCancel from './components/PaymentCancel.vue'
 
 const routes = [
   { path: '/maintenance', component: Maintenance },
@@ -35,6 +37,8 @@ const routes = [
    { path: '/blog', component: BlogList },
    { path: '/blog/:id', component: BlogDetail },
    { path: '/a-propos', component: APropos },
+   { path: '/paiement-succes', component: PaymentSuccess },
+   { path: '/paiement-annule', component: PaymentCancel },
   // Admin routes
   { path: '/admin/login', component: AdminLogin },
   { path: '/admin', component: AdminDashboard },
