@@ -47,38 +47,49 @@
             </div>
           </div>
 
-          <!-- Contact Buttons Skeleton -->
-          <div class="bg-white rounded-md shadow-lg p-6">
-            <div class="h-6 bg-gray-300 rounded mb-3 w-2/3 shimmer-bg"></div>
-            <div class="flex flex-col sm:flex-row gap-4">
-              <div class="flex-1 h-12 bg-gray-300 rounded-lg shimmer-bg"></div>
-              <div class="flex-1 h-12 bg-gray-300 rounded-lg shimmer-bg"></div>
+          <!-- Buy Now Button Skeleton (Desktop only) -->
+          <div class="hidden lg:block">
+            <div class="w-full h-14 bg-primary rounded-lg mb-3 shimmer-bg"></div>
+            <!-- Payment Icons Skeleton -->
+            <div class="flex items-center justify-center gap-2 mt-2">
+              <div class="w-14 h-9 bg-gray-200 rounded border border-gray-300 shimmer-bg"></div>
+              <div class="w-14 h-9 bg-gray-200 rounded border border-gray-300 shimmer-bg"></div>
+              <div class="w-14 h-9 bg-gray-200 rounded border border-gray-300 shimmer-bg"></div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Detailed Specifications Skeleton -->
+      <!-- En savoir plus sur l'annonce - Tabs Section Skeleton -->
       <div class="bg-white rounded-md shadow-lg p-8 mb-8">
         <div class="h-8 bg-gray-300 rounded mb-6 w-64 shimmer-bg"></div>
+        
+        <!-- Tabs Skeleton -->
+        <div class="border-b border-gray-200 mb-6">
+          <div class="flex space-x-4 lg:space-x-8">
+            <div class="h-12 w-24 bg-gray-200 rounded-t shimmer-bg"></div>
+            <div class="h-12 w-28 bg-gray-200 rounded-t shimmer-bg"></div>
+          </div>
+        </div>
 
-        <div class="grid lg:grid-cols-2 gap-6">
-          <!-- Basic Data Skeleton -->
+        <!-- Tab Content Skeleton -->
+        <div class="grid lg:grid-cols-2 gap-8">
+          <!-- Left Column: Données de base -->
           <div>
-            <div class="h-6 bg-gray-300 rounded mb-3 w-40 border-b border-gray-200 pb-2 shimmer-bg"></div>
-            <div class="space-y-3">
-              <div v-for="n in 8" :key="n" class="flex gap-4 py-2 border-b border-gray-100">
-                <span class="h-4 bg-gray-200 rounded min-w-[140px] flex-shrink-0 shimmer-bg"></span>
+            <div class="h-6 bg-gray-300 rounded mb-4 w-40 shimmer-bg"></div>
+            <div class="space-y-0">
+              <div v-for="n in 8" :key="n" class="flex gap-4 py-3 border-b border-gray-200">
+                <span class="h-4 bg-gray-200 rounded min-w-[160px] flex-shrink-0 shimmer-bg"></span>
                 <span class="h-4 bg-gray-300 rounded flex-1 shimmer-bg"></span>
               </div>
             </div>
           </div>
 
-          <!-- Technical Specifications Skeleton -->
+          <!-- Right Column: Spécifications techniques -->
           <div>
-            <div class="h-6 bg-gray-300 rounded mb-3 w-48 border-b border-gray-200 pb-2 shimmer-bg"></div>
+            <div class="h-6 bg-gray-300 rounded mb-4 w-48 shimmer-bg"></div>
             <div class="space-y-3">
-              <div v-for="n in 8" :key="n" class="flex gap-4 py-2 border-b border-gray-100">
+              <div v-for="n in 8" :key="n" class="flex gap-4 py-2 border-b border-gray-200">
                 <span class="h-4 bg-gray-200 rounded min-w-[140px] flex-shrink-0 shimmer-bg"></span>
                 <span class="h-4 bg-gray-300 rounded flex-1 shimmer-bg"></span>
               </div>
@@ -110,16 +121,6 @@
         </div>
       </div>
 
-      <!-- Description Skeleton -->
-      <div class="bg-white rounded-md shadow-lg p-8 mb-12">
-        <div class="h-8 bg-gray-300 rounded mb-6 w-48 shimmer-bg"></div>
-        <div class="space-y-3">
-          <div class="h-4 bg-gray-300 rounded shimmer-bg"></div>
-          <div class="h-4 bg-gray-300 rounded shimmer-bg"></div>
-          <div class="h-4 bg-gray-300 rounded w-5/6 shimmer-bg"></div>
-        </div>
-      </div>
-
       <!-- Related Articles Skeleton -->
       <div class="bg-white rounded-md shadow-lg p-8 mb-12">
         <div class="h-8 bg-gray-300 rounded mb-6 w-48 shimmer-bg"></div>
@@ -141,6 +142,14 @@
               <div class="h-4 w-32 bg-gray-300 rounded shimmer-bg"></div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- Description Section (Expandable) Skeleton -->
+      <div class="bg-white rounded-md shadow-lg mb-8 overflow-hidden">
+        <div class="w-full flex items-center justify-between p-8">
+          <div class="h-8 bg-gray-300 rounded w-48 shimmer-bg"></div>
+          <div class="w-6 h-6 bg-gray-200 rounded shimmer-bg"></div>
         </div>
       </div>
 

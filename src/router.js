@@ -22,8 +22,8 @@ import BlogDetail from './components/BlogDetail.vue'
 import EstimationProcess from './components/EstimationProcess.vue'
 import APropos from './components/APropos.vue'
 import NotFound from './components/NotFound.vue'
-import PaymentSuccess from './components/PaymentSuccess.vue'
-import PaymentCancel from './components/PaymentCancel.vue'
+import PaymentSuccess from './components/payment/PaymentSuccess.vue'
+import PaymentCancel from './components/payment/PaymentCancel.vue'
 
 const routes = [
   { path: '/maintenance', component: Maintenance },
@@ -123,6 +123,15 @@ router.beforeEach(async (to, from, next) => {
 
   // Vérifier l'accès aux pages de paiement (PaymentSuccess et PaymentCancel)
   if (to.path === '/paiement-succes' || to.path === '/paiement-annule') {
+    // Vérifier si l'utilisateur est admin - les admins peuvent accéder sans vérification
+    const isAdmin = await isAdminAuthenticated()
+    if (isAdmin) {
+      // Admin authentifié, autoriser l'accès directement
+      next()
+      return
+    }
+
+    // Pour les non-admins, vérifier les paramètres requis
     const sessionId = to.query.session_id || null
     const watchId = to.query.watch_id || null
     const token = to.query.token || null

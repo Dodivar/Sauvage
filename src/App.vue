@@ -256,7 +256,7 @@ function closeMobileMenu() {
   <!-- Footer -->
   <footer v-if="!isMaintenancePage" id="contact" class="bg-text-main text-white py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid md:grid-cols-4 gap-8">
+      <div :class="isAdmin ? 'grid md:grid-cols-5 gap-8' : 'grid md:grid-cols-4 gap-8'">
         <div class="sm:col-span-2">
           <div class="text-3xl font-bold text-primary mb-4">Sauvage Watches</div>
           <p class="text-gray-300 mb-6 leading-relaxed">
@@ -382,6 +382,92 @@ function closeMobileMenu() {
               123 Avenue des Montres<br />67000 Strasbourg, France
             </p>
           </div>
+        </div>
+        <!-- Admin Debug Links -->
+        <div v-if="isAdmin" class="border-l border-gray-700 pl-4">
+          <h3 class="text-lg font-semibold mb-4 text-purple-300">🔧 Debug Admin</h3>
+          <ul class="space-y-2 text-sm">
+            <li>
+              <RouterLink to="/" class="text-gray-300 hover:text-primary transition-colors"
+                >Accueil</RouterLink
+              >
+            </li>
+            <li>
+              <RouterLink to="/maintenance" class="text-gray-300 hover:text-primary transition-colors"
+                >Maintenance</RouterLink
+              >
+            </li>
+            <li>
+              <RouterLink to="/merci" class="text-gray-300 hover:text-primary transition-colors"
+                >Merci</RouterLink
+              >
+            </li>
+            <li>
+              <RouterLink to="/recherche" class="text-gray-300 hover:text-primary transition-colors"
+                >Recherche</RouterLink
+              >
+            </li>
+            <li>
+              <RouterLink to="/estimation" class="text-gray-300 hover:text-primary transition-colors"
+                >Estimation</RouterLink
+              >
+            </li>
+            <li>
+              <RouterLink to="/estimation/processus" class="text-gray-300 hover:text-primary transition-colors"
+                >Estimation Processus</RouterLink
+              >
+            </li>
+            <li>
+              <RouterLink to="/a-propos" class="text-gray-300 hover:text-primary transition-colors"
+                >À propos</RouterLink
+              >
+            </li>
+            <li>
+              <RouterLink to="/paiement-succes" class="text-gray-300 hover:text-primary transition-colors"
+                >Paiement Succès</RouterLink
+              >
+            </li>
+            <li>
+              <RouterLink to="/paiement-annule" class="text-gray-300 hover:text-primary transition-colors"
+                >Paiement Annulé</RouterLink
+              >
+            </li>
+            <li class="pt-2 border-t border-gray-700">
+              <RouterLink to="/admin" class="text-purple-300 hover:text-purple-200 transition-colors font-medium"
+                >Admin Dashboard</RouterLink
+              >
+            </li>
+            <li>
+              <RouterLink to="/admin/login" class="text-gray-300 hover:text-primary transition-colors"
+                >Admin Login</RouterLink
+              >
+            </li>
+            <li>
+              <RouterLink to="/admin/watches/new" class="text-gray-300 hover:text-primary transition-colors"
+                >Nouvelle Montre</RouterLink
+              >
+            </li>
+            <li>
+              <RouterLink to="/admin/watches/stats" class="text-gray-300 hover:text-primary transition-colors"
+                >Stats Montres</RouterLink
+              >
+            </li>
+            <li>
+              <RouterLink to="/admin/articles" class="text-gray-300 hover:text-primary transition-colors"
+                >Liste Articles</RouterLink
+              >
+            </li>
+            <li>
+              <RouterLink to="/admin/articles/new" class="text-gray-300 hover:text-primary transition-colors"
+                >Nouvel Article</RouterLink
+              >
+            </li>
+            <li>
+              <RouterLink to="/admin/articles/generate" class="text-gray-300 hover:text-primary transition-colors"
+                >Générer Article</RouterLink
+              >
+            </li>
+          </ul>
         </div>
       </div>
       <div class="border-t border-gray-700 mt-12 pt-8">
