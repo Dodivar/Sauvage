@@ -92,9 +92,15 @@ const canScrollRight = ref(true)
 
 const scrollLeft = () => {
   if (carouselContainer.value) {
-    const scrollAmount = carouselContainer.value.clientWidth * 0.8
-    carouselContainer.value.scrollBy({
-      left: -scrollAmount,
+    const container = carouselContainer.value
+    const scrollAmount = container.clientWidth * 0.8
+    const currentScroll = container.scrollLeft
+    
+    // Calculer la nouvelle position en s'assurant qu'elle ne dépasse pas 0
+    const newScroll = Math.max(0, currentScroll - scrollAmount)
+    
+    container.scrollTo({
+      left: newScroll,
       behavior: 'smooth'
     })
   }
@@ -102,9 +108,16 @@ const scrollLeft = () => {
 
 const scrollRight = () => {
   if (carouselContainer.value) {
-    const scrollAmount = carouselContainer.value.clientWidth * 0.8
-    carouselContainer.value.scrollBy({
-      left: scrollAmount,
+    const container = carouselContainer.value
+    const scrollAmount = container.clientWidth * 0.8
+    const currentScroll = container.scrollLeft
+    const maxScroll = container.scrollWidth - container.clientWidth
+    
+    // Calculer la nouvelle position en s'assurant qu'elle ne dépasse pas le maximum
+    const newScroll = Math.min(maxScroll, currentScroll + scrollAmount)
+    
+    container.scrollTo({
+      left: newScroll,
       behavior: 'smooth'
     })
   }
