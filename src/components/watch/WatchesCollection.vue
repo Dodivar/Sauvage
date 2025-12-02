@@ -3,7 +3,7 @@
     <div class="max-w-7xl mx-auto px-4">
       <!-- Header -->
       <div class="text-center mb-8">
-        <h1 class="text-4xl font-bold text-text-main mb-3">Notre collection de montres</h1>
+        <h1 class="text-2xl font-bold text-text-main mb-3">Notre collection de montres</h1>
 <!--         <p class="text-xl text-gray-600 font-light max-w-3xl mx-auto">
           Découvrez notre sélection exclusive de montres de prestige en dépôt-vente, authentifiées
           et garanties par nos experts horlogers
@@ -13,17 +13,15 @@
       <!-- Filters Bar -->
       <div class="bg-white rounded-md shadow-lg p-6 mb-8">
         <div class="flex flex-wrap items-center justify-between gap-4">
+          <!-- Main Filters -->
           <div class="flex flex-wrap gap-4">
             <button
               @click="openBrandModal"
               class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors flex items-center gap-2"
             >
               <span>Marque</span>
-              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
               <span v-if="selectedBrands.length > 0" class="text-primary font-semibold">
-                ({{ selectedBrands.length === 1 ? selectedBrands[0] : selectedBrands.length + ' marques' }})
+                ({{ selectedBrands.length === 1 ? selectedBrands[0] : selectedBrands.length }})
               </span>
             </button>
 
@@ -32,40 +30,86 @@
               class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors flex items-center gap-2"
             >
               <span>Prix</span>
-              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
               <span v-if="priceMin !== null || priceMax !== null" class="text-primary font-semibold">
                 ({{ priceMin !== null ? priceMin.toLocaleString() + ' €' : '0 €' }} - {{ priceMax !== null ? priceMax.toLocaleString() + ' €' : '∞' }})
               </span>
             </button>
-
-            <!-- Sort Dropdown -->
-            <div class="relative">
-              <select
-                v-model="sortOrder"
-                class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors appearance-none bg-white pr-8 cursor-pointer"
-              >
-                <option value="recent">Ajout récent</option>
-                <option value="price-asc">Prix croissant</option>
-                <option value="price-desc">Prix décroissant</option>
-              </select>
-              <svg
-                class="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
           </div>
 
-          <div class="text-sm text-gray-600 font-light">
-            {{ filteredWatches.length }} montre{{
-              filteredWatches.length > 1 ? 's' : ''
-            }}
-            disponible{{ filteredWatches.length > 1 ? 's' : '' }}
+          <!-- Results Count and Actions -->
+          <div class="flex items-center gap-4">
+            <div class="text-sm text-gray-600 font-light">
+              {{ filteredWatches.length }} montre{{
+                filteredWatches.length > 1 ? 's' : ''
+              }}
+              disponible{{ filteredWatches.length > 1 ? 's' : '' }}
+            </div>
+
+            <!-- Sort Dropdown -->
+            <div class="relative" ref="sortDropdownRef">
+              <button
+                @click.stop="toggleSortMenu"
+                class="p-2 hover:bg-gray-100 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+                aria-label="Trier les montres"
+              >
+                <svg 
+                  class="w-5 h-5 text-gray-700"
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                </svg>
+              </button>
+
+              <!-- Sort Menu Dropdown -->
+              <div
+                v-if="isSortMenuOpen"
+                ref="sortMenuRef"
+                class="absolute top-full right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg z-50 min-w-[180px]"
+                @click.stop
+              >
+                <button
+                  @click="selectSort('recent')"
+                  :class="[
+                    'w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors',
+                    sortOrder === 'recent' ? 'bg-primary text-white hover:bg-green-700' : 'text-gray-700'
+                  ]"
+                >
+                  Ajout récent
+                </button>
+                <button
+                  @click="selectSort('price-asc')"
+                  :class="[
+                    'w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors',
+                    sortOrder === 'price-asc' ? 'bg-primary text-white hover:bg-green-700' : 'text-gray-700'
+                  ]"
+                >
+                  Prix croissant
+                </button>
+                <button
+                  @click="selectSort('price-desc')"
+                  :class="[
+                    'w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors rounded-b-lg',
+                    sortOrder === 'price-desc' ? 'bg-primary text-white hover:bg-green-700' : 'text-gray-700'
+                  ]"
+                >
+                  Prix décroissant
+                </button>
+              </div>
+            </div>
+
+            <!-- Reset Filters Button -->
+            <button
+              v-if="hasActiveFilters"
+              @click="resetAllFilters"
+              class="p-2 rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors flex items-center gap-2 text-gray-700"
+            >
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              <span>Réinitialiser</span>
+            </button>
           </div>
         </div>
       </div>
@@ -274,12 +318,20 @@
             <div class="text-sm text-gray-600">
               {{ getFilteredCountWithPrice() }} résultat{{ getFilteredCountWithPrice() > 1 ? 's' : '' }}
             </div>
-            <button
-              @click="applyPriceFilter"
-              class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
-            >
-              Appliquer les filtres
-            </button>
+            <div class="flex gap-3">
+              <button
+                @click="cancelPriceFilter"
+                class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium text-gray-700"
+              >
+              Réinitialiser
+              </button>
+              <button
+                @click="applyPriceFilter"
+                class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+              >
+                Appliquer les filtres
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -340,12 +392,20 @@
             <div class="text-sm text-gray-600">
               {{ getFilteredCountWithBrand() }} résultat{{ getFilteredCountWithBrand() > 1 ? 's' : '' }}
             </div>
-            <button
-              @click="applyBrandFilter"
-              class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
-            >
-              Appliquer les filtres
-            </button>
+            <div class="flex gap-3">
+              <button
+                @click="cancelBrandFilter"
+                class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium text-gray-700"
+              >
+                Réinitialiser
+              </button>
+              <button
+                @click="applyBrandFilter"
+                class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+              >
+                Appliquer les filtres
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -354,7 +414,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useHead } from '@vueuse/head'
 import Slider from '@vueform/slider'
@@ -421,6 +481,7 @@ const sortOrder = ref('recent') // Par défaut: ajout récent
 // Modal states
 const isPriceModalOpen = ref(false)
 const isBrandModalOpen = ref(false)
+const isSortMenuOpen = ref(false)
 
 // Temporary filter values (before applying)
 const tempPriceRange = ref([0, 150000])
@@ -433,6 +494,10 @@ const tempPriceMaxInput = ref(150000)
 const watches = ref([])
 const isLoading = ref(true)
 const error = ref(null)
+
+// Refs for sort menu
+const sortDropdownRef = ref(null)
+const sortMenuRef = ref(null)
 
 // Price limits computed from watches
 const priceMinLimit = computed(() => {
@@ -521,6 +586,29 @@ const closeBrandModal = () => {
   document.body.style.overflow = ''
 }
 
+// Sort menu functions
+const toggleSortMenu = () => {
+  isSortMenuOpen.value = !isSortMenuOpen.value
+}
+
+const closeSortMenu = () => {
+  isSortMenuOpen.value = false
+}
+
+const handleClickOutsideSortMenu = (event) => {
+  if (
+    sortDropdownRef.value &&
+    !sortDropdownRef.value.contains(event.target)
+  ) {
+    closeSortMenu()
+  }
+}
+
+const selectSort = (value) => {
+  sortOrder.value = value
+  closeSortMenu()
+}
+
 // Price filter functions
 const applyQuickPrice = (quickPrice) => {
   const maxValue = quickPrice.max !== null 
@@ -563,6 +651,19 @@ const updatePriceFromInput = () => {
   tempPriceMaxInput.value = newMax
 }
 
+const cancelPriceFilter = () => {
+  // Remove the price filter completely
+  priceMin.value = null
+  priceMax.value = null
+  // Reset temp values to full range limits
+  const minValue = roundToTen(priceMinLimit.value)
+  const maxValue = roundToTen(priceMaxLimit.value)
+  tempPriceRange.value = [minValue, maxValue]
+  tempPriceMinInput.value = minValue
+  tempPriceMaxInput.value = maxValue
+  closePriceModal()
+}
+
 const applyPriceFilter = () => {
   // Only set filters if they differ from the full range
   if (tempPriceRange.value[0] <= priceMinLimit.value && tempPriceRange.value[1] >= priceMaxLimit.value) {
@@ -599,6 +700,14 @@ const toggleBrand = (brand) => {
     // Add brand if not selected
     tempSelectedBrands.value.push(brand)
   }
+}
+
+const cancelBrandFilter = () => {
+  // Remove the brand filter completely
+  selectedBrands.value = []
+  // Reset temp values to empty array
+  tempSelectedBrands.value = []
+  closeBrandModal()
 }
 
 const applyBrandFilter = () => {
@@ -660,6 +769,26 @@ watch([priceMinLimit, priceMaxLimit], () => {
   }
 })
 
+// Reset all filters
+const resetAllFilters = () => {
+  selectedBrands.value = []
+  priceMin.value = null
+  priceMax.value = null
+  sortOrder.value = 'recent'
+  
+  // Reset temp values for modals
+  if (watches.value.length > 0) {
+    const minPrice = Math.min(...watches.value.map(w => w.price))
+    const maxPrice = Math.max(...watches.value.map(w => w.price))
+    const roundedMin = roundToTen(minPrice)
+    const roundedMax = roundToTen(maxPrice)
+    tempPriceRange.value = [roundedMin, roundedMax]
+    tempPriceMinInput.value = roundedMin
+    tempPriceMaxInput.value = roundedMax
+  }
+  tempSelectedBrands.value = []
+}
+
 // Navigation method
 const handleViewDetails = (watchId) => {
   router.push(`/watch/${watchId}`)
@@ -669,6 +798,15 @@ const handleViewDetails = (watchId) => {
 const availableBrands = computed(() => {
   const brands = [...new Set(watches.value.map((watch) => watch.brand))]
   return brands.sort()
+})
+
+const hasActiveFilters = computed(() => {
+  return (
+    selectedBrands.value.length > 0 ||
+    priceMin.value !== null ||
+    priceMax.value !== null ||
+    sortOrder.value !== 'recent'
+  )
 })
 
 const filteredWatches = computed(() => {
@@ -752,6 +890,13 @@ const loadWatches = async () => {
 onMounted(async () => {
   await loadWatches()
   scrollAnimation()
+  // Add click outside listener for sort menu
+  document.addEventListener('click', handleClickOutsideSortMenu)
+})
+
+onUnmounted(() => {
+  // Remove click outside listener for sort menu
+  document.removeEventListener('click', handleClickOutsideSortMenu)
 })
 </script>
 

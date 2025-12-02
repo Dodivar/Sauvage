@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Stripe = require('stripe')
+const crypto = require('crypto')
 const { createClient } = require('@supabase/supabase-js')
 const { getBaseUrl } = require('../utils/getBaseUrl')
 
@@ -19,6 +20,36 @@ if (supabaseUrl && supabaseServiceKey) {
 } else {
   console.warn('⚠️  Supabase non configuré. Les fonctionnalités Stripe nécessitent Supabase.')
 }
+
+// Système de tokens temporaires pour sécuriser PaymentCancel
+// Structure: Map<token, { watchId, expiresAt }>
+const paymentTokens = new Map()
+const TOKEN_EXPIRATION_MS = 60 * 60 * 1000 // 1 heure
+
+// Fonction pour générer un token unique
+function generatePaymentToken() {
+  return crypto.randomUUID()
+}
+
+// Fonction pour nettoyer les tokens expirés
+function cleanupExpiredTokens() {
+  const now = Date.now()
+  let cleanedCount = 0
+  
+  for (const [token, data] of paymentTokens.entries()) {
+    if (data.expiresAt < now) {
+      paymentTokens.delete(token)
+      cleanedCount++
+    }
+  }
+  
+  if (cleanedCount > 0) {
+    console.log(`🧹 Nettoyage: ${cleanedCount} token(s) expiré(s) supprimé(s)`)
+  }
+}
+
+// Nettoyer les tokens expirés toutes les 30 minutes
+setInterval(cleanupExpiredTokens, 30 * 60 * 1000)
 
 // Route pour créer une session Stripe Checkout
 router.post('/create-checkout-session', async (req, res) => {
@@ -61,9 +92,53 @@ router.post('/create-checkout-session', async (req, res) => {
       })
     }
 
+    // Récupérer la première image de la montre (image principale)
+    const { data: firstImage } = await supabase
+      .from('watch_images')
+      .select('image_url, image_path')
+      .eq('watch_id', watchId)
+      .order('image_order', { ascending: true })
+      .limit(1)
+      .single()
+
+    // Construire l'URL de l'image
+    let watchImageUrl = null
+    if (firstImage) {
+      if (firstImage.image_url) {
+        watchImageUrl = firstImage.image_url
+      } else if (firstImage.image_path) {
+        // Générer l'URL publique depuis Supabase Storage
+        const { data } = supabase.storage.from('watch-images').getPublicUrl(firstImage.image_path)
+        watchImageUrl = data.publicUrl
+      }
+    }
+
     const baseUrl = getBaseUrl()
+    
+    // Générer un token temporaire pour sécuriser l'accès à PaymentCancel
+    const cancelToken = generatePaymentToken()
+    const expiresAt = Date.now() + TOKEN_EXPIRATION_MS
+    
+    // Stocker le token avec le watch_id et la date d'expiration
+    // Normaliser watchId en string pour éviter les problèmes de comparaison de types
+    paymentTokens.set(cancelToken, {
+      watchId: String(watchId),
+      expiresAt,
+    })
+    
     const successUrl = `${baseUrl}/paiement-succes?session_id={CHECKOUT_SESSION_ID}&watch_id=${watchId}`
-    const cancelUrl = `${baseUrl}/paiement-annule?watch_id=${watchId}`
+    const cancelUrl = `${baseUrl}/paiement-annule?watch_id=${watchId}&token=${cancelToken}`
+
+    // Préparer les données du produit pour Stripe
+    const productData = {
+      name: watch.name,
+      description: `Réf. ${watch.reference}`,
+    }
+
+    // Ajouter l'image si elle existe
+    if (watchImageUrl) {
+      productData.images = [watchImageUrl]
+    }
 
     // Créer la session Stripe Checkout
     const session = await stripe.checkout.sessions.create({
@@ -72,10 +147,7 @@ router.post('/create-checkout-session', async (req, res) => {
         {
           price_data: {
             currency: 'eur',
-            product_data: {
-              name: watch.name,
-              description: `Réf. ${watch.reference}`,
-            },
+            product_data: productData,
             unit_amount: Math.round(watch.price * 100), // Convertir en centimes
           },
           quantity: 1,
@@ -93,6 +165,9 @@ router.post('/create-checkout-session', async (req, res) => {
     })
 
     console.log(`✅ Session Stripe créée pour la montre ${watch.name} (${watch.id}): ${session.id}`)
+    if (watchImageUrl) {
+      console.log(`📸 Image ajoutée à la session: ${watchImageUrl}`)
+    }
 
     res.json({
       success: true,
@@ -202,6 +277,140 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
     // Pour les autres événements, on retourne juste une confirmation
     console.log(`ℹ️  Événement Stripe reçu (non traité): ${event.type}`)
     res.status(200).json({ received: true })
+  }
+})
+
+// Route pour vérifier la validité d'une session de paiement
+router.get('/verify-session', async (req, res) => {
+  try {
+    const { session_id, watch_id, token } = req.query
+
+    // Si on a un session_id, c'est pour PaymentSuccess
+    if (session_id) {
+      if (!watch_id) {
+        return res.status(400).json({
+          valid: false,
+          reason: 'watch_id manquant',
+        })
+      }
+
+      try {
+        // Vérifier avec Stripe que la session existe et est complétée
+        const session = await stripe.checkout.sessions.retrieve(session_id)
+
+        if (!session) {
+          console.warn(`⚠️  Tentative d'accès avec session_id invalide: ${session_id}`)
+          return res.status(200).json({
+            valid: false,
+            reason: 'Session Stripe invalide',
+          })
+        }
+
+        // Vérifier que la session est complétée
+        if (session.payment_status !== 'paid') {
+          console.warn(`⚠️  Tentative d'accès avec session non payée: ${session_id}`)
+          return res.status(200).json({
+            valid: false,
+            reason: 'Paiement non complété',
+          })
+        }
+
+        // Vérifier que le watch_id correspond aux métadonnées de la session
+        // Normaliser les types avant comparaison (req.query retourne toujours des strings)
+        if (String(session.metadata?.watch_id) !== String(watch_id)) {
+          console.warn(
+            `⚠️  Tentative d'accès avec watch_id incorrect: session=${session_id}, watch_id=${watch_id}`,
+          )
+          return res.status(200).json({
+            valid: false,
+            reason: 'watch_id ne correspond pas à la session',
+          })
+        }
+
+        console.log(`✅ Session vérifiée avec succès: ${session_id}`)
+        return res.status(200).json({
+          valid: true,
+          session: {
+            id: session.id,
+            payment_status: session.payment_status,
+            amount_total: session.amount_total,
+            currency: session.currency,
+          },
+        })
+      } catch (error) {
+        console.error('❌ Erreur lors de la vérification de la session Stripe:', error)
+        return res.status(200).json({
+          valid: false,
+          reason: 'Erreur lors de la vérification de la session',
+        })
+      }
+    }
+
+    // Si on a un token, c'est pour PaymentCancel
+    if (token) {
+      if (!watch_id) {
+        return res.status(400).json({
+          valid: false,
+          reason: 'watch_id manquant',
+        })
+      }
+
+      // Nettoyer les tokens expirés avant de vérifier
+      cleanupExpiredTokens()
+
+      // Vérifier que le token existe
+      const tokenData = paymentTokens.get(token)
+
+      if (!tokenData) {
+        console.warn(`⚠️  Tentative d'accès avec token invalide ou expiré: ${token}`)
+        return res.status(200).json({
+          valid: false,
+          reason: 'Token invalide ou expiré',
+        })
+      }
+
+      // Vérifier que le token n'est pas expiré
+      if (tokenData.expiresAt < Date.now()) {
+        paymentTokens.delete(token)
+        console.warn(`⚠️  Tentative d'accès avec token expiré: ${token}`)
+        return res.status(200).json({
+          valid: false,
+          reason: 'Token expiré',
+        })
+      }
+
+      // Vérifier que le watch_id correspond au token
+      // Normaliser les types avant comparaison (req.query retourne toujours des strings)
+      if (String(tokenData.watchId) !== String(watch_id)) {
+        console.warn(
+          `⚠️  Tentative d'accès avec watch_id incorrect: token=${token}, watch_id=${watch_id}`,
+        )
+        return res.status(200).json({
+          valid: false,
+          reason: 'watch_id ne correspond pas au token',
+        })
+      }
+
+      // Token valide - le supprimer pour éviter la réutilisation
+      paymentTokens.delete(token)
+
+      console.log(`✅ Token vérifié avec succès pour watch_id: ${watch_id}`)
+      return res.status(200).json({
+        valid: true,
+      })
+    }
+
+    // Ni session_id ni token fourni
+    return res.status(400).json({
+      valid: false,
+      reason: 'session_id ou token requis',
+    })
+  } catch (error) {
+    console.error('❌ Erreur lors de la vérification:', error)
+    return res.status(500).json({
+      valid: false,
+      reason: 'Erreur serveur lors de la vérification',
+    })
   }
 })
 

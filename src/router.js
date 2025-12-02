@@ -1,6 +1,7 @@
 import { createWebHistory, createRouter } from 'vue-router'
 import { isAuthenticated } from './services/maintenanceService'
 import { isAdminAuthenticated } from './services/admin/adminAuthService'
+import { verifyPaymentSession } from './services/stripeService'
 
 import HomeView from './components/HomePage.vue'
 import Merci from './components/Merci.vue'
@@ -55,6 +56,7 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(), //createWebHashHistory(),
   routes,
+  // eslint-disable-next-line no-unused-vars
   async scrollBehavior(to, from, savedPosition) {
     // Si on a une ancre dans l'URL sur la page d'accueil, laisser HomePage gérer le scroll
     if (to.hash && to.path === '/') {
@@ -117,6 +119,57 @@ router.beforeEach(async (to, from, next) => {
   if (to.path === '/maintenance') {
     next()
     return
+  }
+
+  // Vérifier l'accès aux pages de paiement (PaymentSuccess et PaymentCancel)
+  if (to.path === '/paiement-succes' || to.path === '/paiement-annule') {
+    const sessionId = to.query.session_id || null
+    const watchId = to.query.watch_id || null
+    const token = to.query.token || null
+
+    // Pour PaymentSuccess, session_id et watch_id sont requis
+    if (to.path === '/paiement-succes') {
+      if (!sessionId || !watchId) {
+        console.warn('⚠️  Tentative d\'accès non autorisée à /paiement-succes sans session_id ou watch_id')
+        next('/collection')
+        return
+      }
+
+      // Vérifier la session avec le backend
+      const verification = await verifyPaymentSession(sessionId, watchId, null)
+      
+      if (!verification.valid) {
+        console.warn(`⚠️  Tentative d'accès non autorisée à /paiement-succes: ${verification.reason || 'Session invalide'}`)
+        next('/collection')
+        return
+      }
+
+      // Session valide, autoriser l'accès
+      next()
+      return
+    }
+
+    // Pour PaymentCancel, watch_id et token sont requis
+    if (to.path === '/paiement-annule') {
+      if (!watchId || !token) {
+        console.warn('⚠️  Tentative d\'accès non autorisée à /paiement-annule sans watch_id ou token')
+        next('/collection')
+        return
+      }
+
+      // Vérifier le token avec le backend
+      const verification = await verifyPaymentSession(null, watchId, token)
+      
+      if (!verification.valid) {
+        console.warn(`⚠️  Tentative d'accès non autorisée à /paiement-annule: ${verification.reason || 'Token invalide'}`)
+        next('/collection')
+        return
+      }
+
+      // Token valide, autoriser l'accès
+      next()
+      return
+    }
   }
 
   // Si l'utilisateur n'est pas authentifié, rediriger vers la page de maintenance

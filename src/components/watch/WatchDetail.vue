@@ -1,5 +1,5 @@
 <template>
-  <section class="lg:py-10 pb-10 gradient-bg min-h-screen">
+  <section class="lg:py-10 pb-20 lg:pb-10 gradient-bg min-h-screen">
     <div class="max-w-7xl mx-auto px-4">
       <!-- Loading State -->
       <WatchDetailSkeleton v-if="isLoading" />
@@ -270,13 +270,11 @@
           </div>
 
           <!-- Buy Now Button -->
-          <div class="bg-white rounded-md shadow-lg p-6">
-            <h3 class="text-xl font-semibold text-gray-900 mb-4 text-center">Acheter cette montre</h3>
             <button
               v-if="watchItem && watchItem.isAvailable && !watchItem.isSold"
               @click="handleBuyNow"
               :disabled="isCreatingCheckout"
-              class="w-full inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-semibold rounded-lg text-white bg-primary hover:bg-green-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transform hover:scale-[1.02] transition-all"
+              class="hidden lg:inline-flex w-full items-center justify-center px-8 py-4 border border-transparent text-lg font-semibold rounded-lg text-white bg-primary hover:bg-green-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transform hover:scale-[1.02] transition-all"
             >
               <svg
                 v-if="!isCreatingCheckout"
@@ -312,9 +310,8 @@
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
               </svg>
-              {{ isCreatingCheckout ? 'Traitement...' : 'Acheter maintenant' }}
+              {{ isCreatingCheckout ? 'Traitement...' : 'Acheter cette montre' }}
             </button>
-          </div>
         </div>
       </div>
 
@@ -584,6 +581,70 @@
       </div>
       </template>
     </div>
+  </section>
+
+  <!-- Sticky Buy Button Mobile -->
+  <div
+    v-if="watchItem && watchItem.isAvailable && !watchItem.isSold"
+    class="fixed bottom-0 left-0 right-0 lg:hidden z-20 bg-white shadow-lg border-t border-gray-200 px-4 py-3"
+  >
+    <div class="flex items-center justify-between gap-4 max-w-7xl mx-auto">
+      <!-- Watch Info and Price -->
+      <div class="flex-1 min-w-0">
+        <div class="text-sm font-semibold text-gray-900 truncate mb-0.5">
+          {{ watchItem.name }}
+        </div>
+        <div class="text-xs text-gray-600 mb-1">
+          Réf. {{ watchItem.reference }}
+        </div>
+        <div class="text-2xl font-medium text-primary">
+          {{ formatPrice(watchItem.price) }}
+        </div>
+      </div>
+      <!-- Buy Button -->
+      <button
+        @click="handleBuyNow"
+        :disabled="isCreatingCheckout"
+        class="flex-shrink-0 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-semibold rounded-lg text-white bg-primary hover:bg-green-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+      >
+        <svg
+          v-if="!isCreatingCheckout"
+          class="w-5 h-5 mr-2"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+          />
+        </svg>
+        <svg
+          v-else
+          class="w-5 h-5 mr-2 animate-spin"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+        {{ isCreatingCheckout ? 'Traitement...' : 'Acheter' }}
+      </button>
+    </div>
+  </div>
 
     <!-- Lightbox Modal -->
     <Teleport to="body">
@@ -752,7 +813,6 @@
         </div>
       </div>
     </Teleport>
-  </section>
 </template>
 
 <script setup>

@@ -268,7 +268,7 @@ const formatEmailContent = (formData) => {
 }
 
 // Route pour l'envoi d'email avec pièces jointes
-router.post('/send-email', upload.array('attachments', 20), async (req, res) => {
+router.post('/send-email', upload.array('attachments', 10), async (req, res) => {
   try {
     console.log("--- Nouvelle requête d'envoi d'email reçue ---")
     const { type, ...formData } = req.body

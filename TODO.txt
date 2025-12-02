@@ -1,5 +1,9 @@
 Montres :
 - Ajouter vidéo 360° sur les bestsellers
+- Améliroer bouton achat
+    achat sur smartphone comme sur app chrono24 tout en bas sticky
+- Ajouter détail de la sécurité d'un achat sur le site pour la confiance
+    retour,assurance, garantie, authentification garantie
 
 
 Article :
@@ -10,12 +14,17 @@ Article :
 - modifier n8n pour accepter de faire des articles sur d'autres sujets que juste des montres, par exemple article de montres à moins de 2k€ 
 
 Accueil :
-Admin :
-Blog:
-Statistiques :
-SEO :
+- vérif : sur smartphone le clic des boutons dépasse la taille maximale des carrousels
+
 FAQ :
 - livraison Colis sécurisé avec montre avec assurance à valeur déclaré 
+
+Paiement :
+- gérer la page de paiement stripe pour afficher les infos de la montre
+
+
+GERER LES DERNIERS ICONES QUI NE S'AFFICHENT PAS BIEN
+ENLEVER Réf sur btn acheter en mobile
 
 
 Estimation :
@@ -26,3 +35,7 @@ droit de rétractation ?
 mentions légale 
 montre garantie => le mécanisme 
 bandeau cookie ?
+
+
+backend:
+- Création de facture et envoi automatisé à l'e-mail du client ? Stripe le propose pour 0,4% de la trs (max 2$)

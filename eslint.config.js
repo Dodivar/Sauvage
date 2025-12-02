@@ -20,6 +20,16 @@ export default defineConfig([
     },
   },
 
+  // Configuration pour les fichiers backend Node.js
+  {
+    files: ['backend/**/*.js'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
+
   // Configuration par défaut pour le reste du projet
   {
     files: ['**/*.{js,mjs,jsx,vue}'],
