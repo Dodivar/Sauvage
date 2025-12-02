@@ -23,6 +23,7 @@ const corsOptions = {
         'https://sauvage-watches.fr',
         'https://www.sauvage-watches.fr',
         'https://recette.sauvage-watches.fr',
+        'https://www.recette.sauvage-watches.fr',
       ]
     : ['http://localhost:5173', 'http://localhost:3000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
