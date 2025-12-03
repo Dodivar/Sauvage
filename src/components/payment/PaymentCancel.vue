@@ -21,7 +21,7 @@
       </div>
 
       <!-- Admin Badge -->
-      <div v-if="isAdmin" class="mb-4">
+      <div v-if="isAdmin" class="mb-4 flex flex-wrap gap-2 justify-center">
         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
           <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path
@@ -33,6 +33,72 @@
           </svg>
           Mode Admin
         </span>
+        <span v-if="isPreviewMode" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+          <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+            />
+          </svg>
+          Mode Prévisualisation
+        </span>
+      </div>
+
+      <!-- Admin Preview Panel -->
+      <div v-if="isAdmin" class="mb-6 bg-purple-50 border-2 border-purple-200 rounded-lg p-4">
+        <h3 class="text-sm font-semibold text-purple-900 mb-3 flex items-center">
+          <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+            />
+          </svg>
+          Prévisualisation - Charger une montre de référence
+        </h3>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <div class="flex-1">
+            <input
+              v-model="adminWatchId"
+              type="text"
+              placeholder="Entrez l'ID d'une montre (ex: uuid)"
+              class="w-full px-4 py-2 border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-sm"
+            />
+          </div>
+          <button
+            @click="loadWatchForPreview"
+            :disabled="!adminWatchId || isLoadingWatch"
+            class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-purple-300 disabled:cursor-not-allowed transition-colors text-sm font-medium whitespace-nowrap"
+          >
+            <span v-if="isLoadingWatch">Chargement...</span>
+            <span v-else>Charger la montre</span>
+          </button>
+          <button
+            v-if="watch"
+            @click="clearPreview"
+            class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors text-sm font-medium whitespace-nowrap"
+          >
+            Réinitialiser
+          </button>
+        </div>
+        <p class="text-xs text-purple-700 mt-2">
+          Utilisez ce champ pour prévisualiser la page d'annulation avec une montre spécifique.
+        </p>
       </div>
 
       <!-- Cancel Message -->
@@ -40,6 +106,66 @@
       <p class="text-lg text-gray-600 mb-6">
         Votre paiement a été annulé. Aucun montant n'a été débité.
       </p>
+
+      <!-- Watch Image - Loading State -->
+      <div v-if="isLoadingWatch" class="mb-6">
+        <div class="bg-gray-50 rounded-lg p-6 animate-pulse">
+          <div class="flex flex-col sm:flex-row items-center gap-6">
+            <div class="w-full sm:w-64 h-64 bg-gray-200 rounded-lg"></div>
+            <div class="flex-1 w-full space-y-3">
+              <div class="h-6 bg-gray-200 rounded w-3/4"></div>
+              <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+              <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+              <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Watch Image - Display -->
+      <div v-else-if="watch && watch.images && watch.images.length > 0" class="mb-6">
+        <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 shadow-lg">
+          <h2 class="text-xl font-semibold text-gray-900 mb-4 text-center">Votre montre</h2>
+          <div class="flex flex-col sm:flex-row items-center gap-6">
+            <!-- Image Container -->
+            <div class="w-full sm:w-64 h-64 bg-white rounded-xl overflow-hidden shadow-xl flex-shrink-0">
+              <img
+                :src="watch.images[0]"
+                :alt="watch.name"
+                class="w-full h-full object-cover"
+                @error="handleImageError"
+              />
+            </div>
+            <!-- Watch Details -->
+            <div class="flex-1 text-left w-full">
+              <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ watch.name }}</h3>
+              <p v-if="watch.reference" class="text-lg font-semibold text-primary mb-3">
+                Réf. {{ watch.reference }}
+              </p>
+              <div class="space-y-2">
+                <p v-if="watch.brand" class="text-gray-700">
+                  <span class="font-semibold text-gray-900">Marque :</span> {{ watch.brand }}
+                </p>
+                <p v-if="watch.model" class="text-gray-700">
+                  <span class="font-semibold text-gray-900">Modèle :</span> {{ watch.model }}
+                </p>
+                <p v-if="watch.price" class="text-lg font-bold text-primary mt-3">
+                  {{ new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(watch.price) }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Watch Image - Error State -->
+      <div v-else-if="watchError" class="mb-6">
+        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+          <p class="text-sm text-yellow-800">
+            <strong>Note :</strong> Impossible de charger les détails de la montre. {{ watchError }}
+          </p>
+        </div>
+      </div>
 
       <!-- Information -->
       <div class="bg-gray-50 rounded-lg p-6 mb-6">
@@ -111,10 +237,16 @@ import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { WHATSAPP_NUMBER } from '@/config'
 import { isAdminAuthenticated } from '@/services/admin/adminAuthService'
+import { getWatchById } from '@/services/watchService'
 
 const route = useRoute()
 const watchId = ref(null)
 const isAdmin = ref(false)
+const adminWatchId = ref('')
+const isPreviewMode = ref(false)
+const watch = ref(null)
+const isLoadingWatch = ref(false)
+const watchError = ref(null)
 
 onMounted(async () => {
   // Vérifier si l'utilisateur est admin
@@ -123,6 +255,43 @@ onMounted(async () => {
   // Récupérer les paramètres de l'URL
   watchId.value = route.query.watch_id || null
 })
+
+async function loadWatchForPreview() {
+  if (!adminWatchId.value || !isAdmin.value) return
+
+  isLoadingWatch.value = true
+  watchError.value = null
+  isPreviewMode.value = true
+
+  try {
+    // Utiliser allowUnavailable = true pour permettre de voir toutes les montres
+    const watchData = await getWatchById(adminWatchId.value.trim(), true)
+    watch.value = watchData
+    // Mettre à jour watchId pour l'affichage
+    watchId.value = adminWatchId.value.trim()
+  } catch (error) {
+    console.error('Erreur lors du chargement de la montre:', error)
+    watchError.value = error.message || 'Erreur lors du chargement de la montre'
+  } finally {
+    isLoadingWatch.value = false
+  }
+}
+
+function clearPreview() {
+  watch.value = null
+  watchId.value = route.query.watch_id || null
+  adminWatchId.value = ''
+  watchError.value = null
+  isPreviewMode.value = false
+}
+
+function handleImageError(event) {
+  console.error('Erreur lors du chargement de l\'image:', event)
+  // Optionnel : masquer l'image en cas d'erreur
+  if (event.target) {
+    event.target.style.display = 'none'
+  }
+}
 </script>
 
 <style scoped>
