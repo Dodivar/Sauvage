@@ -20,6 +20,21 @@
         </div>
       </div>
 
+      <!-- Admin Badge -->
+      <div v-if="isAdmin" class="mb-4">
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+          <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+            />
+          </svg>
+          Mode Admin
+        </span>
+      </div>
+
       <!-- Cancel Message -->
       <h1 class="text-3xl font-bold text-gray-900 mb-4">Paiement annulé</h1>
       <p class="text-lg text-gray-600 mb-6">
@@ -95,11 +110,16 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { WHATSAPP_NUMBER } from '@/config'
+import { isAdminAuthenticated } from '@/services/admin/adminAuthService'
 
 const route = useRoute()
 const watchId = ref(null)
+const isAdmin = ref(false)
 
-onMounted(() => {
+onMounted(async () => {
+  // Vérifier si l'utilisateur est admin
+  isAdmin.value = await isAdminAuthenticated()
+
   // Récupérer les paramètres de l'URL
   watchId.value = route.query.watch_id || null
 })

@@ -270,135 +270,260 @@
           </div>
 
           <!-- Buy Now Button -->
-            <button
-              v-if="watchItem && watchItem.isAvailable && !watchItem.isSold"
-              @click="handleBuyNow"
-              :disabled="isCreatingCheckout"
-              class="hidden lg:inline-flex w-full items-center justify-center px-8 py-4 border border-transparent text-lg font-semibold rounded-lg text-white bg-primary hover:bg-green-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transform hover:scale-[1.02] transition-all"
-            >
-              <svg
-                v-if="!isCreatingCheckout"
-                class="w-6 h-6 mr-3"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+            <div v-if="watchItem && watchItem.isAvailable && !watchItem.isSold" class="hidden lg:block">
+              <button
+                @click="handleBuyNow"
+                :disabled="isCreatingCheckout"
+                class="w-full inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-semibold rounded-lg text-white bg-primary hover:bg-green-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transform hover:scale-[1.02] transition-all mb-3"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-                />
-              </svg>
-              <svg
-                v-else
-                class="w-6 h-6 mr-3 animate-spin"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
+                <svg
+                  v-if="!isCreatingCheckout"
+                  class="w-6 h-6 mr-3"
+                  fill="none"
+                  viewBox="0 0 24 24"
                   stroke="currentColor"
-                  stroke-width="4"
-                ></circle>
-                <path
-                  class="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
-              {{ isCreatingCheckout ? 'Traitement...' : 'Acheter cette montre' }}
-            </button>
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                  />
+                </svg>
+                <svg
+                  v-else
+                  class="w-6 h-6 mr-3 animate-spin"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                {{ isCreatingCheckout ? 'Traitement...' : 'Acheter cette montre' }}
+              </button>
+              
+              <!-- Payment Icons -->
+              <PaymentIcons />
+            </div>
         </div>
       </div>
 
-      <!-- Detailed Specifications -->
+      <!-- En savoir plus sur l'annonce - Tabs Section -->
       <div class="bg-white rounded-md shadow-lg p-8 mb-8">
-        <h2 class="text-2xl font-semibold text-gray-900 mb-6">Caractéristiques détaillées</h2>
+        <h2 class="text-2xl font-semibold text-gray-900 mb-6">En savoir plus sur l'annonce</h2>
+        
+        <!-- Tabs -->
+        <div class="border-b border-gray-200 mb-6">
+          <nav class="flex space-x-4 lg:space-x-8 overflow-x-auto" aria-label="Tabs">
+            <button
+              @click="activeTab = 'details'"
+              :class="[
+                'py-4 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap',
+                activeTab === 'details'
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              ]"
+            >
+              Détails
+            </button>
+            <button
+              @click="activeTab = 'security'"
+              :class="[
+                'py-4 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap',
+                activeTab === 'security'
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              ]"
+            >
+              Garanties
+            </button>
+          </nav>
+        </div>
 
-        <div class="grid lg:grid-cols-2 gap-6">
-          <!-- Basic Data -->
+        <!-- Tab Content: Details -->
+        <div v-if="activeTab === 'details'" class="grid lg:grid-cols-2 gap-8">
+          <!-- Left Column: Données de base -->
           <div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-3 border-b border-gray-200 pb-2">
-              Données de base
-            </h3>
-            <div class="space-y-3">
-              <div v-if="hasValue(watchItem.adCode)" class="flex gap-4 py-2 border-b border-gray-100">
-                <span class="text-gray-600 min-w-[140px] flex-shrink-0">Code annonce</span>
-                <span class="font-medium text-right flex-1">{{ watchItem.adCode }}</span>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Données de base</h3>
+            <div class="space-y-0">
+              <div v-if="hasValue(watchItem.adCode)" class="flex gap-4 py-3 border-b border-gray-200">
+                <span class="text-gray-600 min-w-[160px] flex-shrink-0">Code annonce</span>
+                <span class="font-medium text-gray-900 flex-1">{{ watchItem.adCode }}</span>
               </div>
-              <div v-if="hasValue(watchItem.brand)" class="flex gap-4 py-2 border-b border-gray-100">
-                <span class="text-gray-600 min-w-[140px] flex-shrink-0">Marque</span>
-                <span class="font-medium text-right flex-1">{{ watchItem.brand }}</span>
+              <div v-if="hasValue(watchItem.brand)" class="flex gap-4 py-3 border-b border-gray-200">
+                <span class="text-gray-600 min-w-[160px] flex-shrink-0">Marque</span>
+                <span class="font-medium text-gray-900 flex-1">{{ watchItem.brand }}</span>
               </div>
-              <div v-if="hasValue(watchItem.model)" class="flex gap-4 py-2 border-b border-gray-100">
-                <span class="text-gray-600 min-w-[140px] flex-shrink-0">Modèle</span>
-                <span class="font-medium text-right flex-1">{{ watchItem.model }}</span>
+              <div v-if="hasValue(watchItem.model)" class="flex gap-4 py-3 border-b border-gray-200">
+                <span class="text-gray-600 min-w-[160px] flex-shrink-0">Modèle</span>
+                <span class="font-medium text-gray-900 flex-1">{{ watchItem.model }}</span>
               </div>
-              <div v-if="hasValue(watchItem.reference)" class="flex gap-4 py-2 border-b border-gray-100">
-                <span class="text-gray-600 min-w-[140px] flex-shrink-0">Numéro de référence</span>
-                <span class="font-medium text-right flex-1">{{ watchItem.reference }}</span>
+              <div v-if="hasValue(watchItem.reference)" class="flex gap-4 py-3 border-b border-gray-200">
+                <span class="text-gray-600 min-w-[160px] flex-shrink-0">Numéro de référence</span>
+                <span class="font-medium text-gray-900 flex-1">{{ watchItem.reference }}</span>
               </div>
-              <div v-if="hasValue(watchItem.details?.movement)" class="flex gap-4 py-2 border-b border-gray-100">
-                <span class="text-gray-600 min-w-[140px] flex-shrink-0">Mouvement</span>
-                <span class="font-medium text-right flex-1">{{ watchItem.details.movement }}</span>
+              <div v-if="hasValue(watchItem.details?.movement)" class="flex gap-4 py-3 border-b border-gray-200">
+                <span class="text-gray-600 min-w-[160px] flex-shrink-0">Mouvement</span>
+                <span class="font-medium text-gray-900 flex-1">{{ watchItem.details.movement }}</span>
               </div>
-              <div v-if="hasValue(watchItem.details?.caseMaterial)" class="flex gap-4 py-2 border-b border-gray-100">
-                <span class="text-gray-600 min-w-[140px] flex-shrink-0">Boîtier</span>
-                <span class="font-medium text-right flex-1">{{ watchItem.details.caseMaterial }}</span>
+              <div v-if="hasValue(watchItem.details?.caseMaterial)" class="flex gap-4 py-3 border-b border-gray-200">
+                <span class="text-gray-600 min-w-[160px] flex-shrink-0">Boîtier</span>
+                <span class="font-medium text-gray-900 flex-1">{{ watchItem.details.caseMaterial }}</span>
               </div>
-              <div v-if="hasValue(watchItem.details?.braceletMaterial)" class="flex gap-4 py-2 border-b border-gray-100">
-                <span class="text-gray-600 min-w-[140px] flex-shrink-0">Matière du bracelet</span>
-                <span class="font-medium text-right flex-1">{{ watchItem.details.braceletMaterial }}</span>
+              <div v-if="hasValue(watchItem.details?.braceletMaterial)" class="flex gap-4 py-3 border-b border-gray-200">
+                <span class="text-gray-600 min-w-[160px] flex-shrink-0">Matière du bracelet</span>
+                <span class="font-medium text-gray-900 flex-1">{{ watchItem.details.braceletMaterial }}</span>
               </div>
-              <div v-if="hasValue(watchItem.year)" class="flex gap-4 py-2 border-b border-gray-100">
-                <span class="text-gray-600 min-w-[140px] flex-shrink-0">Année de fabrication</span>
-                <span class="font-medium text-right flex-1">{{ watchItem.year }}</span>
+              <div v-if="hasValue(watchItem.year)" class="flex gap-4 py-3 border-b border-gray-200">
+                <span class="text-gray-600 min-w-[160px] flex-shrink-0">Année de fabrication</span>
+                <span class="font-medium text-gray-900 flex-1">{{ watchItem.year }}</span>
+              </div>
+              <div v-if="hasValue(watchItem.condition)" class="flex gap-4 py-3 border-b border-gray-200">
+                <span class="text-gray-600 min-w-[160px] flex-shrink-0">État</span>
+                <div class="font-medium text-gray-900 flex-1">
+                  <div>{{ watchItem.condition }}</div>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- Technical Specifications -->
+          <!-- Right Column: Spécifications techniques -->
           <div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-3 border-b border-gray-200 pb-2">
-              Spécifications techniques
-            </h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Spécifications techniques</h3>
             <div class="space-y-3">
-              <div v-if="hasValue(watchItem.details?.caseSize)" class="flex gap-4 py-2 border-b border-gray-100">
+              <div v-if="hasValue(watchItem.details?.caseSize)" class="flex gap-4 py-2 border-b border-gray-200">
                 <span class="text-gray-600 min-w-[140px] flex-shrink-0">Diamètre du boîtier</span>
-                <span class="font-medium text-right flex-1">{{ watchItem.details.caseSize }}</span>
+                <span class="font-medium text-gray-900 flex-1">{{ watchItem.details.caseSize }}</span>
               </div>
-              <div v-if="hasValue(watchItem.details?.thickness)" class="flex gap-4 py-2 border-b border-gray-100">
+              <div v-if="hasValue(watchItem.details?.thickness)" class="flex gap-4 py-2 border-b border-gray-200">
                 <span class="text-gray-600 min-w-[140px] flex-shrink-0">Épaisseur</span>
-                <span class="font-medium text-right flex-1">{{ watchItem.details.thickness }}</span>
+                <span class="font-medium text-gray-900 flex-1">{{ watchItem.details.thickness }}</span>
               </div>
-              <div v-if="hasValue(watchItem.details?.dialColor)" class="flex gap-4 py-2 border-b border-gray-100">
+              <div v-if="hasValue(watchItem.details?.dialColor)" class="flex gap-4 py-2 border-b border-gray-200">
                 <span class="text-gray-600 min-w-[140px] flex-shrink-0">Couleur du cadran</span>
-                <span class="font-medium text-right flex-1">{{ watchItem.details.dialColor }}</span>
+                <span class="font-medium text-gray-900 flex-1">{{ watchItem.details.dialColor }}</span>
               </div>
-              <div v-if="hasValue(watchItem.details?.crystal)" class="flex gap-4 py-2 border-b border-gray-100">
+              <div v-if="hasValue(watchItem.details?.crystal)" class="flex gap-4 py-2 border-b border-gray-200">
                 <span class="text-gray-600 min-w-[140px] flex-shrink-0">Matière de la glace</span>
-                <span class="font-medium text-right flex-1">{{ watchItem.details.crystal }}</span>
+                <span class="font-medium text-gray-900 flex-1">{{ watchItem.details.crystal }}</span>
               </div>
-              <div v-if="hasValue(watchItem.details?.waterResistance)" class="flex gap-4 py-2 border-b border-gray-100">
+              <div v-if="hasValue(watchItem.details?.waterResistance)" class="flex gap-4 py-2 border-b border-gray-200">
                 <span class="text-gray-600 min-w-[140px] flex-shrink-0">Étanchéité</span>
-                <span class="font-medium text-right flex-1">{{ watchItem.details.waterResistance }}</span>
+                <span class="font-medium text-gray-900 flex-1">{{ watchItem.details.waterResistance }}</span>
               </div>
-              <div v-if="hasValue(watchItem.details?.functions)" class="flex gap-4 py-2 border-b border-gray-100">
+              <div v-if="hasValue(watchItem.details?.functions)" class="flex gap-4 py-2 border-b border-gray-200">
                 <span class="text-gray-600 min-w-[140px] flex-shrink-0">Fonctions</span>
-                <span class="font-medium text-right flex-1">{{ watchItem.details.functions }}</span>
+                <span class="font-medium text-gray-900 flex-1">{{ watchItem.details.functions }}</span>
               </div>
-              <div v-if="hasValue(watchItem.details?.powerReserve)" class="flex gap-4 py-2 border-b border-gray-100">
+              <div v-if="hasValue(watchItem.details?.powerReserve)" class="flex gap-4 py-2 border-b border-gray-200">
                 <span class="text-gray-600 min-w-[140px] flex-shrink-0">Réserve de marche</span>
-                <span class="font-medium text-right flex-1">{{ watchItem.details.powerReserve }}</span>
+                <span class="font-medium text-gray-900 flex-1">{{ watchItem.details.powerReserve }}</span>
               </div>
-              <div v-if="hasValue(watchItem.details?.frequency)" class="flex gap-4 py-2 border-b border-gray-100">
+              <div v-if="hasValue(watchItem.details?.frequency)" class="flex gap-4 py-2 border-b border-gray-200">
                 <span class="text-gray-600 min-w-[140px] flex-shrink-0">Fréquence</span>
-                <span class="font-medium text-right flex-1">{{ watchItem.details.frequency }}</span>
+                <span class="font-medium text-gray-900 flex-1">{{ watchItem.details.frequency }}</span>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Content: Security -->
+        <div v-if="activeTab === 'security'">
+          <h3 class="text-xl font-semibold text-gray-900 mb-6">Les garanties pour cette annonce</h3>
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Card 1: Droit de rétractation -->
+            <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+              <div class="flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
+                <svg class="w-8 h-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+              </div>
+              <h4 class="text-lg font-semibold text-gray-900 mb-2">Droit de rétractation de 14 jours</h4>
+              <p class="text-gray-600 text-sm leading-relaxed">
+                Si la montre présente des défauts ou ne correspond pas à vos attentes, vous pouvez exercer votre droit de rétractation dans un délai de 14 jours à compter de la réception pour obtenir un remboursement intégral du prix d'achat, rapidement et simplement.
+              </p>
+            </div>
+
+            <!-- Card 2: Authentification garantie -->
+            <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+              <div class="flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
+                <!-- Icône oeil pour authentification garantie -->
+                <svg class="w-8 h-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M1.458 12C2.732 7.943 6.522 5 12 5s9.268 2.943 10.542 7c-1.274 4.057-5.064 7-10.542 7s-9.268-2.943-10.542-7z" />
+                  <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" fill="none" />
+                </svg>
+              </div>
+              <h4 class="text-lg font-semibold text-gray-900 mb-2">Authentification garantie</h4>
+              <p class="text-gray-600 text-sm leading-relaxed">
+                Toutes les montres vendues sur Sauvage sont authentiques. Chaque montre est vérifiée par nos experts avant la mise en vente. Si vous avez le moindre doute sur l'authenticité de votre montre, contactez-nous dans les 14 jours suivant la réception pour un remboursement complet.
+              </p>
+            </div>
+
+            <!-- Card 3: Garantie mécanisme -->
+            <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+              <div class="flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
+                <svg class="w-8 h-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h4 class="text-lg font-semibold text-gray-900 mb-2">Garantie 1 an sur le mécanisme</h4>
+              <p class="text-gray-600 text-sm leading-relaxed">
+                Toutes nos montres bénéficient d'une garantie d'un an sur le mécanisme. En cas de problème mécanique, nous prenons en charge la réparation ou le remplacement, vous permettant d'acheter en toute sérénité.
+              </p>
+            </div>
+
+            <!-- Card 4: Assurance transport -->
+            <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+              <div class="flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
+                <svg class="w-8 h-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <h4 class="text-lg font-semibold text-gray-900 mb-2">Envoi assuré</h4>
+              <p class="text-gray-600 text-sm leading-relaxed">
+                Chaque montre vendue est assurée pour sa valeur totale par Sauvage. Cela garantit qu'il n'y a aucun risque pour l'acheteur, même en cas de résidence à l'étranger. Votre montre est protégée de bout en bout.
+              </p>
+            </div>
+
+            <!-- Card 5: Paiement sécurisé -->
+            <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+              <div class="flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
+                <svg class="w-8 h-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <h4 class="text-lg font-semibold text-gray-900 mb-2">Paiement sécurisé</h4>
+              <p class="text-gray-600 text-sm leading-relaxed">
+                Tous les paiements sont traités de manière sécurisée via Stripe, garantissant la protection de vos données bancaires. Aucune information de paiement n'est stockée sur nos serveurs.
+              </p>
+            </div>
+
+            <!-- Card 6: Colis sécurisé et assuré -->
+            <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+              <div class="flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
+                <svg class="w-8 h-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <!-- Icône colis style isométrique (similaire à heroicons "cube") -->
+                  <polygon points="21 7.5 12 3 3 7.5 12 12 21 7.5" fill="none" stroke="currentColor"/>
+                  <polygon points="3 7.5 3 16.5 12 21 12 12 3 7.5" fill="none" stroke="currentColor"/>
+                  <polygon points="21 7.5 21 16.5 12 21 12 12 21 7.5" fill="none" stroke="currentColor"/>
+                </svg>
+              </div>
+              <h4 class="text-lg font-semibold text-gray-900 mb-2">Colis sécurisé et assuré</h4>
+              <p class="text-gray-600 text-sm leading-relaxed">
+                L'envoi de votre montre est sécurisé et assuré à la valeur déclarée de la montre. Chaque colis est suivi et protégé de bout en bout, garantissant une livraison en toute sécurité jusqu'à votre domicile.
+              </p>
             </div>
           </div>
         </div>
@@ -457,34 +582,6 @@
         </div>
       </div>
 
-      <!-- Description -->
-      <div v-if="hasValue(watchItem.description)" class="bg-white rounded-md shadow-lg p-8 mb-12">
-        <h2 class="text-2xl font-semibold text-gray-900 mb-6">Description</h2>
-        <div class="prose max-w-none text-gray-700 leading-relaxed">
-          <p>{{ isDescriptionExpanded ? watchItem.description : truncatedDescription }}</p>
-          <button
-            v-if="shouldShowToggleButton"
-            @click="isDescriptionExpanded = !isDescriptionExpanded"
-            class="mt-4 text-primary hover:text-green-700 font-semibold transition-colors duration-200 inline-flex items-center"
-          >
-            <span>{{ isDescriptionExpanded ? 'Voir moins' : 'Voir plus' }}</span>
-            <svg
-              :class="['w-5 h-5 ml-2 transition-transform duration-200', isDescriptionExpanded ? 'rotate-180' : '']"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </button>
-        </div>
-      </div>
-
       <!-- Related Articles Section -->
       <div v-if="watchItem && watchItem.articles && watchItem.articles.length > 0" class="bg-white rounded-md shadow-lg p-8 mb-12">
         <h2 class="text-2xl font-semibold text-gray-900 mb-6">Articles liés</h2>
@@ -520,6 +617,55 @@
             </div>
           </article>
         </div>
+      </div>
+      
+      <!-- Description Section (Expandable) -->
+      <div class="bg-white rounded-md shadow-lg mb-8 overflow-hidden">
+        <button
+          @click="isDescriptionExpanded = !isDescriptionExpanded"
+          class="w-full flex items-center justify-between p-8 text-left hover:bg-gray-50 transition-colors"
+          :aria-expanded="isDescriptionExpanded"
+        >
+          <h2 class="text-xl font-semibold text-gray-900">Description</h2>
+          <svg
+            :class="[
+              'w-6 h-6 text-gray-500 transition-transform duration-200',
+              isDescriptionExpanded ? 'transform rotate-180' : ''
+            ]"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </button>
+        <Transition
+          enter-active-class="transition-all duration-300 ease-out"
+          enter-from-class="opacity-0 -translate-y-2"
+          enter-to-class="opacity-100 translate-y-0"
+          leave-active-class="transition-all duration-300 ease-in"
+          leave-from-class="opacity-100 translate-y-0"
+          leave-to-class="opacity-0 -translate-y-2"
+        >
+          <div
+            v-show="isDescriptionExpanded"
+            class="px-8 pb-8"
+          >
+            <div class="prose max-w-none text-gray-700 leading-relaxed">
+              <div v-if="hasValue(watchItem.description)">
+                <p class="mb-4 whitespace-pre-line">{{ watchItem.description }}</p>
+              </div>
+              <div v-else class="text-gray-500 italic">
+                Aucune description disponible.
+              </div>
+            </div>
+          </div>
+        </Transition>
       </div>
 
       <!-- Contact Reminder Section -->
@@ -593,9 +739,6 @@
       <div class="flex-1 min-w-0">
         <div class="text-sm font-semibold text-gray-900 truncate mb-0.5">
           {{ watchItem.name }}
-        </div>
-        <div class="text-xs text-gray-600 mb-1">
-          Réf. {{ watchItem.reference }}
         </div>
         <div class="text-2xl font-medium text-primary">
           {{ formatPrice(watchItem.price) }}
@@ -825,6 +968,7 @@ import { getWatchById } from '@/services/watchService'
 import { isAdminAuthenticated } from '@/services/admin/adminAuthService'
 import { createCheckoutSession } from '@/services/stripeService'
 import WatchDetailSkeleton from '@/components/watch/WatchDetailSkeleton.vue'
+import PaymentIcons from '@/components/payment/PaymentIcons.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -860,22 +1004,10 @@ const isLoading = ref(true)
 const error = ref(null)
 const isUnavailable = ref(false)
 const isAdmin = ref(false)
-const isDescriptionExpanded = ref(false)
 const isCreatingCheckout = ref(false)
+const activeTab = ref('details')
+const isDescriptionExpanded = ref(false)
 
-// Description truncation
-const MAX_DESCRIPTION_LENGTH = 300
-
-const truncatedDescription = computed(() => {
-  if (!watchItem.value?.description) return ''
-  const description = watchItem.value.description
-  if (description.length <= MAX_DESCRIPTION_LENGTH) return description
-  return description.substring(0, MAX_DESCRIPTION_LENGTH) + '...'
-})
-
-const shouldShowToggleButton = computed(() => {
-  return watchItem.value?.description && watchItem.value.description.length > MAX_DESCRIPTION_LENGTH
-})
 
 // Load watch from Supabase
 const loadWatch = async () => {
@@ -897,8 +1029,6 @@ const loadWatch = async () => {
     watchItem.value = data
     // Reset image index when watch changes
     currentImageIndex.value = 0
-    // Reset description expansion state
-    isDescriptionExpanded.value = false
     // Load image dimensions
     if (data && data.images && data.images.length > 0) {
       await loadImageDimensions(data.images[0])
