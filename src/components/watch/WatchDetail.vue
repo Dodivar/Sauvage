@@ -17,8 +17,8 @@
               />
             </svg>
           </div>
-          <h3 class="text-3xl font-bold text-gray-900 mb-3">Montre non disponible</h3>
-          <p class="text-lg text-gray-600 mb-6">
+            <h3 class="text-2xl lg:text-3xl font-bold text-gray-900 mb-3">Montre non disponible</h3>
+            <p class="text-base lg:text-lg text-gray-600 mb-6">
             Cette montre n'est plus en stock ou n'est plus disponible à la vente.
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
@@ -222,7 +222,7 @@
           <!-- Header -->
           <div>
             <div class="flex items-start justify-between mb-2">
-              <h1 class="text-3xl lg:text-4xl font-bold text-gray-900">
+              <h1 class="text-2xl lg:text-4xl font-bold text-gray-900">
                 {{ watchItem.name }}
               </h1>
               <div class="flex items-center space-x-2">
@@ -240,15 +240,15 @@
                 </span>
               </div>
             </div>
-            <p class="text-lg text-gray-600 mb-3">Réf. {{ watchItem.reference }}</p>
-            <div class="text-3xl font-medium text-primary mb-4">
+            <p class="text-base lg:text-lg text-gray-600 mb-3">Réf. {{ watchItem.reference }}</p>
+            <div class="text-2xl lg:text-3xl font-medium text-primary mb-4">
               {{ formatPrice(watchItem.price) }}
             </div>
           </div>
 
           <!-- Key Features -->
           <div>
-            <h3 class="text-xl font-semibold text-gray-900 mb-3">Caractéristiques principales</h3>
+            <h3 class="text-lg lg:text-xl font-semibold text-gray-900 mb-3">Caractéristiques principales</h3>
             <div class="space-y-3">
               <div v-if="hasValue(watchItem.year)" class="flex gap-4 py-2 border-b border-gray-100">
                 <span class="text-gray-600 w-[140px] flex-shrink-0 whitespace-normal">Année</span>
@@ -321,7 +321,7 @@
 
       <!-- En savoir plus sur l'annonce - Tabs Section -->
       <div class="bg-white rounded-md shadow-lg p-8 mb-8">
-        <h2 class="text-2xl font-semibold text-gray-900 mb-6">En savoir plus sur l'annonce</h2>
+        <h2 class="text-xl lg:text-2xl font-semibold text-gray-900 mb-6">En savoir plus sur l'annonce</h2>
         
         <!-- Tabs -->
         <div class="border-b border-gray-200 mb-6">
@@ -355,7 +355,7 @@
         <div v-if="activeTab === 'details'" class="grid lg:grid-cols-2 gap-8">
           <!-- Left Column: Données de base -->
           <div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Données de base</h3>
+            <h3 class="text-base lg:text-lg font-semibold text-gray-900 mb-4">Données de base</h3>
             <div class="space-y-0">
               <div v-if="hasValue(watchItem.adCode)" class="flex gap-4 py-3 border-b border-gray-200">
                 <span class="text-gray-600 min-w-[160px] flex-shrink-0">Code annonce</span>
@@ -400,7 +400,7 @@
 
           <!-- Right Column: Spécifications techniques -->
           <div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Spécifications techniques</h3>
+            <h3 class="text-base lg:text-lg font-semibold text-gray-900 mb-4">Spécifications techniques</h3>
             <div class="space-y-3">
               <div v-if="hasValue(watchItem.details?.caseSize)" class="flex gap-4 py-2 border-b border-gray-200">
                 <span class="text-gray-600 min-w-[140px] flex-shrink-0">Diamètre du boîtier</span>
@@ -440,7 +440,7 @@
 
         <!-- Tab Content: Security -->
         <div v-if="activeTab === 'security'">
-          <h3 class="text-xl font-semibold text-gray-900 mb-6">Les garanties pour cette annonce</h3>
+          <h3 class="text-lg lg:text-xl font-semibold text-gray-900 mb-6">Les garanties pour cette annonce</h3>
           <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Card 1: Droit de rétractation -->
             <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
@@ -449,7 +449,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
               </div>
-              <h4 class="text-lg font-semibold text-gray-900 mb-2">Droit de rétractation de 14 jours</h4>
+              <h4 class="text-base lg:text-lg font-semibold text-gray-900 mb-2">Droit de rétractation de 14 jours</h4>
               <p class="text-gray-600 text-sm leading-relaxed">
                 Si la montre présente des défauts ou ne correspond pas à vos attentes, vous pouvez exercer votre droit de rétractation dans un délai de 14 jours à compter de la réception pour obtenir un remboursement intégral du prix d'achat, rapidement et simplement.
               </p>
@@ -465,7 +465,7 @@
                   <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" fill="none" />
                 </svg>
               </div>
-              <h4 class="text-lg font-semibold text-gray-900 mb-2">Authentification garantie</h4>
+              <h4 class="text-base lg:text-lg font-semibold text-gray-900 mb-2">Authentification garantie</h4>
               <p class="text-gray-600 text-sm leading-relaxed">
                 Toutes les montres vendues sur Sauvage sont authentiques. Chaque montre est vérifiée par nos experts avant la mise en vente. Si vous avez le moindre doute sur l'authenticité de votre montre, contactez-nous dans les 14 jours suivant la réception pour un remboursement complet.
               </p>
@@ -478,7 +478,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h4 class="text-lg font-semibold text-gray-900 mb-2">Garantie 1 an sur le mécanisme</h4>
+              <h4 class="text-base lg:text-lg font-semibold text-gray-900 mb-2">Garantie 1 an sur le mécanisme</h4>
               <p class="text-gray-600 text-sm leading-relaxed">
                 Toutes nos montres bénéficient d'une garantie d'un an sur le mécanisme. En cas de problème mécanique, nous prenons en charge la réparation ou le remplacement, vous permettant d'acheter en toute sérénité.
               </p>
@@ -491,7 +491,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
               </div>
-              <h4 class="text-lg font-semibold text-gray-900 mb-2">Envoi assuré</h4>
+              <h4 class="text-base lg:text-lg font-semibold text-gray-900 mb-2">Envoi assuré</h4>
               <p class="text-gray-600 text-sm leading-relaxed">
                 Chaque montre vendue est assurée pour sa valeur totale par Sauvage. Cela garantit qu'il n'y a aucun risque pour l'acheteur, même en cas de résidence à l'étranger. Votre montre est protégée de bout en bout.
               </p>
@@ -504,7 +504,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
               </div>
-              <h4 class="text-lg font-semibold text-gray-900 mb-2">Paiement sécurisé</h4>
+              <h4 class="text-base lg:text-lg font-semibold text-gray-900 mb-2">Paiement sécurisé</h4>
               <p class="text-gray-600 text-sm leading-relaxed">
                 Tous les paiements sont traités de manière sécurisée via Stripe, garantissant la protection de vos données bancaires. Aucune information de paiement n'est stockée sur nos serveurs.
               </p>
@@ -520,7 +520,7 @@
                   <polygon points="21 7.5 21 16.5 12 21 12 12 21 7.5" fill="none" stroke="currentColor"/>
                 </svg>
               </div>
-              <h4 class="text-lg font-semibold text-gray-900 mb-2">Colis sécurisé et assuré</h4>
+              <h4 class="text-base lg:text-lg font-semibold text-gray-900 mb-2">Colis sécurisé et assuré</h4>
               <p class="text-gray-600 text-sm leading-relaxed">
                 L'envoi de votre montre est sécurisé et assuré à la valeur déclarée de la montre. Chaque colis est suivi et protégé de bout en bout, garantissant une livraison en toute sécurité jusqu'à votre domicile.
               </p>
@@ -532,7 +532,7 @@
       <!-- Condition & Accessories -->
       <div class="grid lg:grid-cols-2 gap-8 mb-12">
         <div class="bg-white rounded-md shadow-lg p-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">État et condition</h3>
+          <h3 class="text-lg lg:text-xl font-semibold text-gray-900 mb-4">État et condition</h3>
           <div class="space-y-3">
             <div v-if="hasValue(watchItem.condition)" class="flex gap-4 py-2 border-b border-gray-100">
               <span class="text-gray-600 min-w-[140px] flex-shrink-0">État général</span>
@@ -554,7 +554,7 @@
         </div>
 
         <div class="bg-white rounded-md shadow-lg p-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">Contenu de la livraison</h3>
+          <h3 class="text-lg lg:text-xl font-semibold text-gray-900 mb-4">Contenu de la livraison</h3>
           <div class="space-y-3">
             <div
               v-for="(item, index) in watchItem.details.accessories"
@@ -584,7 +584,7 @@
 
       <!-- Related Articles Section -->
       <div v-if="watchItem && watchItem.articles && watchItem.articles.length > 0" class="bg-white rounded-md shadow-lg p-8 mb-12">
-        <h2 class="text-2xl font-semibold text-gray-900 mb-6">Articles liés</h2>
+        <h2 class="text-xl lg:text-2xl font-semibold text-gray-900 mb-6">Articles liés</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <article
             v-for="article in watchItem.articles"
@@ -626,7 +626,7 @@
           class="w-full flex items-center justify-between p-8 text-left hover:bg-gray-50 transition-colors"
           :aria-expanded="isDescriptionExpanded"
         >
-          <h2 class="text-xl font-semibold text-gray-900">Description</h2>
+          <h2 class="text-lg lg:text-xl font-semibold text-gray-900">Description</h2>
           <svg
             :class="[
               'w-6 h-6 text-gray-500 transition-transform duration-200',
@@ -671,8 +671,8 @@
       <!-- Contact Reminder Section -->
       <div class="bg-white rounded-md shadow-lg p-8">
         <div class="text-center mb-6">
-          <h2 class="text-2xl lg:text-3xl font-bold mb-3 text-gray-900">Une question sur cette montre ?</h2>
-          <p class="text-lg text-gray-600">
+          <h2 class="text-xl lg:text-3xl font-bold mb-3 text-gray-900">Une question sur cette montre ?</h2>
+          <p class="text-base lg:text-lg text-gray-600">
             Contactez-nous par WhatsApp ou email pour plus d'informations
           </p>
         </div>
@@ -740,7 +740,7 @@
         <div class="text-sm font-semibold text-gray-900 truncate mb-0.5">
           {{ watchItem.name }}
         </div>
-        <div class="text-2xl font-medium text-primary">
+        <div class="text-xl lg:text-2xl font-medium text-primary">
           {{ formatPrice(watchItem.price) }}
         </div>
       </div>
@@ -902,7 +902,7 @@
           </button>
 
           <!-- Title -->
-          <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Partager cette montre</h2>
+          <h2 class="text-xl lg:text-2xl font-bold text-gray-900 mb-6 text-center">Partager cette montre</h2>
 
           <!-- Share buttons -->
           <div class="flex flex-col gap-4">
