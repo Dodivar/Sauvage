@@ -11,7 +11,7 @@ Article :
 
 Paiement :
 - améliorer la page de succès et d'annulation
-
+- lien du retour vers base_url sans le 'www.' ce qui indique pas sécurisé. commen l'ajouté
 
 Estimation :
 - Ajouter un article de blog "Anatomie d'une arnaque" / "Comment repérer une arnaque"
