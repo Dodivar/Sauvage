@@ -1,3 +1,5 @@
+Réduire la taille de quasi tous les textes en format smartphone
+
 Montres :
 - Ajouter vidéo 360° sur les bestsellers
 
@@ -11,7 +13,12 @@ Article :
 
 Paiement :
 - améliorer la page de succès et d'annulation
+    - Image présente sur succès mais faut l'améliorer
 - lien du retour vers base_url sans le 'www.' ce qui indique pas sécurisé. commen l'ajouté
+    lien recette non dispo sans 'www.' à demander/voir dans DSN hostinger
+
+
+Demander quel serait les meilleurs utilité Google Tag Manager et ce qu'il faudrait faire pour ce projet
 
 Estimation :
 - Ajouter un article de blog "Anatomie d'une arnaque" / "Comment repérer une arnaque"
