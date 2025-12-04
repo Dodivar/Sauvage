@@ -12,11 +12,8 @@ Article :
 - modifier n8n pour accepter de faire des articles sur d'autres sujets que juste des montres, par exemple article de montres à moins de 2k€ 
 
 Paiement :
-- améliorer la page de succès et d'annulation
-    - Image présente sur succès mais faut l'améliorer
 - lien du retour vers base_url sans le 'www.' ce qui indique pas sécurisé. commen l'ajouté
     lien recette non dispo sans 'www.' à demander/voir dans DSN hostinger
-
 
 Demander quel serait les meilleurs utilité Google Tag Manager et ce qu'il faudrait faire pour ce projet
 
