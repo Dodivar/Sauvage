@@ -384,17 +384,6 @@
                 <span class="text-gray-600 min-w-[160px] flex-shrink-0">Année de fabrication</span>
                 <span class="font-medium text-gray-900 flex-1">{{ watchItem.year }}</span>
               </div>
-              <div v-if="hasValue(watchItem.condition)" class="flex gap-4 py-3 border-b border-gray-200">
-                <span class="text-gray-600 min-w-[160px] flex-shrink-0">État</span>
-                <div class="font-medium text-gray-900 flex-1">
-                  <button
-                    @click="openConditionLightbox"
-                    class="text-primary hover:text-green-700 underline decoration-2 underline-offset-2 transition-colors cursor-pointer"
-                  >
-                    {{ watchItem.condition }}
-                  </button>
-                </div>
-              </div>
             </div>
           </div>
 
@@ -529,30 +518,8 @@
         </div>
       </div>
 
-      <!-- Condition & Accessories -->
+      <!-- Accessories -->
       <div class="grid lg:grid-cols-2 gap-8 mb-12">
-        <div class="bg-white rounded-md shadow-lg p-6">
-          <h3 class="text-lg lg:text-xl font-semibold text-gray-900 mb-4">État et condition</h3>
-          <div class="space-y-3">
-            <div v-if="hasValue(watchItem.condition)" class="flex gap-4 py-2 border-b border-gray-100">
-              <span class="text-gray-600 min-w-[140px] flex-shrink-0">État général</span>
-              <span class="font-medium text-right flex-1">{{ watchItem.condition }}</span>
-            </div>
-            <div v-if="hasValue(watchItem.details?.caseCondition)" class="flex gap-4 py-2 border-b border-gray-100">
-              <span class="text-gray-600 min-w-[140px] flex-shrink-0">Boîtier</span>
-              <span class="font-medium text-right flex-1">{{ watchItem.details.caseCondition }}</span>
-            </div>
-            <div v-if="hasValue(watchItem.details?.dialCondition)" class="flex gap-4 py-2 border-b border-gray-100">
-              <span class="text-gray-600 min-w-[140px] flex-shrink-0">Cadran</span>
-              <span class="font-medium text-right flex-1">{{ watchItem.details.dialCondition }}</span>
-            </div>
-            <div v-if="hasValue(watchItem.details?.braceletCondition)" class="flex gap-4 py-2 border-b border-gray-100">
-              <span class="text-gray-600 min-w-[140px] flex-shrink-0">Bracelet</span>
-              <span class="font-medium text-right flex-1">{{ watchItem.details.braceletCondition }}</span>
-            </div>
-          </div>
-        </div>
-
         <div class="bg-white rounded-md shadow-lg p-6">
           <h3 class="text-lg lg:text-xl font-semibold text-gray-900 mb-4">Contenu de la livraison</h3>
           <div class="space-y-3">
