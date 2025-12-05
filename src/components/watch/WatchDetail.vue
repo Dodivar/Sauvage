@@ -246,12 +246,7 @@
               </div>
               <div v-if="hasValue(watchItem.condition)" class="flex gap-4 py-2 border-b border-gray-100">
                 <span class="text-gray-600 w-[140px] flex-shrink-0 whitespace-normal">État</span>
-                <button
-                  @click="openConditionLightbox"
-                  class="font-medium text-left flex-1 text-primary hover:text-green-700 underline decoration-2 underline-offset-2 transition-colors cursor-pointer"
-                >
-                  {{ watchItem.condition }}
-                </button>
+                <span class="font-medium text-left flex-1">{{ watchItem.condition }}</span>
               </div>
               <div v-if="hasValue(watchItem.details?.content)" class="flex gap-4 py-2 border-b border-gray-100">
                 <span class="text-gray-600 w-[140px] flex-shrink-0 whitespace-normal">Contenu</span>
@@ -387,12 +382,7 @@
               <div v-if="hasValue(watchItem.condition)" class="flex gap-4 py-3 border-b border-gray-200">
                 <span class="text-gray-600 min-w-[160px] flex-shrink-0">État</span>
                 <div class="font-medium text-gray-900 flex-1">
-                  <button
-                    @click="openConditionLightbox"
-                    class="text-primary hover:text-green-700 underline decoration-2 underline-offset-2 transition-colors cursor-pointer"
-                  >
-                    {{ watchItem.condition }}
-                  </button>
+                  <div>{{ watchItem.condition }}</div>
                 </div>
               </div>
             </div>
@@ -956,160 +946,6 @@
         </div>
       </div>
     </Teleport>
-
-    <!-- Condition Lightbox Modal -->
-    <Teleport to="body">
-      <div
-        v-if="isConditionLightboxOpen"
-        class="lightbox-overlay fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-20 p-4"
-        @click="closeConditionLightbox"
-        @keydown.esc="closeConditionLightbox"
-        tabindex="-1"
-      >
-        <!-- Condition Modal Content -->
-        <div
-          @click.stop
-          class="relative bg-white rounded-md shadow-2xl p-6 lg:p-8 max-w-2xl w-full mx-4 max-h-[85vh] flex flex-col"
-        >
-          <!-- Close button -->
-          <button
-            @click="closeConditionLightbox"
-            class="absolute top-4 right-4 z-10 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full p-2 transition-all duration-200"
-            title="Fermer"
-            aria-label="Fermer"
-          >
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-
-          <div class="overflow-y-auto flex-1">
-          <!-- Title -->
-          <h2 class="text-xl lg:text-2xl font-bold text-gray-900 mb-6 text-center pr-10">État de la montre</h2>
-
-          <!-- Tabs -->
-          <div class="border-b border-gray-200 mb-6">
-            <nav class="flex space-x-4 lg:space-x-8" aria-label="Tabs">
-              <button
-                @click="conditionLightboxTab = 'details'"
-                :class="[
-                  'py-3 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap',
-                  conditionLightboxTab === 'details'
-                    ? 'border-primary text-primary'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                ]"
-              >
-                Détails
-              </button>
-              <button
-                @click="conditionLightboxTab = 'explanations'"
-                :class="[
-                  'py-3 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap',
-                  conditionLightboxTab === 'explanations'
-                    ? 'border-primary text-primary'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                ]"
-              >
-                Explications
-              </button>
-            </nav>
-          </div>
-
-          <!-- Tab Content: Details -->
-          <div v-if="conditionLightboxTab === 'details'">
-            <div class="bg-gray-50 rounded-lg p-6 border border-gray-200 space-y-4">
-              <!-- État général -->
-              <div v-if="hasValue(watchItem?.condition)" class="flex gap-4 py-3 border-b border-gray-200">
-                <span class="text-gray-600 min-w-[140px] flex-shrink-0 font-medium">État général</span>
-                <span class="font-semibold text-gray-900 flex-1">{{ watchItem.condition }}</span>
-              </div>
-
-              <!-- Boîtier -->
-              <div v-if="hasValue(watchItem?.details?.caseCondition)" class="flex gap-4 py-3 border-b border-gray-200">
-                <span class="text-gray-600 min-w-[140px] flex-shrink-0 font-medium">Boîtier</span>
-                <span class="font-semibold text-gray-900 flex-1">{{ watchItem.details.caseCondition }}</span>
-              </div>
-
-              <!-- Cadran -->
-              <div v-if="hasValue(watchItem?.details?.dialCondition)" class="flex gap-4 py-3 border-b border-gray-200">
-                <span class="text-gray-600 min-w-[140px] flex-shrink-0 font-medium">Cadran</span>
-                <span class="font-semibold text-gray-900 flex-1">{{ watchItem.details.dialCondition }}</span>
-              </div>
-
-              <!-- Bracelet -->
-              <div v-if="hasValue(watchItem?.details?.braceletCondition)" class="flex gap-4 py-3">
-                <span class="text-gray-600 min-w-[140px] flex-shrink-0 font-medium">Bracelet</span>
-                <span class="font-semibold text-gray-900 flex-1">{{ watchItem.details.braceletCondition }}</span>
-              </div>
-
-              <!-- Message si aucun détail disponible -->
-              <div v-if="!hasValue(watchItem?.condition) && !hasValue(watchItem?.details?.caseCondition) && !hasValue(watchItem?.details?.dialCondition) && !hasValue(watchItem?.details?.braceletCondition)" class="text-center py-8 text-gray-500">
-                Aucun détail d'état disponible.
-              </div>
-            </div>
-          </div>
-
-          <!-- Tab Content: Explanations -->
-          <div v-if="conditionLightboxTab === 'explanations'">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              <!-- Jamais porté / Neuf -->
-              <div class="bg-gray-50 rounded-lg p-5 border border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">Jamais porté / Neuf</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">
-                  La montre est dans son état d'origine, jamais portée. Elle est accompagnée de tous ses accessoires d'origine (boîte, papiers, étiquettes) et présente aucune trace d'usure. C'est l'état le plus proche d'une montre neuve.
-                </p>
-              </div>
-
-              <!-- Très bon état -->
-              <div class="bg-gray-50 rounded-lg p-5 border border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">Très bon état</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">
-                  La montre a été portée avec soin et présente des signes d'usure très minimes, souvent invisibles à l'œil nu. Le boîtier, le cadran et le bracelet sont en excellent état. Seules de légères micro-rayures peuvent être présentes sur le boîtier ou le bracelet, mais elles n'affectent pas l'esthétique générale de la montre.
-                </p>
-              </div>
-
-              <!-- Bon état -->
-              <div class="bg-gray-50 rounded-lg p-5 border border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">Bon état</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">
-                  La montre présente des signes d'usure normaux dus à un port régulier. On peut observer des rayures légères sur le boîtier, le bracelet ou la glace, mais elles n'affectent pas le fonctionnement de la montre. L'état général reste très correct et la montre conserve son charme et son authenticité.
-                </p>
-              </div>
-
-              <!-- État correct / Occasion -->
-              <div class="bg-gray-50 rounded-lg p-5 border border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">État correct / Occasion</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">
-                  La montre présente des signes d'usure plus marqués, témoignant d'un port régulier et parfois intensif. Des rayures, des éraflures ou des traces d'usure sont visibles sur le boîtier, le bracelet ou la glace. Malgré ces signes d'usure, la montre fonctionne correctement et conserve son authenticité. C'est un état typique d'une montre ayant été portée régulièrement.
-                </p>
-              </div>
-
-              <!-- État moyen -->
-              <div class="bg-gray-50 rounded-lg p-5 border border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">État moyen</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">
-                  La montre présente des signes d'usure importants avec des rayures, des éraflures ou des impacts visibles. Le boîtier, le bracelet ou la glace peuvent présenter des dommages esthétiques plus marqués. La montre fonctionne toujours correctement, mais son apparence reflète clairement son utilisation passée.
-                </p>
-              </div>
-
-              <!-- À restaurer -->
-              <div class="bg-gray-50 rounded-lg p-5 border border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">À restaurer</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">
-                  La montre nécessite une restauration pour retrouver son état optimal. Elle peut présenter des problèmes mécaniques, esthétiques ou les deux. Une intervention professionnelle est recommandée pour remettre la montre en état de fonctionnement et améliorer son apparence.
-                </p>
-              </div>
-            </div>
-          </div>
-          </div>
-        </div>
-      </div>
-    </Teleport>
 </template>
 
 <script setup>
@@ -1137,9 +973,6 @@ const isLightboxOpen = ref(false)
 const isShareLightboxOpen = ref(false)
 const urlCopied = ref(false)
 
-// Condition lightbox state
-const isConditionLightboxOpen = ref(false)
-
 // Zoom on hover state
 const isHovering = ref(false)
 const mousePosition = ref({ x: 0, y: 0 })
@@ -1164,7 +997,6 @@ const isAdmin = ref(false)
 const isCreatingCheckout = ref(false)
 const activeTab = ref('details')
 const isDescriptionExpanded = ref(false)
-const conditionLightboxTab = ref('details')
 
 
 // Load watch from Supabase
@@ -1782,22 +1614,6 @@ const closeShareLightbox = () => {
   }
 }
 
-// Condition lightbox methods
-const openConditionLightbox = () => {
-  conditionLightboxTab.value = 'details' // Reset to details tab when opening
-  isConditionLightboxOpen.value = true
-  // Prevent body and html scroll when lightbox is open (without changing scroll position)
-  document.body.style.overflow = 'hidden'
-  document.documentElement.style.overflow = 'hidden'
-}
-
-const closeConditionLightbox = () => {
-  isConditionLightboxOpen.value = false
-  // Restore body and html scroll
-  document.body.style.overflow = ''
-  document.documentElement.style.overflow = ''
-}
-
 // Share methods
 const shareOnFacebook = () => {
   if (!watchItem.value) return
@@ -1867,9 +1683,6 @@ const handleKeyDown = (event) => {
     if (isShareLightboxOpen.value) {
       closeShareLightbox()
     }
-    if (isConditionLightboxOpen.value) {
-      closeConditionLightbox()
-    }
   }
 }
 
@@ -1885,27 +1698,8 @@ watch(isLightboxOpen, async (isOpen) => {
       overlay.focus()
     }
   } else {
-    // Remove keyboard event listener only if other lightboxes are also closed
-    if (!isShareLightboxOpen.value && !isConditionLightboxOpen.value) {
-      document.removeEventListener('keydown', handleKeyDown)
-    }
-  }
-})
-
-// Watch for condition lightbox state changes
-watch(isConditionLightboxOpen, async (isOpen) => {
-  if (isOpen) {
-    await nextTick()
-    // Add keyboard event listener
-    document.addEventListener('keydown', handleKeyDown)
-    // Focus the lightbox overlay for keyboard navigation
-    const overlay = document.querySelector('.lightbox-overlay')
-    if (overlay) {
-      overlay.focus()
-    }
-  } else {
-    // Remove keyboard event listener only if other lightboxes are also closed
-    if (!isLightboxOpen.value && !isShareLightboxOpen.value) {
+    // Remove keyboard event listener only if share lightbox is also closed
+    if (!isShareLightboxOpen.value) {
       document.removeEventListener('keydown', handleKeyDown)
     }
   }
@@ -1923,8 +1717,8 @@ watch(isShareLightboxOpen, async (isOpen) => {
       overlay.focus()
     }
   } else {
-    // Remove keyboard event listener only if other lightboxes are also closed
-    if (!isLightboxOpen.value && !isConditionLightboxOpen.value) {
+    // Remove keyboard event listener only if image lightbox is also closed
+    if (!isLightboxOpen.value) {
       document.removeEventListener('keydown', handleKeyDown)
     }
   }
