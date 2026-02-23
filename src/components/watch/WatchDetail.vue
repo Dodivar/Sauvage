@@ -19,7 +19,7 @@
           </div>
             <h3 class="text-2xl lg:text-3xl font-bold text-gray-900 mb-3">Montre non disponible</h3>
             <p class="text-base lg:text-lg text-gray-600 mb-6">
-            Cette montre n'est plus en stock ou n'est plus disponible à la vente.
+            Cette pièce n'est plus en stock ou n'est plus disponible dans notre sélection.
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <router-link

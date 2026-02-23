@@ -5,7 +5,7 @@
         <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-3">
           Nouvelles arrivées
         </h2>
-        <p class="text-xl text-gray-600">Découvrez nos dernières montres mises en stock</p>
+        <p class="text-xl text-gray-600">Découvrez nos dernières pièces ajoutées à notre sélection</p>
       </div>
       <div class="relative group">
         <!-- Flèche gauche -->

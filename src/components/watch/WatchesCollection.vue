@@ -172,9 +172,9 @@
 
       <!-- Contact Section -->
       <div class="bg-white rounded-md shadow-lg p-8 text-center">
-        <h2 class="text-2xl font-semibold text-text-main mb-4">Une montre vous intéresse ?</h2>
+        <h2 class="text-2xl font-semibold text-text-main mb-4">Une pièce vous intéresse ?</h2>
         <p class="text-lg text-gray-600 mb-6 font-light">
-          Contactez-nous pour plus d'informations ou pour organiser une visite
+          Contactez-nous pour plus d'informations ou pour organiser une visite en main propre
         </p>
 
         <div class="flex flex-col sm:flex-row justify-center gap-4">

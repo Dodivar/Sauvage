@@ -260,7 +260,7 @@ function closeMobileMenu() {
         <div class="sm:col-span-2">
           <div class="text-3xl font-bold text-primary mb-4">Sauvage Watches</div>
           <p class="text-gray-300 mb-6 leading-relaxed">
-            Votre partenaire pour l'achat et la vente de montres de luxe authentifiées. Recherche personnalisée, estimation rapide, transparence garantie.
+            Votre partenaire pour l'achat et la mise à disposition de montres de luxe authentifiées. Recherche personnalisée, estimation rapide, transparence garantie.
           </p>
           <div class="flex space-x-4">
             <a
