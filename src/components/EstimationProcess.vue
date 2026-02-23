@@ -138,7 +138,7 @@
                   Après avoir croisé toutes ces informations, nous vous proposons une estimation 
                   détaillée et transparente. Cette estimation est valable pendant 30 jours et 
                   peut être ajustée après un examen physique de la montre si vous souhaitez 
-                  procéder à une vente.
+                  procéder à une transaction.
                 </p>
               </div>
             </div>

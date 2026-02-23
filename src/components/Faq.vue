@@ -77,9 +77,9 @@ const faqItems = [
   },
   {
     id: 6,
-    question: 'Les montres que vous vendez sont-elles authentiques et garanties ?',
+    question: 'Les montres que vous proposez sont-elles authentiques et garanties ?',
     answer:
-      'Oui, <strong>toutes nos montres sont authentifiées</strong> par nos experts avant d\'être mises en vente, qu\'il s\'agisse de notre collection en stock ou de montres trouvées via notre service de recherche personnalisée. Nous vérifions l\'authenticité, l\'état, et l\'historique de chaque pièce. Nous proposons également une garantie sur nos ventes et nous engageons sur la qualité et l\'authenticité de chaque montre que nous vendons.',
+      'Oui, <strong>toutes nos montres sont authentifiées</strong> par nos experts avant d\'être proposées, qu\'il s\'agisse de notre collection en stock ou de montres trouvées via notre service de recherche personnalisée. Nous vérifions l\'authenticité, l\'état, et l\'historique de chaque pièce. Nous proposons également une garantie sur nos transactions et nous engageons sur la qualité et l\'authenticité de chaque pièce que nous proposons.',
   },
   {
     id: 8,
@@ -101,7 +101,7 @@ const faqItems = [
   },
   {
     id: 11,
-    question: 'Comment se déroule le processus de vente de ma montre ?',
+    question: 'Comment se déroule le processus de rachat de ma montre ?',
     answer: `<ul class="list-decimal space-y-2 ml-4">
       <li>Vous remplissez notre <a href="/estimation" class="text-primary hover:text-green-700 underline font-medium">formulaire d'estimation gratuite</a> en ligne ou nous contactez directement.</li>
       <li>Nous analysons votre demande et vous envoyons une estimation détaillée sous 24h. <a href="/estimation/processus" class="text-primary hover:text-green-700 underline font-medium">Découvrez notre méthode d'estimation</a>.</li>
@@ -125,7 +125,7 @@ const faqItems = [
     id: 14,
     question: 'Comment puis-je être sûr(e) que vous êtes un professionnel sérieux ?',
     answer:
-      'Notre activité est déclarée (SIRET visible sur le site), et nous avons déjà accompagné de nombreux clients satisfaits. Nous vous invitons à consulter nos avis Google, à vérifier notre profil professionnel et à nous contacter pour toute question. Nous sommes transparents sur nos méthodes, comme en témoigne notre <a href="/estimation/processus" class="text-primary hover:text-green-700 underline font-medium">page détaillée expliquant notre processus d\'estimation</a>.',
+      'Notre activité est déclarée (SIRET visible sur le site), et nous avons déjà accompagné de nombreux collectionneurs satisfaits. Nous vous invitons à consulter nos avis Google, à vérifier notre profil professionnel et à nous contacter pour toute question. Nous sommes transparents sur nos méthodes, comme en témoigne notre <a href="/estimation/processus" class="text-primary hover:text-green-700 underline font-medium">page détaillée expliquant notre processus d\'estimation</a>.',
   },
 ]
 

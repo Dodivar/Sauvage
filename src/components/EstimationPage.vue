@@ -300,7 +300,7 @@
             </div>
             <h3 class="text-2xl font-bold text-text-main mb-3">Notre collection de montres</h3>
             <p class="text-gray-600 mb-4">
-              Parcourez notre sélection de montres de prestige actuellement disponibles à la vente.
+              Parcourez notre sélection de montres de prestige actuellement disponibles.
             </p>
             <RouterLink
               to="/collection"

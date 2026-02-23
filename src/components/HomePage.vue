@@ -299,7 +299,7 @@ watch(() => route.hash, async () => {
             Achetez ou recherchez votre montre en toute confiance
           </h2>
           <p class="text-xl text-gray-600">
-            Profitez d'un accompagnement personnalisé, d'une sécurité totale et de tous les avantages de mon réseau d'expert pour un achat serein ou la quête du modèle qui vous fait rêver.
+            Profitez d'un accompagnement personnalisé, d'une sécurité totale et de tous les avantages de notre réseau d'experts pour un achat serein ou la quête du modèle qui vous fait rêver.
           </p>
         </div>
         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -351,7 +351,7 @@ watch(() => route.hash, async () => {
             </div>
             <h3 class="text-lg font-semibold mb-2">Sourcing & réseau international</h3>
             <p class="text-gray-600">
-              Profitez de mon réseau français et européen pour accéder à des modèles rares, exclusifs ou au meilleur rapport qualité/prix.
+              Profitez de notre réseau français et européen pour accéder à des modèles rares, exclusifs ou au meilleur rapport qualité/prix.
             </p>
           </div>
           <!-- Transparence et sérénité -->
@@ -423,9 +423,9 @@ watch(() => route.hash, async () => {
                 <path d="M12 8v4l2.5 2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </div>
-            <h3 class="text-xl font-semibold mb-2">Vente de montre</h3>
+            <h3 class="text-xl font-semibold mb-2">Collection de montres</h3>
             <p class="text-gray-600 mb-3">
-              Découvrez notre offre de montre à saisir dès maitenant.
+              Découvrez notre sélection de montres disponibles en stock.
             </p>
             <a href="/collection" class="text-primary font-semibold hover:underline">
               Voir nos montres en stock

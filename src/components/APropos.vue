@@ -34,7 +34,7 @@
             </div>
             <h3 class="text-xl font-semibold mb-3">Notre mission</h3>
             <p class="text-gray-600">
-              Offrir à nos clients une expérience d'achat et de vente de montres de prestige 
+              Offrir aux collectionneurs une expérience d'achat et de vente de montres de prestige 
               transparente, sécurisée et personnalisée. Nous nous engageons à garantir 
               l'authenticité de chaque pièce et à proposer un service d'excellence.
             </p>
@@ -157,7 +157,7 @@
             </div>
             <h3 class="text-lg font-semibold mb-2">Satisfaction</h3>
             <p class="text-gray-600">
-              Votre satisfaction est notre priorité. Nous nous engageons à vous offrir une expérience exceptionnelle.
+              Votre satisfaction est notre priorité. Nous nous engageons à vous offrir une expérience de qualité.
             </p>
           </div>
         </div>
@@ -208,7 +208,7 @@
                 <svg class="h-5 w-5 text-primary mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                 </svg>
-                Garantie sur nos ventes
+                Garantie sur nos transactions
               </li>
             </ul>
           </div>
@@ -316,7 +316,7 @@
         <div class="text-center mb-8">
           <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-3">Notre expertise</h2>
           <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-            Une équipe passionnée et un réseau solide pour vous offrir le meilleur service
+            Une équipe passionnée et un réseau solide pour vous offrir un service de qualité
           </p>
         </div>
         <div class="grid md:grid-cols-2 gap-8 mt-12">

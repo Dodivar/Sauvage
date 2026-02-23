@@ -67,7 +67,7 @@ onMounted(() => {
         <p class="text-lg text-gray-600">
           Notre équipe spécialisée vous aide à trouver des montres rares, discontinuées ou très
           demandées. Grâce à notre réseau de confiance, nous sécurisons pour vous l'achat d'une
-          pièce d'exception, au meilleur prix et en toute sérénité.
+          pièce d'exception, au prix du marché et en toute sérénité.
         </p>
       </div>
 
@@ -286,7 +286,7 @@ onMounted(() => {
             </div>
             <h3 class="text-2xl font-bold text-text-main mb-3">Notre collection de montres</h3>
             <p class="text-gray-600 mb-4">
-              Parcourez notre sélection de montres de prestige actuellement disponibles à la vente.
+              Parcourez notre sélection de montres de prestige actuellement disponibles.
             </p>
             <RouterLink
               to="/collection"

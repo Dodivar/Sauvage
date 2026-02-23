@@ -46,7 +46,7 @@ onMounted(() => {
                       d="M5 13l4 4L19 7"
                     />
                   </svg>
-                  <span>Une visibilité maximale auprès d'une clientèle qualifiée</span>
+                  <span>Une visibilité maximale auprès de collectionneurs qualifiés</span>
                 </li>
                 <li class="flex items-start">
                   <svg
