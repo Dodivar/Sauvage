@@ -4,8 +4,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#00c172',
-        'text-main': '#2a282b',
+        // Palette principale Sauvage Watches
+        primary: '#0f2a1d', // Vert foncé
+        'primary-hover': '#163d2a', // Vert foncé - état hover
+        cream: '#f7ede0', // Beige clair
+        'text-main': '#000000', // Noir
       },
       animation: {
         shimmer: 'shimmer 2s infinite',

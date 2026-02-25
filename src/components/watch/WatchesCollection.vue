@@ -69,7 +69,7 @@
                   @click="selectSort('recent')"
                   :class="[
                     'w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors',
-                    sortOrder === 'recent' ? 'bg-primary text-white hover:bg-green-700' : 'text-gray-700'
+                    sortOrder === 'recent' ? 'bg-primary text-white hover:bg-primary-hover' : 'text-gray-700'
                   ]"
                 >
                   Ajout récent
@@ -78,7 +78,7 @@
                   @click="selectSort('price-asc')"
                   :class="[
                     'w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors',
-                    sortOrder === 'price-asc' ? 'bg-primary text-white hover:bg-green-700' : 'text-gray-700'
+                    sortOrder === 'price-asc' ? 'bg-primary text-white hover:bg-primary-hover' : 'text-gray-700'
                   ]"
                 >
                   Prix croissant
@@ -87,7 +87,7 @@
                   @click="selectSort('price-desc')"
                   :class="[
                     'w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors rounded-b-lg',
-                    sortOrder === 'price-desc' ? 'bg-primary text-white hover:bg-green-700' : 'text-gray-700'
+                    sortOrder === 'price-desc' ? 'bg-primary text-white hover:bg-primary-hover' : 'text-gray-700'
                   ]"
                 >
                   Prix décroissant
@@ -137,7 +137,7 @@
         <p class="text-gray-600 mb-3">{{ error }}</p>
         <button
           @click="loadWatches"
-          class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-green-700 transition-colors"
+          class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors"
         >
           Réessayer
         </button>
@@ -181,7 +181,7 @@
           <a
             :href="'https://wa.me/' + WHATSAPP_NUMBER"
             target="_blank"
-            class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-primary hover:bg-green-700 transition-colors duration-200"
+            class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-primary hover:bg-primary-hover transition-colors duration-200"
           >
             <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
               <path
@@ -192,7 +192,7 @@
           </a>
           <a
             :href="'mailto:' + EMAIL_CONTACT"
-            class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-primary hover:bg-green-700 transition-colors duration-200"
+            class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-primary hover:bg-primary-hover transition-colors duration-200"
           >
             <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
@@ -323,7 +323,7 @@
               </button>
               <button
                 @click="applyPriceFilter"
-                class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+                class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors font-medium"
               >
                 Appliquer les filtres
               </button>
@@ -397,7 +397,7 @@
               </button>
               <button
                 @click="applyBrandFilter"
-                class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+                class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors font-medium"
               >
                 Appliquer les filtres
               </button>
@@ -933,7 +933,7 @@ onUnmounted(() => {
 }
 
 .gradient-bg {
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  background: linear-gradient(135deg, #f7ede0 0%, #ede4d8 100%);
 }
 
 .modal-overlay {
@@ -946,26 +946,26 @@ onUnmounted(() => {
 
 /* Custom slider styles */
 :deep(.slider-connect) {
-  background: #00c172;
+  background: #0f2a1d;
 }
 
 :deep(.slider-handle) {
-  background: #00c172;
+  background: #0f2a1d;
   border: 2px solid white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 :deep(.slider-handle:hover) {
-  background: #00a85f;
+  background: #163d2a;
 }
 
 :deep(.slider-tooltip) {
-  background: #00c172;
+  background: #0f2a1d;
   border: none;
   color: white;
 }
 
 :deep(.slider-tooltip::before) {
-  border-top-color: #00c172;
+  border-top-color: #0f2a1d;
 }
 </style>

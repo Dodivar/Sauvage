@@ -67,7 +67,7 @@
         <p class="text-gray-600 mb-3">{{ error }}</p>
         <button
           @click="loadArticles"
-          class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-green-700 transition-colors"
+          class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors"
         >
           Réessayer
         </button>
@@ -377,7 +377,7 @@ onMounted(async () => {
 }
 
 .gradient-bg {
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  background: linear-gradient(135deg, #f7ede0 0%, #ede4d8 100%);
 }
 
 .line-clamp-2 {

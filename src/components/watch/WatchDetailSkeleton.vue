@@ -187,7 +187,7 @@
 
 <style scoped>
 .gradient-bg {
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  background: linear-gradient(135deg, #f7ede0 0%, #ede4d8 100%);
 }
 
 @keyframes shimmer {

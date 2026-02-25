@@ -185,7 +185,7 @@ watch(() => route.hash, async () => {
           <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
             <RouterLink
               to="/collection"
-              class="inline-flex items-center bg-primary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-green-700 transition-all shadow-lg"
+              class="inline-flex items-center bg-primary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary-hover transition-all shadow-lg"
             >
               Voir les montres en stock
             </RouterLink>

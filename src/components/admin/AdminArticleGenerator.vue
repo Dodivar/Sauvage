@@ -130,7 +130,7 @@ const handleCancel = () => {
             <button
               type="submit"
               :disabled="isLoading || !watchName.trim()"
-              class="px-6 py-2.5 sm:py-2 bg-primary text-white rounded-lg font-semibold hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base w-full sm:w-auto flex items-center justify-center gap-2"
+              class="px-6 py-2.5 sm:py-2 bg-primary text-white rounded-lg font-semibold hover:bg-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base w-full sm:w-auto flex items-center justify-center gap-2"
             >
               <svg
                 v-if="isLoading"

@@ -613,7 +613,7 @@ onMounted(async () => {
             </button>
             <button
               @click="router.push('/admin/watches/new')"
-              class="w-full px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-green-700 transition-colors whitespace-nowrap sm:w-auto"
+              class="w-full px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-primary-hover transition-colors whitespace-nowrap sm:w-auto"
             >
               + Ajouter une montre
             </button>
@@ -1059,7 +1059,7 @@ onMounted(async () => {
         <button
           v-if="!searchQuery && !selectedBrand"
           @click="router.push('/admin/watches/new')"
-          class="px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-green-700 transition-colors"
+          class="px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-primary-hover transition-colors"
         >
           + Ajouter une montre
         </button>

@@ -276,7 +276,7 @@ onMounted(async () => {
             </button>
             <button
               @click="router.push('/admin/articles/new')"
-              class="px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-green-700 transition-colors whitespace-nowrap"
+              class="px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-primary-hover transition-colors whitespace-nowrap"
             >
               + Ajouter un article
             </button>
@@ -564,7 +564,7 @@ onMounted(async () => {
         <button
           v-if="!searchQuery"
           @click="router.push('/admin/articles/new')"
-          class="px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-green-700 transition-colors"
+          class="px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-primary-hover transition-colors"
         >
           + Ajouter un article
         </button>

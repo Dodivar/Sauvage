@@ -171,7 +171,7 @@ onMounted(() => {
             <a
               :href="'https://wa.me/' + WHATSAPP_NUMBER"
               target="_blank"
-              class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 transition-colors"
+              class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary hover:bg-primary-hover transition-colors"
             >
               <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
                 <path
@@ -182,7 +182,7 @@ onMounted(() => {
             </a>
             <a
               :href="'mailto:' + EMAIL_CONTACT"
-              class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary hover:bg-green-700 transition-colors"
+              class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary hover:bg-primary-hover transition-colors"
             >
               <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path

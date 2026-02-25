@@ -133,7 +133,7 @@
             <p class="text-gray-600 mb-4">{{ error }}</p>
             <button
               @click="loadArticles"
-              class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-green-700 transition-colors"
+              class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors"
             >
               Réessayer
             </button>
@@ -314,7 +314,7 @@
             <button
               @click="handleSave"
               :disabled="isSaving"
-              class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <span v-if="isSaving">Enregistrement...</span>
               <span v-else>Sauvegarder</span>

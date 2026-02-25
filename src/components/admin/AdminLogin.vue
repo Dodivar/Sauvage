@@ -114,7 +114,7 @@ const handleSubmit = async () => {
           <button
             type="submit"
             :disabled="isLoading"
-            class="w-full bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-all transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            class="w-full bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-hover transition-all transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
           >
             <span v-if="!isLoading">Se connecter</span>
             <span v-else class="flex items-center justify-center">
@@ -149,7 +149,7 @@ const handleSubmit = async () => {
 
 <style scoped>
 .gradient-bg {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: linear-gradient(135deg, #f7ede0 0%, #ede4d8 100%);
 }
 </style>
 

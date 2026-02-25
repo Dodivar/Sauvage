@@ -328,7 +328,7 @@ onMounted(async () => {
               <button
                 type="submit"
                 :disabled="isSaving"
-                class="px-6 py-2.5 sm:py-2 bg-primary text-white rounded-lg font-semibold hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base w-full sm:w-auto"
+                class="px-6 py-2.5 sm:py-2 bg-primary text-white rounded-lg font-semibold hover:bg-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base w-full sm:w-auto"
               >
                 {{ isSaving ? 'Enregistrement...' : isEditMode ? 'Mettre à jour' : 'Créer l\'article' }}
               </button>

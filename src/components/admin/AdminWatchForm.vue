@@ -749,7 +749,7 @@ onMounted(() => {
             <button
               type="button"
               @click="showArticleSelector = true"
-              class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-green-700 transition-colors"
+              class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors"
             >
               Gérer les articles liés
             </button>
@@ -861,7 +861,7 @@ onMounted(() => {
           <button
             type="submit"
             :disabled="isSaving"
-            class="px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-green-700 transition-colors disabled:opacity-50"
+            class="px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-primary-hover transition-colors disabled:opacity-50"
           >
             {{ isSaving ? 'Sauvegarde...' : isEditMode ? 'Mettre à jour' : 'Créer' }}
           </button>

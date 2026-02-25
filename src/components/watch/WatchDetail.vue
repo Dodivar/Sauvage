@@ -24,7 +24,7 @@
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <router-link
               to="/collection"
-              class="px-6 py-3 bg-primary text-white rounded-lg font-semibold hover:bg-green-700 transition-colors inline-flex items-center justify-center"
+              class="px-6 py-3 bg-primary text-white rounded-lg font-semibold hover:bg-primary-hover transition-colors inline-flex items-center justify-center"
             >
               <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
@@ -59,7 +59,7 @@
           <p class="text-gray-600 mb-3">{{ error }}</p>
           <button
             @click="loadWatch"
-            class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-green-700 transition-colors"
+            class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors"
           >
             Réessayer
           </button>
@@ -264,7 +264,7 @@
               <button
                 @click="handleBuyNow"
                 :disabled="isCreatingCheckout"
-                class="w-full inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-semibold rounded-lg text-white bg-primary hover:bg-green-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transform hover:scale-[1.02] transition-all mb-3"
+                class="w-full inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-semibold rounded-lg text-white bg-primary hover:bg-primary-hover transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transform hover:scale-[1.02] transition-all mb-3"
               >
                 <svg
                   v-if="!isCreatingCheckout"
@@ -657,7 +657,7 @@
                 : '#'
             "
             target="_blank"
-            class="flex-1 inline-flex items-center justify-center px-6 py-4 border border-transparent text-base font-medium rounded-lg text-white bg-primary hover:bg-green-700 transition-colors duration-200"
+            class="flex-1 inline-flex items-center justify-center px-6 py-4 border border-transparent text-base font-medium rounded-lg text-white bg-primary hover:bg-primary-hover transition-colors duration-200"
           >
             <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 24 24">
               <path
@@ -679,7 +679,7 @@
                   )
                 : '#'
             "
-            class="flex-1 inline-flex items-center justify-center px-6 py-4 border border-transparent text-base font-medium rounded-lg text-white bg-primary hover:bg-green-700 transition-colors duration-200"
+            class="flex-1 inline-flex items-center justify-center px-6 py-4 border border-transparent text-base font-medium rounded-lg text-white bg-primary hover:bg-primary-hover transition-colors duration-200"
           >
             <svg class="w-6 h-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
@@ -716,7 +716,7 @@
       <button
         @click="handleBuyNow"
         :disabled="isCreatingCheckout"
-        class="flex-shrink-0 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-semibold rounded-lg text-white bg-primary hover:bg-green-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+        class="flex-shrink-0 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-semibold rounded-lg text-white bg-primary hover:bg-primary-hover transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
       >
         <svg
           v-if="!isCreatingCheckout"
@@ -910,7 +910,7 @@
             <!-- Copy URL -->
             <button
               @click="copyUrl"
-              class="flex items-center justify-center gap-3 px-6 py-4 rounded-lg bg-primary text-white hover:bg-green-700 transition-colors font-medium relative"
+              class="flex items-center justify-center gap-3 px-6 py-4 rounded-lg bg-primary text-white hover:bg-primary-hover transition-colors font-medium relative"
             >
               <svg v-if="!urlCopied" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -1742,7 +1742,7 @@ onUnmounted(() => {
 
 <style scoped>
 .gradient-bg {
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  background: linear-gradient(135deg, #f7ede0 0%, #ede4d8 100%);
 }
 
 .prose {

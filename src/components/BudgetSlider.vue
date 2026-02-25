@@ -125,26 +125,26 @@ const updateRangeFromInput = () => {
 
 /* Custom slider styles */
 :deep(.slider-connect) {
-  background: #00c172;
+  background: #0f2a1d;
 }
 
 :deep(.slider-handle) {
-  background: #00c172;
+  background: #0f2a1d;
   border: 2px solid white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 :deep(.slider-handle:hover) {
-  background: #00a85f;
+  background: #163d2a;
 }
 
 :deep(.slider-tooltip) {
-  background: #00c172;
+  background: #0f2a1d;
   border: none;
   color: white;
 }
 
 :deep(.slider-tooltip::before) {
-  border-top-color: #00c172;
+  border-top-color: #0f2a1d;
 }
 </style>

@@ -252,7 +252,7 @@ onMounted(() => {
           <button
             type="submit"
             :disabled="isSubmitting"
-            class="w-full bg-primary text-white py-4 px-8 rounded-lg font-semibold text-lg hover:bg-green-700 transition-all transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            class="w-full bg-primary text-white py-4 px-8 rounded-lg font-semibold text-lg hover:bg-primary-hover transition-all transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {{ isSubmitting ? `Envoi en cours${loadingDots}` : 'Envoyer ma demande de recherche' }}
           </button>
@@ -290,7 +290,7 @@ onMounted(() => {
             </p>
             <RouterLink
               to="/collection"
-              class="inline-flex items-center bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-all transform hover:scale-105"
+              class="inline-flex items-center bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-hover transition-all transform hover:scale-105"
             >
               Découvrir la collection
               <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -314,7 +314,7 @@ onMounted(() => {
             </p>
             <RouterLink
               to="/estimation"
-              class="inline-flex items-center bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-all transform hover:scale-105"
+              class="inline-flex items-center bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-hover transition-all transform hover:scale-105"
             >
               Estimer ma montre
               <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

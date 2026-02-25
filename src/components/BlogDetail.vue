@@ -24,7 +24,7 @@
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <button
             @click="loadArticle"
-            class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-green-700 transition-colors"
+            class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors"
           >
             Réessayer
           </button>
@@ -194,7 +194,7 @@
                 </button>
                 <button
                   @click="copyUrl"
-                  class="flex items-center justify-center w-9 h-9 rounded-full bg-primary text-white hover:bg-green-700 transition-colors relative"
+                  class="flex items-center justify-center w-9 h-9 rounded-full bg-primary text-white hover:bg-primary-hover transition-colors relative"
                   :title="urlCopied ? 'URL copiée !' : 'Copier l\'URL'"
                   :aria-label="urlCopied ? 'URL copiée' : 'Copier l\'URL'"
                 >
@@ -527,7 +527,7 @@ onMounted(async () => {
 
 <style scoped>
 .gradient-bg {
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  background: linear-gradient(135deg, #f7ede0 0%, #ede4d8 100%);
 }
 
 /* Styles pour le contenu markdown */
