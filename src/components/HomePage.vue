@@ -292,7 +292,7 @@ watch(() => route.hash, async () => {
     <CarouselNouvelles />
 
     <!-- Sécurité et avantages pour ACHETER ou rechercher une montre -->
-    <section class="py-12 bg-gray-50">
+    <section class="py-12 bg-cream">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-10">
           <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-3">
@@ -393,7 +393,7 @@ watch(() => route.hash, async () => {
         <div class="grid md:grid-cols-3 gap-6">
 
           <!-- Recherche personnalisée -->
-          <div class="bg-gray-50 rounded-md p-6 text-center hover:shadow-lg transition-all">
+          <div class="bg-cream rounded-md p-6 text-center hover:shadow-lg transition-all">
             <div class="text-primary text-4xl mb-3 flex justify-center">
               <!-- SVG search icon -->
               <svg class="h-10 w-10 text-primary mx-auto" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -413,7 +413,7 @@ watch(() => route.hash, async () => {
           </div>
          
           <!-- Vente de montre -->
-          <div class="bg-gray-50 rounded-md p-6 text-center hover:shadow-lg transition-all">
+          <div class="bg-cream rounded-md p-6 text-center hover:shadow-lg transition-all">
             <div class="text-primary text-4xl mb-3 flex justify-center">
               <!-- SVG montre (watch) icon -->
               <svg class="h-10 w-10 text-primary mx-auto" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -433,7 +433,7 @@ watch(() => route.hash, async () => {
           </div>
 
           <!-- Estimation gratuite -->
-          <div class="bg-gray-50 rounded-md p-6 text-center hover:shadow-lg transition-all">
+          <div class="bg-cream rounded-md p-6 text-center hover:shadow-lg transition-all">
             <div class="text-primary text-4xl mb-3 flex justify-center">
               <!-- SVG calculator icon -->
               <svg class="h-10 w-10 text-primary mx-auto" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -456,7 +456,7 @@ watch(() => route.hash, async () => {
             </RouterLink>
           </div>
           <!-- Dépôt-vente -->
-          <!-- <div class="bg-gray-50 rounded-md p-6 text-center hover:shadow-lg transition-all">
+          <!-- <div class="bg-cream rounded-md p-6 text-center hover:shadow-lg transition-all">
             <div class="text-primary text-4xl mb-4">
               <i class="fas fa-store"></i>
             </div>

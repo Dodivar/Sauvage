@@ -73,7 +73,7 @@ function closeMobileMenu() {
       class="flex flex-col items-center justify-center h-screen space-y-8 text-xl font-semibold text-text-main w-screen"
     >
       <RouterLink to="/" @click="closeMobileMenu">
-        <img width="100px" src="./assets/logo noir.png" />
+        <img width="100px" src=".\assets\logos\Logos RVB (web)\Logos RVB vertical\Logo SW vert vertical RVB.png" />
       </RouterLink>
       <!-- Menu admin simplifié -->
       <template v-if="isAdmin">
@@ -156,7 +156,7 @@ function closeMobileMenu() {
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center">
           <RouterLink to="/">
-            <img width="50px" height="50px" src="./assets/logo noir.png" />
+            <img width="50px" height="50px" src="./assets\logos\Logos RVB (web)\Icône RVB\Icône SW noire RVB.png" />
           </RouterLink>
         </div>
         <div class="hidden md:block">
@@ -203,18 +203,18 @@ function closeMobileMenu() {
                 >
                   <RouterLink
                     to="/recherche"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-cream-100 hover:text-primary"
                     >Recherche personnalisée</RouterLink
                   >
                   <div class="py-1">
                     <RouterLink
                       to="/estimation"
-                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-cream-100 hover:text-primary"
                       >Estimation</RouterLink
                     >
                     <!-- <RouterLink
                       to="/depot-vente"
-                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-cream-100 hover:text-primary"
                       >Dépôt-vente</RouterLink
                     > -->
                   </div>
@@ -258,7 +258,13 @@ function closeMobileMenu() {
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div :class="isAdmin ? 'grid md:grid-cols-5 gap-8' : 'grid md:grid-cols-4 gap-8'">
         <div class="sm:col-span-2">
-          <div class="text-3xl font-bold text-primary mb-4">Sauvage Watches</div>
+          <div class="mb-4">
+            <img
+              src="/src/assets/logos/Logos RVB (web)/Logos RVB horizontal/Logo SW vert horizontal RVB.png"
+              alt="Sauvage Watches"
+              class="h-12 w-auto"
+            />
+          </div>
           <p class="text-gray-600 mb-6 leading-relaxed">
             Votre partenaire pour l'achat et la mise à disposition de montres de luxe authentifiées. Recherche personnalisée, estimation rapide, transparence garantie.
           </p>

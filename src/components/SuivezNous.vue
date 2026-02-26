@@ -1,6 +1,6 @@
 <template>
   <!-- Suivez-nous Section -->
-  <section class="py-10 bg-gray-50">
+  <section class="py-10 bg-cream">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-8">
         <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-3">

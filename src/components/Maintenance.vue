@@ -57,7 +57,7 @@ const handleSubmit = async () => {
         </p>
 
         <!-- Formulaire de mot de passe -->
-        <div class="bg-gray-50 rounded-md p-6 mb-6">
+        <div class="bg-cream rounded-md p-6 mb-6">
           <h2 class="text-lg font-semibold text-text-main mb-4">
             Accès réservé
           </h2>

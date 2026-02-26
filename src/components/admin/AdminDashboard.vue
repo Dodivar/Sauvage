@@ -489,7 +489,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-cream">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Top Section -->
       <AdminHeader title="Administration" />
@@ -526,7 +526,7 @@ onMounted(async () => {
               ]"
             >
               Montres en stock
-              <span class="ml-2 text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+              <span class="ml-2 text-xs bg-cream-100 text-gray-600 px-2 py-1 rounded-full">
                 {{ watches.filter((w) => w.is_available !== false).length }}
               </span>
             </button>
@@ -540,7 +540,7 @@ onMounted(async () => {
               ]"
             >
               Montres hors stock
-              <span class="ml-2 text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+              <span class="ml-2 text-xs bg-cream-100 text-gray-600 px-2 py-1 rounded-full">
                 {{ watches.filter((w) => w.is_available === false).length }}
               </span>
             </button>
@@ -554,7 +554,7 @@ onMounted(async () => {
               ]"
             >
               Montres vendues
-              <span class="ml-2 text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+              <span class="ml-2 text-xs bg-cream-100 text-gray-600 px-2 py-1 rounded-full">
                 {{ watches.filter((w) => w.is_sold === true).length }}
               </span>
             </button>
@@ -568,7 +568,7 @@ onMounted(async () => {
               ]"
             >
               Toutes les montres
-              <span class="ml-2 text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+              <span class="ml-2 text-xs bg-cream-100 text-gray-600 px-2 py-1 rounded-full">
                 {{ watches.length }}
               </span>
             </button>
@@ -643,11 +643,11 @@ onMounted(async () => {
       <div v-else-if="filteredWatches.length > 0" class="bg-white rounded-lg shadow overflow-hidden">
         <div class="overflow-x-auto">
           <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+            <thead class="bg-cream">
               <tr>
                 <th 
                   v-if="activeTab !== 'sold'"
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-cream-100 transition-colors"
                   @click="handleSort('order')"
                 >
                   <div class="flex items-center gap-2">
@@ -681,7 +681,7 @@ onMounted(async () => {
                   Nom
                 </th>
                 <th 
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-cream-100 transition-colors"
                   @click="handleSort('brand')"
                 >
                   <div class="flex items-center gap-2">
@@ -709,7 +709,7 @@ onMounted(async () => {
                   </div>
                 </th>
                 <th 
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-cream-100 transition-colors"
                   @click="handleSort('model')"
                 >
                   <div class="flex items-center gap-2">
@@ -737,7 +737,7 @@ onMounted(async () => {
                   </div>
                 </th>
                 <th 
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-cream-100 transition-colors"
                   @click="handleSort('price')"
                 >
                   <div class="flex items-center gap-2">
@@ -765,7 +765,7 @@ onMounted(async () => {
                   </div>
                 </th>
                 <th 
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-cream-100 transition-colors"
                   @click="handleSort('date')"
                 >
                   <div class="flex items-center gap-2">
@@ -811,7 +811,7 @@ onMounted(async () => {
                 v-for="(watch, index) in filteredWatches"
                 :key="watch.id"
                 :class="[
-                  'hover:bg-gray-50 transition-colors',
+                  'hover:bg-cream transition-colors',
                   activeTab !== 'sold' ? 'cursor-move' : 'cursor-default',
                   draggedOverIndex === index ? 'bg-blue-50 border-2 border-blue-300' : '',
                 ]"
@@ -832,7 +832,7 @@ onMounted(async () => {
                         @click.stop="moveWatchUp(watch.id)"
                         :disabled="index === 0"
                         :class="[
-                          'p-1 rounded hover:bg-gray-200 transition-colors',
+                          'p-1 rounded hover:bg-cream-200 transition-colors',
                           index === 0 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer',
                         ]"
                         title="Déplacer vers le haut"
@@ -845,7 +845,7 @@ onMounted(async () => {
                         @click.stop="moveWatchDown(watch.id)"
                         :disabled="index === filteredWatches.length - 1"
                         :class="[
-                          'p-1 rounded hover:bg-gray-200 transition-colors',
+                          'p-1 rounded hover:bg-cream-200 transition-colors',
                           index === filteredWatches.length - 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer',
                         ]"
                         title="Déplacer vers le bas"
@@ -858,7 +858,7 @@ onMounted(async () => {
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="h-16 w-16 bg-gray-200 rounded overflow-hidden">
+                  <div class="h-16 w-16 bg-cream-200 rounded overflow-hidden">
                     <img
                       v-if="watch.images && watch.images.length > 0"
                       :src="watch.images[0]"
@@ -898,7 +898,7 @@ onMounted(async () => {
                     :class="[
                       watch.is_available !== false
                         ? 'bg-green-100 text-green-800'
-                        : 'bg-gray-100 text-gray-800',
+                        : 'bg-cream-100 text-gray-800',
                       'px-2 py-1 text-xs font-semibold rounded-full',
                     ]"
                   >
@@ -1033,7 +1033,7 @@ onMounted(async () => {
             </tbody>
           </table>
         </div>
-        <div class="px-6 py-3 bg-gray-50 border-t border-gray-200">
+        <div class="px-6 py-3 bg-cream border-t border-gray-200">
           <p class="text-sm text-gray-500 italic">
             {{ filteredWatches.length }} montre{{ filteredWatches.length > 1 ? 's' : '' }} affichée{{ filteredWatches.length > 1 ? 's' : '' }}
           </p>
@@ -1083,7 +1083,7 @@ onMounted(async () => {
         <div class="flex justify-end space-x-4">
           <button
             @click="cancelDelete"
-            class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+            class="px-4 py-2 text-gray-700 bg-cream-100 rounded-lg hover:bg-cream-200 transition-colors"
           >
             Annuler
           </button>

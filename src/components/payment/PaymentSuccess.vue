@@ -109,14 +109,14 @@
 
       <!-- Watch Image - Loading State -->
       <div v-if="isLoadingWatch" class="mb-6">
-        <div class="bg-gray-50 rounded-lg p-6 animate-pulse">
+        <div class="bg-cream rounded-lg p-6 animate-pulse">
           <div class="flex flex-col sm:flex-row items-center gap-6">
-            <div class="w-full sm:w-64 h-64 bg-gray-200 rounded-lg"></div>
+            <div class="w-full sm:w-64 h-64 bg-cream-200 rounded-lg"></div>
             <div class="flex-1 w-full space-y-3">
-              <div class="h-6 bg-gray-200 rounded w-3/4"></div>
-              <div class="h-4 bg-gray-200 rounded w-1/2"></div>
-              <div class="h-4 bg-gray-200 rounded w-1/2"></div>
-              <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+              <div class="h-6 bg-cream-200 rounded w-3/4"></div>
+              <div class="h-4 bg-cream-200 rounded w-1/2"></div>
+              <div class="h-4 bg-cream-200 rounded w-1/2"></div>
+              <div class="h-4 bg-cream-200 rounded w-1/2"></div>
             </div>
           </div>
         </div>
@@ -168,7 +168,7 @@
       </div>
 
       <!-- Order Details -->
-      <div v-if="sessionId || watchId || watch" class="bg-gray-50 rounded-lg p-6 mb-6">
+      <div v-if="sessionId || watchId || watch" class="bg-cream rounded-lg p-6 mb-6">
         <h2 class="text-xl font-semibold text-gray-900 mb-4">Détails de la commande</h2>
         <div class="space-y-3 text-left">
           <div v-if="watch && watch.name" class="pb-3 border-b border-gray-200">
@@ -212,7 +212,7 @@
         </router-link>
         <router-link
           to="/"
-          class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-base font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200"
+          class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-base font-medium rounded-lg text-gray-700 bg-white hover:bg-cream transition-colors duration-200"
         >
           Retour à l'accueil
         </router-link>

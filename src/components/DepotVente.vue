@@ -144,7 +144,7 @@ onMounted(() => {
             la sécurisation de la transaction, vous permettant de vous concentrer sur l'essentiel.
           </p>
 
-          <div class="bg-gray-50 rounded-lg p-6 mb-8">
+          <div class="bg-cream rounded-lg p-6 mb-8">
             <h3 class="text-xl font-semibold text-text-main mb-4">
               Le processus en quelques étapes :
             </h3>

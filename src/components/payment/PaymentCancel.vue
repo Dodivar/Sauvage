@@ -109,14 +109,14 @@
 
       <!-- Watch Image - Loading State -->
       <div v-if="isLoadingWatch" class="mb-6">
-        <div class="bg-gray-50 rounded-lg p-6 animate-pulse">
+        <div class="bg-cream rounded-lg p-6 animate-pulse">
           <div class="flex flex-col sm:flex-row items-center gap-6">
-            <div class="w-full sm:w-64 h-64 bg-gray-200 rounded-lg"></div>
+            <div class="w-full sm:w-64 h-64 bg-cream-200 rounded-lg"></div>
             <div class="flex-1 w-full space-y-3">
-              <div class="h-6 bg-gray-200 rounded w-3/4"></div>
-              <div class="h-4 bg-gray-200 rounded w-1/2"></div>
-              <div class="h-4 bg-gray-200 rounded w-1/2"></div>
-              <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+              <div class="h-6 bg-cream-200 rounded w-3/4"></div>
+              <div class="h-4 bg-cream-200 rounded w-1/2"></div>
+              <div class="h-4 bg-cream-200 rounded w-1/2"></div>
+              <div class="h-4 bg-cream-200 rounded w-1/2"></div>
             </div>
           </div>
         </div>
@@ -168,7 +168,7 @@
       </div>
 
       <!-- Information -->
-      <div class="bg-gray-50 rounded-lg p-6 mb-6">
+      <div class="bg-cream rounded-lg p-6 mb-6">
         <p class="text-gray-700 mb-4">
           Si vous avez rencontré un problème lors du paiement ou si vous souhaitez finaliser votre
           achat, n'hésitez pas à nous contacter.
@@ -223,7 +223,7 @@
         </router-link>
         <router-link
           to="/"
-          class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-base font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200"
+          class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-base font-medium rounded-lg text-gray-700 bg-white hover:bg-cream transition-colors duration-200"
         >
           Retour à l'accueil
         </router-link>

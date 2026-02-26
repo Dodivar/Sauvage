@@ -519,7 +519,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-cream">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Top Section -->
       <AdminHeader title="Statistiques des montres" :show-back-button="true" />
@@ -652,7 +652,7 @@ onMounted(async () => {
                 ({{ storageStats.totalSizeMB.toFixed(2) }} MB)
               </div>
             </div>
-            <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+            <div class="bg-cream rounded-lg p-6 border border-gray-200">
               <div class="text-sm text-gray-600 mb-1">Nombre de fichiers</div>
               <div class="text-3xl font-bold text-gray-700">{{ storageStats.fileCount }}</div>
               <div class="text-xs text-gray-500 mt-2">Images stockées</div>
@@ -672,7 +672,7 @@ onMounted(async () => {
               <span>Utilisation</span>
               <span>{{ storageStats.usagePercent.toFixed(1) }}%</span>
             </div>
-            <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+            <div class="w-full bg-cream-200 rounded-full h-4 overflow-hidden">
               <div
                 class="h-full transition-all duration-500 rounded-full"
                 :class="{
@@ -710,7 +710,7 @@ onMounted(async () => {
                 ({{ (totalTableSizeMB / 1024).toFixed(3) }} GB)
               </div>
             </div>
-            <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+            <div class="bg-cream rounded-lg p-6 border border-gray-200">
               <div class="text-sm text-gray-600 mb-1">Nombre de tables</div>
               <div class="text-3xl font-bold text-gray-700">{{ tableSizes.length }}</div>
               <div class="text-xs text-gray-500 mt-2">Tables dans la base</div>
@@ -730,7 +730,7 @@ onMounted(async () => {
               <span>Utilisation</span>
               <span>{{ tableSizeUsagePercent.toFixed(1) }}%</span>
             </div>
-            <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+            <div class="w-full bg-cream-200 rounded-full h-4 overflow-hidden">
               <div
                 class="h-full transition-all duration-500 rounded-full"
                 :class="{
@@ -746,7 +746,7 @@ onMounted(async () => {
           <!-- Table List -->
           <div v-if="tableSizes.length > 0" class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
-              <thead class="bg-gray-50">
+              <thead class="bg-cream">
                 <tr>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Table
@@ -763,7 +763,7 @@ onMounted(async () => {
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
-                <tr v-for="table in tableSizes" :key="table.table_name" class="hover:bg-gray-50">
+                <tr v-for="table in tableSizes" :key="table.table_name" class="hover:bg-cream">
                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="text-sm font-medium text-gray-900">{{ table.table_name }}</div>
                   </td>
@@ -778,7 +778,7 @@ onMounted(async () => {
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="flex items-center">
-                      <div class="w-full bg-gray-200 rounded-full h-2 mr-2">
+                      <div class="w-full bg-cream-200 rounded-full h-2 mr-2">
                         <div
                           class="bg-indigo-600 h-2 rounded-full"
                           :style="{ width: `${totalTableSizeMB > 0 ? (table.size_mb / totalTableSizeMB * 100) : 0}%` }"

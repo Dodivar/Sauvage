@@ -145,7 +145,7 @@
           </div>
 
           <!-- Factors Section -->
-          <div class="bg-gray-50 rounded-md p-8">
+          <div class="bg-cream rounded-md p-8">
             <h2 class="text-2xl font-bold text-text-main mb-6">
               Les facteurs qui influencent l'estimation
             </h2>
@@ -254,7 +254,7 @@
             </p>
             <RouterLink
               to="/estimation"
-              class="inline-flex items-center bg-white text-primary px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all transform hover:scale-105"
+              class="inline-flex items-center bg-white text-primary px-8 py-3 rounded-lg font-semibold hover:bg-cream-100 transition-all transform hover:scale-105"
             >
               Faire une estimation gratuite
               <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

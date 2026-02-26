@@ -30,7 +30,7 @@
           </button>
           <router-link
             :to="backLink"
-            class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors inline-flex items-center justify-center"
+            class="px-6 py-2 bg-cream-200 text-gray-700 rounded-lg hover:bg-cream-200 transition-colors inline-flex items-center justify-center"
           >
             {{ backText }}
           </router-link>
@@ -61,7 +61,7 @@
             <div class="flex items-center gap-2">
               <button
                 @click="shareOnFacebook"
-                class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 text-gray-600 hover:bg-[#1877F2] hover:text-white transition-colors"
+                class="flex items-center justify-center w-8 h-8 rounded-full bg-cream-100 text-gray-600 hover:bg-[#1877F2] hover:text-white transition-colors"
                 title="Partager sur Facebook"
                 aria-label="Partager sur Facebook"
               >
@@ -71,7 +71,7 @@
               </button>
               <button
                 @click="shareOnTwitter"
-                class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 text-gray-600 hover:bg-black hover:text-white transition-colors"
+                class="flex items-center justify-center w-8 h-8 rounded-full bg-cream-100 text-gray-600 hover:bg-black hover:text-white transition-colors"
                 title="Partager sur X"
                 aria-label="Partager sur X"
               >
@@ -81,7 +81,7 @@
               </button>
               <button
                 @click="shareByEmail"
-                class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-600 hover:text-white transition-colors"
+                class="flex items-center justify-center w-8 h-8 rounded-full bg-cream-100 text-gray-600 hover:bg-gray-600 hover:text-white transition-colors"
                 title="Partager par email"
                 aria-label="Partager par email"
               >
@@ -91,7 +91,7 @@
               </button>
               <button
                 @click="copyUrl"
-                class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 text-gray-600 hover:bg-primary hover:text-white transition-colors relative"
+                class="flex items-center justify-center w-8 h-8 rounded-full bg-cream-100 text-gray-600 hover:bg-primary hover:text-white transition-colors relative"
                 :title="urlCopied ? 'URL copiée !' : 'Copier l\'URL'"
                 :aria-label="urlCopied ? 'URL copiée' : 'Copier l\'URL'"
               >
@@ -142,7 +142,7 @@
         </div>
 
         <!-- Footer -->
-        <div class="p-8 border-t border-gray-200 bg-gray-50">
+        <div class="p-8 border-t border-gray-200 bg-cream">
           <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
             <router-link
               :to="backLink"

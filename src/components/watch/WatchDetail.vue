@@ -38,7 +38,7 @@
             </router-link>
             <router-link
               to="/"
-              class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition-colors inline-flex items-center justify-center"
+              class="px-6 py-3 bg-cream-200 text-gray-700 rounded-lg font-semibold hover:bg-cream-200 transition-colors inline-flex items-center justify-center"
             >
               Retour à l'accueil
             </router-link>
@@ -91,7 +91,7 @@
                 class="w-full h-full object-cover object-center cursor-zoom-in"
                 @click="openLightbox"
               />
-              <div v-else class="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
+              <div v-else class="w-full h-full flex items-center justify-center bg-cream-100 text-gray-400">
                 Image non disponible
               </div>
 
@@ -433,7 +433,7 @@
           <h3 class="text-lg lg:text-xl font-semibold text-gray-900 mb-6">Les garanties pour cette annonce</h3>
           <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Card 1: Droit de rétractation -->
-            <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+            <div class="bg-cream rounded-lg p-6 border border-gray-200">
               <div class="flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
                 <svg class="w-8 h-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -446,7 +446,7 @@
             </div>
 
             <!-- Card 2: Authentification garantie -->
-            <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+            <div class="bg-cream rounded-lg p-6 border border-gray-200">
               <div class="flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
                 <!-- Icône oeil pour authentification garantie -->
                 <svg class="w-8 h-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -462,7 +462,7 @@
             </div>
 
             <!-- Card 3: Garantie mécanisme -->
-            <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+            <div class="bg-cream rounded-lg p-6 border border-gray-200">
               <div class="flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
                 <svg class="w-8 h-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -475,7 +475,7 @@
             </div>
 
             <!-- Card 4: Assurance transport -->
-            <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+            <div class="bg-cream rounded-lg p-6 border border-gray-200">
               <div class="flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
                 <svg class="w-8 h-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -488,7 +488,7 @@
             </div>
 
             <!-- Card 5: Paiement sécurisé -->
-            <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+            <div class="bg-cream rounded-lg p-6 border border-gray-200">
               <div class="flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
                 <svg class="w-8 h-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -501,7 +501,7 @@
             </div>
 
             <!-- Card 6: Colis sécurisé et assuré -->
-            <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+            <div class="bg-cream rounded-lg p-6 border border-gray-200">
               <div class="flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
                 <svg class="w-8 h-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <!-- Icône colis style isométrique (similaire à heroicons "cube") -->
@@ -557,7 +557,7 @@
           <article
             v-for="article in watchItem.articles"
             :key="article.id"
-            class="bg-gray-50 rounded-lg p-6 hover:shadow-md transition-shadow cursor-pointer"
+            class="bg-cream rounded-lg p-6 hover:shadow-md transition-shadow cursor-pointer"
             @click="goToArticle(article.id)"
           >
             <h3 class="text-lg font-semibold text-gray-900 mb-3 line-clamp-2">
@@ -591,7 +591,7 @@
       <div class="bg-white rounded-md shadow-lg mb-8 overflow-hidden">
         <button
           @click="isDescriptionExpanded = !isDescriptionExpanded"
-          class="w-full flex items-center justify-between p-8 text-left hover:bg-gray-50 transition-colors"
+          class="w-full flex items-center justify-between p-8 text-left hover:bg-cream transition-colors"
           :aria-expanded="isDescriptionExpanded"
         >
           <h2 class="text-lg lg:text-xl font-semibold text-gray-900">Description</h2>
@@ -855,7 +855,7 @@
           <!-- Close button -->
           <button
             @click="closeShareLightbox"
-            class="absolute top-4 right-4 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full p-2 transition-all duration-200"
+            class="absolute top-4 right-4 bg-cream-100 hover:bg-cream-200 text-gray-600 rounded-full p-2 transition-all duration-200"
             title="Fermer"
             aria-label="Fermer"
           >

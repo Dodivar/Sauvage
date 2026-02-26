@@ -65,7 +65,7 @@ const handleCancel = () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-cream">
     <div class="max-w-4xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
       <!-- Top Section -->
       <AdminHeader
@@ -109,7 +109,7 @@ const handleCancel = () => {
               type="text"
               required
               :disabled="isLoading"
-              class="w-full px-3 sm:px-4 py-2.5 sm:py-2 text-base sm:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+              class="w-full px-3 sm:px-4 py-2.5 sm:py-2 text-base sm:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent disabled:bg-cream-100 disabled:cursor-not-allowed"
               placeholder="Ex: Rolex Submariner, Omega, Tag Heuer Monaco..."
             />
             <p class="mt-1.5 sm:mt-2 text-xs sm:text-sm text-gray-500">
@@ -123,7 +123,7 @@ const handleCancel = () => {
               type="button"
               @click="handleCancel"
               :disabled="isLoading"
-              class="px-6 py-2.5 sm:py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base font-medium w-full sm:w-auto"
+              class="px-6 py-2.5 sm:py-2 text-gray-700 bg-cream-100 rounded-lg hover:bg-cream-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base font-medium w-full sm:w-auto"
             >
               Annuler
             </button>

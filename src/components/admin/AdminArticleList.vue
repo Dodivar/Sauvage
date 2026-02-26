@@ -207,7 +207,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-cream">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Top Section -->
       <AdminHeader title="Gestion des articles" />
@@ -225,7 +225,7 @@ onMounted(async () => {
           </div>
           <div class="flex flex-wrap gap-3">
             <!-- Filtre de visibilité -->
-            <div class="flex items-center gap-2 bg-gray-100 rounded-lg p-1">
+            <div class="flex items-center gap-2 bg-cream-100 rounded-lg p-1">
               <button
                 @click="visibilityFilter = 'visible'"
                 :class="[
@@ -306,7 +306,7 @@ onMounted(async () => {
       <div v-else-if="filteredArticles.length > 0" class="bg-white rounded-lg shadow overflow-hidden">
         <div class="overflow-x-auto">
           <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+            <thead class="bg-cream">
               <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Titre
@@ -318,7 +318,7 @@ onMounted(async () => {
                   Statut
                 </th>
                 <th 
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-cream-100 transition-colors"
                   @click="handleSort('watches')"
                 >
                   <div class="flex items-center gap-2">
@@ -346,7 +346,7 @@ onMounted(async () => {
                   </div>
                 </th>
                 <th 
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-cream-100 transition-colors"
                   @click="handleSort('views')"
                 >
                   <div class="flex items-center gap-2">
@@ -374,7 +374,7 @@ onMounted(async () => {
                   </div>
                 </th>
                 <th 
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-cream-100 transition-colors"
                   @click="handleSort('date')"
                 >
                   <div class="flex items-center gap-2">
@@ -407,7 +407,7 @@ onMounted(async () => {
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-              <tr v-for="article in filteredArticles" :key="article.id" class="hover:bg-gray-50">
+              <tr v-for="article in filteredArticles" :key="article.id" class="hover:bg-cream">
                 <td class="px-6 py-4 text-sm text-gray-900 max-w-sm">
                   <div class="truncate font-medium" :title="article.title">
                     {{ article.title }}
@@ -431,7 +431,7 @@ onMounted(async () => {
                       'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
                       article.is_visible
                         ? 'bg-green-100 text-green-800'
-                        : 'bg-gray-100 text-gray-800'
+                        : 'bg-cream-100 text-gray-800'
                     ]"
                   >
                     {{ article.is_visible ? 'Visible' : 'Masqué' }}
@@ -538,7 +538,7 @@ onMounted(async () => {
             </tbody>
           </table>
         </div>
-        <div class="px-6 py-3 bg-gray-50 border-t border-gray-200">
+        <div class="px-6 py-3 bg-cream border-t border-gray-200">
           <p class="text-sm text-gray-500 italic">
             {{ filteredArticles.length }} article{{ filteredArticles.length > 1 ? 's' : '' }} affiché{{ filteredArticles.length > 1 ? 's' : '' }}
           </p>
@@ -588,7 +588,7 @@ onMounted(async () => {
         <div class="flex justify-end space-x-4">
           <button
             @click="cancelDelete"
-            class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+            class="px-4 py-2 text-gray-700 bg-cream-100 rounded-lg hover:bg-cream-200 transition-colors"
           >
             Annuler
           </button>

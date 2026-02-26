@@ -51,13 +51,13 @@ onMounted(async () => {
       <button
         v-if="showBackButton"
         @click="router.push(backButtonRoute)"
-        class="px-4 py-2 text-sm text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+        class="px-4 py-2 text-sm text-gray-700 hover:text-gray-900 hover:bg-cream-100 rounded-lg transition-colors"
       >
         {{ backButtonText }}
       </button>
       <button
         @click="handleLogout"
-        class="px-4 py-2 text-sm text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+        class="px-4 py-2 text-sm text-gray-700 hover:text-gray-900 hover:bg-cream-100 rounded-lg transition-colors"
       >
         Déconnexion
       </button>

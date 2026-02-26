@@ -13,7 +13,7 @@
           <div class="flex flex-wrap gap-4">
             <button
               @click="openBrandModal"
-              class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors flex items-center gap-2"
+              class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-cream focus:ring-2 focus:ring-primary focus:border-transparent transition-colors flex items-center gap-2"
             >
               <span>Marque</span>
               <span v-if="selectedBrands.length > 0" class="text-primary font-semibold">
@@ -23,7 +23,7 @@
 
             <button
               @click="openPriceModal"
-              class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors flex items-center gap-2"
+              class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-cream focus:ring-2 focus:ring-primary focus:border-transparent transition-colors flex items-center gap-2"
             >
               <span>Prix</span>
               <span v-if="priceMin !== null || priceMax !== null" class="text-primary font-semibold">
@@ -45,7 +45,7 @@
             <div class="relative" ref="sortDropdownRef">
               <button
                 @click.stop="toggleSortMenu"
-                class="p-2 hover:bg-gray-100 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+                class="p-2 hover:bg-cream-100 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
                 aria-label="Trier les montres"
               >
                 <svg 
@@ -68,7 +68,7 @@
                 <button
                   @click="selectSort('recent')"
                   :class="[
-                    'w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors',
+                    'w-full text-left px-4 py-2 hover:bg-cream transition-colors',
                     sortOrder === 'recent' ? 'bg-primary text-white hover:bg-primary-hover' : 'text-gray-700'
                   ]"
                 >
@@ -77,7 +77,7 @@
                 <button
                   @click="selectSort('price-asc')"
                   :class="[
-                    'w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors',
+                    'w-full text-left px-4 py-2 hover:bg-cream transition-colors',
                     sortOrder === 'price-asc' ? 'bg-primary text-white hover:bg-primary-hover' : 'text-gray-700'
                   ]"
                 >
@@ -86,7 +86,7 @@
                 <button
                   @click="selectSort('price-desc')"
                   :class="[
-                    'w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors rounded-b-lg',
+                    'w-full text-left px-4 py-2 hover:bg-cream transition-colors rounded-b-lg',
                     sortOrder === 'price-desc' ? 'bg-primary text-white hover:bg-primary-hover' : 'text-gray-700'
                   ]"
                 >
@@ -99,7 +99,7 @@
             <button
               v-if="hasActiveFilters"
               @click="resetAllFilters"
-              class="p-2 rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors flex items-center gap-2 text-gray-700"
+              class="p-2 rounded-lg hover:bg-cream focus:ring-2 focus:ring-primary focus:border-transparent transition-colors flex items-center gap-2 text-gray-700"
             >
               <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -310,14 +310,14 @@
           </div>
 
           <!-- Footer -->
-          <div class="sticky bottom-0 bg-gray-50 border-t border-gray-200 px-6 py-4 flex items-center justify-between">
+          <div class="sticky bottom-0 bg-cream border-t border-gray-200 px-6 py-4 flex items-center justify-between">
             <div class="text-sm text-gray-600">
               {{ getFilteredCountWithPrice() }} résultat{{ getFilteredCountWithPrice() > 1 ? 's' : '' }}
             </div>
             <div class="flex gap-3">
               <button
                 @click="cancelPriceFilter"
-                class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium text-gray-700"
+                class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-cream transition-colors font-medium text-gray-700"
               >
               Réinitialiser
               </button>
@@ -384,14 +384,14 @@
           </div>
 
           <!-- Footer -->
-          <div class="sticky bottom-0 bg-gray-50 border-t border-gray-200 px-6 py-4 flex items-center justify-between">
+          <div class="sticky bottom-0 bg-cream border-t border-gray-200 px-6 py-4 flex items-center justify-between">
             <div class="text-sm text-gray-600">
               {{ getFilteredCountWithBrand() }} résultat{{ getFilteredCountWithBrand() > 1 ? 's' : '' }}
             </div>
             <div class="flex gap-3">
               <button
                 @click="cancelBrandFilter"
-                class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium text-gray-700"
+                class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-cream transition-colors font-medium text-gray-700"
               >
                 Réinitialiser
               </button>

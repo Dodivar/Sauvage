@@ -376,7 +376,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50 py-8">
+  <div class="min-h-screen bg-cream py-8">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header -->
       <AdminHeader
@@ -515,7 +515,7 @@ onMounted(() => {
             </div>
             <div v-if="formData.isSold && formData.saleDate" class="md:col-span-2">
               <label class="block text-sm font-medium text-gray-700 mb-2">Date de mise en vente</label>
-              <div class="px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg text-sm text-gray-700">
+              <div class="px-4 py-2 bg-cream border border-gray-300 rounded-lg text-sm text-gray-700">
                 {{ formatDate(formData.saleDate) }}
               </div>
             </div>
@@ -704,7 +704,7 @@ onMounted(() => {
               <button
                 type="button"
                 @click="addAccessory"
-                class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                class="px-4 py-2 bg-cream-200 text-gray-700 rounded-lg hover:bg-cream-200 transition-colors"
               >
                 Ajouter
               </button>
@@ -713,7 +713,7 @@ onMounted(() => {
               <div
                 v-for="(accessory, index) in formData.details.accessories"
                 :key="index"
-                class="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                class="flex items-center justify-between p-3 bg-cream rounded-lg"
               >
                 <div class="flex items-center">
                   <input
@@ -775,7 +775,7 @@ onMounted(() => {
               type="button"
               @click="imageInput?.click()"
               :disabled="isUploadingImage"
-              class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors disabled:opacity-50"
+              class="px-4 py-2 bg-cream-200 text-gray-700 rounded-lg hover:bg-cream-200 transition-colors disabled:opacity-50"
             >
               {{ isUploadingImage ? 'Upload en cours...' : '+ Ajouter des images' }}
             </button>
@@ -837,7 +837,7 @@ onMounted(() => {
           <button
             type="button"
             @click="router.push('/admin')"
-            class="px-6 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors"
+            class="px-6 py-2 text-gray-700 bg-cream-200 rounded-lg hover:bg-cream-200 transition-colors"
           >
             Annuler
           </button>

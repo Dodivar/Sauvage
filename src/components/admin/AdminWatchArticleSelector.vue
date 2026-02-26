@@ -199,7 +199,7 @@
                   <div
                     v-for="article in filteredAndSortedArticles.filter(a => !articleMatchesWatchName(a))"
                     :key="article.id"
-                    class="flex items-start space-x-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                    class="flex items-start space-x-3 p-4 border border-gray-200 rounded-lg hover:bg-cream transition-colors"
                   >
                     <input
                       type="checkbox"
@@ -300,14 +300,14 @@
         </div>
 
         <!-- Footer -->
-        <div class="flex items-center justify-between p-6 border-t border-gray-200 bg-gray-50">
+        <div class="flex items-center justify-between p-6 border-t border-gray-200 bg-cream">
           <div class="text-sm text-gray-600">
             {{ selectedArticleIds.length }} article{{ selectedArticleIds.length > 1 ? 's' : '' }} sélectionné{{ selectedArticleIds.length > 1 ? 's' : '' }}
           </div>
           <div class="flex space-x-3">
             <button
               @click="handleCancel"
-              class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+              class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-cream-100 transition-colors"
             >
               Annuler
             </button>

@@ -12,7 +12,7 @@
         <button
           v-if="canScrollLeft"
           @click="scrollLeft"
-          class="carousel-arrow carousel-arrow-left absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-2 sm:p-3 hover:bg-gray-50 transition-all duration-200"
+          class="carousel-arrow carousel-arrow-left absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-2 sm:p-3 hover:bg-cream transition-all duration-200"
           aria-label="Défiler vers la gauche"
         >
           <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -29,7 +29,7 @@
         <button
           v-if="canScrollRight"
           @click="scrollRight"
-          class="carousel-arrow carousel-arrow-right absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-2 sm:p-3 hover:bg-gray-50 transition-all duration-200"
+          class="carousel-arrow carousel-arrow-right absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-2 sm:p-3 hover:bg-cream transition-all duration-200"
           aria-label="Défiler vers la droite"
         >
           <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

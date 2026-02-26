@@ -7,7 +7,12 @@ export default {
         // Palette principale Sauvage Watches
         primary: '#0f2a1d', // Vert foncé
         'primary-hover': '#163d2a', // Vert foncé - état hover
-        cream: '#f7ede0', // Beige clair
+        cream: {
+          DEFAULT: '#f7ede0', // Beige clair
+          100: '#ede4d8', // Crème plus foncé (hover, états secondaires)
+          200: '#e3d9cc', // Crème encore plus foncé (skeleton, placeholders)
+          300: '#d9cec0', // Crème sombre (skeleton loaders)
+        },
         'text-main': '#000000', // Noir
       },
       animation: {

@@ -19,7 +19,7 @@
                 'px-4 py-2 rounded-lg font-medium transition-colors',
                 selectedCategory === null
                   ? 'bg-primary text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200',
+                  : 'bg-cream-100 text-gray-700 hover:bg-cream-200',
               ]"
             >
               Toutes les catégories
@@ -32,7 +32,7 @@
                 'px-4 py-2 rounded-lg font-medium transition-colors',
                 selectedCategory === category
                   ? 'bg-primary text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200',
+                  : 'bg-cream-100 text-gray-700 hover:bg-cream-200',
               ]"
             >
               {{ category }}
@@ -138,8 +138,8 @@
           :class="[
             'px-4 py-2 rounded-lg font-medium transition-colors',
             currentPage === 1
-              ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-              : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300',
+              ? 'bg-cream-200 text-gray-400 cursor-not-allowed'
+              : 'bg-white text-gray-700 hover:bg-cream-100 border border-gray-300',
           ]"
         >
           Précédent
@@ -154,7 +154,7 @@
               'px-4 py-2 rounded-lg font-medium transition-colors',
               page === currentPage
                 ? 'bg-primary text-white'
-                : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300',
+                : 'bg-white text-gray-700 hover:bg-cream-100 border border-gray-300',
             ]"
           >
             {{ page }}
@@ -167,8 +167,8 @@
           :class="[
             'px-4 py-2 rounded-lg font-medium transition-colors',
             currentPage === totalPages
-              ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-              : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300',
+              ? 'bg-cream-200 text-gray-400 cursor-not-allowed'
+              : 'bg-white text-gray-700 hover:bg-cream-100 border border-gray-300',
           ]"
         >
           Suivant
