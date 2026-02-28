@@ -19,26 +19,31 @@ router.afterEach((to) => {
   }
 })
 
-// Écouter les changements de thème
+// Écouter les changements de thème pour mettre à jour les favicons
 const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
 
-// Fonction pour mettre à jour les favicons
 function updateFavicon(e) {
   const isDark = e.matches
-  const favicons = document.querySelectorAll('link[rel="icon"]')
+  const favicons = document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"]')
 
   favicons.forEach((favicon) => {
-    const href = favicon.getAttribute('href')
+    let href = favicon.getAttribute('href')
+    if (!href) return
+
     if (isDark) {
-      favicon.setAttribute('href', href.replace('-light-', '-dark-'))
+      href = href
+        .replace('/favicon.svg', '/favicon-dark.svg')
+        .replace('/favicon.ico', '/favicon-dark.ico')
+        .replace('/favicon-96x96.png', '/favicon-96x96-dark.png')
     } else {
-      favicon.setAttribute('href', href.replace('-dark-', '-light-'))
+      href = href
+        .replace('/favicon-96x96-dark.png', '/favicon-96x96.png')
+        .replace('/favicon-dark.svg', '/favicon.svg')
+        .replace('/favicon-dark.ico', '/favicon.ico')
     }
+    favicon.setAttribute('href', href)
   })
 }
 
-// Exécuter au chargement
 updateFavicon(mediaQuery)
-
-// Écouter les changements
 mediaQuery.addEventListener('change', updateFavicon)
