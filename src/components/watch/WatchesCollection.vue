@@ -13,20 +13,20 @@
           <div class="flex flex-wrap gap-4">
             <button
               @click="openBrandModal"
-              class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-cream focus:ring-2 focus:ring-primary focus:border-transparent transition-colors flex items-center gap-2"
+              class="px-4 py-2 border border-primary text-white bg-primary rounded-lg hover:bg-primary-hover focus:ring-2 focus:ring-primary focus:border-transparent transition-colors flex items-center gap-2"
             >
               <span>Marque</span>
-              <span v-if="selectedBrands.length > 0" class="text-primary font-semibold">
+              <span v-if="selectedBrands.length > 0" class="text-cream font-semibold">
                 ({{ selectedBrands.length === 1 ? selectedBrands[0] : selectedBrands.length }})
               </span>
             </button>
 
             <button
               @click="openPriceModal"
-              class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-cream focus:ring-2 focus:ring-primary focus:border-transparent transition-colors flex items-center gap-2"
+              class="px-4 py-2 border border-primary text-white bg-primary rounded-lg hover:bg-primary-hover focus:ring-2 focus:ring-primary focus:border-transparent transition-colors flex items-center gap-2"
             >
               <span>Prix</span>
-              <span v-if="priceMin !== null || priceMax !== null" class="text-primary font-semibold">
+              <span v-if="priceMin !== null || priceMax !== null" class="text-cream font-semibold">
                 ({{ priceMin !== null ? priceMin.toLocaleString() + ' €' : '0 €' }} - {{ priceMax !== null ? priceMax.toLocaleString() + ' €' : '∞' }})
               </span>
             </button>
@@ -222,7 +222,7 @@
           class="modal-container bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
         >
           <!-- Header -->
-          <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10">
+          <div class="sticky top-0 bg-cream  border-b border-gray-200  px-6 py-4 flex items-center justify-between z-10">
             <h2 class="text-2xl font-bold text-text-main">Prix</h2>
             <button
               @click="closePriceModal"
@@ -310,7 +310,7 @@
           </div>
 
           <!-- Footer -->
-          <div class="sticky bottom-0 bg-cream border-t border-gray-200 px-6 py-4 flex items-center justify-between">
+          <div class="sticky bottom-0 border-t border-gray-200 px-6 py-4 flex items-center justify-between">
             <div class="text-sm text-gray-600">
               {{ getFilteredCountWithPrice() }} résultat{{ getFilteredCountWithPrice() > 1 ? 's' : '' }}
             </div>
@@ -347,7 +347,7 @@
           class="modal-container bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
         >
           <!-- Header -->
-          <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10">
+          <div class="sticky top-0  bg-cream  border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10">
             <h2 class="text-2xl font-bold text-text-main">Marque</h2>
             <button
               @click="closeBrandModal"
@@ -384,7 +384,7 @@
           </div>
 
           <!-- Footer -->
-          <div class="sticky bottom-0 bg-cream border-t border-gray-200 px-6 py-4 flex items-center justify-between">
+          <div class="sticky bottom-0  border-t border-gray-200 px-6 py-4 flex items-center justify-between">
             <div class="text-sm text-gray-600">
               {{ getFilteredCountWithBrand() }} résultat{{ getFilteredCountWithBrand() > 1 ? 's' : '' }}
             </div>

@@ -156,7 +156,7 @@ function closeMobileMenu() {
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center">
           <RouterLink to="/">
-            <img width="50px" height="50px" src="./assets\logos\Logos RVB (web)\Icône RVB\Icône SW noire RVB.png" />
+            <img width="50px" height="50px" src="./assets\logos\Logos RVB (web)\Icône RVB\Icône SW verte RVB.png" />
           </RouterLink>
         </div>
         <div class="hidden md:block">
@@ -236,7 +236,7 @@ function closeMobileMenu() {
           </div>
         </div>
         <button class="md:hidden" ref="mobile-menu-toggle" @click="displayMobileMenu">
-          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="black">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"

@@ -14,6 +14,25 @@
   scroll-behavior: smooth;
 }
 
+/* Formulaires : fond clair conservé en mode sombre (évite le style sombre natif du navigateur) */
+input,
+textarea,
+select {
+  background-color: #ffffff;
+  color: var(--color-text-main);
+}
+input::placeholder,
+textarea::placeholder {
+  color: #6b7280;
+}
+
+/* Texte des checkboxes : toujours noir */
+label:has(input[type="checkbox"]),
+input[type="checkbox"] + label,
+input[type="checkbox"] ~ label {
+  color: var(--color-text-main);
+}
+
 body {
   background-color: #f7ede0;
 }
