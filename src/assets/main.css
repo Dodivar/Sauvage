@@ -47,6 +47,10 @@
   scroll-behavior: smooth;
 }
 
+html {
+  color: var(--color-text-main);
+}
+
 /* Formulaires : fond clair conservé en mode sombre (évite le style sombre natif du navigateur) */
 input,
 textarea,
@@ -69,6 +73,7 @@ input[type="checkbox"] ~ label {
 body {
   font-family: 'HK Grotesk', ui-sans-serif, system-ui, sans-serif;
   background-color: #f7ede0;
+  color: var(--color-text-main);
 }
 
 h1,

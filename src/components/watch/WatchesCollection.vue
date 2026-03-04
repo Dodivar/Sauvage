@@ -16,7 +16,7 @@
               class="px-4 py-2 border border-primary text-white bg-primary rounded-lg hover:bg-primary-hover focus:ring-2 focus:ring-primary focus:border-transparent transition-colors flex items-center gap-2"
             >
               <span>Marque</span>
-              <span v-if="selectedBrands.length > 0" class="text-cream font-semibold">
+              <span v-if="selectedBrands.length > 0" class="text-white font-semibold">
                 ({{ selectedBrands.length === 1 ? selectedBrands[0] : selectedBrands.length }})
               </span>
             </button>
@@ -26,7 +26,7 @@
               class="px-4 py-2 border border-primary text-white bg-primary rounded-lg hover:bg-primary-hover focus:ring-2 focus:ring-primary focus:border-transparent transition-colors flex items-center gap-2"
             >
               <span>Prix</span>
-              <span v-if="priceMin !== null || priceMax !== null" class="text-cream font-semibold">
+              <span v-if="priceMin !== null || priceMax !== null" class="text-white font-semibold">
                 ({{ priceMin !== null ? priceMin.toLocaleString() + ' €' : '0 €' }} - {{ priceMax !== null ? priceMax.toLocaleString() + ' €' : '∞' }})
               </span>
             </button>
