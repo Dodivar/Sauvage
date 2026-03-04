@@ -2,6 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Polices Sauvage Watches */
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/Poppins Bold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'HK Grotesk';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/HK Grotesk Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'HK Grotesk';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/HK Grotesk Italic.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'HK Grotesk';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/HK Grotesk ExtraBold.woff2') format('woff2');
+}
+
 /* Palette principale Sauvage Watches */
 :root {
   --color-primary: #0f2a1d;
@@ -34,7 +67,20 @@ input[type="checkbox"] ~ label {
 }
 
 body {
+  font-family: 'HK Grotesk', ui-sans-serif, system-ui, sans-serif;
   background-color: #f7ede0;
+}
+
+h1,
+h2 {
+  font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
+}
+
+h3,
+h4 {
+  font-family: 'HK Grotesk', ui-sans-serif, system-ui, sans-serif;
+  font-weight: 800;
 }
 
 .gradient-bg {
