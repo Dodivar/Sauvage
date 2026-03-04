@@ -43,7 +43,7 @@ onMounted(() => {
       </p>
       <a
         href="/"
-        class="inline-block bg-primary text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-primary-hover transition transform hover:scale-105"
+        class="inline-block bg-primary text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-primary-hover transition"
       >
         Retour à l'accueil
       </a>

@@ -252,7 +252,7 @@ onMounted(() => {
           <button
             type="submit"
             :disabled="isSubmitting"
-            class="w-full bg-primary text-white py-4 px-8 rounded-lg font-semibold text-lg hover:bg-primary-hover transition-all transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            class="w-full bg-primary text-white py-4 px-8 rounded-lg font-semibold text-lg hover:bg-primary-hover transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {{ isSubmitting ? `Envoi en cours${loadingDots}` : 'Envoyer ma demande de recherche' }}
           </button>
@@ -274,7 +274,7 @@ onMounted(() => {
       <div class="grid md:grid-cols-2 gap-6">
         
         <!-- Lien vers la collection de montres -->
-        <div class="bg-white rounded-md shadow-lg p-8 hover:shadow-xl transition-all transform hover:scale-105">
+        <div class="bg-white rounded-md shadow-lg p-8 hover:shadow-xl transition-all">
           <div class="text-center">
             <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
               <svg class="inline-block w-8 h-8 text-white align-middle" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -290,7 +290,7 @@ onMounted(() => {
             </p>
             <RouterLink
               to="/collection"
-              class="inline-flex items-center bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-hover transition-all transform hover:scale-105"
+              class="inline-flex items-center bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-hover transition-all"
             >
               Découvrir la collection
               <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -301,7 +301,7 @@ onMounted(() => {
         </div>
         
         <!-- Estimation de montre -->
-        <div class="bg-white rounded-md shadow-lg p-8 hover:shadow-xl transition-all transform hover:scale-105">
+        <div class="bg-white rounded-md shadow-lg p-8 hover:shadow-xl transition-all">
           <div class="text-center">
             <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
               <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -314,7 +314,7 @@ onMounted(() => {
             </p>
             <RouterLink
               to="/estimation"
-              class="inline-flex items-center bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-hover transition-all transform hover:scale-105"
+              class="inline-flex items-center bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-hover transition-all"
             >
               Estimer ma montre
               <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

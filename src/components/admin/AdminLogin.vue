@@ -114,7 +114,7 @@ const handleSubmit = async () => {
           <button
             type="submit"
             :disabled="isLoading"
-            class="w-full bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-hover transition-all transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            class="w-full bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-hover transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span v-if="!isLoading">Se connecter</span>
             <span v-else class="flex items-center justify-center">
