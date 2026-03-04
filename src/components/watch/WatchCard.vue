@@ -1,7 +1,7 @@
 <template>
   <div :class="{ 'cursor-pointer': clickable }" @click="handleCardClick">
     <!-- Image Slider -->
-    <div class="relative w-full aspect-square bg-cream-100 rounded-md overflow-hidden mb-2">
+    <div class="relative w-full aspect-square bg-white rounded-md overflow-hidden mb-2 border border-gray-100">
       <div
         class="absolute inset-0 flex items-center justify-center"
         v-if="!watch.images || watch.images.length === 0"

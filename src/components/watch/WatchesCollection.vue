@@ -1,5 +1,5 @@
 <template>
-  <section class="py-3 lg:py-10 gradient-bg min-h-screen">
+  <section class="py-3 lg:py-10 min-h-screen">
     <div class="max-w-7xl mx-auto px-4">
       <!-- Header -->
       <div class="text-center mb-3 lg:mb-8">
@@ -222,7 +222,7 @@
           class="modal-container bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
         >
           <!-- Header -->
-          <div class="sticky top-0 bg-cream  border-b border-gray-200  px-6 py-4 flex items-center justify-between z-10">
+          <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10">
             <h2 class="text-2xl font-bold text-text-main">Prix</h2>
             <button
               @click="closePriceModal"
@@ -347,7 +347,7 @@
           class="modal-container bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
         >
           <!-- Header -->
-          <div class="sticky top-0  bg-cream  border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10">
+          <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10">
             <h2 class="text-2xl font-bold text-text-main">Marque</h2>
             <button
               @click="closeBrandModal"
@@ -932,9 +932,6 @@ onUnmounted(() => {
   animation: fade-in 0.6s ease-out;
 }
 
-.gradient-bg {
-  background: linear-gradient(135deg, #f7ede0 0%, #ede4d8 100%);
-}
 
 .modal-overlay {
   animation: modal-fade-in 0.2s ease-out;

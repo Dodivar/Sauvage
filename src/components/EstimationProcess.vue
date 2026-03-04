@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen">
-    <section class="py-12 gradient-bg">
+    <section class="py-12">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Header -->
         <div class="text-center mb-8">
@@ -145,7 +145,7 @@
           </div>
 
           <!-- Factors Section -->
-          <div class="bg-cream rounded-md p-8">
+          <div class="bg-white rounded-md p-8 shadow-lg">
             <h2 class="text-2xl font-bold text-text-main mb-6">
               Les facteurs qui influencent l'estimation
             </h2>

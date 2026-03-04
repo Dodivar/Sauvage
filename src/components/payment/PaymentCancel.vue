@@ -1,5 +1,5 @@
 <template>
-  <section class="min-h-screen gradient-bg flex items-center justify-center py-12 px-4">
+  <section class="min-h-screen flex items-center justify-center py-12 px-4">
     <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-8 text-center">
       <!-- Cancel Icon -->
       <div class="mb-6">
@@ -109,7 +109,7 @@
 
       <!-- Watch Image - Loading State -->
       <div v-if="isLoadingWatch" class="mb-6">
-        <div class="bg-cream rounded-lg p-6 animate-pulse">
+        <div class="bg-white rounded-lg p-6 animate-pulse shadow-lg">
           <div class="flex flex-col sm:flex-row items-center gap-6">
             <div class="w-full sm:w-64 h-64 bg-cream-200 rounded-lg"></div>
             <div class="flex-1 w-full space-y-3">
@@ -124,7 +124,7 @@
 
       <!-- Watch Image - Display -->
       <div v-else-if="watch && watch.images && watch.images.length > 0" class="mb-6">
-        <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 shadow-lg">
+        <div class="bg-white rounded-xl p-6 shadow-lg">
           <h2 class="text-xl font-semibold text-gray-900 mb-4 text-center">Votre montre</h2>
           <div class="flex flex-col sm:flex-row items-center gap-6">
             <!-- Image Container -->
@@ -168,7 +168,7 @@
       </div>
 
       <!-- Information -->
-      <div class="bg-cream rounded-lg p-6 mb-6">
+      <div class="bg-white rounded-lg p-6 mb-6 shadow-lg">
         <p class="text-gray-700 mb-4">
           Si vous avez rencontré un problème lors du paiement ou si vous souhaitez finaliser votre
           achat, n'hésitez pas à nous contacter.
@@ -295,9 +295,6 @@ function handleImageError(event) {
 </script>
 
 <style scoped>
-.gradient-bg {
-  background: linear-gradient(135deg, #f7ede0 0%, #ede4d8 100%);
-}
 </style>
 
 

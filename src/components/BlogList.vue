@@ -1,5 +1,5 @@
 <template>
-  <section class="py-10 gradient-bg min-h-screen">
+  <section class="py-10 min-h-screen">
     <div class="max-w-7xl mx-auto px-4">
       <!-- Header -->
       <div class="text-center mb-8">
@@ -374,10 +374,6 @@ onMounted(async () => {
 
 .animate-fade-in {
   animation: fade-in 0.6s ease-out;
-}
-
-.gradient-bg {
-  background: linear-gradient(135deg, #f7ede0 0%, #ede4d8 100%);
 }
 
 .line-clamp-2 {

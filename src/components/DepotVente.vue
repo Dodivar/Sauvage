@@ -9,7 +9,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <section class="py-16 gradient-bg">
+  <section class="py-16">
     <div class="max-w-4xl mx-auto px-4">
       <h1 class="text-4xl font-bold text-text-main mb-8 text-center">Dépôt-Vente de montres</h1>
 
@@ -144,7 +144,7 @@ onMounted(() => {
             la sécurisation de la transaction, vous permettant de vous concentrer sur l'essentiel.
           </p>
 
-          <div class="bg-cream rounded-lg p-6 mb-8">
+          <div class="bg-white rounded-lg p-6 mb-8 shadow-lg">
             <h3 class="text-xl font-semibold text-text-main mb-4">
               Le processus en quelques étapes :
             </h3>

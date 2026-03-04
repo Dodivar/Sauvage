@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen">
     <!-- Hero Section -->
-    <section class="py-12 gradient-bg">
+    <section class="py-12">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-8">
           <h1 class="text-3xl lg:text-4xl font-bold text-text-main mb-3">
@@ -26,7 +26,7 @@
           </p>
         </div>
         <div class="grid md:grid-cols-2 gap-6 mt-8">
-          <div class="bg-cream rounded-md p-8">
+          <div class="bg-white rounded-md p-8 shadow-lg">
             <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-3">
               <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -39,7 +39,7 @@
               l'authenticité de chaque pièce et à proposer un service d'excellence.
             </p>
           </div>
-          <div class="bg-cream rounded-md p-8">
+          <div class="bg-white rounded-md p-8 shadow-lg">
             <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-4">
               <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -390,7 +390,7 @@
           </p>
         </div>
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-          <div class="bg-cream rounded-md p-6">
+          <div class="bg-white rounded-md p-6 shadow-lg">
             <div class="text-primary text-3xl mb-3">⚡</div>
             <h3 class="text-lg font-semibold mb-3">Délais réduits</h3>
             <p class="text-gray-600">
@@ -398,7 +398,7 @@
               et l'envoi est rapide une fois la commande validée.
             </p>
           </div>
-          <div class="bg-cream rounded-md p-6">
+          <div class="bg-white rounded-md p-6 shadow-lg">
             <div class="text-primary text-3xl mb-3">🎯</div>
             <h3 class="text-lg font-semibold mb-3">Prix transparents</h3>
             <p class="text-gray-600">
@@ -406,7 +406,7 @@
               clair et transparent.
             </p>
           </div>
-          <div class="bg-cream rounded-md p-6">
+          <div class="bg-white rounded-md p-6 shadow-lg">
             <div class="text-primary text-3xl mb-3">🤝</div>
             <h3 class="text-lg font-semibold mb-3">Relation directe</h3>
             <p class="text-gray-600">
@@ -414,7 +414,7 @@
               et suivi de votre commande en temps réel.
             </p>
           </div>
-          <div class="bg-cream rounded-md p-6">
+          <div class="bg-white rounded-md p-6 shadow-lg">
             <div class="text-primary text-3xl mb-3">✅</div>
             <h3 class="text-lg font-semibold mb-3">Qualité garantie</h3>
             <p class="text-gray-600">
@@ -422,7 +422,7 @@
               Nous garantissons l'authenticité et la qualité de chaque pièce.
             </p>
           </div>
-          <div class="bg-cream rounded-md p-6">
+          <div class="bg-white rounded-md p-6 shadow-lg">
             <div class="text-primary text-3xl mb-3">📦</div>
             <h3 class="text-lg font-semibold mb-3">Livraison sécurisée</h3>
             <p class="text-gray-600">
@@ -430,7 +430,7 @@
               pendant tout le transport jusqu'à chez vous.
             </p>
           </div>
-          <div class="bg-cream rounded-md p-6">
+          <div class="bg-white rounded-md p-6 shadow-lg">
             <div class="text-primary text-3xl mb-3">🛡️</div>
             <h3 class="text-lg font-semibold mb-3">Garantie et SAV</h3>
             <p class="text-gray-600">

@@ -1,5 +1,5 @@
 <template>
-  <section id="faq" class="py-12 gradient-bg">
+  <section id="faq" class="py-12">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-10">
         <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-3">Questions fréquentes</h2>

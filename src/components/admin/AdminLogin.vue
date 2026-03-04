@@ -40,7 +40,7 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <div class="min-h-screen gradient-bg flex items-center justify-center px-4">
+  <div class="min-h-screen flex items-center justify-center px-4">
     <div class="max-w-md w-full">
       <div class="bg-white rounded-md shadow-xl p-8 md:p-12">
         <!-- Logo -->
@@ -148,9 +148,6 @@ const handleSubmit = async () => {
 </template>
 
 <style scoped>
-.gradient-bg {
-  background: linear-gradient(135deg, #f7ede0 0%, #ede4d8 100%);
-}
 </style>
 
 

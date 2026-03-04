@@ -1,5 +1,5 @@
 <template>
-  <section class="lg:py-10 pb-20 lg:pb-10 gradient-bg min-h-screen">
+  <section class="lg:py-10 pb-20 lg:pb-10 min-h-screen">
     <div class="max-w-7xl mx-auto px-4">
       <!-- Main Section: Grid 2 columns -->
       <div class="grid lg:grid-cols-2 gap-8 mb-8">
@@ -128,7 +128,7 @@
           <div
             v-for="n in 3"
             :key="n"
-            class="bg-cream rounded-lg p-6"
+            class="bg-white rounded-lg p-6 shadow-sm"
           >
             <div class="h-6 bg-cream-300 rounded mb-3 shimmer-bg"></div>
             <div class="h-4 bg-cream-200 rounded mb-2 shimmer-bg"></div>
@@ -186,9 +186,6 @@
 </script>
 
 <style scoped>
-.gradient-bg {
-  background: linear-gradient(135deg, #f7ede0 0%, #ede4d8 100%);
-}
 
 @keyframes shimmer {
   0% {

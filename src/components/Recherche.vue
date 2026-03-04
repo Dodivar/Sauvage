@@ -59,7 +59,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <section class="py-10 gradient-bg" name="RechercheMontre">
+  <section class="py-10" name="RechercheMontre">
     <div class="max-w-4xl mx-auto px-4">
       <div class="mb-8 text-center">
         <h1 class="text-3xl font-bold text-text-main">Recherche personnalisée de montre</h1>

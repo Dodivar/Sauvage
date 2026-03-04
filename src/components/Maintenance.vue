@@ -34,7 +34,7 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <div class="min-h-screen gradient-bg flex items-center justify-center px-4">
+  <div class="min-h-screen flex items-center justify-center px-4">
     <div class="max-w-2xl w-full">
       <div class="bg-white rounded-md shadow-xl p-8 md:p-12 text-center">
         <!-- Logo -->
@@ -57,7 +57,7 @@ const handleSubmit = async () => {
         </p>
 
         <!-- Formulaire de mot de passe -->
-        <div class="bg-cream rounded-md p-6 mb-6">
+        <div class="bg-white rounded-md p-6 mb-6 shadow-lg">
           <h2 class="text-lg font-semibold text-text-main mb-4">
             Accès réservé
           </h2>
@@ -153,8 +153,5 @@ const handleSubmit = async () => {
 </template>
 
 <style scoped>
-.gradient-bg {
-  background: linear-gradient(135deg, #f7ede0 0%, #ede4d8 100%);
-}
 </style>
 

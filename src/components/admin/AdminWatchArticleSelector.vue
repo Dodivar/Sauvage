@@ -300,7 +300,7 @@
         </div>
 
         <!-- Footer -->
-        <div class="flex items-center justify-between p-6 border-t border-gray-200 bg-cream">
+        <div class="flex items-center justify-between p-6 border-t border-gray-200 bg-white">
           <div class="text-sm text-gray-600">
             {{ selectedArticleIds.length }} article{{ selectedArticleIds.length > 1 ? 's' : '' }} sélectionné{{ selectedArticleIds.length > 1 ? 's' : '' }}
           </div>

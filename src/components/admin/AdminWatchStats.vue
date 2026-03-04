@@ -643,7 +643,7 @@ onMounted(async () => {
           
           <!-- Summary Cards -->
           <div v-if="storageStats" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <div class="bg-blue-50 rounded-lg p-6 border border-blue-200">
+            <div class="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
               <div class="text-sm text-blue-600 mb-1">Stockage utilisé</div>
               <div class="text-3xl font-bold text-blue-700">
                 {{ storageStats.totalSizeGB.toFixed(2) }} GB
@@ -652,12 +652,12 @@ onMounted(async () => {
                 ({{ storageStats.totalSizeMB.toFixed(2) }} MB)
               </div>
             </div>
-            <div class="bg-cream rounded-lg p-6 border border-gray-200">
+            <div class="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
               <div class="text-sm text-gray-600 mb-1">Nombre de fichiers</div>
               <div class="text-3xl font-bold text-gray-700">{{ storageStats.fileCount }}</div>
               <div class="text-xs text-gray-500 mt-2">Images stockées</div>
             </div>
-            <div class="bg-purple-50 rounded-lg p-6 border border-purple-200">
+            <div class="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
               <div class="text-sm text-purple-600 mb-1">Limite du plan</div>
               <div class="text-3xl font-bold text-purple-700">{{ storageStats.limitGB }} GB</div>
               <div class="text-xs text-purple-500 mt-2">
@@ -701,7 +701,7 @@ onMounted(async () => {
           
           <!-- Summary Cards -->
           <div v-if="tableSizes.length > 0" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <div class="bg-indigo-50 rounded-lg p-6 border border-indigo-200">
+            <div class="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
               <div class="text-sm text-indigo-600 mb-1">Taille totale utilisée</div>
               <div class="text-3xl font-bold text-indigo-700">
                 {{ totalTableSizeMB.toFixed(2) }} MB
@@ -710,12 +710,12 @@ onMounted(async () => {
                 ({{ (totalTableSizeMB / 1024).toFixed(3) }} GB)
               </div>
             </div>
-            <div class="bg-cream rounded-lg p-6 border border-gray-200">
+            <div class="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
               <div class="text-sm text-gray-600 mb-1">Nombre de tables</div>
               <div class="text-3xl font-bold text-gray-700">{{ tableSizes.length }}</div>
               <div class="text-xs text-gray-500 mt-2">Tables dans la base</div>
             </div>
-            <div class="bg-purple-50 rounded-lg p-6 border border-purple-200">
+            <div class="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
               <div class="text-sm text-purple-600 mb-1">Limite du plan</div>
               <div class="text-3xl font-bold text-purple-700">{{ tableSizeLimitMB }} MB</div>
               <div class="text-xs text-purple-500 mt-2">

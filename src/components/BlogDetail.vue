@@ -1,5 +1,5 @@
 <template>
-  <section class="py-10 gradient-bg min-h-screen">
+  <section class="py-10 min-h-screen">
     <div class="max-w-4xl mx-auto px-4">
       <!-- Loading State -->
       <div v-if="isLoading" class="text-center py-10">
@@ -142,7 +142,7 @@
         </div>
 
         <!-- Footer -->
-        <div class="p-8 border-t border-gray-200 bg-cream">
+        <div class="p-8 border-t border-gray-200 bg-white">
           <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
             <router-link
               :to="backLink"
@@ -526,9 +526,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.gradient-bg {
-  background: linear-gradient(135deg, #f7ede0 0%, #ede4d8 100%);
-}
 
 /* Styles pour le contenu markdown */
 :deep(.article-content) {

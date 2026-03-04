@@ -88,9 +88,6 @@ h4 {
   font-weight: 800;
 }
 
-.gradient-bg {
-  background: linear-gradient(135deg, #f7ede0 0%, #ede4d8 100%);
-}
 .watch-shadow {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
 }
@@ -98,6 +95,7 @@ h4 {
   background-color: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(8px);
 }
+
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }

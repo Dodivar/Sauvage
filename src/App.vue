@@ -203,21 +203,19 @@ function closeMobileMenu() {
                 >
                   <RouterLink
                     to="/recherche"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-cream-100 hover:text-primary"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:text-primary hover:bg-primary/10"
                     >Recherche personnalisée</RouterLink
                   >
-                  <div class="py-1">
-                    <RouterLink
-                      to="/estimation"
-                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-cream-100 hover:text-primary"
-                      >Estimation</RouterLink
-                    >
-                    <!-- <RouterLink
+                  <RouterLink
+                    to="/estimation"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:text-primary hover:bg-primary/10"
+                    >Estimation</RouterLink
+                  >
+                  <!-- <RouterLink
                       to="/depot-vente"
-                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-cream-100 hover:text-primary"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:text-primary hover:bg-primary/10"
                       >Dépôt-vente</RouterLink
                     > -->
-                  </div>
                 </div>
               </div>
               <RouterLink to="/blog" class="text-text-main hover:text-primary transition-colors"

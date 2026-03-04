@@ -393,7 +393,7 @@ watch(() => route.hash, async () => {
         <div class="grid md:grid-cols-3 gap-6">
 
           <!-- Recherche personnalisée -->
-          <div class="bg-cream rounded-md p-6 text-center hover:shadow-lg transition-all">
+          <div class="bg-white rounded-md p-6 text-center hover:shadow-lg transition-all shadow-lg">
             <div class="text-primary text-4xl mb-3 flex justify-center">
               <!-- SVG search icon -->
               <svg class="h-10 w-10 text-primary mx-auto" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -413,7 +413,7 @@ watch(() => route.hash, async () => {
           </div>
          
           <!-- Vente de montre -->
-          <div class="bg-cream rounded-md p-6 text-center hover:shadow-lg transition-all">
+          <div class="bg-white rounded-md p-6 text-center hover:shadow-lg transition-all shadow-lg">
             <div class="text-primary text-4xl mb-3 flex justify-center">
               <!-- SVG montre (watch) icon -->
               <svg class="h-10 w-10 text-primary mx-auto" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -433,7 +433,7 @@ watch(() => route.hash, async () => {
           </div>
 
           <!-- Estimation gratuite -->
-          <div class="bg-cream rounded-md p-6 text-center hover:shadow-lg transition-all">
+          <div class="bg-white rounded-md p-6 text-center hover:shadow-lg transition-all shadow-lg">
             <div class="text-primary text-4xl mb-3 flex justify-center">
               <!-- SVG calculator icon -->
               <svg class="h-10 w-10 text-primary mx-auto" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -456,7 +456,7 @@ watch(() => route.hash, async () => {
             </RouterLink>
           </div>
           <!-- Dépôt-vente -->
-          <!-- <div class="bg-cream rounded-md p-6 text-center hover:shadow-lg transition-all">
+          <!-- <div class="bg-white rounded-md p-6 text-center hover:shadow-lg transition-all shadow-lg">
             <div class="text-primary text-4xl mb-4">
               <i class="fas fa-store"></i>
             </div>
