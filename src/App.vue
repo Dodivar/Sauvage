@@ -50,13 +50,13 @@ function closeMobileMenu() {
   <div
     v-if="!isMaintenancePage"
     ref="mobile-menu-overlay"
-    class="fixed inset-0 bg-cream/90 backdrop-blur-lg z-30 hidden transition-opacity duration-300"
+    class="fixed inset-0 bg-primary z-30 hidden transition-opacity duration-300"
   >
     <div class="absolute top-6 right-6">
       <button
         @click="closeMobileMenu"
         ref="close-mobile-menu"
-        class="text-text-main focus:outline-none p-2"
+        class="text-white focus:outline-none p-2"
         aria-label="Fermer le menu"
       >
         <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -70,80 +70,80 @@ function closeMobileMenu() {
       </button>
     </div>
     <nav
-      class="flex flex-col items-center justify-center h-screen space-y-8 text-xl font-semibold text-text-main w-screen"
+      class="flex flex-col items-center justify-center h-screen space-y-8 text-xl font-semibold text-white w-screen"
     >
       <RouterLink to="/" @click="closeMobileMenu">
-        <img width="100px" src=".\assets\logos\Logos RVB (web)\Logos RVB vertical\Logo SW vert vertical RVB.png" />
+        <img width="100px" src="./assets/logos/Logos RVB (web)/Logos RVB vertical/Logo SW blanc vertical RVB.png" alt="Sauvage Watches" />
       </RouterLink>
       <!-- Menu admin simplifié -->
       <template v-if="isAdmin">
         <RouterLink
           to="/collection"
           @click="closeMobileMenu"
-          class="hover:text-primary transition-colors"
+          class="hover:text-cream-100 transition-colors"
           >Nos montres</RouterLink
         >
         <RouterLink
           to="/admin"
           @click="closeMobileMenu"
-          class="hover:text-primary transition-colors"
+          class="hover:text-cream-100 transition-colors"
           >Tableau de bord</RouterLink
         >
         <RouterLink
           to="/admin/articles"
           @click="closeMobileMenu"
-          class="hover:text-primary transition-colors"
+          class="hover:text-cream-100 transition-colors"
           >Articles</RouterLink
         >
       </template>
       <!-- Menu utilisateur complet -->
       <template v-else>
-        <RouterLink to="/" @click="closeMobileMenu" class="hover:text-primary transition-colors"
+        <RouterLink to="/" @click="closeMobileMenu" class="hover:text-cream-100 transition-colors"
           >Accueil</RouterLink
         >
         <RouterLink
           to="/collection"
           @click="closeMobileMenu"
-          class="hover:text-primary transition-colors"
+          class="hover:text-cream-100 transition-colors"
           >Nos montres</RouterLink
         >
         <RouterLink
           to="/recherche"
           @click="closeMobileMenu"
-          class="hover:text-primary transition-colors"
+          class="hover:text-cream-100 transition-colors"
           >Recherche personnalisée</RouterLink
         >
         <RouterLink
           to="/estimation"
           @click="closeMobileMenu"
-          class="hover:text-primary transition-colors"
+          class="hover:text-cream-100 transition-colors"
           >Estimation</RouterLink
         >
         <!-- <RouterLink
           to="/depot-vente"
           @click="closeMobileMenu"
-          class="hover:text-primary transition-colors"
+          class="hover:text-cream-100 transition-colors"
           >Dépôt-vente</RouterLink
         > -->
         <RouterLink
           to="/blog"
           @click="closeMobileMenu"
-          class="hover:text-primary transition-colors"
+          class="hover:text-cream-100 transition-colors"
           >Blog</RouterLink
         >
         <RouterLink
           to="/a-propos"
           @click="closeMobileMenu"
-          class="hover:text-primary transition-colors"
+          class="hover:text-cream-100 transition-colors"
           >À propos</RouterLink
         >
-        <RouterLink to="/#faq" @click="closeMobileMenu" class="hover:text-primary transition-colors"
+        <RouterLink to="/#faq" @click="closeMobileMenu" class="hover:text-cream-100 transition-colors"
           >FAQ</RouterLink
         >
         <RouterLink
           to="/#contact"
           @click="closeMobileMenu"
-          class="hover:text-primary transition-colors"
+          class="hover:text-cream-100 transition-colors"
           >Contact</RouterLink
         >
       </template>
