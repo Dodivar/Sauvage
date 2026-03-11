@@ -2,7 +2,6 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { logoutAdmin, getCurrentAdmin } from '@/services/admin/adminAuthService'
-import logoNoir from '@/assets/logo noir.png'
 
 const router = useRouter()
 
@@ -56,7 +55,7 @@ onMounted(async () => {
       </button>
       <button
         @click="handleLogout"
-        class="px-4 py-2 text-sm text-gray-700 hover:text-gray-900 hover:bg-cream-100 rounded-lg transition-colors"
+        class="px-4 py-2 text-sm text-gray-700 hover:text-gray-900 rounded-lg bg-white transition-colors"
       >
         Déconnexion
       </button>

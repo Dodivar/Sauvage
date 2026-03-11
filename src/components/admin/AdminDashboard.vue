@@ -521,12 +521,12 @@ onMounted(async () => {
               :class="[
                 activeTab === 'available'
                   ? 'border-primary text-primary'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+                  : 'border-transparent hover:text-gray-700 hover:border-gray-300',
                 'whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm',
               ]"
             >
               Montres en stock
-              <span class="ml-2 text-xs bg-cream-100 text-gray-600 px-2 py-1 rounded-full">
+              <span class="ml-2 text-xs bg-primary text-white px-2 py-1 rounded-full">
                 {{ watches.filter((w) => w.is_available !== false).length }}
               </span>
             </button>
@@ -535,12 +535,12 @@ onMounted(async () => {
               :class="[
                 activeTab === 'unavailable'
                   ? 'border-primary text-primary'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+                  : 'border-transparent hover:text-gray-700 hover:border-gray-300',
                 'whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm',
               ]"
             >
               Montres hors stock
-              <span class="ml-2 text-xs bg-cream-100 text-gray-600 px-2 py-1 rounded-full">
+              <span class="ml-2 text-xs bg-primary text-white px-2 py-1 rounded-full">
                 {{ watches.filter((w) => w.is_available === false).length }}
               </span>
             </button>
@@ -549,12 +549,12 @@ onMounted(async () => {
               :class="[
                 activeTab === 'sold'
                   ? 'border-primary text-primary'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+                  : 'border-transparent hover:text-gray-700 hover:border-gray-300',
                 'whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm',
               ]"
             >
               Montres vendues
-              <span class="ml-2 text-xs bg-cream-100 text-gray-600 px-2 py-1 rounded-full">
+              <span class="ml-2 text-xs bg-primary text-white px-2 py-1 rounded-full">
                 {{ watches.filter((w) => w.is_sold === true).length }}
               </span>
             </button>
@@ -563,12 +563,12 @@ onMounted(async () => {
               :class="[
                 activeTab === 'all'
                   ? 'border-primary text-primary'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+                  : 'border-transparent hover:text-gray-700 hover:border-gray-300',
                 'whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm',
               ]"
             >
               Toutes les montres
-              <span class="ml-2 text-xs bg-cream-100 text-gray-600 px-2 py-1 rounded-full">
+              <span class="ml-2 text-xs bg-primary text-white px-2 py-1 rounded-full">
                 {{ watches.length }}
               </span>
             </button>
@@ -643,7 +643,7 @@ onMounted(async () => {
       <div v-else-if="filteredWatches.length > 0" class="bg-white rounded-lg shadow overflow-hidden">
         <div class="overflow-x-auto">
           <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-cream">
+            <thead class="">
               <tr>
                 <th 
                   v-if="activeTab !== 'sold'"
@@ -1033,7 +1033,7 @@ onMounted(async () => {
             </tbody>
           </table>
         </div>
-        <div class="px-6 py-3 bg-cream border-t border-gray-200">
+        <div class="px-6 py-3 border-t border-gray-200">
           <p class="text-sm text-gray-500 italic">
             {{ filteredWatches.length }} montre{{ filteredWatches.length > 1 ? 's' : '' }} affichée{{ filteredWatches.length > 1 ? 's' : '' }}
           </p>

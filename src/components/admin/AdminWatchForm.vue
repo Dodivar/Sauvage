@@ -697,14 +697,14 @@ onMounted(() => {
                 <input
                   v-model="newAccessoryIncluded"
                   type="checkbox"
-                  class="mr-2"
+                  class="mr-2 bg-primary text-white accent-primary"
                 />
                 Inclus
               </label>
               <button
                 type="button"
                 @click="addAccessory"
-                class="px-4 py-2 bg-cream-200 text-gray-700 rounded-lg hover:bg-cream-200 transition-colors"
+                class="px-4 py-2 bg-primary text-gray-700 rounded-lg text-white transition-colors"
               >
                 Ajouter
               </button>
@@ -775,7 +775,7 @@ onMounted(() => {
               type="button"
               @click="imageInput?.click()"
               :disabled="isUploadingImage"
-              class="px-4 py-2 bg-cream-200 text-gray-700 rounded-lg hover:bg-cream-200 transition-colors disabled:opacity-50"
+              class="px-4 py-2 bg-primary text-gray-700 rounded-lg text-white transition-colors disabled:opacity-50"
             >
               {{ isUploadingImage ? 'Upload en cours...' : '+ Ajouter des images' }}
             </button>
@@ -837,7 +837,7 @@ onMounted(() => {
           <button
             type="button"
             @click="router.push('/admin')"
-            class="px-6 py-2 text-gray-700 bg-cream-200 rounded-lg hover:bg-cream-200 transition-colors"
+            class="px-6 py-2 text-gray-700 rounded-lg bg-white transition-colors"
           >
             Annuler
           </button>
