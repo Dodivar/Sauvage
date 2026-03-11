@@ -1,6 +1,9 @@
 export const WHATSAPP_NUMBER = '+33612843926'
 export const EMAIL_CONTACT = 'contact@sauvage-watches.fr'
 
+/** Afficher la section d'achat (boutons "Acheter") sur les pages détail montre. Mettre à false pour masquer (ex: mode dépôt-vente uniquement). */
+export const PURCHASE_ENABLED = import.meta.env.VITE_PURCHASE_ENABLED !== 'false'
+
 const urlProduction = 'https://sauvage-watches.fr'
 const urlStaging = 'https://recette.sauvage-watches.fr'
 const urlDevelopment = 'http://localhost:5173'

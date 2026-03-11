@@ -260,7 +260,7 @@
           </div>
 
           <!-- Buy Now Button -->
-            <div v-if="watchItem && watchItem.isAvailable && !watchItem.isSold" class="hidden lg:block">
+            <div v-if="PURCHASE_ENABLED && watchItem && watchItem.isAvailable && !watchItem.isSold" class="hidden lg:block">
               <button
                 @click="handleBuyNow"
                 :disabled="isCreatingCheckout"
@@ -699,7 +699,7 @@
 
   <!-- Sticky Buy Button Mobile -->
   <div
-    v-if="watchItem && watchItem.isAvailable && !watchItem.isSold"
+    v-if="PURCHASE_ENABLED && watchItem && watchItem.isAvailable && !watchItem.isSold"
     class="fixed bottom-0 left-0 right-0 lg:hidden z-20 bg-white shadow-lg border-t border-gray-200 px-4 py-3"
   >
     <div class="flex items-center justify-between gap-4 max-w-7xl mx-auto">
@@ -931,7 +931,7 @@ import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useHead } from '@vueuse/head'
 import { scrollAnimation } from '@/animation'
-import { WHATSAPP_NUMBER, EMAIL_CONTACT, BASE_URL } from '@/config'
+import { WHATSAPP_NUMBER, EMAIL_CONTACT, BASE_URL, PURCHASE_ENABLED } from '@/config'
 import { getWatchById } from '@/services/watchService'
 import { isAdminAuthenticated } from '@/services/admin/adminAuthService'
 import { createCheckoutSession } from '@/services/stripeService'

@@ -41,7 +41,6 @@ onMounted(async () => {
 <template>
   <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
     <div class="flex items-center space-x-4">
-      <img :src="logoNoir" alt="Sauvage" class="h-10 w-auto" />
       <h1 class="text-2xl font-bold text-text-main">{{ title }}</h1>
     </div>
     <div class="flex items-center space-x-4">

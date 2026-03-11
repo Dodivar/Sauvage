@@ -252,24 +252,24 @@ function closeMobileMenu() {
   </main>
 
   <!-- Footer -->
-  <footer v-if="!isMaintenancePage" id="contact" class="bg-white text-text-main py-16 border-t border-gray-200">
+  <footer v-if="!isMaintenancePage" id="contact" class="bg-primary text-white py-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div :class="isAdmin ? 'grid md:grid-cols-5 gap-8' : 'grid md:grid-cols-4 gap-8'">
         <div class="sm:col-span-2">
           <div class="mb-4">
             <img
-              src="/src/assets/logos/Logos RVB (web)/Logos RVB horizontal/Logo SW vert horizontal RVB.png"
+              src="/src/assets/logos/Logos RVB (web)/Logos RVB horizontal/Logo SW blanc horizontal RVB.png"
               alt="Sauvage Watches"
               class="h-12 w-auto"
             />
           </div>
-          <p class="text-gray-600 mb-6 leading-relaxed">
+          <p class="text-white/90 mb-6 leading-relaxed">
             Votre partenaire pour l'achat et la mise à disposition de montres de luxe authentifiées. Recherche personnalisée, estimation rapide, transparence garantie.
           </p>
           <div class="flex space-x-4">
             <a
               href="https://www.tiktok.com/@sauvagewatches"
-              class="text-gray-600 hover:text-primary transition-colors"
+              class="text-white/90 hover:text-white transition-colors"
             >
               <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
                 <path
@@ -277,7 +277,7 @@ function closeMobileMenu() {
                 />
               </svg>
             </a>
-            <a href="#" class="text-gray-600 hover:text-primary transition-colors">
+            <a href="#" class="text-white/90 hover:text-white transition-colors">
               <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
                 <path
                   d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.254-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
@@ -286,7 +286,7 @@ function closeMobileMenu() {
             </a>
             <a
               :href="'https://wa.me/' + WHATSAPP_NUMBER"
-              class="text-gray-600 hover:text-primary transition-colors"
+              class="text-white/90 hover:text-white transition-colors"
             >
               <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
                 <path
@@ -300,47 +300,47 @@ function closeMobileMenu() {
           <h3 class="text-lg font-semibold mb-4">Navigation</h3>
           <ul class="space-y-2">
             <li>
-              <a href="#accueil" class="text-gray-600 hover:text-primary transition-colors"
+              <a href="#accueil" class="text-white/90 hover:text-white transition-colors"
                 >Accueil</a
               >
             </li>
             <li>
               <RouterLink
                 to="/collection"
-                class="text-gray-600 hover:text-primary transition-colors"
+                class="text-white/90 hover:text-white transition-colors"
                 >Nos montres</RouterLink
               >
             </li>
             <li>
-              <RouterLink to="/recherche" class="text-gray-600 hover:text-primary transition-colors"
+              <RouterLink to="/recherche" class="text-white/90 hover:text-white transition-colors"
                 >Recherche personnalisée</RouterLink
               >
             </li>
             <li>
               <RouterLink
                 to="/estimation"
-                class="text-gray-600 hover:text-primary transition-colors"
+                class="text-white/90 hover:text-white transition-colors"
                 >Estimation</RouterLink
               >
             </li>
             <li>
               <RouterLink
                 to="/blog"
-                class="text-gray-600 hover:text-primary transition-colors"
+                class="text-white/90 hover:text-white transition-colors"
                 >Blog</RouterLink
               >
             </li>
             <li>
               <RouterLink
                 to="/a-propos"
-                class="text-gray-600 hover:text-primary transition-colors"
+                class="text-white/90 hover:text-white transition-colors"
                 >À propos</RouterLink
               >
             </li>
             <!-- <li>
               <RouterLink
                 to="/depot-vente"
-                class="text-gray-600 hover:text-primary transition-colors"
+                class="text-white/90 hover:text-white transition-colors"
                 >Dépôt-vente</RouterLink
               >
             </li> -->
@@ -348,7 +348,7 @@ function closeMobileMenu() {
         </div>
         <div>
           <h3 class="text-lg font-semibold mb-4">Contact</h3>
-          <div class="space-y-2 text-gray-600">
+          <div class="space-y-2 text-white/90">
             <a class="flex items-center"
               :href="'https://wa.me/' + WHATSAPP_NUMBER">
               <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
@@ -388,103 +388,103 @@ function closeMobileMenu() {
           </div>
         </div>
         <!-- Admin Debug Links -->
-        <div v-if="isAdmin" class="border-l border-gray-200 pl-4">
-          <h3 class="text-lg font-semibold mb-4 text-purple-600">🔧 Debug Admin</h3>
+        <div v-if="isAdmin" class="border-l border-white/20 pl-4">
+          <h3 class="text-lg font-semibold mb-4 text-white">🔧 Debug Admin</h3>
           <ul class="space-y-2 text-sm">
             <li>
-              <RouterLink to="/" class="text-gray-600 hover:text-primary transition-colors"
+              <RouterLink to="/" class="text-white/90 hover:text-white transition-colors"
                 >Accueil</RouterLink
               >
             </li>
             <li>
-              <RouterLink to="/maintenance" class="text-gray-600 hover:text-primary transition-colors"
+              <RouterLink to="/maintenance" class="text-white/90 hover:text-white transition-colors"
                 >Maintenance</RouterLink
               >
             </li>
             <li>
-              <RouterLink to="/merci" class="text-gray-600 hover:text-primary transition-colors"
+              <RouterLink to="/merci" class="text-white/90 hover:text-white transition-colors"
                 >Merci</RouterLink
               >
             </li>
             <li>
-              <RouterLink to="/recherche" class="text-gray-600 hover:text-primary transition-colors"
+              <RouterLink to="/recherche" class="text-white/90 hover:text-white transition-colors"
                 >Recherche</RouterLink
               >
             </li>
             <li>
-              <RouterLink to="/estimation" class="text-gray-600 hover:text-primary transition-colors"
+              <RouterLink to="/estimation" class="text-white/90 hover:text-white transition-colors"
                 >Estimation</RouterLink
               >
             </li>
             <li>
-              <RouterLink to="/estimation/processus" class="text-gray-600 hover:text-primary transition-colors"
+              <RouterLink to="/estimation/processus" class="text-white/90 hover:text-white transition-colors"
                 >Estimation Processus</RouterLink
               >
             </li>
             <li>
-              <RouterLink to="/a-propos" class="text-gray-600 hover:text-primary transition-colors"
+              <RouterLink to="/a-propos" class="text-white/90 hover:text-white transition-colors"
                 >À propos</RouterLink
               >
             </li>
             <li>
-              <RouterLink to="/paiement-succes" class="text-gray-600 hover:text-primary transition-colors"
+              <RouterLink to="/paiement-succes" class="text-white/90 hover:text-white transition-colors"
                 >Paiement Succès</RouterLink
               >
             </li>
             <li>
-              <RouterLink to="/paiement-annule" class="text-gray-600 hover:text-primary transition-colors"
+              <RouterLink to="/paiement-annule" class="text-white/90 hover:text-white transition-colors"
                 >Paiement Annulé</RouterLink
               >
             </li>
-            <li class="pt-2 border-t border-gray-200">
-              <RouterLink to="/admin" class="text-purple-600 hover:text-purple-500 transition-colors font-medium"
+            <li class="pt-2 border-t border-white/20">
+              <RouterLink to="/admin" class="text-white hover:text-white/80 transition-colors font-medium"
                 >Admin Dashboard</RouterLink
               >
             </li>
             <li>
-              <RouterLink to="/admin/login" class="text-gray-600 hover:text-primary transition-colors"
+              <RouterLink to="/admin/login" class="text-white/90 hover:text-white transition-colors"
                 >Admin Login</RouterLink
               >
             </li>
             <li>
-              <RouterLink to="/admin/watches/new" class="text-gray-600 hover:text-primary transition-colors"
+              <RouterLink to="/admin/watches/new" class="text-white/90 hover:text-white transition-colors"
                 >Nouvelle Montre</RouterLink
               >
             </li>
             <li>
-              <RouterLink to="/admin/watches/stats" class="text-gray-600 hover:text-primary transition-colors"
+              <RouterLink to="/admin/watches/stats" class="text-white/90 hover:text-white transition-colors"
                 >Stats Montres</RouterLink
               >
             </li>
             <li>
-              <RouterLink to="/admin/articles" class="text-gray-600 hover:text-primary transition-colors"
+              <RouterLink to="/admin/articles" class="text-white/90 hover:text-white transition-colors"
                 >Liste Articles</RouterLink
               >
             </li>
             <li>
-              <RouterLink to="/admin/articles/new" class="text-gray-600 hover:text-primary transition-colors"
+              <RouterLink to="/admin/articles/new" class="text-white/90 hover:text-white transition-colors"
                 >Nouvel Article</RouterLink
               >
             </li>
             <li>
-              <RouterLink to="/admin/articles/generate" class="text-gray-600 hover:text-primary transition-colors"
+              <RouterLink to="/admin/articles/generate" class="text-white/90 hover:text-white transition-colors"
                 >Générer Article</RouterLink
               >
             </li>
           </ul>
         </div>
       </div>
-      <div class="border-t border-gray-200 mt-12 pt-8">
+      <div class="border-t border-white/20 mt-12 pt-8">
         <div class="flex flex-col md:flex-row justify-between items-center">
-          <p class="text-gray-600 text-sm">© 2025 Sauvage. Tous droits réservés.</p>
+          <p class="text-white/90 text-sm">© 2025 Sauvage. Tous droits réservés.</p>
           <div class="flex space-x-6 mt-4 md:mt-0">
-            <a href="#" class="text-gray-600 hover:text-primary text-sm transition-colors"
+            <a href="#" class="text-white/90 hover:text-white text-sm transition-colors"
               >Mentions légales</a
             >
-            <a href="#" class="text-gray-600 hover:text-primary text-sm transition-colors"
+            <a href="#" class="text-white/90 hover:text-white text-sm transition-colors"
               >Politique de confidentialité</a
             >
-            <a href="#" class="text-gray-600 hover:text-primary text-sm transition-colors">CGU</a>
+            <a href="#" class="text-white/90 hover:text-white text-sm transition-colors">CGU</a>
           </div>
         </div>
       </div>
