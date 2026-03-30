@@ -480,13 +480,21 @@ function closeMobileMenu() {
         <div class="flex flex-col md:flex-row justify-between items-center">
           <p class="text-white/90 text-sm">© 2025 Sauvage. Tous droits réservés.</p>
           <div class="flex space-x-6 mt-4 md:mt-0">
-            <a href="#" class="text-white/90 hover:text-white text-sm transition-colors"
-              >Mentions légales</a
+            <RouterLink
+              to="/mentions-legales"
+              class="text-white/90 hover:text-white text-sm transition-colors"
+              >Mentions légales</RouterLink
             >
-            <a href="#" class="text-white/90 hover:text-white text-sm transition-colors"
-              >Politique de confidentialité</a
+            <RouterLink
+              to="/politique-confidentialite"
+              class="text-white/90 hover:text-white text-sm transition-colors"
+              >Politique de confidentialité</RouterLink
             >
-            <a href="#" class="text-white/90 hover:text-white text-sm transition-colors">CGU</a>
+            <RouterLink
+              to="/conditions-generales-utilisation"
+              class="text-white/90 hover:text-white text-sm transition-colors"
+              >CGU</RouterLink
+            >
             <button
               type="button"
               class="text-white/90 hover:text-white text-sm transition-colors bg-transparent border-0 cursor-pointer p-0 font-inherit text-left md:text-center"

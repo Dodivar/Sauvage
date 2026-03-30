@@ -1,5 +1,6 @@
 Ajouter des images sur la page d'accueil illustrant un texte pour ne pas paraître trop fake et non humain
 
+COMPLETER LES VITE_PUBLIC_LEGAL_
 
 Article :
 - Ajouter des images pour les articles

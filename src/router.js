@@ -21,6 +21,9 @@ import BlogList from './components/BlogList.vue'
 import BlogDetail from './components/BlogDetail.vue'
 import EstimationProcess from './components/EstimationProcess.vue'
 import APropos from './components/APropos.vue'
+import PolitiqueConfidentialite from './components/PolitiqueConfidentialite.vue'
+import MentionsLegales from './components/MentionsLegales.vue'
+import ConditionsGeneralesUtilisation from './components/ConditionsGeneralesUtilisation.vue'
 import NotFound from './components/NotFound.vue'
 import PaymentSuccess from './components/payment/PaymentSuccess.vue'
 import PaymentCancel from './components/payment/PaymentCancel.vue'
@@ -38,6 +41,9 @@ const routes = [
    { path: '/blog', component: BlogList },
    { path: '/blog/:id', component: BlogDetail },
    { path: '/a-propos', component: APropos },
+   { path: '/politique-confidentialite', component: PolitiqueConfidentialite },
+   { path: '/mentions-legales', component: MentionsLegales },
+   { path: '/conditions-generales-utilisation', component: ConditionsGeneralesUtilisation },
    { path: '/paiement-succes', component: PaymentSuccess },
    { path: '/paiement-annule', component: PaymentCancel },
   // Admin routes

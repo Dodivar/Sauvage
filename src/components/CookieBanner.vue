@@ -71,8 +71,10 @@ function onSaveCustomize() {
         améliorer votre navigation. Vous décidez : accepter, refuser ou personnaliser.
         L’enregistrement de votre choix sur cet appareil est nécessaire au fonctionnement de cette
         bannière. Pour plus de détails, consultez notre
-        <a href="#" class="font-medium text-primary underline decoration-primary/40 hover:text-primary-hover"
-          >politique de confidentialité</a
+        <RouterLink
+          to="/politique-confidentialite"
+          class="font-medium text-primary underline decoration-primary/40 hover:text-primary-hover"
+          >politique de confidentialité</RouterLink
         >.
       </p>
 
