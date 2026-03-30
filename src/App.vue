@@ -4,6 +4,8 @@ import { useRoute } from 'vue-router'
 import { Head } from '@vueuse/head'
 import { WHATSAPP_NUMBER, EMAIL_CONTACT } from '@/config'
 import { isAdminAuthenticated } from '@/services/admin/adminAuthService'
+import CookieBanner from '@/components/CookieBanner.vue'
+import { openCookiePreferences } from '@/services/cookiePreferencesUi'
 
 //const displayMobileMenu = ref(false)
 const overlay = useTemplateRef('mobile-menu-overlay')
@@ -485,11 +487,20 @@ function closeMobileMenu() {
               >Politique de confidentialité</a
             >
             <a href="#" class="text-white/90 hover:text-white text-sm transition-colors">CGU</a>
+            <button
+              type="button"
+              class="text-white/90 hover:text-white text-sm transition-colors bg-transparent border-0 cursor-pointer p-0 font-inherit text-left md:text-center"
+              @click="openCookiePreferences"
+            >
+              Préférences cookies
+            </button>
           </div>
         </div>
       </div>
     </div>
   </footer>
+
+  <CookieBanner />
 </template>
 
 <style scoped></style>

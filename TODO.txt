@@ -1,9 +1,5 @@
-Réduire la taille de quasi tous les textes en format smartphone
 Ajouter des images sur la page d'accueil illustrant un texte pour ne pas paraître trop fake et non humain
 
-
-Montres :
-- Ajouter vidéo 360° sur les bestsellers
 
 Article :
 - Ajouter des images pour les articles
@@ -25,7 +21,6 @@ CGV & d'utilisation
 droit de rétractation ?
 mentions légale 
 montre garantie => le mécanisme 
-bandeau cookie ?
 
 
 backend:

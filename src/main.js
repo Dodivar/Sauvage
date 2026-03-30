@@ -4,6 +4,12 @@ import { createApp } from 'vue'
 import { createHead } from '@vueuse/head'
 import App from './App.vue'
 import router from './router'
+import { isAnalyticsAllowed } from '@/services/cookieConsent'
+import { ensureGoogleAnalytics } from '@/services/googleAnalytics'
+
+if (isAnalyticsAllowed()) {
+  ensureGoogleAnalytics(import.meta.env.VITE_GA_ID)
+}
 
 const head = createHead()
 const app = createApp(App)
@@ -12,10 +18,11 @@ app.use(router)
 app.use(head)
 app.mount('#app')
 
-// Ecoute des changements de route pour GA
+// Ecoute des changements de route pour GA (uniquement si consentement analytics encore valide)
 router.afterEach((to) => {
-  if (window.gtag) {
-    window.gtag('config', import.meta.env.VITE_GA_ID, { page_path: to.fullPath })
+  const gaId = import.meta.env.VITE_GA_ID
+  if (gaId && window.gtag && isAnalyticsAllowed()) {
+    window.gtag('config', gaId, { page_path: to.fullPath })
   }
 })
 
