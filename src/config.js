@@ -5,12 +5,11 @@ export const EMAIL_CONTACT = 'contact@sauvage-watches.fr'
  * Identité publique du responsable du traitement (RGPD).
  * Renseigner VITE_PUBLIC_LEGAL_* dans l’environnement ou .env pour affichage sur les pages légales (politique de confidentialité, mentions légales).
  */
-export const LEGAL_COMPANY_NAME =
-  import.meta.env.VITE_PUBLIC_LEGAL_COMPANY_NAME?.trim() || 'Sauvage Watches'
+export const LEGAL_COMPANY_NAME = 'Sauvage Watches'
 
-export const LEGAL_ADDRESS = import.meta.env.VITE_PUBLIC_LEGAL_ADDRESS?.trim() || ''
+export const LEGAL_ADDRESS = '32 Allée de la Robertsau 67000 Strasbourg'
 
-export const LEGAL_SIRET = import.meta.env.VITE_PUBLIC_LEGAL_SIRET?.trim() || ''
+export const LEGAL_SIRET = '931 523 393 00011'
 
 /** Afficher la section d'achat (boutons "Acheter") sur les pages détail montre. Mettre à false pour masquer (ex: mode dépôt-vente uniquement). */
 export const PURCHASE_ENABLED = import.meta.env.VITE_PURCHASE_ENABLED !== 'false'
