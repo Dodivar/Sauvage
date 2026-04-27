@@ -229,7 +229,7 @@ function closeMobileMenu() {
               <RouterLink to="/#faq" class="text-text-main hover:text-primary transition-colors"
                 >FAQ</RouterLink
               >
-              <RouterLink to="#contact" class="text-text-main hover:text-primary transition-colors"
+              <RouterLink to="/#contact" class="text-text-main hover:text-primary transition-colors"
                 >Contact</RouterLink
               >
             </template>
@@ -385,7 +385,7 @@ function closeMobileMenu() {
                   d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                 />
               </svg>
-              123 Avenue des Montres<br />67000 Strasbourg, France
+              32 All. de la Robertsau<br />67000 Strasbourg, France
             </p>
           </div>
         </div>

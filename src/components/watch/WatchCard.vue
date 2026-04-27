@@ -76,7 +76,7 @@
         <h3
           class="text-xs md:text-base lg:text-xl font-semibold text-gray-900 leading-tight flex-1 pr-1 truncate"
           style="max-width: 100%;"
-          title="{{ watch.name }}"
+          :title="watch.name"
         >
           {{ watch.name }}
         </h3>

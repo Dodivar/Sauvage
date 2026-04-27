@@ -193,7 +193,7 @@
                 required
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary"
               >
-                <option value="Neuf/jamaus portée">Neuf/jamais portée</option>
+                <option value="Neuf/jamais portée">Neuf/jamais portée</option>
                 <option value="Très bon état">Très bon état</option>
                 <option value="Bon état">Bon état</option>
                 <option value="Usage courant">Usage courant</option>
