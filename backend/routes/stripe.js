@@ -1,16 +1,25 @@
 const express = require('express')
-const router = express.Router()
+const rateLimit = require('express-rate-limit')
 const Stripe = require('stripe')
-const crypto = require('crypto')
 const { createClient } = require('@supabase/supabase-js')
 const { getBaseUrl } = require('../utils/getBaseUrl')
+const { signPaymentCancelToken, verifyPaymentCancelToken } = require('../utils/paymentCancelToken')
 
-// Configuration Stripe
+const router = express.Router()
+
+const RESERVE_MINUTES = 30
+
+const checkoutRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: parseInt(process.env.STRIPE_CHECKOUT_RATE_LIMIT_MAX || '30', 10),
+  standardHeaders: true,
+  legacyHeaders: false,
+})
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
   apiVersion: '2024-12-18.acacia',
 })
 
-// Configuration Supabase
 const supabaseUrl = process.env.SUPABASE_URL
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 let supabase = null
@@ -21,38 +30,83 @@ if (supabaseUrl && supabaseServiceKey) {
   console.warn('⚠️  Supabase non configuré. Les fonctionnalités Stripe nécessitent Supabase.')
 }
 
-// Système de tokens temporaires pour sécuriser PaymentCancel
-// Structure: Map<token, { watchId, expiresAt }>
-const paymentTokens = new Map()
-const TOKEN_EXPIRATION_MS = 60 * 60 * 1000 // 1 heure
-
-// Fonction pour générer un token unique
-function generatePaymentToken() {
-  return crypto.randomUUID()
+async function tryClaimStripeEvent(event) {
+  const { error } = await supabase.from('stripe_processed_events').insert({
+    event_id: event.id,
+    event_type: event.type,
+  })
+  if (!error) {
+    return { duplicate: false }
+  }
+  if (error.code === '23505') {
+    return { duplicate: true }
+  }
+  throw error
 }
 
-// Fonction pour nettoyer les tokens expirés
-function cleanupExpiredTokens() {
-  const now = Date.now()
-  let cleanedCount = 0
-  
-  for (const [token, data] of paymentTokens.entries()) {
-    if (data.expiresAt < now) {
-      paymentTokens.delete(token)
-      cleanedCount++
-    }
-  }
-  
-  if (cleanedCount > 0) {
-    console.log(`🧹 Nettoyage: ${cleanedCount} token(s) expiré(s) supprimé(s)`)
-  }
+async function releaseStripeEventClaim(eventId) {
+  await supabase.from('stripe_processed_events').delete().eq('event_id', eventId)
 }
 
-// Nettoyer les tokens expirés toutes les 30 minutes
-setInterval(cleanupExpiredTokens, 30 * 60 * 1000)
+async function rollbackReservation(watchId) {
+  await supabase.from('watches').update({
+    checkout_reserved_until: null,
+    updated_at: new Date().toISOString(),
+  }).eq('id', watchId)
+}
 
-// Route pour créer une session Stripe Checkout
-router.post('/create-checkout-session', async (req, res) => {
+async function handleCheckoutSessionCompleted(session) {
+  const watchId = session.metadata?.watch_id
+  if (!watchId) {
+    throw new Error('watch_id manquant dans les métadonnées de la session')
+  }
+
+  const { error: updateError } = await supabase
+    .from('watches')
+    .update({
+      is_sold: true,
+      is_available: false,
+      sale_date: new Date().toISOString(),
+      checkout_reserved_until: null,
+      stripe_checkout_session_id: session.id,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', watchId)
+
+  if (updateError) {
+    throw updateError
+  }
+
+  console.log(`✅ Montre ${watchId} marquée comme vendue (session ${session.id})`)
+  console.log(`💰 Montant payé: ${session.amount_total != null ? session.amount_total / 100 : '?'} ${(session.currency || '').toUpperCase()}`)
+  console.log(`📧 Email client: ${session.customer_details?.email || 'Non fourni'}`)
+}
+
+async function handleCheckoutSessionExpired(session) {
+  const watchId = session.metadata?.watch_id
+  if (!watchId) {
+    console.warn('checkout.session.expired sans watch_id dans les métadonnées')
+    return
+  }
+
+  const { error } = await supabase
+    .from('watches')
+    .update({
+      checkout_reserved_until: null,
+      stripe_checkout_session_id: null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', watchId)
+    .eq('is_sold', false)
+    .eq('stripe_checkout_session_id', session.id)
+
+  if (error) {
+    throw error
+  }
+  console.log(`ℹ️  Réservation libérée pour montre ${watchId} (session expirée ${session.id})`)
+}
+
+router.post('/create-checkout-session', checkoutRateLimiter, async (req, res) => {
   try {
     const { watchId } = req.body
 
@@ -63,6 +117,14 @@ router.post('/create-checkout-session', async (req, res) => {
       })
     }
 
+    if (!process.env.PAYMENT_CANCEL_SECRET) {
+      console.error('❌ PAYMENT_CANCEL_SECRET non configuré')
+      return res.status(500).json({
+        success: false,
+        error: 'Configuration serveur incomplète (paiement)',
+      })
+    }
+
     if (!supabase) {
       return res.status(500).json({
         success: false,
@@ -70,7 +132,6 @@ router.post('/create-checkout-session', async (req, res) => {
       })
     }
 
-    // Vérifier que la montre existe et est disponible
     const { data: watch, error: watchError } = await supabase
       .from('watches')
       .select('id, name, reference, price, is_available, is_sold')
@@ -84,15 +145,36 @@ router.post('/create-checkout-session', async (req, res) => {
       })
     }
 
-    // Vérifier que la montre est disponible
     if (!watch.is_available || watch.is_sold) {
       return res.status(400).json({
         success: false,
-        error: 'Cette montre n\'est plus disponible à la vente',
+        error: "Cette montre n'est plus disponible à la vente",
       })
     }
 
-    // Récupérer la première image de la montre (image principale)
+    const { data: reserved, error: rpcError } = await supabase.rpc('reserve_watch_for_checkout', {
+      p_watch_id: watchId,
+      p_reserve_minutes: RESERVE_MINUTES,
+    })
+
+    if (rpcError) {
+      console.error('❌ reserve_watch_for_checkout:', rpcError)
+      return res.status(500).json({
+        success: false,
+        error:
+          rpcError.message?.includes('function') || rpcError.code === '42883'
+            ? 'Migration SQL requise (reserve_watch_for_checkout). Voir supabase/migrations.'
+            : 'Impossible de réserver la montre',
+      })
+    }
+
+    if (reserved !== true) {
+      return res.status(409).json({
+        success: false,
+        error: 'Montre non disponible ou réservation en cours pour un autre acheteur',
+      })
+    }
+
     const { data: firstImage } = await supabase
       .from('watch_images')
       .select('image_url, image_path')
@@ -101,68 +183,84 @@ router.post('/create-checkout-session', async (req, res) => {
       .limit(1)
       .single()
 
-    // Construire l'URL de l'image
     let watchImageUrl = null
     if (firstImage) {
       if (firstImage.image_url) {
         watchImageUrl = firstImage.image_url
       } else if (firstImage.image_path) {
-        // Générer l'URL publique depuis Supabase Storage
         const { data } = supabase.storage.from('watch-images').getPublicUrl(firstImage.image_path)
         watchImageUrl = data.publicUrl
       }
     }
 
     const baseUrl = getBaseUrl()
-    
-    // Générer un token temporaire pour sécuriser l'accès à PaymentCancel
-    const cancelToken = generatePaymentToken()
-    const expiresAt = Date.now() + TOKEN_EXPIRATION_MS
-    
-    // Stocker le token avec le watch_id et la date d'expiration
-    // Normaliser watchId en string pour éviter les problèmes de comparaison de types
-    paymentTokens.set(cancelToken, {
-      watchId: String(watchId),
-      expiresAt,
-    })
-    
-    const successUrl = `${baseUrl}/paiement-succes?session_id={CHECKOUT_SESSION_ID}&watch_id=${watchId}`
-    const cancelUrl = `${baseUrl}/paiement-annule?watch_id=${watchId}&token=${cancelToken}`
 
-    // Préparer les données du produit pour Stripe
+    let cancelToken
+    try {
+      cancelToken = signPaymentCancelToken(watchId)
+    } catch (e) {
+      await rollbackReservation(watchId)
+      console.error('❌ Token annulation:', e)
+      return res.status(500).json({
+        success: false,
+        error: e.message || 'Erreur configuration paiement',
+      })
+    }
+
+    const successUrl = `${baseUrl}/paiement-succes?session_id={CHECKOUT_SESSION_ID}&watch_id=${watchId}`
+    const cancelUrl = `${baseUrl}/paiement-annule?watch_id=${watchId}&token=${encodeURIComponent(cancelToken)}`
+
     const productData = {
       name: watch.name,
       description: `Réf. ${watch.reference}`,
     }
-
-    // Ajouter l'image si elle existe
     if (watchImageUrl) {
       productData.images = [watchImageUrl]
     }
 
-    // Créer la session Stripe Checkout
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: [
-        {
-          price_data: {
-            currency: 'eur',
-            product_data: productData,
-            unit_amount: Math.round(watch.price * 100), // Convertir en centimes
+    let session
+    try {
+      session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price_data: {
+              currency: 'eur',
+              product_data: productData,
+              unit_amount: Math.round(watch.price * 100),
+            },
+            quantity: 1,
           },
-          quantity: 1,
+        ],
+        mode: 'payment',
+        success_url: successUrl,
+        cancel_url: cancelUrl,
+        metadata: {
+          watch_id: watch.id,
+          watch_name: watch.name,
+          watch_reference: watch.reference || '',
         },
-      ],
-      mode: 'payment',
-      success_url: successUrl,
-      cancel_url: cancelUrl,
-      metadata: {
-        watch_id: watch.id,
-        watch_name: watch.name,
-        watch_reference: watch.reference || '',
-      },
-      customer_email: undefined, // Laisse Stripe demander l'email
-    })
+      })
+    } catch (stripeErr) {
+      await rollbackReservation(watchId)
+      console.error('❌ Erreur Stripe create session:', stripeErr)
+      return res.status(500).json({
+        success: false,
+        error: stripeErr.message || 'Erreur lors de la création de la session de paiement',
+      })
+    }
+
+    const { error: sidErr } = await supabase
+      .from('watches')
+      .update({
+        stripe_checkout_session_id: session.id,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', watchId)
+
+    if (sidErr) {
+      console.error('❌ Impossible d’enregistrer stripe_checkout_session_id:', sidErr)
+    }
 
     console.log(`✅ Session Stripe créée pour la montre ${watch.name} (${watch.id}): ${session.id}`)
     if (watchImageUrl) {
@@ -183,109 +281,68 @@ router.post('/create-checkout-session', async (req, res) => {
   }
 })
 
-// Route pour gérer les webhooks Stripe
-// IMPORTANT: Cette route doit recevoir le body brut pour valider la signature
-// IMPORTANT: Les webhooks doivent TOUJOURS retourner 200 pour éviter les réessais Stripe
 router.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
-  const sig = req.headers['stripe-signature']
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
-
-  // Toujours retourner 200 pour éviter les réessais Stripe, même en cas d'erreur
-  // Les erreurs sont loggées pour être tracées
-
   if (!webhookSecret) {
-    console.error('❌ STRIPE_WEBHOOK_SECRET non configuré - Webhook ignoré')
-    return res.status(200).json({ received: true, error: 'Webhook secret manquant' })
+    console.error('❌ STRIPE_WEBHOOK_SECRET non configuré')
+    return res.status(503).json({ error: 'Webhook secret not configured' })
   }
 
+  const sig = req.headers['stripe-signature']
   let event
 
   try {
     event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret)
   } catch (err) {
     console.error('❌ Erreur de validation du webhook Stripe:', err.message)
-    console.error('❌ Signature reçue:', sig)
-    // Retourner 200 pour éviter les réessais, mais logger l'erreur
-    return res.status(200).json({ received: true, error: `Webhook validation failed: ${err.message}` })
+    return res.status(400).send(`Webhook signature verification failed: ${err.message}`)
   }
 
-  // Gérer l'événement checkout.session.completed
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object
+  const handledTypes = ['checkout.session.completed', 'checkout.session.expired']
+  if (!handledTypes.includes(event.type)) {
+    console.log(`ℹ️  Événement Stripe ignoré: ${event.type}`)
+    return res.status(200).json({ received: true })
+  }
 
-    console.log(`✅ Paiement réussi pour la session: ${session.id}`)
-    console.log(`📦 Métadonnées:`, session.metadata)
+  if (!supabase) {
+    console.error('❌ Supabase non configuré — webhook non traité')
+    return res.status(503).json({ error: 'Database not configured' })
+  }
 
-    const watchId = session.metadata?.watch_id
+  let claimResult
+  try {
+    claimResult = await tryClaimStripeEvent(event)
+  } catch (e) {
+    console.error('❌ Erreur claim événement Stripe:', e)
+    return res.status(500).json({ error: 'Could not record event' })
+  }
 
-    if (!watchId) {
-      console.error('❌ watch_id manquant dans les métadonnées de la session')
-      console.error('❌ Session ID:', session.id)
-      console.error('❌ Métadonnées complètes:', JSON.stringify(session.metadata, null, 2))
-      // Retourner 200 pour éviter les réessais, mais logger l'erreur
-      return res.status(200).json({ received: true, error: 'watch_id manquant dans les métadonnées' })
+  if (claimResult.duplicate) {
+    return res.status(200).json({ received: true, duplicate: true })
+  }
+
+  try {
+    if (event.type === 'checkout.session.completed') {
+      await handleCheckoutSessionCompleted(event.data.object)
+    } else {
+      await handleCheckoutSessionExpired(event.data.object)
     }
-
-    if (!supabase) {
-      console.error('❌ Supabase non configuré - Impossible de mettre à jour le stock')
-      console.error('❌ Session ID:', session.id)
-      console.error('❌ Watch ID:', watchId)
-      // Retourner 200 pour éviter les réessais, mais logger l'erreur critique
-      // NOTE: Dans ce cas, la montre ne sera pas marquée comme vendue automatiquement
-      // Il faudra le faire manuellement depuis le dashboard Stripe
-      return res.status(200).json({ received: true, error: 'Configuration Supabase manquante' })
-    }
-
+    return res.status(200).json({ received: true })
+  } catch (err) {
+    console.error('❌ Erreur traitement webhook:', err)
     try {
-      // Mettre à jour la montre dans Supabase
-      const { error: updateError } = await supabase
-        .from('watches')
-        .update({
-          is_sold: true,
-          is_available: false,
-          sale_date: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', watchId)
-
-      if (updateError) {
-        console.error('❌ Erreur lors de la mise à jour de la montre:', updateError)
-        console.error('❌ Session ID:', session.id)
-        console.error('❌ Watch ID:', watchId)
-        console.error('❌ Détails de l\'erreur Supabase:', JSON.stringify(updateError, null, 2))
-        // Retourner 200 pour éviter les réessais, mais logger l'erreur critique
-        // NOTE: Dans ce cas, la montre ne sera pas marquée comme vendue automatiquement
-        // Il faudra le faire manuellement depuis le dashboard Supabase
-        return res.status(200).json({ received: true, error: 'Erreur lors de la mise à jour du stock', details: updateError.message })
-      }
-
-      console.log(`✅ Montre ${watchId} marquée comme vendue`)
-      console.log(`💰 Montant payé: ${session.amount_total / 100} ${session.currency.toUpperCase()}`)
-      console.log(`📧 Email client: ${session.customer_details?.email || 'Non fourni'}`)
-
-      // Retourner une réponse 200 pour confirmer la réception du webhook
-      res.status(200).json({ received: true, success: true })
-    } catch (error) {
-      console.error('❌ Erreur lors du traitement du webhook:', error)
-      console.error('❌ Stack trace:', error.stack)
-      console.error('❌ Session ID:', session.id)
-      console.error('❌ Watch ID:', watchId)
-      // Retourner 200 pour éviter les réessais, mais logger l'erreur critique
-      res.status(200).json({ received: true, error: error.message })
+      await releaseStripeEventClaim(event.id)
+    } catch (releaseErr) {
+      console.error('❌ Erreur suppression claim webhook:', releaseErr)
     }
-  } else {
-    // Pour les autres événements, on retourne juste une confirmation
-    console.log(`ℹ️  Événement Stripe reçu (non traité): ${event.type}`)
-    res.status(200).json({ received: true })
+    return res.status(500).json({ error: 'Webhook processing failed' })
   }
 })
 
-// Route pour vérifier la validité d'une session de paiement
 router.get('/verify-session', async (req, res) => {
   try {
     const { session_id, watch_id, token } = req.query
 
-    // Si on a un session_id, c'est pour PaymentSuccess
     if (session_id) {
       if (!watch_id) {
         return res.status(400).json({
@@ -295,7 +352,6 @@ router.get('/verify-session', async (req, res) => {
       }
 
       try {
-        // Vérifier avec Stripe que la session existe et est complétée
         const session = await stripe.checkout.sessions.retrieve(session_id)
 
         if (!session) {
@@ -306,7 +362,6 @@ router.get('/verify-session', async (req, res) => {
           })
         }
 
-        // Vérifier que la session est complétée
         if (session.payment_status !== 'paid') {
           console.warn(`⚠️  Tentative d'accès avec session non payée: ${session_id}`)
           return res.status(200).json({
@@ -315,8 +370,6 @@ router.get('/verify-session', async (req, res) => {
           })
         }
 
-        // Vérifier que le watch_id correspond aux métadonnées de la session
-        // Normaliser les types avant comparaison (req.query retourne toujours des strings)
         if (String(session.metadata?.watch_id) !== String(watch_id)) {
           console.warn(
             `⚠️  Tentative d'accès avec watch_id incorrect: session=${session_id}, watch_id=${watch_id}`,
@@ -346,7 +399,6 @@ router.get('/verify-session', async (req, res) => {
       }
     }
 
-    // Si on a un token, c'est pour PaymentCancel
     if (token) {
       if (!watch_id) {
         return res.status(400).json({
@@ -355,52 +407,20 @@ router.get('/verify-session', async (req, res) => {
         })
       }
 
-      // Nettoyer les tokens expirés avant de vérifier
-      cleanupExpiredTokens()
-
-      // Vérifier que le token existe
-      const tokenData = paymentTokens.get(token)
-
-      if (!tokenData) {
-        console.warn(`⚠️  Tentative d'accès avec token invalide ou expiré: ${token}`)
+      if (!verifyPaymentCancelToken(token, watch_id)) {
+        console.warn(`⚠️  Tentative d'accès avec token annulation invalide ou expiré`)
         return res.status(200).json({
           valid: false,
           reason: 'Token invalide ou expiré',
         })
       }
 
-      // Vérifier que le token n'est pas expiré
-      if (tokenData.expiresAt < Date.now()) {
-        paymentTokens.delete(token)
-        console.warn(`⚠️  Tentative d'accès avec token expiré: ${token}`)
-        return res.status(200).json({
-          valid: false,
-          reason: 'Token expiré',
-        })
-      }
-
-      // Vérifier que le watch_id correspond au token
-      // Normaliser les types avant comparaison (req.query retourne toujours des strings)
-      if (String(tokenData.watchId) !== String(watch_id)) {
-        console.warn(
-          `⚠️  Tentative d'accès avec watch_id incorrect: token=${token}, watch_id=${watch_id}`,
-        )
-        return res.status(200).json({
-          valid: false,
-          reason: 'watch_id ne correspond pas au token',
-        })
-      }
-
-      // Token valide - le supprimer pour éviter la réutilisation
-      paymentTokens.delete(token)
-
-      console.log(`✅ Token vérifié avec succès pour watch_id: ${watch_id}`)
+      console.log(`✅ Token annulation vérifié pour watch_id: ${watch_id}`)
       return res.status(200).json({
         valid: true,
       })
     }
 
-    // Ni session_id ni token fourni
     return res.status(400).json({
       valid: false,
       reason: 'session_id ou token requis',
@@ -415,4 +435,3 @@ router.get('/verify-session', async (req, res) => {
 })
 
 module.exports = router
-
