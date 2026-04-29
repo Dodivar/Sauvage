@@ -4,6 +4,24 @@ const path = require('path')
 // Chargement du fichier .env depuis le répertoire backend
 require('dotenv').config({ path: path.join(__dirname, '.env') })
 
+const isProductionBoot =
+  process.env.NODE_ENV === 'production' || process.env.RENDER === 'true'
+if (isProductionBoot) {
+  if (!process.env.BASE_URL) {
+    console.warn(
+      '⚠️  BASE_URL non défini — les redirections Stripe utiliseront la valeur par défaut de getBaseUrl() (peut être incorrect pour la recette ou un autre domaine).',
+    )
+  }
+  if (!process.env.STRIPE_WEBHOOK_SECRET) {
+    console.warn('⚠️  STRIPE_WEBHOOK_SECRET non défini — les webhooks Stripe renverront 503.')
+  }
+  if (!process.env.PAYMENT_CANCEL_SECRET) {
+    console.warn(
+      '⚠️  PAYMENT_CANCEL_SECRET non défini — create-checkout-session renverra une erreur tant que cette variable est absente.',
+    )
+  }
+}
+
 // Import des routes
 const mailjetRoutes = require('./routes/mailjet')
 const stripeRoutes = require('./routes/stripe')
@@ -69,8 +87,7 @@ if (isProduction) {
   })
 }
 
-// Middleware pour parser JSON (sauf pour le webhook Stripe qui a besoin du body brut)
-// Le webhook Stripe doit recevoir le body brut pour valider la signature
+// Middleware pour parser JSON (sauf pour le webhook Stripe : body brut pour la signature)
 app.use((req, res, next) => {
   if (req.path === '/api/stripe/webhook') {
     return next()
