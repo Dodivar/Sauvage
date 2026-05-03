@@ -5,6 +5,21 @@
 export default {
   siteId: 'original',
 
+  locale: 'fr',
+
+  /** Design tokens → CSS variables via vite/site-from-config.mjs + Tailwind theme.extend */
+  theme: {
+    colors: {
+      primary: '#0f2a1d',
+      primaryHover: '#163d2a',
+      cream: '#f7ede0',
+      cream100: '#ede4d8',
+      cream200: '#e3d9cc',
+      cream300: '#d9cec0',
+      textMain: '#000000',
+    },
+  },
+
   brand: {
     legalName: 'Sauvage Watches',
     displayName: 'Sauvage',
@@ -76,6 +91,26 @@ export default {
   },
 
   seo: {
+    /** Static shell before Vue hydrates @vueuse/head (fallback / crawlers). */
+    indexHtml: {
+      title: 'Sauvage - Montres de luxe',
+      metaDescription:
+        'Sauvage - Expert en services de montres de luxe. Collection de montres garanties 1 an, estimation gratuite. Rolex, Breitling, Tag Heuer, Cartier et plus.',
+      keywords:
+        'recherche personnalisée de montre, rachat montre, montre de luxe, montre occasion, Rolex, Breitling, Tag Heuer, Cartier, montre garantie',
+      author: 'Sauvage',
+      ogTitle: 'Sauvage - Montres de luxe',
+      ogDescription:
+        'Expert en services de montres de luxe. Collection de montres garanties 1 an, estimation gratuite.',
+      twitterCard: 'summary_large_image',
+      twitterTitle: 'Sauvage - Montres de luxe',
+      twitterDescription:
+        'Expert en services de montres de luxe. Collection de montres garanties 1 an, estimation gratuite.',
+      ogLocale: 'fr_FR',
+      ogSiteName: 'Sauvage',
+      appleMobileWebAppTitle: 'Sauvage Watches',
+      ogImagePath: '/logo500x500.png',
+    },
     home: {
       title: 'Sauvage - Rachat de Montres de Luxe | Collection Garantie',
       metaDescription:

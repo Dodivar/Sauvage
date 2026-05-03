@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["packages/base/src/*"]
+    }
+  },
+  "include": ["packages/base/src/**/*", "sites/original/**/*", "vite/**/*", "api/**/*.js"],
+  "exclude": ["node_modules", "dist"]
+}

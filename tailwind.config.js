@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
+  content: ['./sites/original/index.html', './packages/base/src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
     extend: {
       fontFamily: {
@@ -8,16 +8,15 @@ export default {
         heading: ['Poppins', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       colors: {
-        // Palette principale Sauvage Watches
-        primary: '#0f2a1d', // Vert foncé
-        'primary-hover': '#163d2a', // Vert foncé - état hover
+        primary: 'var(--color-primary)',
+        'primary-hover': 'var(--color-primary-hover)',
         cream: {
-          DEFAULT: '#f7ede0', // Beige clair
-          100: '#ede4d8', // Crème plus foncé (hover, états secondaires)
-          200: '#e3d9cc', // Crème encore plus foncé (skeleton, placeholders)
-          300: '#d9cec0', // Crème sombre (skeleton loaders)
+          DEFAULT: 'var(--color-cream)',
+          100: 'var(--color-cream-100)',
+          200: 'var(--color-cream-200)',
+          300: 'var(--color-cream-300)',
         },
-        'text-main': '#000000', // Noir
+        'text-main': 'var(--color-text-main)',
       },
       animation: {
         shimmer: 'shimmer 2s infinite',
