@@ -1,6 +1,8 @@
 /** Stockage du consentement cookies / traceurs (hors navigation HTTP du site). */
 
-export const COOKIE_CONSENT_STORAGE_KEY = 'sauvage_cookie_consent_v1'
+import { getSiteConfig } from '@/site/getSiteConfig.js'
+
+export const COOKIE_CONSENT_STORAGE_KEY = getSiteConfig().integrations.cookieConsentStorageKey
 
 export const COOKIE_CONSENT_VERSION = 1
 

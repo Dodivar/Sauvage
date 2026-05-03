@@ -3,6 +3,9 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { loginAdmin, isAdminAuthenticated } from '@/services/admin/adminAuthService'
 import logoNoir from '@/assets/logos/Logos RVB (web)/Icône RVB/Icône SW verte RVB.png'
+import { getSiteConfig } from '@/site/getSiteConfig.js'
+
+const loginLogoAlt = getSiteConfig().brand.loginLogoAlt
 
 const router = useRouter()
 const email = ref('')
@@ -47,7 +50,7 @@ const handleSubmit = async () => {
         <div class="mb-8 text-center">
           <img
             :src="logoNoir"
-            alt="Sauvage"
+            :alt="loginLogoAlt"
             class="mx-auto h-16 w-auto"
           />
         </div>

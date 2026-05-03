@@ -35,7 +35,7 @@
           <!-- Introduction -->
           <div class="prose prose-lg max-w-none">
             <p class="text-lg text-gray-700 leading-relaxed">
-              Chez Sauvage, nous croyons que la transparence est la clé de la confiance. 
+              {{ estimationProcessLead }}
               C'est pourquoi nous vous expliquons en détail comment nous procédons pour 
               estimer votre montre de manière précise et équitable.
             </p>
@@ -271,6 +271,9 @@
 <script setup>
 import { RouterLink, useRouter } from 'vue-router'
 import { onMounted, ref } from 'vue'
+import { getSiteConfig } from '@/site/getSiteConfig.js'
+
+const estimationProcessLead = getSiteConfig().copy.estimationProcessLead
 
 const router = useRouter()
 const previousRoute = ref(null)

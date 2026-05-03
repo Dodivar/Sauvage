@@ -457,7 +457,7 @@
               </div>
               <h4 class="text-base lg:text-lg font-semibold text-gray-900 mb-2">Authentification garantie</h4>
               <p class="text-gray-600 text-sm leading-relaxed">
-                Toutes les montres vendues sur Sauvage sont authentiques. Chaque montre est vérifiée par nos experts avant la mise en vente. Si vous avez le moindre doute sur l'authenticité de votre montre, contactez-nous dans les 14 jours suivant la réception pour un remboursement complet.
+                {{ siteCopy.watchSecurityAuthentic }}
               </p>
             </div>
 
@@ -483,7 +483,7 @@
               </div>
               <h4 class="text-base lg:text-lg font-semibold text-gray-900 mb-2">Envoi assuré</h4>
               <p class="text-gray-600 text-sm leading-relaxed">
-                Chaque montre vendue est assurée pour sa valeur totale par Sauvage. Cela garantit qu'il n'y a aucun risque pour l'acheteur, même en cas de résidence à l'étranger. Votre montre est protégée de bout en bout.
+                {{ siteCopy.watchSecurityInsurance }}
               </p>
             </div>
 
@@ -932,7 +932,11 @@ import { useRoute, useRouter } from 'vue-router'
 import { useHead } from '@vueuse/head'
 import { scrollAnimation } from '@/animation'
 import { WHATSAPP_NUMBER, EMAIL_CONTACT, BASE_URL, PURCHASE_ENABLED } from '@/config'
+import { getSiteConfig } from '@/site/getSiteConfig.js'
 import { getWatchById } from '@/services/watchService'
+
+const siteCopy = getSiteConfig().copy
+const seoWatch = getSiteConfig().seo.watchDetail
 import { isAdminAuthenticated } from '@/services/admin/adminAuthService'
 import { createCheckoutSession } from '@/services/stripeService'
 import WatchDetailSkeleton from '@/components/watch/WatchDetailSkeleton.vue'
@@ -1411,12 +1415,12 @@ const handleBuyNow = async () => {
 
 // SEO Meta Tags and Structured Data
 const pageTitle = computed(() => {
-  if (!watchItem.value) return 'Montre - Sauvage'
-  return `${watchItem.value.name} - ${formatPrice(watchItem.value.price)} | Sauvage`
+  if (!watchItem.value) return seoWatch.titleFallback
+  return `${watchItem.value.name} - ${formatPrice(watchItem.value.price)}${seoWatch.titlePriceSuffix}`
 })
 
 const pageDescription = computed(() => {
-  if (!watchItem.value) return 'Découvrez cette montre de luxe sur Sauvage'
+  if (!watchItem.value) return seoWatch.descriptionFallback
   const desc = watchItem.value.description || ''
   const brand = watchItem.value.brand || ''
   const ref = watchItem.value.reference || ''
@@ -1459,7 +1463,7 @@ const structuredData = computed(() => {
       url: canonicalUrl.value,
       seller: {
         '@type': 'Organization',
-        name: 'Sauvage',
+        name: seoWatch.structuredDataSellerName,
         url: BASE_URL,
       },
     },

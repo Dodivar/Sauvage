@@ -133,25 +133,26 @@ import {
   LEGAL_COMPANY_NAME,
   LEGAL_SIRET,
 } from '@/config'
+import { getSiteConfig } from '@/site/getSiteConfig.js'
 
 const hasLegalDetails = computed(() => Boolean(LEGAL_ADDRESS || LEGAL_SIRET))
 
+const seo = getSiteConfig().seo.mentions
+
 useHead({
-  title: 'Mentions légales | Sauvage Watches',
+  title: seo.title,
   meta: [
     {
       name: 'description',
-      content:
-        'Mentions légales du site Sauvage Watches : éditeur, hébergement, propriété intellectuelle, données personnelles.',
+      content: seo.metaDescription,
     },
     {
       property: 'og:title',
-      content: 'Mentions légales | Sauvage Watches',
+      content: seo.ogTitle,
     },
     {
       property: 'og:description',
-      content:
-        'Informations sur l’éditeur du site, l’hébergeur Vercel et le cadre applicable.',
+      content: seo.ogDescription,
     },
     {
       property: 'og:url',
@@ -167,11 +168,11 @@ useHead({
     },
     {
       name: 'twitter:title',
-      content: 'Mentions légales | Sauvage Watches',
+      content: seo.twitterTitle,
     },
     {
       name: 'twitter:description',
-      content: 'Éditeur, publication, hébergement et propriété intellectuelle.',
+      content: seo.twitterDescription,
     },
   ],
   link: [

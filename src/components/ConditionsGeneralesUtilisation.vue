@@ -152,23 +152,24 @@
 <script setup>
 import { useHead } from '@vueuse/head'
 import { BASE_URL, EMAIL_CONTACT, LEGAL_COMPANY_NAME, PURCHASE_ENABLED } from '@/config'
+import { getSiteConfig } from '@/site/getSiteConfig.js'
+
+const seo = getSiteConfig().seo.cgu
 
 useHead({
-  title: 'Conditions générales d’utilisation | Sauvage Watches',
+  title: seo.title,
   meta: [
     {
       name: 'description',
-      content:
-        'CGU du site Sauvage Watches : accès, services, commande et paiement, responsabilité, droit applicable.',
+      content: seo.metaDescription,
     },
     {
       property: 'og:title',
-      content: 'Conditions générales d’utilisation | Sauvage Watches',
+      content: seo.ogTitle,
     },
     {
       property: 'og:description',
-      content:
-        'Modalités d’utilisation du site, services proposés, propriété intellectuelle et contact.',
+      content: seo.ogDescription,
     },
     {
       property: 'og:url',
@@ -184,11 +185,11 @@ useHead({
     },
     {
       name: 'twitter:title',
-      content: 'Conditions générales d’utilisation | Sauvage Watches',
+      content: seo.twitterTitle,
     },
     {
       name: 'twitter:description',
-      content: 'Règles d’accès et d’usage du site Sauvage Watches.',
+      content: seo.twitterDescription,
     },
   ],
   link: [

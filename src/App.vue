@@ -3,6 +3,9 @@ import { ref, useTemplateRef, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { Head } from '@vueuse/head'
 import { WHATSAPP_NUMBER, EMAIL_CONTACT } from '@/config'
+import { getSiteConfig } from '@/site/getSiteConfig.js'
+
+const site = getSiteConfig()
 import { isAdminAuthenticated } from '@/services/admin/adminAuthService'
 import CookieBanner from '@/components/CookieBanner.vue'
 import { openCookiePreferences } from '@/services/cookiePreferencesUi'
@@ -75,7 +78,7 @@ function closeMobileMenu() {
       class="flex flex-col items-center justify-center h-screen space-y-8 text-xl font-semibold text-white w-screen"
     >
       <RouterLink to="/" @click="closeMobileMenu">
-        <img width="100px" src="./assets/logos/Logos RVB (web)/Logos RVB vertical/Logo SW blanc vertical RVB.png" alt="Sauvage Watches" />
+        <img width="100px" :src="site.assets.logos.mobileMenuVerticalWhite" :alt="site.brand.logoAlt" />
       </RouterLink>
       <!-- Menu admin simplifié -->
       <template v-if="isAdmin">
@@ -158,7 +161,7 @@ function closeMobileMenu() {
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center">
           <RouterLink to="/">
-            <img width="50px" height="50px" src="./assets\logos\Logos RVB (web)\Icône RVB\Icône SW verte RVB.png" />
+            <img width="50px" height="50px" :src="site.assets.logos.headerIconGreen" alt="" />
           </RouterLink>
         </div>
         <div class="hidden md:block">
@@ -260,17 +263,17 @@ function closeMobileMenu() {
         <div class="sm:col-span-2">
           <div class="mb-4">
             <img
-              src="/src/assets/logos/Logos RVB (web)/Logos RVB horizontal/Logo SW blanc horizontal RVB.png"
-              alt="Sauvage Watches"
+              :src="site.assets.logos.footerHorizontalWhite"
+              :alt="site.brand.logoAlt"
               class="h-12 w-auto"
             />
           </div>
           <p class="text-white/90 mb-6 leading-relaxed">
-            Votre partenaire pour l'achat et la mise à disposition de montres de luxe authentifiées. Recherche personnalisée, estimation rapide, transparence garantie.
+            {{ site.copy.footerTagline }}
           </p>
           <div class="flex space-x-4">
             <a
-              href="https://www.tiktok.com/@sauvagewatches"
+              :href="site.social.footerTiktokUrl"
               class="text-white/90 hover:text-white transition-colors"
             >
               <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
@@ -385,7 +388,7 @@ function closeMobileMenu() {
                   d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                 />
               </svg>
-              32 All. de la Robertsau<br />67000 Strasbourg, France
+              <span v-html="site.contact.footerAddressHtml"></span>
             </p>
           </div>
         </div>
@@ -478,7 +481,7 @@ function closeMobileMenu() {
       </div>
       <div class="border-t border-white/20 mt-12 pt-8">
         <div class="flex flex-col md:flex-row justify-between items-center">
-          <p class="text-white/90 text-sm">© 2025 Sauvage. Tous droits réservés.</p>
+          <p class="text-white/90 text-sm">{{ site.copy.copyrightLine }}</p>
           <div class="flex space-x-6 mt-4 md:mt-0">
             <RouterLink
               to="/mentions-legales"

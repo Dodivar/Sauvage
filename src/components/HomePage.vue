@@ -4,6 +4,9 @@ import { useRoute } from 'vue-router'
 import { useHead } from '@vueuse/head'
 import { scrollAnimation } from '@/animation'
 import { BASE_URL } from '@/config'
+import { getSiteConfig } from '@/site/getSiteConfig.js'
+
+const seo = getSiteConfig().seo.home
 import navitimerImg from '@/assets/hero section img/navitimer-b01-chronograph-43.png'
 import parallaxImg1 from '@/assets/hero section img/montre-tag-heuer-monaco-calibre-11.png'
 import parallaxImg2 from '@/assets/hero section img/Rolex.png'
@@ -19,19 +22,19 @@ const route = useRoute()
 
 // SEO Meta Tags
 useHead({
-  title: 'Sauvage - Rachat de Montres de Luxe | Collection Garantie',
+  title: seo.title,
   meta: [
     {
       name: 'description',
-      content: 'Découvrez notre collection de montres de luxe garanties 1 an. Rolex, Breitling, Tag Heuer, Cartier et plus. Estimation gratuite, recherche personnalisée et accompagnement expert.',
+      content: seo.metaDescription,
     },
     {
       property: 'og:title',
-      content: 'Sauvage - Rachat de Montres de Luxe | Collection Garantie',
+      content: seo.ogTitle,
     },
     {
       property: 'og:description',
-      content: 'Découvrez notre collection de montres de luxe garanties 1 an. Estimation gratuite, recherche personnalisée et accompagnement expert.',
+      content: seo.ogDescription,
     },
     {
       property: 'og:url',
@@ -47,11 +50,11 @@ useHead({
     },
     {
       name: 'twitter:title',
-      content: 'Sauvage - Rachat de Montres de Luxe',
+      content: seo.twitterTitle,
     },
     {
       name: 'twitter:description',
-      content: 'Découvrez notre collection de montres de luxe garanties 1 an. Estimation gratuite, recherche personnalisée.',
+      content: seo.twitterDescription,
     },
   ],
   link: [

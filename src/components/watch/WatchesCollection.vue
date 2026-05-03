@@ -422,22 +422,25 @@ import WatchCardSkeleton from './WatchCardSkeleton.vue'
 import { scrollAnimation } from '@/animation'
 import { WHATSAPP_NUMBER, EMAIL_CONTACT, BASE_URL } from '@/config'
 import { getAllWatches } from '@/services/watchService'
+import { getSiteConfig } from '@/site/getSiteConfig.js'
+
+const seo = getSiteConfig().seo.collection
 
 // SEO Meta Tags
 useHead({
-  title: 'Collection de Montres de Luxe | Sauvage',
+  title: seo.title,
   meta: [
     {
       name: 'description',
-      content: 'Découvrez notre collection complète de montres de luxe. Rolex, Breitling, Tag Heuer, Cartier et plus. Toutes nos montres sont garanties 1 an et authentifiées.',
+      content: seo.metaDescription,
     },
     {
       property: 'og:title',
-      content: 'Collection de Montres de Luxe | Sauvage',
+      content: seo.ogTitle,
     },
     {
       property: 'og:description',
-      content: 'Découvrez notre collection complète de montres de luxe garanties 1 an et authentifiées.',
+      content: seo.ogDescription,
     },
     {
       property: 'og:url',
@@ -453,11 +456,11 @@ useHead({
     },
     {
       name: 'twitter:title',
-      content: 'Collection de Montres de Luxe | Sauvage',
+      content: seo.twitterTitle,
     },
     {
       name: 'twitter:description',
-      content: 'Découvrez notre collection complète de montres de luxe garanties 1 an.',
+      content: seo.twitterDescription,
     },
   ],
   link: [

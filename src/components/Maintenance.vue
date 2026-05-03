@@ -4,6 +4,9 @@ import { useRouter } from 'vue-router'
 import { checkMaintenancePassword, authenticate } from '@/services/maintenanceService'
 import { EMAIL_CONTACT } from '@/config'
 import logoNoir from '@/assets/logos/Logos RVB (web)/Logos RVB horizontal/Logo SW vert horizontal RVB.png'
+import { getSiteConfig } from '@/site/getSiteConfig.js'
+
+const loginLogoAlt = getSiteConfig().brand.loginLogoAlt
 
 const router = useRouter()
 const password = ref('')
@@ -41,7 +44,7 @@ const handleSubmit = async () => {
         <div class="mb-8">
           <img
             :src="logoNoir"
-            alt="Sauvage"
+            :alt="loginLogoAlt"
             class="mx-auto h-16 w-auto"
           />
         </div>

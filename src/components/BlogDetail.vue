@@ -235,8 +235,10 @@ import { getArticleByIdForAdmin } from '@/services/admin/adminArticleService'
 import { isAdminAuthenticated } from '@/services/admin/adminAuthService'
 import { scrollAnimation } from '@/animation'
 import { BASE_URL } from '@/config'
+import { getSiteConfig } from '@/site/getSiteConfig.js'
 
 const route = useRoute()
+const seoBlog = getSiteConfig().seo.blog
 
 // State
 const article = ref(null)
@@ -369,8 +371,8 @@ const loadArticle = async () => {
 
 // SEO Meta Tags and Structured Data
 const pageTitle = computed(() => {
-  if (!article.value) return 'Article - Sauvage'
-  return `${article.value.title} | Blog Sauvage`
+  if (!article.value) return seoBlog.articleFallbackTitle
+  return `${article.value.title} ${seoBlog.articleTitleBlogSuffix}`
 })
 
 const pageDescription = computed(() => {
@@ -413,12 +415,12 @@ const structuredData = computed(() => {
     dateModified: modifiedDate.value || publishedDate.value,
     author: {
       '@type': 'Organization',
-      name: 'Sauvage',
+      name: seoBlog.structuredDataPublisherName,
       url: BASE_URL,
     },
     publisher: {
       '@type': 'Organization',
-      name: 'Sauvage',
+      name: seoBlog.structuredDataPublisherName,
       url: BASE_URL,
       logo: {
         '@type': 'ImageObject',
@@ -469,7 +471,7 @@ watch([article, pageTitle, pageDescription, canonicalUrl, ogImage], () => {
       },
       {
         property: 'og:site_name',
-        content: 'Sauvage',
+        content: seoBlog.structuredDataPublisherName,
       },
       {
         property: 'article:published_time',

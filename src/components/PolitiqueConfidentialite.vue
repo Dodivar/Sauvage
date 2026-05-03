@@ -9,7 +9,7 @@
           Dernière mise à jour : 30 mars 2026
         </p>
         <p class="mt-6 text-gray-700 leading-relaxed">
-          La présente politique explique comment Sauvage Watches traite les données personnelles
+          La présente politique explique comment {{ LEGAL_COMPANY_NAME }} traite les données personnelles
           lorsque vous utilisez le site, dans le respect du Règlement général sur la protection des
           données (RGPD) et de la loi française « Informatique et Libertés ».
         </p>
@@ -205,25 +205,26 @@ import {
   LEGAL_COMPANY_NAME,
   LEGAL_SIRET,
 } from '@/config'
+import { getSiteConfig } from '@/site/getSiteConfig.js'
 
 const hasLegalDetails = computed(() => Boolean(LEGAL_ADDRESS || LEGAL_SIRET))
 
+const seo = getSiteConfig().seo.politique
+
 useHead({
-  title: 'Politique de confidentialité | Sauvage Watches',
+  title: seo.title,
   meta: [
     {
       name: 'description',
-      content:
-        'Politique de confidentialité de Sauvage Watches : traitements des données, cookies et analytics, formulaires, paiements Stripe, vos droits RGPD.',
+      content: seo.metaDescription,
     },
     {
       property: 'og:title',
-      content: 'Politique de confidentialité | Sauvage Watches',
+      content: seo.ogTitle,
     },
     {
       property: 'og:description',
-      content:
-        'Transparence sur le traitement des données : audience (Google Analytics), formulaires, paiement Stripe, exercice de vos droits.',
+      content: seo.ogDescription,
     },
     {
       property: 'og:url',
@@ -239,11 +240,11 @@ useHead({
     },
     {
       name: 'twitter:title',
-      content: 'Politique de confidentialité | Sauvage Watches',
+      content: seo.twitterTitle,
     },
     {
       name: 'twitter:description',
-      content: 'Traitement des données personnelles, cookies, vos droits et contact RGPD.',
+      content: seo.twitterDescription,
     },
   ],
   link: [

@@ -1,8 +1,11 @@
 <script setup>
 import { scrollAnimation } from '@/animation'
 import { WHATSAPP_NUMBER, EMAIL_CONTACT } from '@/config'
+import { getSiteConfig } from '@/site/getSiteConfig.js'
 
 import { onMounted } from 'vue'
+
+const brandDisplayName = getSiteConfig().brand.displayName
 onMounted(() => {
   scrollAnimation()
 })
@@ -23,7 +26,7 @@ onMounted(() => {
             Notre service de dépôt-vente
           </h2>
           <p class="mb-6">
-            Chez Sauvage, nous comprenons que la vente d'une montre représente un
+            Chez {{ brandDisplayName }}, nous comprenons que la vente d'une montre représente un
             <strong>moment important</strong>. Notre service de dépôt-vente vous offre une solution
             complète et sécurisée pour valoriser votre pièce dans les meilleures conditions.
           </p>

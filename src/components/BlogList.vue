@@ -185,22 +185,25 @@ import { useHead } from '@vueuse/head'
 import { getAllArticles, getAllCategories } from '@/services/articleService'
 import { scrollAnimation } from '@/animation'
 import { BASE_URL } from '@/config'
+import { getSiteConfig } from '@/site/getSiteConfig.js'
+
+const seo = getSiteConfig().seo.blog
 
 // SEO Meta Tags
 useHead({
-  title: 'Blog Horlogerie | Articles sur les Montres | Sauvage',
+  title: seo.title,
   meta: [
     {
       name: 'description',
-      content: 'Découvrez nos articles sur les montres et l\'horlogerie. Guides, actualités, conseils d\'achat et expertise sur les montres de luxe.',
+      content: seo.metaDescription,
     },
     {
       property: 'og:title',
-      content: 'Blog Horlogerie | Articles sur les Montres | Sauvage',
+      content: seo.ogTitle,
     },
     {
       property: 'og:description',
-      content: 'Découvrez nos articles sur les montres et l\'horlogerie. Guides, actualités et conseils d\'achat.',
+      content: seo.ogDescription,
     },
     {
       property: 'og:url',
@@ -216,11 +219,11 @@ useHead({
     },
     {
       name: 'twitter:title',
-      content: 'Blog Horlogerie | Sauvage',
+      content: seo.twitterTitle,
     },
     {
       name: 'twitter:description',
-      content: 'Découvrez nos articles sur les montres et l\'horlogerie.',
+      content: seo.twitterDescription,
     },
   ],
   link: [

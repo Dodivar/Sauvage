@@ -1,4 +1,12 @@
-const INIT_FLAG = '__sauvage_ga_initialized'
+import { getSiteConfig } from '@/site/getSiteConfig.js'
+
+function initFlagName() {
+  return getSiteConfig().integrations.gaInitFlag
+}
+
+function pendingWaitersKey() {
+  return getSiteConfig().integrations.gaPendingWaitersKey
+}
 
 function pagePath() {
   return `${window.location.pathname}${window.location.search}`
@@ -12,7 +20,9 @@ function pagePath() {
 export function ensureGoogleAnalytics(measurementId) {
   if (!measurementId) {
     if (import.meta.env.DEV) {
-      console.info('[Sauvage] Google Analytics : VITE_GA_ID absent, chargement ignoré.')
+      console.info(
+        `${getSiteConfig().integrations.gaDevLogPrefix} Google Analytics : VITE_GA_ID absent, chargement ignoré.`,
+      )
     }
     return
   }
@@ -30,13 +40,14 @@ export function ensureGoogleAnalytics(measurementId) {
     })
   }
 
+  const INIT_FLAG = initFlagName()
   if (window[INIT_FLAG]) {
     applyConfig()
     return
   }
 
-  const pending = (window.__sauvage_ga_pending_waiters =
-    window.__sauvage_ga_pending_waiters || [])
+  const pendingKey = pendingWaitersKey()
+  const pending = (window[pendingKey] = window[pendingKey] || [])
   pending.push(1)
 
   if (pending.length > 1) {
@@ -49,7 +60,7 @@ export function ensureGoogleAnalytics(measurementId) {
   script.onload = () => {
     window[INIT_FLAG] = true
     gtag('js', new Date())
-    window.__sauvage_ga_pending_waiters = []
+    window[pendingKey] = []
     applyConfig()
   }
   document.head.appendChild(script)

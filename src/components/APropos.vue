@@ -5,7 +5,7 @@
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-8">
           <h1 class="text-3xl lg:text-4xl font-bold text-text-main mb-3">
-            À propos de Sauvage
+            À propos de {{ brandDisplayName }}
           </h1>
           <p class="text-xl text-gray-600 mb-3">
             Votre partenaire de confiance pour l'achat et la vente de montres de prestige
@@ -20,7 +20,7 @@
         <div class="text-center mb-8">
           <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-3">Qui sommes-nous ?</h2>
           <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-            Sauvage est une entreprise spécialisée dans le rachat et la vente de montres de luxe. 
+            {{ brandDisplayName }} est une entreprise spécialisée dans le rachat et la vente de montres de luxe. 
             Contrairement aux plateformes tierces qui mettent simplement en relation acheteurs et vendeurs, 
             nous possédons directement notre propre stock de montres authentifiées et vérifiées.
           </p>
@@ -471,22 +471,26 @@
 <script setup>
 import { useHead } from '@vueuse/head'
 import { BASE_URL } from '@/config'
+import { getSiteConfig } from '@/site/getSiteConfig.js'
+
+const brandDisplayName = getSiteConfig().brand.displayName
+const seo = getSiteConfig().seo.aPropos
 
 // SEO Meta Tags
 useHead({
-  title: 'À propos de Sauvage - Votre partenaire de confiance pour les montres de luxe',
+  title: seo.title,
   meta: [
     {
       name: 'description',
-      content: 'Découvrez Sauvage, une entreprise spécialisée dans le rachat et la vente de montres de luxe. Nous possédons directement notre stock, garantissant authenticité, qualité et disponibilité immédiate.',
+      content: seo.metaDescription,
     },
     {
       property: 'og:title',
-      content: 'À propos de Sauvage - Votre partenaire de confiance',
+      content: seo.ogTitle,
     },
     {
       property: 'og:description',
-      content: 'Découvrez Sauvage, une entreprise spécialisée dans le rachat et la vente de montres de luxe. Stock direct, authenticité garantie.',
+      content: seo.ogDescription,
     },
     {
       property: 'og:url',
@@ -502,11 +506,11 @@ useHead({
     },
     {
       name: 'twitter:title',
-      content: 'À propos de Sauvage',
+      content: seo.twitterTitle,
     },
     {
       name: 'twitter:description',
-      content: 'Découvrez Sauvage, votre partenaire de confiance pour les montres de luxe.',
+      content: seo.twitterDescription,
     },
   ],
   link: [
