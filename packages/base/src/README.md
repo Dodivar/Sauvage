@@ -14,7 +14,7 @@ Code client Vue 3 / Vite.
 
 | Dossier | Rôle |
 | --- | --- |
-| `assets/` | Images, logos et CSS global |
+| `assets/` | CSS global partagé ; images de marque par site dans `sites/<id>/src/assets` (`@site`) |
 | `components/` | Composants Vue (pages, modules réutilisables) |
 | `services/` | Accès aux API Supabase/Mailjet et helpers métier |
 

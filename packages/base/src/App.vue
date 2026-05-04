@@ -4,6 +4,9 @@ import { useRoute } from 'vue-router'
 import { Head } from '@vueuse/head'
 import { WHATSAPP_NUMBER, EMAIL_CONTACT } from '@/config'
 import { getSiteConfig } from '@/site/getSiteConfig.js'
+import logoMobileMenuVerticalWhite from '@site/assets/logos/Logos RVB (web)/Logos RVB vertical/Logo SW blanc vertical RVB.png'
+import logoHeaderIconGreen from '@site/assets/logos/Logos RVB (web)/Icône RVB/Icône SW verte RVB.png'
+import logoFooterHorizontalWhite from '@site/assets/logos/Logos RVB (web)/Logos RVB horizontal/Logo SW blanc horizontal RVB.png'
 
 const site = getSiteConfig()
 import { isAdminAuthenticated } from '@/services/admin/adminAuthService'
@@ -78,7 +81,7 @@ function closeMobileMenu() {
       class="flex flex-col items-center justify-center h-screen space-y-8 text-xl font-semibold text-white w-screen"
     >
       <RouterLink to="/" @click="closeMobileMenu">
-        <img width="100px" :src="site.assets.logos.mobileMenuVerticalWhite" :alt="site.brand.logoAlt" />
+        <img width="100px" :src="logoMobileMenuVerticalWhite" :alt="site.brand.logoAlt" />
       </RouterLink>
       <!-- Menu admin simplifié -->
       <template v-if="isAdmin">
@@ -161,7 +164,7 @@ function closeMobileMenu() {
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center">
           <RouterLink to="/">
-            <img width="50px" height="50px" :src="site.assets.logos.headerIconGreen" alt="" />
+            <img width="50px" height="50px" :src="logoHeaderIconGreen" alt="" />
           </RouterLink>
         </div>
         <div class="hidden md:block">
@@ -263,7 +266,7 @@ function closeMobileMenu() {
         <div class="sm:col-span-2">
           <div class="mb-4">
             <img
-              :src="site.assets.logos.footerHorizontalWhite"
+              :src="logoFooterHorizontalWhite"
               :alt="site.brand.logoAlt"
               class="h-12 w-auto"
             />

@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { checkMaintenancePassword, authenticate } from '@/services/maintenanceService'
 import { EMAIL_CONTACT } from '@/config'
-import logoNoir from '@/assets/logos/Logos RVB (web)/Logos RVB horizontal/Logo SW vert horizontal RVB.png'
+import logoNoir from '@site/assets/logos/Logos RVB (web)/Logos RVB horizontal/Logo SW vert horizontal RVB.png'
 import { getSiteConfig } from '@/site/getSiteConfig.js'
 
 const loginLogoAlt = getSiteConfig().brand.loginLogoAlt

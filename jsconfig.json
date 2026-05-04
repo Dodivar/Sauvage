@@ -2,7 +2,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["packages/base/src/*"]
+      "@/*": ["packages/base/src/*"],
+      "@site/*": ["sites/original/src/*"]
     }
   },
   "include": ["packages/base/src/**/*", "sites/original/**/*", "vite/**/*", "api/**/*.js"],

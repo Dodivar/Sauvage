@@ -48,18 +48,6 @@ export default {
     previewFallbackHost: 'recette.sauvage-watches.fr',
   },
 
-  /** Resolved relative to `src/App.vue` for dev/build consistency */
-  assets: {
-    logos: {
-      mobileMenuVerticalWhite:
-        './assets/logos/Logos RVB (web)/Logos RVB vertical/Logo SW blanc vertical RVB.png',
-      headerIconGreen:
-        './assets/logos/Logos RVB (web)/Icône RVB/Icône SW verte RVB.png',
-      footerHorizontalWhite:
-        '/src/assets/logos/Logos RVB (web)/Logos RVB horizontal/Logo SW blanc horizontal RVB.png',
-    },
-  },
-
   social: {
     footerTiktokUrl: 'https://www.tiktok.com/@sauvagewatches',
     suivezNous: {

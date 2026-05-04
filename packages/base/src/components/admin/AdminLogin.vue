@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { loginAdmin, isAdminAuthenticated } from '@/services/admin/adminAuthService'
-import logoNoir from '@/assets/logos/Logos RVB (web)/Icône RVB/Icône SW verte RVB.png'
+import logoNoir from '@site/assets/logos/Logos RVB (web)/Icône RVB/Icône SW verte RVB.png'
 import { getSiteConfig } from '@/site/getSiteConfig.js'
 
 const loginLogoAlt = getSiteConfig().brand.loginLogoAlt

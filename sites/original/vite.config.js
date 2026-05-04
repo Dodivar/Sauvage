@@ -7,6 +7,7 @@ import { siteFromConfigPlugin } from '../../vite/site-from-config.mjs'
 
 const repoRoot = fileURLToPath(new URL('../..', import.meta.url))
 const baseSrc = fileURLToPath(new URL('../../packages/base/src', import.meta.url))
+const siteSrc = fileURLToPath(new URL('./src', import.meta.url))
 
 function createNodeLocalStorage() {
   const values = new Map()
@@ -54,12 +55,15 @@ export default defineConfig(async ({ command }) => {
 
   return {
     root: fileURLToPath(new URL('.', import.meta.url)),
+    // Load .env from repo root (not sites/original), so VITE_* matches import.meta.env
+    envDir: repoRoot,
     publicDir: 'public',
     base: '/',
     plugins,
     resolve: {
       alias: {
         '@': baseSrc,
+        '@site': siteSrc,
       },
     },
     build: {

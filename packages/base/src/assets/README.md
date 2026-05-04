@@ -1,10 +1,9 @@
-# Assets
+# Assets (template / partagé)
 
-- `main.css` : styles globaux (typographie, reset, helpers).
-- `logo*.png` : variantes utilisées pour les headers sombres/clairs et les
-  favicons générés.
-- `hero section img/` : visuels haute résolution pour la page d’accueil et les
-  fiches montres.
+- `main.css` : styles globaux (Tailwind, reset, helpers partagés).
+
+Les logos, visuels d’accueil et autres médias **propres à une marque** vivent sous
+`sites/<siteId>/src/assets/` (alias Vite `@site/*`, voir `sites/<siteId>/vite.config.js`).
 
 ## Règles
 
