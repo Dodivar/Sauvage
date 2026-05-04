@@ -1,4 +1,47 @@
+import path from 'node:path'
+import { fileURLToPath, pathToFileURL } from 'node:url'
+
 import { createClient } from '@supabase/supabase-js'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+async function loadSiteConfig() {
+  const siteId =
+    process.env.SITE_ID?.trim() ||
+    process.env.VITE_SITE_ID?.trim() ||
+    'sauvage-watches'
+  const configPath = path.join(__dirname, '..', 'sites', siteId, 'site.config.js')
+  const { default: siteConfig } = await import(pathToFileURL(configPath).href)
+  return { siteId, siteConfig }
+}
+
+function resolveBaseUrl(siteConfig, req) {
+  const explicit = process.env.VITE_BASE_URL || process.env.BASE_URL
+  if (explicit) return explicit.replace(/\/$/, '')
+
+  const urlProduction = siteConfig.urls.production.replace(/\/$/, '')
+  const urlStaging = siteConfig.urls.staging.replace(/\/$/, '')
+  const previewFallbackHost = siteConfig.urls.previewFallbackHost?.replace(/\/$/, '') ?? ''
+
+  if (process.env.VERCEL_ENV === 'production') {
+    return urlProduction
+  }
+
+  if (process.env.VERCEL_ENV === 'preview' || process.env.VERCEL_URL) {
+    if (
+      process.env.VERCEL_URL?.includes('recette') ||
+      req.headers.host?.includes('recette')
+    ) {
+      return urlStaging
+    }
+    if (process.env.VERCEL_URL) {
+      return `https://${process.env.VERCEL_URL}`
+    }
+    return `https://${previewFallbackHost}`
+  }
+
+  return urlProduction
+}
 
 export default async function handler(req, res) {
   // Gérer les requêtes OPTIONS pour CORS
@@ -13,33 +56,14 @@ export default async function handler(req, res) {
     return
   }
   try {
+    const { siteConfig } = await loadSiteConfig()
+    const baseUrl = resolveBaseUrl(siteConfig, req)
+
     // Récupération des variables d'environnement
     // Note: Les variables VITE_* ne sont pas disponibles dans les fonctions serverless Vercel
     // Il faut utiliser les variables sans préfixe VITE_ dans Vercel
     const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL
     const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY
-    
-    // Déterminer l'URL de base selon l'environnement
-    // Priorité : VITE_BASE_URL ou BASE_URL (variable d'environnement) > VERCEL_ENV > VERCEL_URL
-    let baseUrl
-    if (process.env.VITE_BASE_URL || process.env.BASE_URL) {
-      baseUrl = process.env.VITE_BASE_URL || process.env.BASE_URL
-    } else if (process.env.VERCEL_ENV === 'production') {
-      baseUrl = 'https://sauvage-watches.fr'
-    } else if (process.env.VERCEL_ENV === 'preview') {
-      // En staging/preview, utiliser l'URL de recette si disponible, sinon l'URL Vercel
-      if (process.env.VERCEL_URL?.includes('recette') || 
-          req.headers.host?.includes('recette')) {
-        baseUrl = 'https://recette.sauvage-watches.fr'
-      } else {
-        baseUrl = `https://${process.env.VERCEL_URL}`
-      }
-    } else if (process.env.VERCEL_URL) {
-      baseUrl = `https://${process.env.VERCEL_URL}`
-    } else {
-      // Par défaut : production
-      baseUrl = 'https://sauvage-watches.fr'
-    }
 
     if (!supabaseUrl || !supabaseKey) {
       console.error('Variables d\'environnement manquantes:', {

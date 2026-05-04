@@ -6,6 +6,6 @@
       "@site/*": ["sites/sauvage-watches/src/*"]
     }
   },
-  "include": ["packages/base/src/**/*", "sites/sauvage-watches/**/*", "vite/**/*", "api/**/*.js"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["packages/base/src/**/*", "sites/**/*", "vite/**/*", "api/**/*.js", "scripts/**/*"],
+  "exclude": ["node_modules", "dist", "sites/_template/**"]
 }

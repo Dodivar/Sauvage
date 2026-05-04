@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./sites/sauvage-watches/index.html', './packages/base/src/**/*.{vue,js,ts,jsx,tsx}'],
+  content: ['./sites/**/index.html', './packages/base/src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
     extend: {
       fontFamily: {

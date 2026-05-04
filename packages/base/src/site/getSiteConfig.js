@@ -1,8 +1,7 @@
-import siteConfig from '../../../../sites/sauvage-watches/site.config.js'
+import siteConfig from '@site-config'
 
 /**
- * Returns the active site manifest. Single entrypoint so future multi-site builds
- * can swap the resolved module without touching feature code.
+ * Returns the active site manifest. Resolved at build time from `sites/<SITE_ID>/site.config.js`.
  */
 export function getSiteConfig() {
   return siteConfig

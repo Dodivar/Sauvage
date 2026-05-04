@@ -4,7 +4,7 @@ Couche d’accès aux données et intégrations externes.
 
 ## Fichiers notables
 
-- `supabase.js` : client unique configuré avec les variables Vite.
+- `supabase.js` : client unique configuré avec les variables Vite (`VITE_SUPABASE_*`), pour le site actif défini par `SITE_ID` au build (voir `vite/vite.config.mjs`).
 - `watchService.js`, `articleService.js`, `maintenanceService.js` : requêtes
   publiques (collection, blog, bannière maintenance).
 - `emailService.js` et `n8nService.js` : webhooks sortants (Mailjet, automation).

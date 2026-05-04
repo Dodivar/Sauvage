@@ -2,9 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Palette / tokens : variables injectées depuis sites/sauvage-watches/site.config.js (voir vite/site-from-config.mjs) */
+/* Palette / tokens : variables injectées depuis sites/<SITE_ID>/site.config.js (voir vite/site-from-config.mjs) */
 
-/* Polices site (fichiers dans sites/sauvage-watches/public/fonts) */
+/* Polices site : fichiers servis depuis sites/<SITE_ID>/public/fonts via la racine Vite */
 @font-face {
   font-family: 'Poppins';
   font-style: normal;

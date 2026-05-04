@@ -3,7 +3,7 @@
 - `main.css` : styles globaux (Tailwind, reset, helpers partagés).
 
 Les logos, visuels d’accueil et autres médias **propres à une marque** vivent sous
-`sites/<siteId>/src/assets/` (alias Vite `@site/*`, voir `sites/<siteId>/vite.config.js`).
+`sites/<siteId>/src/assets/` (alias Vite `@site/*`, résolu par `vite/vite.config.mjs` à la racine du repo selon `SITE_ID`).
 
 ## Règles
 

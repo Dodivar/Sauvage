@@ -35,15 +35,24 @@ const isProduction =
   process.env.NODE_ENV === 'production' ||
   process.env.RENDER === 'true'
 
+function resolveProductionCorsOrigins() {
+  const raw = process.env.BACKEND_CORS_ORIGINS
+  if (raw && String(raw).trim()) {
+    return String(raw)
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean)
+  }
+  return [
+    'https://sauvage-watches.fr',
+    'https://www.sauvage-watches.fr',
+    'https://recette.sauvage-watches.fr',
+    'https://www.recette.sauvage-watches.fr',
+  ]
+}
+
 const corsOptions = {
-  origin: isProduction
-    ? [
-        'https://sauvage-watches.fr',
-        'https://www.sauvage-watches.fr',
-        'https://recette.sauvage-watches.fr',
-        'https://www.recette.sauvage-watches.fr',
-      ]
-    : ['http://localhost:5173', 'http://localhost:3000'],
+  origin: isProduction ? resolveProductionCorsOrigins() : ['http://localhost:5173', 'http://localhost:3000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: [
     'Content-Type',
