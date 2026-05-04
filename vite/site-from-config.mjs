@@ -1,4 +1,4 @@
-import siteConfig from '../sites/original/site.config.js'
+import siteConfig from '../sites/sauvage-watches/site.config.js'
 
 function escapeHtmlAttr(value) {
   return String(value)
@@ -22,7 +22,7 @@ function buildThemeCss() {
 }
 
 /**
- * Injects index.html meta from sites/original/site.config.js and serves virtual theme CSS variables.
+ * Injects index.html meta from sites/sauvage-watches/site.config.js and serves virtual theme CSS variables.
  */
 export function siteFromConfigPlugin() {
   const virtualId = '\0virtual:site-theme.css'

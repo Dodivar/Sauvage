@@ -55,7 +55,7 @@ export default defineConfig(async ({ command }) => {
 
   return {
     root: fileURLToPath(new URL('.', import.meta.url)),
-    // Load .env from repo root (not sites/original), so VITE_* matches import.meta.env
+    // Load .env from repo root (not sites/sauvage-watches), so VITE_* matches import.meta.env
     envDir: repoRoot,
     publicDir: 'public',
     base: '/',

@@ -3,9 +3,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["packages/base/src/*"],
-      "@site/*": ["sites/original/src/*"]
+      "@site/*": ["sites/sauvage-watches/src/*"]
     }
   },
-  "include": ["packages/base/src/**/*", "sites/original/**/*", "vite/**/*", "api/**/*.js"],
+  "include": ["packages/base/src/**/*", "sites/sauvage-watches/**/*", "vite/**/*", "api/**/*.js"],
   "exclude": ["node_modules", "dist"]
 }

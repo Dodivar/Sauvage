@@ -7,9 +7,9 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "vite --config sites/original/vite.config.js",
-    "build": "vite build --config sites/original/vite.config.js",
-    "preview": "vite preview --config sites/original/vite.config.js",
+    "dev": "vite --config sites/sauvage-watches/vite.config.js",
+    "build": "vite build --config sites/sauvage-watches/vite.config.js",
+    "preview": "vite preview --config sites/sauvage-watches/vite.config.js",
     "lint": "eslint . --fix",
     "format": "prettier --write packages/base/src/",
     "mail-server": "node backend/server.js"

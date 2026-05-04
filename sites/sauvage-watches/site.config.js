@@ -1,9 +1,9 @@
 /**
  * First-site manifest: current production storefront (Sauvage).
- * Template extraction — all brand-specific defaults for `sites/original` live here.
+ * Template extraction — all brand-specific defaults for `sites/sauvage-watches` live here.
  */
 export default {
-  siteId: 'original',
+  siteId: 'sauvage-watches',
 
   locale: 'fr',
 

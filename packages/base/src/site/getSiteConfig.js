@@ -1,4 +1,4 @@
-import siteConfig from '../../../../sites/original/site.config.js'
+import siteConfig from '../../../../sites/sauvage-watches/site.config.js'
 
 /**
  * Returns the active site manifest. Single entrypoint so future multi-site builds
