@@ -1,13 +1,14 @@
-import { fileURLToPath, URL } from 'node:url'
+import fs from 'node:fs'
+import path from 'node:path'
+import { pathToFileURL } from 'node:url'
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
-import { siteFromConfigPlugin } from '../../vite/site-from-config.mjs'
+import { siteFromConfigPlugin } from './site-from-config.mjs'
+import { REPO_ROOT, resolveSitePaths } from './resolve-site.mjs'
 
-const repoRoot = fileURLToPath(new URL('../..', import.meta.url))
-const baseSrc = fileURLToPath(new URL('../../packages/base/src', import.meta.url))
-const siteSrc = fileURLToPath(new URL('./src', import.meta.url))
+const baseSrc = path.join(REPO_ROOT, 'packages/base/src')
 
 function createNodeLocalStorage() {
   const values = new Map()
@@ -45,7 +46,21 @@ function ensureNodeLocalStorage() {
 
 // https://vite.dev/config/
 export default defineConfig(async ({ command }) => {
-  const plugins = [siteFromConfigPlugin(), vue()]
+  const requireExplicitSiteId = command === 'build'
+  const { siteId, siteRoot, siteConfigPath, siteSrcPath } = resolveSitePaths({
+    requireExplicit: requireExplicitSiteId,
+  })
+
+  if (!fs.existsSync(siteSrcPath)) {
+    throw new Error(
+      `SITE_ID "${siteId}" must define sites/${siteId}/src/ (Vite alias @site/* points there).`,
+    )
+  }
+
+  const siteConfigHref = pathToFileURL(siteConfigPath).href
+  const { default: siteConfig } = await import(siteConfigHref)
+
+  const plugins = [siteFromConfigPlugin(siteConfig), vue()]
 
   if (command === 'serve') {
     ensureNodeLocalStorage()
@@ -54,25 +69,28 @@ export default defineConfig(async ({ command }) => {
   }
 
   return {
-    root: fileURLToPath(new URL('.', import.meta.url)),
-    // Load .env from repo root (not sites/sauvage-watches), so VITE_* matches import.meta.env
-    envDir: repoRoot,
+    root: siteRoot,
+    envDir: REPO_ROOT,
     publicDir: 'public',
     base: '/',
+    define: {
+      'import.meta.env.VITE_SITE_ID': JSON.stringify(siteId),
+    },
     plugins,
     resolve: {
       alias: {
         '@': baseSrc,
-        '@site': siteSrc,
+        '@site-config': siteConfigPath,
+        '@site': siteSrcPath,
       },
     },
     build: {
-      outDir: fileURLToPath(new URL('../../dist', import.meta.url)),
+      outDir: path.join(REPO_ROOT, 'dist'),
       emptyOutDir: true,
     },
     server: {
       fs: {
-        allow: [repoRoot],
+        allow: [REPO_ROOT],
       },
     },
   }

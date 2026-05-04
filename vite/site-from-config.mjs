@@ -1,5 +1,3 @@
-import siteConfig from '../sites/sauvage-watches/site.config.js'
-
 function escapeHtmlAttr(value) {
   return String(value)
     .replace(/&/g, '&amp;')
@@ -7,7 +5,7 @@ function escapeHtmlAttr(value) {
     .replace(/</g, '&lt;')
 }
 
-function buildThemeCss() {
+function buildThemeCss(siteConfig) {
   const t = siteConfig.theme.colors
   return `:root {
   --color-primary: ${t.primary};
@@ -22,9 +20,10 @@ function buildThemeCss() {
 }
 
 /**
- * Injects index.html meta from sites/sauvage-watches/site.config.js and serves virtual theme CSS variables.
+ * Injects index.html meta from the active `sites/<SITE_ID>/site.config.js` and serves virtual theme CSS variables.
+ * @param {Record<string, unknown>} siteConfig
  */
-export function siteFromConfigPlugin() {
+export function siteFromConfigPlugin(siteConfig) {
   const virtualId = '\0virtual:site-theme.css'
 
   return {
@@ -34,7 +33,7 @@ export function siteFromConfigPlugin() {
     },
     load(id) {
       if (id === virtualId) {
-        return buildThemeCss()
+        return buildThemeCss(siteConfig)
       }
     },
     transformIndexHtml(html) {
