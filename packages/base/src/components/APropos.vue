@@ -443,7 +443,7 @@
     </section>
 
     <!-- Call to action -->
-    <section class="py-10 bg-primary text-white">
+    <section v-if="features.collection || features.recherche" class="py-10 bg-primary text-white">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 class="text-3xl lg:text-4xl font-bold mb-3">Prêt à découvrir notre collection ?</h2>
         <p class="text-xl mb-6 opacity-90">
@@ -451,12 +451,14 @@
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <RouterLink
+            v-if="features.collection"
             to="/collection"
             class="inline-flex items-center bg-white text-primary px-8 py-4 rounded-lg text-lg font-semibold hover:bg-cream-100 transition-all shadow-lg"
           >
             Voir notre collection
           </RouterLink>
           <RouterLink
+            v-if="features.recherche"
             to="/recherche"
             class="inline-flex items-center border-2 border-white text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white/10 transition-all"
           >
@@ -473,8 +475,10 @@ import { useHead } from '@vueuse/head'
 import { BASE_URL } from '@/config'
 import { getSiteConfig } from '@/site/getSiteConfig.js'
 
-const brandDisplayName = getSiteConfig().brand.displayName
-const seo = getSiteConfig().seo.aPropos
+const site = getSiteConfig()
+const brandDisplayName = site.brand.displayName
+const seo = site.seo.aPropos
+const features = site.features
 
 // SEO Meta Tags
 useHead({

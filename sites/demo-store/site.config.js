@@ -77,6 +77,23 @@ export default {
     gaDevLogPrefix: '[DemoStore]',
   },
 
+  /**
+   * Fonctionnalités et pages publiques (voir packages/base/src/site/siteFeatures.js pour les clés).
+   * Passer une clé à false désactive la route et les liens de navigation associés.
+   */
+  features: {
+    collection: true,
+    blog: true,
+    recherche: true,
+    estimation: true,
+    estimationProcess: true,
+    merci: true,
+    about: true,
+    legal: true,
+    paymentReturn: true,
+    admin: true,
+  },
+
   seo: {
     /** Static shell before Vue hydrates @vueuse/head (fallback / crawlers). */
     indexHtml: {

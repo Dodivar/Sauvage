@@ -3,12 +3,14 @@ import { useRouter } from 'vue-router'
 import { ref, onMounted, watch } from 'vue'
 import { scrollAnimation } from '@/animation'
 import { handleFormSubmit, prepareSearchFormData } from '@/services/emailService'
+import { getSiteConfig } from '@/site/getSiteConfig.js'
 import BudgetSlider from './BudgetSlider.vue'
 import ContactCTA from './ContactCTA.vue'
 
 defineOptions({ name: 'RechercheMontre' })
 
 const router = useRouter()
+const features = getSiteConfig().features
 const isSubmitting = ref(false)
 const errorMessage = ref('')
 const budgetRange = ref([0, 15000])
@@ -262,7 +264,7 @@ onMounted(() => {
   </section>
 
   <!-- Section liens vers nos services -->
-  <section class="py-10 bg-cream">
+  <section v-if="features.collection || features.estimation" class="py-10 bg-cream">
     <div class="max-w-6xl mx-auto px-4">
       <div class="text-center mb-8">
         <h2 class="text-3xl font-bold text-text-main mb-3">Nos autres services</h2>
@@ -274,7 +276,10 @@ onMounted(() => {
       <div class="grid md:grid-cols-2 gap-6">
         
         <!-- Lien vers la collection de montres -->
-        <div class="bg-white rounded-md shadow-lg p-8 hover:shadow-xl transition-all">
+        <div
+          v-if="features.collection"
+          class="bg-white rounded-md shadow-lg p-8 hover:shadow-xl transition-all"
+        >
           <div class="text-center">
             <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
               <svg class="inline-block w-8 h-8 text-white align-middle" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -301,7 +306,10 @@ onMounted(() => {
         </div>
         
         <!-- Estimation de montre -->
-        <div class="bg-white rounded-md shadow-lg p-8 hover:shadow-xl transition-all">
+        <div
+          v-if="features.estimation"
+          class="bg-white rounded-md shadow-lg p-8 hover:shadow-xl transition-all"
+        >
           <div class="text-center">
             <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
               <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

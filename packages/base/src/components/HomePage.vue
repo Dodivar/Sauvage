@@ -6,7 +6,9 @@ import { scrollAnimation } from '@/animation'
 import { BASE_URL } from '@/config'
 import { getSiteConfig } from '@/site/getSiteConfig.js'
 
-const seo = getSiteConfig().seo.home
+const site = getSiteConfig()
+const seo = site.seo.home
+const features = site.features
 import navitimerImg from '@site/assets/hero section img/navitimer-b01-chronograph-43.png'
 import parallaxImg1 from '@site/assets/hero section img/montre-tag-heuer-monaco-calibre-11.png'
 import parallaxImg2 from '@site/assets/hero section img/Rolex.png'
@@ -187,12 +189,14 @@ watch(() => route.hash, async () => {
           </p>
           <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
             <RouterLink
+              v-if="features.collection"
               to="/collection"
               class="inline-flex items-center bg-primary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary-hover transition-all shadow-lg"
             >
               Voir les montres en stock
             </RouterLink>
             <RouterLink
+              v-if="features.recherche"
               to="/recherche"
               class="inline-flex items-center px-8 py-4 rounded-lg text-lg font-semibold border-2 border-primary text-primary hover:bg-green-50 transition-all shadow"
             >
@@ -384,7 +388,11 @@ watch(() => route.hash, async () => {
     <SuivezNous />
     
     <!-- Services -->
-    <section id="services" class="py-12 bg-white">
+    <section
+      v-if="features.recherche || features.collection || features.estimation"
+      id="services"
+      class="py-12 bg-white"
+    >
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-10">
           <h2 class="text-3xl lg:text-4xl font-bold text-text-main mb-3">Nos services exclusifs</h2>
@@ -396,7 +404,10 @@ watch(() => route.hash, async () => {
         <div class="grid md:grid-cols-3 gap-6">
 
           <!-- Recherche personnalisée -->
-          <div class="bg-white rounded-md p-6 text-center hover:shadow-lg transition-all shadow-lg">
+          <div
+            v-if="features.recherche"
+            class="bg-white rounded-md p-6 text-center hover:shadow-lg transition-all shadow-lg"
+          >
             <div class="text-primary text-4xl mb-3 flex justify-center">
               <!-- SVG search icon -->
               <svg class="h-10 w-10 text-primary mx-auto" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -416,7 +427,10 @@ watch(() => route.hash, async () => {
           </div>
          
           <!-- Vente de montre -->
-          <div class="bg-white rounded-md p-6 text-center hover:shadow-lg transition-all shadow-lg">
+          <div
+            v-if="features.collection"
+            class="bg-white rounded-md p-6 text-center hover:shadow-lg transition-all shadow-lg"
+          >
             <div class="text-primary text-4xl mb-3 flex justify-center">
               <!-- SVG montre (watch) icon -->
               <svg class="h-10 w-10 text-primary mx-auto" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -436,7 +450,10 @@ watch(() => route.hash, async () => {
           </div>
 
           <!-- Estimation gratuite -->
-          <div class="bg-white rounded-md p-6 text-center hover:shadow-lg transition-all shadow-lg">
+          <div
+            v-if="features.estimation"
+            class="bg-white rounded-md p-6 text-center hover:shadow-lg transition-all shadow-lg"
+          >
             <div class="text-primary text-4xl mb-3 flex justify-center">
               <!-- SVG calculator icon -->
               <svg class="h-10 w-10 text-primary mx-auto" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">

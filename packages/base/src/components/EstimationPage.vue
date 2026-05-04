@@ -10,6 +10,7 @@
             Remplissez ce formulaire pour recevoir une estimation personnalisée
           </p>
           <RouterLink
+            v-if="features.estimationProcess"
             to="/estimation/processus"
             class="inline-flex items-center text-primary hover:text-green-700 transition-colors text-sm font-medium underline"
           >
@@ -276,7 +277,7 @@
     
 
   <!-- Section liens vers nos services -->
-  <section class="py-10 bg-cream">
+  <section v-if="features.collection || features.recherche" class="py-10 bg-cream">
     <div class="max-w-6xl mx-auto px-4">
       <div class="text-center mb-8">
         <h2 class="text-3xl font-bold text-text-main mb-3">Nos autres services</h2>
@@ -288,7 +289,10 @@
       <div class="grid md:grid-cols-2 gap-6">
         
         <!-- Lien vers la collection de montres -->
-        <div class="bg-white rounded-md shadow-lg p-8 hover:shadow-xl transition-all">
+        <div
+          v-if="features.collection"
+          class="bg-white rounded-md shadow-lg p-8 hover:shadow-xl transition-all"
+        >
           <div class="text-center">
             <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-3">
               <svg class="inline-block w-8 h-8 text-white align-middle" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -315,7 +319,10 @@
         </div>
         
         <!-- Recherche personnalisée de montre -->
-        <div class="bg-white rounded-md shadow-lg p-8 hover:shadow-xl transition-all">
+        <div
+          v-if="features.recherche"
+          class="bg-white rounded-md shadow-lg p-8 hover:shadow-xl transition-all"
+        >
           <div class="text-center">
             <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-3">
               <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -351,9 +358,11 @@ import { useRouter } from 'vue-router'
 import { ref, onMounted, watch } from 'vue'
 import { handleFormSubmit, prepareEstimationFormData } from '@/services/emailService'
 import { createPreviewElement } from '@/services/imagePreviewService'
+import { getSiteConfig } from '@/site/getSiteConfig.js'
 import TooltipInfo from './TooltipInfo.vue'
 import ContactCTA from './ContactCTA.vue'
 const router = useRouter()
+const features = getSiteConfig().features
 
 const isSubmitting = ref(false)
 const errorMessage = ref('')

@@ -216,7 +216,8 @@
           Retour à la montre
         </router-link>
         <router-link
-          to="/collection"
+          v-if="features.collection"
+          :to="browsePath"
           class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-primary hover:bg-primary-hover transition-colors duration-200"
         >
           Voir notre collection
@@ -237,7 +238,12 @@ import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { WHATSAPP_NUMBER } from '@/config'
 import { isAdminAuthenticated } from '@/services/admin/adminAuthService'
+import { getSiteConfig } from '@/site/getSiteConfig.js'
+import { getBrowsePath } from '@/site/siteFeatures.js'
 import { getWatchById } from '@/services/watchService'
+
+const features = getSiteConfig().features
+const browsePath = getBrowsePath(features)
 
 const route = useRoute()
 const watchId = ref(null)

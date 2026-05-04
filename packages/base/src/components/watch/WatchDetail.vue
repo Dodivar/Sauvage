@@ -23,7 +23,7 @@
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <router-link
-              to="/collection"
+              :to="browsePath"
               class="px-6 py-3 bg-primary text-white rounded-lg font-semibold hover:bg-primary-hover transition-colors inline-flex items-center justify-center"
             >
               <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -933,10 +933,13 @@ import { useHead } from '@vueuse/head'
 import { scrollAnimation } from '@/animation'
 import { WHATSAPP_NUMBER, EMAIL_CONTACT, BASE_URL, PURCHASE_ENABLED } from '@/config'
 import { getSiteConfig } from '@/site/getSiteConfig.js'
+import { getBrowsePath } from '@/site/siteFeatures.js'
 import { getWatchById } from '@/services/watchService'
 
-const siteCopy = getSiteConfig().copy
-const seoWatch = getSiteConfig().seo.watchDetail
+const site = getSiteConfig()
+const siteCopy = site.copy
+const seoWatch = site.seo.watchDetail
+const browsePath = getBrowsePath(site.features)
 import { isAdminAuthenticated } from '@/services/admin/adminAuthService'
 import { createCheckoutSession } from '@/services/stripeService'
 import WatchDetailSkeleton from '@/components/watch/WatchDetailSkeleton.vue'

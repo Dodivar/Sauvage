@@ -78,6 +78,13 @@ export default {
     gaDevLogPrefix: '[Sauvage]',
   },
 
+  /**
+   * Fonctionnalités et pages publiques (voir packages/base/src/site/siteFeatures.js pour les clés).
+   * Passer une clé à false désactive la route et les liens de navigation associés.
+   */
+  features: {
+  },
+
   seo: {
     /** Static shell before Vue hydrates @vueuse/head (fallback / crawlers). */
     indexHtml: {

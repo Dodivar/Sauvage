@@ -2,6 +2,8 @@ import { createWebHistory, createRouter } from 'vue-router'
 import { isAuthenticated } from './services/maintenanceService'
 import { isAdminAuthenticated } from './services/admin/adminAuthService'
 import { verifyPaymentSession } from './services/stripeService'
+import { getBrowsePath } from './site/siteFeatures.js'
+import { getSiteConfig } from './site/getSiteConfig.js'
 
 import HomeView from './components/HomePage.vue'
 import Merci from './components/Merci.vue'
@@ -28,36 +30,45 @@ import NotFound from './components/NotFound.vue'
 import PaymentSuccess from './components/payment/PaymentSuccess.vue'
 import PaymentCancel from './components/payment/PaymentCancel.vue'
 
-const routes = [
+const { features } = getSiteConfig()
+const browseFallback = getBrowsePath(features)
+
+const routeDefinitions = [
   { path: '/maintenance', component: Maintenance },
   { path: '/', component: HomeView },
-  { path: '/merci', component: Merci },
-  { path: '/recherche', component: Recherche },
-  { path: '/estimation', component: EstimationPage },
-  { path: '/estimation/processus', component: EstimationProcess },
-  // { path: '/depot-vente', component: DepotVente },
-   { path: '/collection', component: WatchesCollection },
-   { path: '/watch/:id', component: WatchDetail },
-   { path: '/blog', component: BlogList },
-   { path: '/blog/:id', component: BlogDetail },
-   { path: '/a-propos', component: APropos },
-   { path: '/politique-confidentialite', component: PolitiqueConfidentialite },
-   { path: '/mentions-legales', component: MentionsLegales },
-   { path: '/conditions-generales-utilisation', component: ConditionsGeneralesUtilisation },
-   { path: '/paiement-succes', component: PaymentSuccess },
-   { path: '/paiement-annule', component: PaymentCancel },
-  // Admin routes
-  { path: '/admin/login', component: AdminLogin },
-  { path: '/admin', component: AdminDashboard },
-  { path: '/admin/watches/new', component: AdminWatchForm },
-  { path: '/admin/watches/:id/edit', component: AdminWatchForm },
-  { path: '/admin/watches/stats', component: AdminWatchStats },
-  { path: '/admin/articles', component: AdminArticleList },
-  { path: '/admin/articles/new', component: AdminArticleForm },
-  { path: '/admin/articles/generate', component: AdminArticleGenerator },
-  { path: '/admin/articles/:id/edit', component: AdminArticleForm },
+  { path: '/merci', component: Merci, feature: 'merci' },
+  { path: '/recherche', component: Recherche, feature: 'recherche' },
+  { path: '/estimation', component: EstimationPage, feature: 'estimation' },
+  { path: '/estimation/processus', component: EstimationProcess, feature: 'estimationProcess' },
+  { path: '/collection', component: WatchesCollection, feature: 'collection' },
+  { path: '/watch/:id', component: WatchDetail, feature: 'collection' },
+  { path: '/blog', component: BlogList, feature: 'blog' },
+  { path: '/blog/:id', component: BlogDetail, feature: 'blog' },
+  { path: '/a-propos', component: APropos, feature: 'about' },
+  { path: '/politique-confidentialite', component: PolitiqueConfidentialite, feature: 'legal' },
+  { path: '/mentions-legales', component: MentionsLegales, feature: 'legal' },
+  { path: '/conditions-generales-utilisation', component: ConditionsGeneralesUtilisation, feature: 'legal' },
+  { path: '/paiement-succes', component: PaymentSuccess, feature: 'paymentReturn' },
+  { path: '/paiement-annule', component: PaymentCancel, feature: 'paymentReturn' },
+  { path: '/admin/login', component: AdminLogin, feature: 'admin' },
+  { path: '/admin', component: AdminDashboard, feature: 'admin' },
+  { path: '/admin/watches/new', component: AdminWatchForm, feature: 'admin' },
+  { path: '/admin/watches/:id/edit', component: AdminWatchForm, feature: 'admin' },
+  { path: '/admin/watches/stats', component: AdminWatchStats, feature: 'admin' },
+  { path: '/admin/articles', component: AdminArticleList, feature: 'admin' },
+  { path: '/admin/articles/new', component: AdminArticleForm, feature: 'admin' },
+  { path: '/admin/articles/generate', component: AdminArticleGenerator, feature: 'admin' },
+  { path: '/admin/articles/:id/edit', component: AdminArticleForm, feature: 'admin' },
   { path: '/:pathMatch(.*)*', component: NotFound },
 ]
+
+const routes = routeDefinitions
+  .filter((def) => !def.feature || features[def.feature])
+  .map((def) => {
+    const route = { ...def }
+    delete route.feature
+    return route
+  })
 
 const router = createRouter({
   history: createWebHistory(), //createWebHashHistory(),
@@ -96,8 +107,8 @@ router.beforeEach(async (to, from, next) => {
     sessionStorage.setItem('estimationProcessPreviousRoute', from.path)
   }
 
-  // Routes admin - vérifier l'authentification admin
-  if (to.path.startsWith('/admin')) {
+  // Routes admin - vérifier l'authentification admin (désactivé si `features.admin` est false)
+  if (features.admin && to.path.startsWith('/admin')) {
     // Si on va vers la page de login admin, autoriser l'accès
     if (to.path === '/admin/login') {
       // Si déjà authentifié, rediriger vers /admin
@@ -127,8 +138,11 @@ router.beforeEach(async (to, from, next) => {
     return
   }
 
-  // Vérifier l'accès aux pages de paiement (PaymentSuccess et PaymentCancel)
-  if (to.path === '/paiement-succes' || to.path === '/paiement-annule') {
+  // Vérifier l'accès aux pages de paiement (désactivé si `features.paymentReturn` est false)
+  if (
+    features.paymentReturn &&
+    (to.path === '/paiement-succes' || to.path === '/paiement-annule')
+  ) {
     // Vérifier si l'utilisateur est admin - les admins peuvent accéder sans vérification
     const isAdmin = await isAdminAuthenticated()
     if (isAdmin) {
@@ -146,7 +160,7 @@ router.beforeEach(async (to, from, next) => {
     if (to.path === '/paiement-succes') {
       if (!sessionId || !watchId) {
         console.warn('⚠️  Tentative d\'accès non autorisée à /paiement-succes sans session_id ou watch_id')
-        next('/collection')
+        next(browseFallback)
         return
       }
 
@@ -155,7 +169,7 @@ router.beforeEach(async (to, from, next) => {
       
       if (!verification.valid) {
         console.warn(`⚠️  Tentative d'accès non autorisée à /paiement-succes: ${verification.reason || 'Session invalide'}`)
-        next('/collection')
+        next(browseFallback)
         return
       }
 
@@ -168,7 +182,7 @@ router.beforeEach(async (to, from, next) => {
     if (to.path === '/paiement-annule') {
       if (!watchId || !token) {
         console.warn('⚠️  Tentative d\'accès non autorisée à /paiement-annule sans watch_id ou token')
-        next('/collection')
+        next(browseFallback)
         return
       }
 
@@ -177,7 +191,7 @@ router.beforeEach(async (to, from, next) => {
       
       if (!verification.valid) {
         console.warn(`⚠️  Tentative d'accès non autorisée à /paiement-annule: ${verification.reason || 'Token invalide'}`)
-        next('/collection')
+        next(browseFallback)
         return
       }
 

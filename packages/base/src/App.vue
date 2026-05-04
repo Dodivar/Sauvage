@@ -9,6 +9,8 @@ import logoHeaderIconGreen from '@site/assets/logos/Logos RVB (web)/Icône RVB/
 import logoFooterHorizontalWhite from '@site/assets/logos/Logos RVB (web)/Logos RVB horizontal/Logo SW blanc horizontal RVB.png'
 
 const site = getSiteConfig()
+const features = site.features
+const showServicesMenu = features.recherche || features.estimation
 import { isAdminAuthenticated } from '@/services/admin/adminAuthService'
 import CookieBanner from '@/components/CookieBanner.vue'
 import { openCookiePreferences } from '@/services/cookiePreferencesUi'
@@ -84,8 +86,9 @@ function closeMobileMenu() {
         <img width="100px" :src="logoMobileMenuVerticalWhite" :alt="site.brand.logoAlt" />
       </RouterLink>
       <!-- Menu admin simplifié -->
-      <template v-if="isAdmin">
+      <template v-if="isAdmin && features.admin">
         <RouterLink
+          v-if="features.collection"
           to="/collection"
           @click="closeMobileMenu"
           class="hover:text-cream-100 transition-colors"
@@ -98,6 +101,7 @@ function closeMobileMenu() {
           >Tableau de bord</RouterLink
         >
         <RouterLink
+          v-if="features.blog"
           to="/admin/articles"
           @click="closeMobileMenu"
           class="hover:text-cream-100 transition-colors"
@@ -110,18 +114,21 @@ function closeMobileMenu() {
           >Accueil</RouterLink
         >
         <RouterLink
+          v-if="features.collection"
           to="/collection"
           @click="closeMobileMenu"
           class="hover:text-cream-100 transition-colors"
           >Nos montres</RouterLink
         >
         <RouterLink
+          v-if="features.recherche"
           to="/recherche"
           @click="closeMobileMenu"
           class="hover:text-cream-100 transition-colors"
           >Recherche personnalisée</RouterLink
         >
         <RouterLink
+          v-if="features.estimation"
           to="/estimation"
           @click="closeMobileMenu"
           class="hover:text-cream-100 transition-colors"
@@ -134,12 +141,14 @@ function closeMobileMenu() {
           >Dépôt-vente</RouterLink
         > -->
         <RouterLink
+          v-if="features.blog"
           to="/blog"
           @click="closeMobileMenu"
           class="hover:text-cream-100 transition-colors"
           >Blog</RouterLink
         >
         <RouterLink
+          v-if="features.about"
           to="/a-propos"
           @click="closeMobileMenu"
           class="hover:text-cream-100 transition-colors"
@@ -170,8 +179,9 @@ function closeMobileMenu() {
         <div class="hidden md:block">
           <div class="ml-10 flex items-baseline space-x-8">
             <!-- Menu admin simplifié -->
-            <template v-if="isAdmin">
+            <template v-if="isAdmin && features.admin">
               <RouterLink
+                v-if="features.collection"
                 to="/collection"
                 class="text-text-main hover:text-primary transition-colors"
                 >Nos montres</RouterLink
@@ -182,6 +192,7 @@ function closeMobileMenu() {
                 >Tableau de bord</RouterLink
               >
               <RouterLink
+                v-if="features.blog"
                 to="/admin/articles"
                 class="text-text-main hover:text-primary transition-colors"
                 >Articles</RouterLink
@@ -190,11 +201,12 @@ function closeMobileMenu() {
             <!-- Menu utilisateur complet -->
             <template v-else>
               <RouterLink
+                v-if="features.collection"
                 to="/collection"
                 class="text-text-main hover:text-primary transition-colors"
                 >Nos montres</RouterLink
               >
-              <div class="relative group">
+              <div v-if="showServicesMenu" class="relative group">
                 <p class="text-text-main hover:text-primary transition-colors flex items-center">
                   Nos services
                   <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -210,11 +222,13 @@ function closeMobileMenu() {
                   class="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
                 >
                   <RouterLink
+                    v-if="features.recherche"
                     to="/recherche"
                     class="block px-4 py-2 text-sm text-gray-700 hover:text-primary hover:bg-primary/10"
                     >Recherche personnalisée</RouterLink
                   >
                   <RouterLink
+                    v-if="features.estimation"
                     to="/estimation"
                     class="block px-4 py-2 text-sm text-gray-700 hover:text-primary hover:bg-primary/10"
                     >Estimation</RouterLink
@@ -226,10 +240,16 @@ function closeMobileMenu() {
                     > -->
                 </div>
               </div>
-              <RouterLink to="/blog" class="text-text-main hover:text-primary transition-colors"
+              <RouterLink
+                v-if="features.blog"
+                to="/blog"
+                class="text-text-main hover:text-primary transition-colors"
                 >Blog</RouterLink
               >
-              <RouterLink to="/a-propos" class="text-text-main hover:text-primary transition-colors"
+              <RouterLink
+                v-if="features.about"
+                to="/a-propos"
+                class="text-text-main hover:text-primary transition-colors"
                 >À propos</RouterLink
               >
               <RouterLink to="/#faq" class="text-text-main hover:text-primary transition-colors"
@@ -312,33 +332,33 @@ function closeMobileMenu() {
                 >Accueil</a
               >
             </li>
-            <li>
+            <li v-if="features.collection">
               <RouterLink
                 to="/collection"
                 class="text-white/90 hover:text-white transition-colors"
                 >Nos montres</RouterLink
               >
             </li>
-            <li>
+            <li v-if="features.recherche">
               <RouterLink to="/recherche" class="text-white/90 hover:text-white transition-colors"
                 >Recherche personnalisée</RouterLink
               >
             </li>
-            <li>
+            <li v-if="features.estimation">
               <RouterLink
                 to="/estimation"
                 class="text-white/90 hover:text-white transition-colors"
                 >Estimation</RouterLink
               >
             </li>
-            <li>
+            <li v-if="features.blog">
               <RouterLink
                 to="/blog"
                 class="text-white/90 hover:text-white transition-colors"
                 >Blog</RouterLink
               >
             </li>
-            <li>
+            <li v-if="features.about">
               <RouterLink
                 to="/a-propos"
                 class="text-white/90 hover:text-white transition-colors"
@@ -396,7 +416,7 @@ function closeMobileMenu() {
           </div>
         </div>
         <!-- Admin Debug Links -->
-        <div v-if="isAdmin" class="border-l border-white/20 pl-4">
+        <div v-if="isAdmin && features.admin" class="border-l border-white/20 pl-4">
           <h3 class="text-lg font-semibold mb-4 text-white">🔧 Debug Admin</h3>
           <ul class="space-y-2 text-sm">
             <li>
@@ -409,37 +429,37 @@ function closeMobileMenu() {
                 >Maintenance</RouterLink
               >
             </li>
-            <li>
+            <li v-if="features.merci">
               <RouterLink to="/merci" class="text-white/90 hover:text-white transition-colors"
                 >Merci</RouterLink
               >
             </li>
-            <li>
+            <li v-if="features.recherche">
               <RouterLink to="/recherche" class="text-white/90 hover:text-white transition-colors"
                 >Recherche</RouterLink
               >
             </li>
-            <li>
+            <li v-if="features.estimation">
               <RouterLink to="/estimation" class="text-white/90 hover:text-white transition-colors"
                 >Estimation</RouterLink
               >
             </li>
-            <li>
+            <li v-if="features.estimationProcess">
               <RouterLink to="/estimation/processus" class="text-white/90 hover:text-white transition-colors"
                 >Estimation Processus</RouterLink
               >
             </li>
-            <li>
+            <li v-if="features.about">
               <RouterLink to="/a-propos" class="text-white/90 hover:text-white transition-colors"
                 >À propos</RouterLink
               >
             </li>
-            <li>
+            <li v-if="features.paymentReturn">
               <RouterLink to="/paiement-succes" class="text-white/90 hover:text-white transition-colors"
                 >Paiement Succès</RouterLink
               >
             </li>
-            <li>
+            <li v-if="features.paymentReturn">
               <RouterLink to="/paiement-annule" class="text-white/90 hover:text-white transition-colors"
                 >Paiement Annulé</RouterLink
               >
@@ -464,17 +484,17 @@ function closeMobileMenu() {
                 >Stats Montres</RouterLink
               >
             </li>
-            <li>
+            <li v-if="features.blog">
               <RouterLink to="/admin/articles" class="text-white/90 hover:text-white transition-colors"
                 >Liste Articles</RouterLink
               >
             </li>
-            <li>
+            <li v-if="features.blog">
               <RouterLink to="/admin/articles/new" class="text-white/90 hover:text-white transition-colors"
                 >Nouvel Article</RouterLink
               >
             </li>
-            <li>
+            <li v-if="features.blog">
               <RouterLink to="/admin/articles/generate" class="text-white/90 hover:text-white transition-colors"
                 >Générer Article</RouterLink
               >
@@ -485,18 +505,21 @@ function closeMobileMenu() {
       <div class="border-t border-white/20 mt-12 pt-8">
         <div class="flex flex-col md:flex-row justify-between items-center">
           <p class="text-white/90 text-sm">{{ site.copy.copyrightLine }}</p>
-          <div class="flex space-x-6 mt-4 md:mt-0">
+          <div class="flex flex-wrap gap-x-6 gap-y-2 mt-4 md:mt-0">
             <RouterLink
+              v-if="features.legal"
               to="/mentions-legales"
               class="text-white/90 hover:text-white text-sm transition-colors"
               >Mentions légales</RouterLink
             >
             <RouterLink
+              v-if="features.legal"
               to="/politique-confidentialite"
               class="text-white/90 hover:text-white text-sm transition-colors"
               >Politique de confidentialité</RouterLink
             >
             <RouterLink
+              v-if="features.legal"
               to="/conditions-generales-utilisation"
               class="text-white/90 hover:text-white text-sm transition-colors"
               >CGU</RouterLink

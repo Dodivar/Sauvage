@@ -197,7 +197,8 @@
       <!-- Action Buttons -->
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <router-link
-          to="/collection"
+          v-if="features.collection"
+          :to="browsePath"
           class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-primary hover:bg-primary-hover transition-colors duration-200"
         >
           <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -226,6 +227,11 @@ import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { getWatchById } from '@/services/watchService'
 import { isAdminAuthenticated } from '@/services/admin/adminAuthService'
+import { getSiteConfig } from '@/site/getSiteConfig.js'
+import { getBrowsePath } from '@/site/siteFeatures.js'
+
+const features = getSiteConfig().features
+const browsePath = getBrowsePath(features)
 
 const route = useRoute()
 const sessionId = ref(null)
