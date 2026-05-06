@@ -1,0 +1,25 @@
+---
+description: Ligne éditoriale Sauvage Watches (textes, ton, vocabulaire)
+globs: sites/sauvage-watches/**
+alwaysApply: false
+---
+
+# Règles éditoriales — Sauvage Watches
+
+**Périmètre :** uniquement les fichiers sous `sites/sauvage-watches/`. Les autres clients sous `sites/<SITE_ID>/` n’ont **aucune** ligne éditoriale imposée par Cursor tant qu’il n’existe pas de fichier dédié `.cursor/rules/<site-id>-editorial.mdc` pour ce site.
+
+## Ligne éditoriale
+
+**IMPORTANT :** avant toute modification, ajout ou création de texte pour ce site (pages, composants, emails, messages, réseaux sociaux), **toujours** consulter et respecter les guidelines définies dans :
+
+📄 `documentation/sauvage-watches-ligne-editoriale.md`
+
+Ce fichier contient :
+
+- Le ton de communication (affirmé, maîtrisé, élégant)
+- Les valeurs à valoriser (expertise, sélection, rareté, authenticité, passion horlogère)
+- Le vocabulaire à privilégier et à éviter
+- Les règles de style et conventions
+- Des exemples de bonnes pratiques
+
+Tous les textes doivent respecter cette ligne éditoriale pour maintenir la cohérence de la communication de la marque Sauvage Watches.
