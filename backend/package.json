@@ -1,7 +1,7 @@
 {
-    "name": "sauvage-watches-server",
+    "name": "watch-ecommerce-backend",
     "version": "1.0.0",
-    "description": "Mail server for Sauvage Watches",
+    "description": "Backend multi-tenant pour les sites e-commerce de montres (aiguille via Origin / siteId).",
     "main": "server.js",
     "scripts": {
         "start": "node server.js",

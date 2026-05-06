@@ -90,8 +90,31 @@ export default {
     merci: true,
     about: true,
     legal: true,
+    purchase: true,
     paymentReturn: true,
     admin: true,
+  },
+
+  /**
+   * Configuration du backend Render multi-tenant.
+   * Les défauts non spécifiés sont calculés à partir de `brand`, `contact`, `urls` et `theme.colors`.
+   * Les secrets sont fournis via `SITE_DEMO_STORE__<KEY>` côté Render.
+   */
+  backend: {
+    cors: {
+      extraAllowedOrigins: [],
+    },
+    email: {
+      // fromName, fromAddress, toAddress dérivés de brand.legalName et contact.email.
+      template: {
+        // logoText dérivé de brand.displayName.toUpperCase() ; accentColor dérivé de theme.colors.primary.
+      },
+    },
+    n8n: {
+      // Configurer une fois le workflow n8n du client provisionné.
+      productionWorkflowUrl: '',
+      testWorkflowUrl: '',
+    },
   },
 
   seo: {

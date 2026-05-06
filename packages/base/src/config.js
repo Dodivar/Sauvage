@@ -15,8 +15,13 @@ export const LEGAL_ADDRESS = site.legal.address
 
 export const LEGAL_SIRET = site.legal.siret
 
-/** Afficher la section d'achat (boutons "Acheter") sur les pages détail montre. Mettre à false pour masquer (ex: mode dépôt-vente uniquement). */
-export const PURCHASE_ENABLED = import.meta.env.VITE_PURCHASE_ENABLED !== 'false'
+/**
+ * Afficher la section d'achat (boutons « Acheter ») sur les fiches montre.
+ * Combine `features.purchase` du manifest client (`site.config.js`) et `VITE_PURCHASE_ENABLED`
+ * (désactive explicitement si la valeur est la chaîne `'false'`).
+ */
+export const PURCHASE_ENABLED =
+  site.features.purchase !== false && import.meta.env.VITE_PURCHASE_ENABLED !== 'false'
 
 const urlProduction = site.urls.production
 const urlStaging = site.urls.staging

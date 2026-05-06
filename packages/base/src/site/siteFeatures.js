@@ -12,6 +12,8 @@ export const DEFAULT_SITE_FEATURES = {
   merci: true,
   about: true,
   legal: true,
+  /** Boutons « Acheter » et flux Stripe Checkout sur les fiches montre. */
+  purchase: true,
   paymentReturn: true,
   admin: true,
 }

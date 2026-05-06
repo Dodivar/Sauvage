@@ -2,18 +2,20 @@ const crypto = require('crypto')
 
 const DEFAULT_TTL_SECONDS = 60 * 60 // 1 hour
 
-function getSecret() {
-  return process.env.PAYMENT_CANCEL_SECRET || ''
-}
-
 /**
  * Stateless signed cancel URL token: base64url(payload).hmacSha256
  * Payload: { watchId: string, exp: unix seconds }
+ *
+ * Le secret est fourni explicitement (multi-tenant) — chaque site dispose de son propre
+ * `PAYMENT_CANCEL_SECRET` via `SITE_<ID>__PAYMENT_CANCEL_SECRET`.
+ *
+ * @param {string} secret Secret HMAC du site.
+ * @param {string|number} watchId
+ * @param {number} [ttlSeconds]
  */
-function signPaymentCancelToken(watchId, ttlSeconds = DEFAULT_TTL_SECONDS) {
-  const secret = getSecret()
+function signPaymentCancelToken(secret, watchId, ttlSeconds = DEFAULT_TTL_SECONDS) {
   if (!secret) {
-    throw new Error('PAYMENT_CANCEL_SECRET is not configured')
+    throw new Error('PAYMENT_CANCEL_SECRET manquant pour ce site')
   }
   const payload = {
     watchId: String(watchId),
@@ -25,10 +27,13 @@ function signPaymentCancelToken(watchId, ttlSeconds = DEFAULT_TTL_SECONDS) {
 }
 
 /**
- * Verifies token signature, expiry, and that payload.watchId matches watchId param.
+ * Vérifie la signature et l'expiration, et que payload.watchId correspond.
+ * @param {string} secret Secret HMAC du site.
+ * @param {string} token
+ * @param {string|number} watchId
+ * @returns {boolean}
  */
-function verifyPaymentCancelToken(token, watchId) {
-  const secret = getSecret()
+function verifyPaymentCancelToken(secret, token, watchId) {
   if (!secret || !token || watchId == null) {
     return false
   }

@@ -83,6 +83,41 @@ export default {
    * Passer une clé à false désactive la route et les liens de navigation associés.
    */
   features: {
+    /** Achats en ligne (Stripe) sur les fiches montre ; désactiver aussi `VITE_PURCHASE_ENABLED=false` en prod si besoin. */
+    purchase: true,
+  },
+
+  /**
+   * Configuration du backend Render multi-tenant.
+   * Les défauts non spécifiés sont calculés à partir de `brand`, `contact`, `urls` et `theme.colors`
+   * dans `backend/sites/normalize.js`. Les secrets restent dans les variables d'environnement
+   * `SITE_<UPPER_SITE_ID>__<KEY>` (voir `backend/sites/secrets.js`).
+   */
+  backend: {
+    cors: {
+      /** Origines additionnelles à autoriser au-delà des urls.production/staging/development (et leur variante www). */
+      extraAllowedOrigins: [],
+    },
+    email: {
+      /** Override de brand.legalName pour le "From Name" Mailjet. */
+      fromName: 'Sauvage Watches',
+      /** Override de contact.email pour l'expéditeur Mailjet. */
+      fromAddress: 'contact@sauvage-watches.fr',
+      /** Override de contact.email pour le destinataire interne Mailjet. */
+      toAddress: 'contact@sauvage-watches.fr',
+      template: {
+        /** Override du logo texte affiché en en-tête de l'email (sinon brand.displayName.toUpperCase()). */
+        logoText: 'SAUVAGE WATCHES',
+        /** Couleur d'accent du template email (bordures, titres). Sinon theme.colors.primary. */
+        accentColor: '#d4af37',
+      },
+    },
+    n8n: {
+      productionWorkflowUrl:
+        'https://n8n.srv1166238.hstgr.cloud/webhook/0adc09a6-a55c-4cd6-be94-f99c3036d441',
+      testWorkflowUrl:
+        'https://n8n.srv1166238.hstgr.cloud/webhook-test/0adc09a6-a55c-4cd6-be94-f99c3036d441',
+    },
   },
 
   seo: {

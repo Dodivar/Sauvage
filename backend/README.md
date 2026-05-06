@@ -1,259 +1,215 @@
-# Backend - Sauvage Watches
+# Backend — service Render multi-tenant
 
-Serveur Express.js qui centralise les fonctionnalités backend de l'application Sauvage Watches. Il gère les communications avec les services externes (Mailjet, Stripe, n8n, Supabase) et sécurise les opérations sensibles.
+Serveur Express.js qui sert **plusieurs clients** (sites e-commerce) à partir d'un **unique déploiement Render**. Pour chaque requête, le site actif est résolu à partir du `Origin` HTTP (ou du paramètre URL pour les webhooks Stripe), puis la configuration et les secrets correspondants sont chargés à la volée.
 
-## 📁 Structure du projet
+Aujourd'hui le service héberge `sauvage-watches`. Ajouter un nouveau client se fait sans toucher au code (voir [Ajouter un nouveau client](#-ajouter-un-nouveau-client)).
+
+## Architecture multi-tenant
+
+```
+                      ┌───────────────────────────────────────────────┐
+   Front Vercel       │  Backend Render unique                         │
+   (sauvage)  ──HTTPS─▶ ┌───────┐  resolveSite(req)   ┌────────────┐  │
+                      │ │ CORS  │ ─────────────────▶  │ req.site = │  │
+   Front Vercel       │ │ dyn.  │  via Origin/Host/    │  config +  │  │
+   (demo-store)──HTTPS▶│       │  X-Site-Id /:siteId  │  secrets   │  │
+                      │ └───────┘                      └────────────┘  │
+                      │            ↳ getStripeClient(site)             │
+                      │            ↳ getSupabaseClient(site)           │
+                      │            ↳ getMailjetClient(site)            │
+                      └───────────────────────────────────────────────┘
+   Stripe (webhook) ──POST /api/stripe/webhook/:siteId──▶ même backend
+```
+
+Chaque site a son propre triplet **frontend** + **comptes externes** (Stripe / Supabase / Mailjet) ; le backend reste un seul service partagé.
+
+## Structure du projet
 
 ```
 backend/
-├── routes/           # Routes API organisées par domaine fonctionnel
-├── utils/            # Utilitaires réutilisables
-├── uploads/          # Fichiers temporaires uploadés (ignoré par Git)
-├── server.js         # Point d'entrée principal du serveur
-├── package.json      # Dépendances et scripts npm
-├── env.example       # Template de configuration des variables d'environnement
-└── README.md         # Documentation (ce fichier)
+├── server.js                       # Bootstrap async (charge le registry, monte CORS dynamique, monte les routes)
+├── sites/
+│   ├── registry.js                 # Charge tous les sites/<id>/site.config.js, construit les index byId/byOrigin/byHost
+│   ├── normalize.js                # Calcule les défauts (brand → email, theme → couleur d'accent, urls → CORS)
+│   └── secrets.js                  # Lit SITE_<ID>__<KEY> (avec fallback legacy pour Sauvage)
+├── middleware/
+│   ├── resolveSite.js              # Pose req.site à partir de Origin / X-Site-Id / :siteId
+│   └── corsFromRegistry.js         # CORS dynamique : autorise toute origine déclarée par un site
+├── routes/
+│   ├── mailjet.js                  # /api/send-email — utilise req.site
+│   ├── stripe.js                   # /api/stripe/* — webhook /api/stripe/webhook/:siteId
+│   └── n8n.js                      # /api/n8n/generate-article — utilise req.site
+├── utils/
+│   ├── getBaseUrl.js               # URL frontend du site (success/cancel Stripe)
+│   ├── paymentCancelToken.js       # HMAC paramétré par site
+│   └── siteClients.js              # Cache mémoïsé des clients Stripe / Supabase / Mailjet
+├── templates/
+│   └── estimationEmail.js          # Template HTML paramétrable par site
+├── env.example                     # Modèle des variables d'env (voir aussi la section ci-dessous)
+└── README.md                       # Ce fichier
 ```
 
-## 📂 Détails des dossiers
+## Aiguillage de la requête
 
-### `/routes` - Routes API
+Le middleware `resolveSite` détermine `req.site` selon la priorité suivante :
 
-Contient toutes les routes API organisées par domaine fonctionnel. Chaque fichier exporte un router Express qui est monté dans `server.js`.
 
-#### `routes/mailjet.js`
-**Utilité** : Gestion de l'envoi d'emails via Mailjet pour les formulaires de contact.
+| Source                      | Usage                                                      |
+| --------------------------- | ---------------------------------------------------------- |
+| `req.params.siteId`         | Webhook Stripe (`/api/stripe/webhook/:siteId`)             |
+| Header `X-Site-Id`          | Tests / curl / dev                                         |
+| Header `Origin`             | Cas standard : appel front → backend                       |
+| Header `Host`               | Fallback (rare)                                            |
+| `DEV_DEFAULT_SITE_ID` (dev) | Fallback dev quand aucun matche (défaut `sauvage-watches`) |
+| Sinon                       | Réponse `400 { error: "Unknown site" }`                    |
 
-**Fonctionnalités** :
-- Upload de photos via `multer` pour les demandes d'estimation
-- Génération de templates HTML pour les emails
-- Envoi d'emails formatés via l'API Mailjet
-- Gestion des formulaires "estimation" et "recherche personnalisée"
 
-**Routes** :
-- `POST /api/send-estimation` - Envoie une demande d'estimation avec photos
-- `POST /api/send-search` - Envoie une demande de recherche personnalisée
+L'origine acceptée est calculée pour chaque site à partir de `urls.production`, `urls.staging`, `urls.development` (et leur variante `www.`) plus `backend.cors.extraAllowedOrigins`. Aucune liste hardcodée dans le code.
 
-**Spécificités maintenance** :
-- Les fichiers uploadés sont stockés temporairement dans `uploads/` et doivent être nettoyés régulièrement
-- Les templates HTML sont générés dynamiquement - modifier la fonction `createEmailTemplate()` pour changer le format
-- Les clés API Mailjet doivent être configurées dans `.env`
+## Configuration par client (`sites/<id>/site.config.js`)
 
-#### `routes/stripe.js`
-**Utilité** : Gestion des paiements Stripe et sécurisation des pages de résultat de paiement.
+La configuration partagée front/back se trouve dans `sites/<SITE_ID>/site.config.js`. Le backend ne lit que le bloc `backend` plus quelques sections déjà présentes :
 
-**Fonctionnalités** :
-- Création de sessions Stripe Checkout après **réservation atomique** en base (`reserve_watch_for_checkout`)
-- Webhooks `checkout.session.completed` (vente) et `checkout.session.expired` (libération de réservation)
-- **Idempotence** des webhooks via la table Supabase `stripe_processed_events`
-- Jetons d’annulation **signés (HMAC)** pour `PaymentCancel` (`PAYMENT_CANCEL_SECRET`, sans état en mémoire)
-- Vérification des sessions Stripe pour `PaymentSuccess`
-- Limite de débit sur `create-checkout-session` (`express-rate-limit`, configurable avec `STRIPE_CHECKOUT_RATE_LIMIT_MAX`)
 
-**Routes** :
-- `POST /api/stripe/create-checkout-session` - Réserve la montre puis crée une session Stripe
-- `POST /api/stripe/webhook` - Webhook Stripe (signature obligatoire ; codes HTTP conformes aux attentes Stripe)
-- `GET /api/stripe/verify-session` - Vérifie une session payée ou un jeton d’annulation
+| Champ utilisé                      | Source                                                                       |
+| ---------------------------------- | ---------------------------------------------------------------------------- |
+| `From Name` Mailjet                | `backend.email.fromName` ou `brand.legalName`                                |
+| `From / To` Mailjet                | `backend.email.fromAddress` / `toAddress` ou `contact.email`                 |
+| Logo texte du template email       | `backend.email.template.logoText` ou `brand.displayName.toUpperCase()`       |
+| Couleur d'accent du template email | `backend.email.template.accentColor` ou `theme.colors.primary`               |
+| Origines CORS autorisées           | `urls.{production,staging,development}` + `backend.cors.extraAllowedOrigins` |
+| URL base Stripe (success/cancel)   | `urls.production` (prod) / `urls.development` (dev)                          |
+| Workflow n8n                       | `backend.n8n.{production,test}WorkflowUrl`                                   |
 
-**Spécificités maintenance** :
-- **Migration SQL** : appliquer [`supabase/migrations/20260429120000_stripe_integration_hardening.sql`](../supabase/migrations/20260429120000_stripe_integration_hardening.sql) (colonnes `watches`, table `stripe_processed_events`, fonction `reserve_watch_for_checkout`)
-- **Webhooks** : signature invalide → **400** ; configuration manquante → **503** ; erreur métier après réception → **500** (Stripe réessaie). Succès ou doublon déjà traité → **200**
-- Activer l’événement **`checkout.session.expired`** dans le dashboard Stripe pour libérer les réservations abandonnées
-- **`BASE_URL`** : définir en production si le domaine du frontend n’est pas celui par défaut de `getBaseUrl()`
 
-#### `routes/n8n.js`
-**Utilité** : Proxy pour les workflows n8n, évite les problèmes CORS.
+Exemple minimal :
 
-**Fonctionnalités** :
-- Appel de workflows n8n depuis le serveur backend
-- Gestion automatique de l'environnement (production vs test)
-- Génération d'articles de blog via workflow n8n
-
-**Routes** :
-- `POST /api/n8n/generate-article` - Génère un article de blog via workflow n8n
-
-**Spécificités maintenance** :
-- L'URL du workflow change automatiquement selon l'environnement :
-  - Production : `/webhook/` (workflow activé)
-  - Test/Debug : `/webhook-test/` (workflow de test)
-- Peut être surchargée via la variable `N8N_WORKFLOW_URL` dans `.env`
-
-### `/utils` - Utilitaires
-
-Contient des fonctions utilitaires réutilisables dans plusieurs routes.
-
-#### `utils/getBaseUrl.js`
-**Utilité** : Détermine l'URL de base selon l'environnement (production, développement).
-
-**Fonctionnalités** :
-- Détection automatique de l'environnement (production vs développement)
-- Retourne l'URL appropriée pour les redirections Stripe et autres URLs absolues
-
-**Spécificités maintenance** :
-- Utilisé principalement pour générer les URLs de redirection Stripe (`success_url`, `cancel_url`)
-- **`BASE_URL` est recommandé en production** (sinon défaut `https://sauvage-watches.fr` ou localhost en dev)
-- Détecte automatiquement l'environnement Render via `RENDER=true`
-
-### `/uploads` - Fichiers temporaires
-
-**Utilité** : Stockage temporaire des fichiers uploadés (photos de montres pour estimation).
-
-**Spécificités maintenance** :
-- ⚠️ **Ignoré par Git** - Ne pas commiter les fichiers uploadés
-- ⚠️ **Nettoyage régulier requis** - Les fichiers ne sont pas supprimés automatiquement après envoi
-- Script de nettoyage recommandé : Supprimer les fichiers de plus de 24h
-- En production, considérer l'utilisation d'un stockage cloud (S3, Cloudinary) au lieu du système de fichiers local
-
-## 🔧 Configuration
-
-### Variables d'environnement
-
-Créer un fichier `.env` à la racine du dossier `backend/` (copier `env.example`) :
-
-```bash
-# Configuration Mailjet
-MAILJET_API_KEY=your_mailjet_api_key_here
-MAILJET_SECRET_KEY=your_mailjet_secret_key_here
-
-# Configuration Email
-EMAIL_FROM=contact@sauvage-watches.fr
-
-# Configuration Serveur
-PORT=3000
-NODE_ENV=development
-
-# URL frontend pour Stripe success/cancel (recommandé si domaine ≠ défaut)
-BASE_URL=https://sauvage-watches.fr
-
-# Configuration Stripe
-STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key_here
-STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret_here
-STRIPE_PUBLISHABLE_KEY=pk_test_your_stripe_publishable_key_here
-PAYMENT_CANCEL_SECRET=generate_a_long_random_secret
-# STRIPE_CHECKOUT_RATE_LIMIT_MAX=30
-
-# Configuration Supabase
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key_here
-
-# Configuration n8n (optionnel)
-N8N_WORKFLOW_URL=https://n8n.srv1166238.hstgr.cloud/webhook/...
-
+```js
+backend: {
+  cors: { extraAllowedOrigins: [] },
+  email: {
+    fromName: 'Sauvage Watches',
+    fromAddress: 'contact@sauvage-watches.fr',
+    toAddress: 'contact@sauvage-watches.fr',
+    template: { logoText: 'SAUVAGE WATCHES', accentColor: '#d4af37' },
+  },
+  n8n: {
+    productionWorkflowUrl: 'https://n8n.exemple.com/webhook/...',
+    testWorkflowUrl: 'https://n8n.exemple.com/webhook-test/...',
+  },
+},
 ```
 
-### Installation et démarrage
+## Variables d'environnement
+
+Voir `[env.example](env.example)` pour la liste complète. Convention :
+
+```
+SITE_<UPPER_SNAKE_SITE_ID>__<KEY>
+```
+
+Exemple pour `sauvage-watches` (kebab-case → `SAUVAGE_WATCHES`) :
+
+```
+SITE_SAUVAGE_WATCHES__STRIPE_SECRET_KEY=sk_...
+SITE_SAUVAGE_WATCHES__STRIPE_WEBHOOK_SECRET=whsec_...
+SITE_SAUVAGE_WATCHES__SUPABASE_URL=https://...
+SITE_SAUVAGE_WATCHES__SUPABASE_SERVICE_ROLE_KEY=...
+SITE_SAUVAGE_WATCHES__MAILJET_API_KEY=...
+SITE_SAUVAGE_WATCHES__MAILJET_SECRET_KEY=...
+SITE_SAUVAGE_WATCHES__PAYMENT_CANCEL_SECRET=...
+```
+
+Variables optionnelles :
+
+- `SITE_<ID>__BASE_URL` — override de `urls.production` pour les redirections Stripe (utile pour pointer vers un sous-domaine de recette).
+- `SITE_<ID>__EMAIL_FROM` — override de l'adresse expéditeur Mailjet.
+- `SITE_<ID>__STRIPE_CHECKOUT_RATE_LIMIT_MAX` — par défaut 30 sur 15 min.
+
+### Rétrocompatibilité Sauvage
+
+Les variables historiques (`STRIPE_SECRET_KEY`, `MAILJET_API_KEY`, `BASE_URL`, etc., **sans préfixe**) servent encore de fallback pour le site `sauvage-watches`. Le serveur émet un warning au boot pour chaque clé tombant sur le legacy. Migration recommandée : renommer une à une dans le dashboard Render.
+
+## ➕ Ajouter un nouveau client
+
+1. **Créer le manifest front** : `sites/<nouveau-client>/site.config.js` (le front Vite l'utilise déjà). Compléter le bloc `backend` (cf. exemple ci-dessus).
+2. **Configurer les secrets** dans le dashboard Render : ajouter toutes les variables `SITE_<UPPER_ID>__`* correspondantes (Stripe, Supabase, Mailjet, PaymentCancel).
+3. **Configurer le webhook Stripe** : dans le dashboard Stripe du nouveau client, pointer le webhook vers :
+  ```
+   https://<backend-render>.onrender.com/api/stripe/webhook/<nouveau-client>
+  ```
+   Inclure au minimum `checkout.session.completed` et `checkout.session.expired`.
+4. **Redéployer Render** : le boot charge automatiquement le nouveau `sites/<id>/site.config.js`. Aucune modification de code.
+
+## Endpoints
+
+
+| Méthode | URL                                   | Site résolu via         |
+| ------- | ------------------------------------- | ----------------------- |
+| GET     | `/api/health`                         | (aucun)                 |
+| POST    | `/api/send-email`                     | Origin                  |
+| GET     | `/api/config-check`                   | Origin                  |
+| GET     | `/api/test-mailjet`                   | Origin                  |
+| POST    | `/api/n8n/generate-article`           | Origin                  |
+| POST    | `/api/stripe/create-checkout-session` | Origin                  |
+| GET     | `/api/stripe/verify-session`          | Origin                  |
+| POST    | `/api/stripe/webhook/:siteId`         | Param `:siteId`         |
+| POST    | `/api/stripe/webhook` (legacy)        | Forcé `sauvage-watches` |
+
+
+## Démarrage local
 
 ```bash
-# Installation des dépendances
 cd backend
 npm install
-
-# Démarrage en mode développement (avec auto-reload)
+cp env.example .env   # remplir au minimum SITE_SAUVAGE_WATCHES__* ou les legacy
 npm run dev
-
-# Démarrage en mode production
-npm start
 ```
 
-Le serveur démarre sur le port `3000` par défaut (ou celui défini dans `PORT`).
-
-## 🔒 Sécurité
-
-### Bonnes pratiques
-
-1. **Variables d'environnement** :
-   - ⚠️ Ne jamais commiter le fichier `.env` (déjà dans `.gitignore`)
-   - Utiliser des clés différentes pour développement et production
-   - Utiliser un compte Mailjet de test pour les environnements non prod
-
-2. **Webhooks Stripe** :
-   - Vérifier la signature avec `STRIPE_WEBHOOK_SECRET` ; en cas d’échec de traitement métier, **500** pour déclencher les réessais Stripe
-   - Les événements sont enregistrés dans `stripe_processed_events` pour éviter les doubles traitements
-
-3. **Jetons d’annulation** :
-   - Signés avec `PAYMENT_CANCEL_SECRET` (voir `utils/paymentCancelToken.js`)
-
-4. **CORS** :
-   - Configuration stricte selon l'environnement
-   - Seuls les domaines autorisés peuvent faire des requêtes
-   - Logging des requêtes OPTIONS en production pour diagnostic
-
-## 🐛 Maintenance et dépannage
-
-### Logs et monitoring
-
-Le serveur logge plusieurs types d'informations :
-
-- ✅ **Succès** : Création de sessions, paiements réussis, emails envoyés
-- ⚠️ **Avertissements** : Tentatives d'accès non autorisées, tokens expirés
-- ❌ **Erreurs** : Échecs d'envoi d'email, erreurs Stripe, erreurs Supabase
-
-### Problèmes courants
-
-#### Emails non envoyés
-1. Vérifier les clés Mailjet dans `.env`
-2. Vérifier les logs du serveur pour les erreurs détaillées
-3. Vérifier le dashboard Mailjet pour les erreurs d'envoi
-4. Vérifier que le quota Mailjet n'est pas dépassé
-
-#### Paiements Stripe non traités
-1. Vérifier que le webhook est configuré dans le dashboard Stripe (y compris `checkout.session.expired`)
-2. Vérifier que `STRIPE_WEBHOOK_SECRET` est correct et que la migration SQL a été appliquée
-3. Vérifier les logs (codes **400** signature, **500** erreur Supabase — Stripe doit réessayer)
-4. Vérifier que Supabase est correctement configuré pour la mise à jour du stock
-
-#### Accès refusé aux pages de paiement
-1. Vérifier que les paramètres `session_id`/`token` et `watch_id` sont présents dans l'URL
-2. Vérifier les logs pour les raisons de refus (token expiré, session invalide, etc.)
-3. Pour PaymentCancel, vérifier `PAYMENT_CANCEL_SECRET` et l’expiration du jeton
-
-#### Problèmes CORS
-1. Vérifier que le domaine frontend est dans la liste `corsOptions.origin`
-2. Vérifier les logs de requêtes OPTIONS en production
-3. Vérifier que `NODE_ENV` ou `RENDER` est correctement défini
-
-### Nettoyage régulier
-
-#### Fichiers uploadés
-Les fichiers dans `uploads/` doivent être nettoyés régulièrement. Script recommandé :
+Pour tester un autre site en local :
 
 ```bash
-# Supprimer les fichiers de plus de 24h
+curl -H "X-Site-Id: demo-store" http://localhost:3000/api/health
+```
+
+## Déploiement Render
+
+1. Connecter le repo GitHub, dossier `backend/`.
+2. Build command : `npm install`. Start command : `npm start`.
+3. Variables d'environnement Render :
+  - `NODE_ENV=production`, `RENDER=true`
+  - Pour chaque client actif : `SITE_<ID>__*` (Stripe / Supabase / Mailjet / PaymentCancel)
+  - Optionnel : `BACKEND_CORS_ORIGINS` (extras globaux)
+4. Healthcheck : `/api/health` (renvoie la liste des sites chargés).
+
+## Sécurité
+
+- **CORS strict** : seules les origines déclarées par un `site.config.js` ou par `BACKEND_CORS_ORIGINS` sont acceptées. Toute origine inconnue → erreur 403 (transformée par le handler global).
+- **Webhooks Stripe** : signature vérifiée avec `SITE_<ID>__STRIPE_WEBHOOK_SECRET`. Échec → 400 (non-réessai par Stripe). Erreur métier après réception → 500 (Stripe réessaie). Idempotence via `stripe_processed_events`.
+- **Tokens d'annulation** : signés HMAC avec `SITE_<ID>__PAYMENT_CANCEL_SECRET` ; isolés par site.
+- **Aucun secret partagé entre sites** : chaque siteId a son propre Stripe / Supabase / Mailjet.
+
+## Maintenance
+
+### Webhook Stripe en migration
+
+L'URL legacy `POST /api/stripe/webhook` reste branchée sur `sauvage-watches` pour ne pas casser le webhook actuellement configuré. Une fois le dashboard Stripe Sauvage mis à jour vers `/api/stripe/webhook/sauvage-watches`, l'alias peut être supprimé.
+
+### Nettoyage des uploads
+
+Le dossier `uploads/` (multer pour les pièces jointes Mailjet) doit être nettoyé régulièrement :
+
+```bash
 find uploads/ -type f -mtime +1 -delete
 ```
 
-## 📦 Dépendances principales
+### Migration SQL Stripe
 
-- **express** : Framework web pour Node.js
-- **cors** : Gestion des en-têtes CORS
-- **multer** : Gestion de l'upload de fichiers
-- **node-mailjet** : Client API Mailjet pour l'envoi d'emails
-- **stripe** : SDK Stripe pour les paiements
-- **express-rate-limit** : Limitation du débit sur la création de sessions Checkout
-- **@supabase/supabase-js** : Client Supabase pour la base de données
-- **dotenv** : Chargement des variables d'environnement
-- **form-data** : Gestion des données FormData pour n8n
+Avant de déployer, appliquer côté Supabase de chaque client la migration `supabase/migrations/20260429120000_stripe_integration_hardening.sql` (table `stripe_processed_events`, colonnes `watches`, fonction `reserve_watch_for_checkout`).
 
-## 🚀 Déploiement
+## Dépendances principales
 
-### Sur Render (recommandé)
+- `express`, `cors`, `multer`, `express-rate-limit`
+- `stripe`, `@supabase/supabase-js`, `node-mailjet`
+- `dotenv`, `form-data`
 
-1. Connecter le repository GitHub
-2. Configurer les variables d'environnement dans le dashboard Render
-3. Définir `NODE_ENV=production` et `RENDER=true`
-4. Le serveur démarre automatiquement sur le port défini par Render
-
-### Variables d'environnement requises en production
-
-- `MAILJET_API_KEY` / `MAILJET_SECRET_KEY`
-- `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` / `PAYMENT_CANCEL_SECRET`
-- `BASE_URL` (recommandé si le domaine frontend n’est pas celui par défaut)
-- `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY`
-- `NODE_ENV=production`
-- `RENDER=true` (si déployé sur Render)
-
-## 📝 Notes importantes
-
-- Le dossier `uploads/` est ignoré par Git - ne pas commiter les fichiers uploadés
-- Appliquer la migration Stripe dans Supabase avant de déployer le backend mis à jour
-- Le webhook Stripe doit pointer vers : `https://votre-backend.com/api/stripe/webhook` et inclure au minimum `checkout.session.completed` et `checkout.session.expired`

@@ -1,126 +1,116 @@
 const express = require('express')
-const cors = require('cors')
 const path = require('path')
-// Chargement du fichier .env depuis le répertoire backend
 require('dotenv').config({ path: path.join(__dirname, '.env') })
+
+const { buildRegistry } = require('./sites/registry')
+const { corsFromRegistry } = require('./middleware/corsFromRegistry')
+const { resolveSite } = require('./middleware/resolveSite')
+
+const mailjetRoutes = require('./routes/mailjet')
+const { buildStripeRouter } = require('./routes/stripe')
+const n8nRoutes = require('./routes/n8n')
 
 const isProductionBoot =
   process.env.NODE_ENV === 'production' || process.env.RENDER === 'true'
-if (isProductionBoot) {
-  if (!process.env.BASE_URL) {
-    console.warn(
-      '⚠️  BASE_URL non défini — les redirections Stripe utiliseront la valeur par défaut de getBaseUrl() (peut être incorrect pour la recette ou un autre domaine).',
-    )
-  }
-  if (!process.env.STRIPE_WEBHOOK_SECRET) {
-    console.warn('⚠️  STRIPE_WEBHOOK_SECRET non défini — les webhooks Stripe renverront 503.')
-  }
-  if (!process.env.PAYMENT_CANCEL_SECRET) {
-    console.warn(
-      '⚠️  PAYMENT_CANCEL_SECRET non défini — create-checkout-session renverra une erreur tant que cette variable est absente.',
-    )
-  }
-}
 
-// Import des routes
-const mailjetRoutes = require('./routes/mailjet')
-const stripeRoutes = require('./routes/stripe')
-const n8nRoutes = require('./routes/n8n')
-
-const app = express()
-
-// Configuration CORS pour le déploiement
-// Détection de l'environnement de production (vérifie NODE_ENV ou si on est sur Render)
-const isProduction =
-  process.env.NODE_ENV === 'production' ||
-  process.env.RENDER === 'true'
-
-function resolveProductionCorsOrigins() {
-  const raw = process.env.BACKEND_CORS_ORIGINS
-  if (raw && String(raw).trim()) {
-    return String(raw)
-      .split(',')
-      .map((s) => s.trim())
-      .filter(Boolean)
-  }
-  return [
-    'https://sauvage-watches.fr',
-    'https://www.sauvage-watches.fr',
-    'https://recette.sauvage-watches.fr',
-    'https://www.recette.sauvage-watches.fr',
-  ]
-}
-
-const corsOptions = {
-  origin: isProduction ? resolveProductionCorsOrigins() : ['http://localhost:5173', 'http://localhost:3000'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: [
-    'Content-Type',
-    'Accept',
-    'Authorization',
-    'X-Requested-With',
-    'Origin',
-  ],
-  credentials: true,
-  preflightContinue: false,
-  optionsSuccessStatus: 204,
-}
-
-// Log de la configuration CORS au démarrage
-console.log('🔧 Configuration CORS:', {
-  isProduction,
-  allowedOrigins: corsOptions.origin,
-  methods: corsOptions.methods,
-  allowedHeaders: corsOptions.allowedHeaders,
-  NODE_ENV: process.env.NODE_ENV,
-  RENDER: process.env.RENDER,
-})
-
-app.use(cors(corsOptions))
-
-// Gestion explicite des requêtes OPTIONS (preflight)
-app.options('*', cors(corsOptions))
-
-// Middleware de logging pour diagnostiquer les problèmes CORS en production
-if (isProduction) {
-  app.use((req, res, next) => {
-    if (req.method === 'OPTIONS') {
-      console.log('🔍 Requête OPTIONS (preflight) reçue:', {
-        origin: req.headers.origin,
-        method: req.method,
-        path: req.path,
-        allowedOrigins: corsOptions.origin,
-      })
+function logBootWarnings(registry) {
+  if (!isProductionBoot) return
+  for (const site of registry.list()) {
+    const missing = []
+    if (!site.secrets.stripe.secretKey) missing.push('STRIPE_SECRET_KEY')
+    if (!site.secrets.stripe.webhookSecret) missing.push('STRIPE_WEBHOOK_SECRET')
+    if (!site.secrets.paymentCancelSecret) missing.push('PAYMENT_CANCEL_SECRET')
+    if (!site.secrets.supabase.url) missing.push('SUPABASE_URL')
+    if (!site.secrets.supabase.serviceRoleKey) missing.push('SUPABASE_SERVICE_ROLE_KEY')
+    if (!site.secrets.mailjet.apiKey) missing.push('MAILJET_API_KEY')
+    if (!site.secrets.mailjet.secretKey) missing.push('MAILJET_SECRET_KEY')
+    if (missing.length > 0) {
+      console.warn(
+        `⚠️  [${site.id}] secrets manquants : ${missing.join(', ')}. Les routes correspondantes renverront 503 pour ce site.`,
+      )
     }
-    next()
+  }
+}
+
+async function main() {
+  const registry = await buildRegistry()
+  if (registry.byId.size === 0) {
+    console.error('❌ Aucun site chargé dans `sites/`. Arrêt.')
+    process.exit(1)
+  }
+
+  console.log(
+    `🌐 Sites chargés (${registry.byId.size}) :`,
+    Array.from(registry.byId.keys()).join(', '),
+  )
+  logBootWarnings(registry)
+
+  const app = express()
+
+  // CORS dynamique (origines = registre + BACKEND_CORS_ORIGINS + dev defaults).
+  const { middleware: corsMiddleware, options: corsOptions, allowed } = corsFromRegistry(registry)
+  console.log('🔧 Configuration CORS dynamique :', {
+    isProduction: isProductionBoot,
+    allowedOriginsCount: allowed.size,
+    allowedOrigins: Array.from(allowed),
+  })
+
+  app.use(corsMiddleware)
+  app.options('*', corsMiddleware)
+
+  if (isProductionBoot) {
+    app.use((req, res, next) => {
+      if (req.method === 'OPTIONS') {
+        console.log('🔍 Requête OPTIONS (preflight) reçue:', {
+          origin: req.headers.origin,
+          method: req.method,
+          path: req.path,
+        })
+      }
+      next()
+    })
+  }
+
+  // Body parser : JSON sauf pour les webhooks Stripe (body brut requis pour signature).
+  app.use((req, res, next) => {
+    if (req.path === '/api/stripe/webhook' || req.path.startsWith('/api/stripe/webhook/')) {
+      return next()
+    }
+    express.json()(req, res, next)
+  })
+
+  // Routes publiques sans contexte de site.
+  app.get('/api/health', (req, res) => {
+    res.json({
+      status: 'ok',
+      message: 'Server is running',
+      sites: Array.from(registry.byId.keys()),
+    })
+  })
+
+  // Routes nécessitant un site (Mailjet + n8n) — site résolu via Origin/header.
+  app.use('/api', resolveSite(registry), mailjetRoutes)
+  app.use('/api/n8n', resolveSite(registry), n8nRoutes)
+
+  // Stripe : le router applique lui-même `resolveSite` par route (le webhook utilise :siteId).
+  app.use('/api/stripe', buildStripeRouter(registry))
+
+  // Fallback CORS : transformer les erreurs CORS en 403 propres.
+  app.use((err, req, res, next) => {
+    if (err && /CORS/.test(String(err.message))) {
+      return res.status(403).json({ success: false, error: err.message })
+    }
+    return next(err)
+  })
+
+  const PORT = process.env.PORT || 3000
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`)
+    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`)
   })
 }
 
-// Middleware pour parser JSON (sauf pour le webhook Stripe : body brut pour la signature)
-app.use((req, res, next) => {
-  if (req.path === '/api/stripe/webhook') {
-    return next()
-  }
-  express.json()(req, res, next)
-})
-
-// Montage des routes
-app.use('/api', mailjetRoutes)
-app.use('/api/stripe', stripeRoutes)
-app.use('/api/n8n', n8nRoutes)
-
-// Route de test pour vérifier que le serveur fonctionne
-app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'ok', 
-    message: 'Server is running',
-    mailjet: 'configured'
-  })
-})
-
-// Démarrage du serveur
-const PORT = process.env.PORT || 3000
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`)
-  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`)
+main().catch((err) => {
+  console.error('❌ Échec du démarrage du serveur :', err)
+  process.exit(1)
 })
