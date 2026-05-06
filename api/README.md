@@ -11,12 +11,12 @@ compatible avec l’environnement Edge/Serverless pour alimenter le front.
 ## Variables d’environnement
 
 
-| Nom                                            | Description                                  |
-| ---------------------------------------------- | -------------------------------------------- |
+| Nom                                            | Description                                                                                              |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
 | `SITE_ID` / `VITE_SITE_ID`                     | Dossier sous `sites/` pour charger `site.config.js` (URLs du sitemap). Défaut local : `sauvage-watches`. |
-| `SUPABASE_URL` / `VITE_SUPABASE_URL`           | Instance Supabase source des données         |
-| `SUPABASE_ANON_KEY` / `VITE_SUPABASE_ANON_KEY` | Clé utilisée par le client service           |
-| `VERCEL_ENV`, `VERCEL_URL`, `BASE_URL`         | Permettent d’inférer l’URL absolue des pages |
+| `SUPABASE_URL` / `VITE_SUPABASE_URL`           | Instance Supabase source des données                                                                     |
+| `SUPABASE_ANON_KEY` / `VITE_SUPABASE_ANON_KEY` | Clé utilisée par le client service                                                                       |
+| `VERCEL_ENV`, `VERCEL_URL`, `BASE_URL`         | Permettent d’inférer l’URL absolue des pages                                                             |
 
 
 ## Bonnes pratiques

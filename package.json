@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "vite --config vite/vite.config.mjs",
     "build": "vite build --config vite/vite.config.mjs",
+    "build:vercel": "node scripts/vercel-build.mjs",
     "preview": "vite preview --config vite/vite.config.mjs",
     "dev:sauvage": "cross-env SITE_ID=sauvage-watches vite --config vite/vite.config.mjs",
     "build:sauvage": "cross-env SITE_ID=sauvage-watches vite build --config vite/vite.config.mjs",
